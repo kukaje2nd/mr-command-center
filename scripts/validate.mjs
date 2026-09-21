@@ -84,7 +84,13 @@ if (!match) {
     'applyReportDefaults',
     'exportLocalBackup',
     'importLocalBackup',
-    'buildLocalBackupPayload'
+    'buildLocalBackupPayload',
+    'showHome',
+    'showAllTools',
+    'setFocusedSection',
+    'renderFocusBar',
+    'setPaletteCategory',
+    'closeMoreTools'
   ];
 
   for (const name of requiredFunctions) {
@@ -173,7 +179,15 @@ const requiredIds = [
   'workspaceProfileList',
   'backupCard',
   'exportBackupBtn',
-  'workspaceBackupImport'
+  'workspaceBackupImport',
+  'homeBtn',
+  'toolDock',
+  'moreTools',
+  'focusBar',
+  'focusTitle',
+  'focusGroup',
+  'focusRelated',
+  'paletteFilters'
 ];
 
 for (const id of requiredIds) {
