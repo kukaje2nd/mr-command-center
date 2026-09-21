@@ -81,7 +81,8 @@ if (!match) {
     'setFocusedSection',
     'renderFocusBar',
     'setPaletteCategory',
-    'closeMoreTools'
+    'closeMoreTools',
+    'renderParameterLens'
   ];
 
   for (const name of requiredFunctions) {
@@ -171,7 +172,16 @@ const requiredIds = [
   'focusTitle',
   'focusGroup',
   'focusRelated',
-  'paletteFilters'
+  'paletteFilters',
+  'sbFreq',
+  'sbPhaseFov',
+  'sbAccel',
+  'sbPf',
+  'parameterLens',
+  'parameterReference',
+  'sbParamLensTitle',
+  'barAccel',
+  'barPf'
 ];
 
 for (const id of requiredIds) {
@@ -195,6 +205,18 @@ const forbiddenFragments = [
 
 for (const fragment of forbiddenFragments) {
   if (html.includes(fragment)) fail.push('Removed feature returned unexpectedly: ' + fragment);
+}
+
+const requiredParameterCopy = [
+  'Parameter Lab',
+  'Parallel acceleration R',
+  'Partial Fourier',
+  'idealized 1/√R',
+  'Parameter Reference'
+];
+
+for (const text of requiredParameterCopy) {
+  if (!html.includes(text)) fail.push('Required parameter-lab copy is missing: ' + text);
 }
 
 const requiredWorkflowCopy = [
