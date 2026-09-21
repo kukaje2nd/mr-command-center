@@ -1,9 +1,8 @@
-const CACHE_NAME = 'mrcc-v1.8.0';
+const CACHE_NAME = 'mrcc-v1.9.0';
 const CORE_ASSETS = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(CORE_ASSETS)));
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
@@ -13,6 +12,10 @@ self.addEventListener('activate', event => {
     ))
   );
   self.clients.claim();
+});
+
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('fetch', event => {
