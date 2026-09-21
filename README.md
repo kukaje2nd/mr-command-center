@@ -8,6 +8,8 @@ v1.6 — Sequence Rescue
 ## Deployment
 This repository is designed to deploy as a static site. The production entry point is `index.html`.
 
+Deployment verification marker: 2026-09-21.
+
 ## Safety boundary
 This site is an educational and workflow-support tool. It does not replace institutional policy, scanner/manufacturer instructions, implant/device labeling, MR safety leadership, radiologist/physician judgment, or emergency procedures.
 
