@@ -57,15 +57,6 @@ if (!match) {
     'copyWorkspaceReport',
     'downloadWorkspaceReport',
     'printWorkspaceReport',
-    'applySecretUnlocks',
-    'unlockSecret',
-    'magnetSecretTap',
-    'brandSecretTap',
-    'recordSecretSequence',
-    'updateCoffeeSNR',
-    'rollShiftFortune',
-    'rollScannerMood',
-    'toggleGradientGroove',
     'readStoredJson',
     'trapDialogFocus',
     'localDataHealthy',
@@ -158,13 +149,6 @@ const requiredIds = [
   'reportProtocol',
   'reportUsage',
   'reportLearning',
-  'secretBreak',
-  'secretMood',
-  'secretAfterHours',
-  'coffeeDose',
-  'fortuneResult',
-  'scannerMood',
-  'grooveBtn',
   'taskFilterCategory',
   'taskFilterCount',
   'dataHealthSummary',
@@ -192,6 +176,25 @@ const requiredIds = [
 
 for (const id of requiredIds) {
   if (!html.includes('id="' + id + '"')) fail.push('Required element id is missing: ' + id);
+}
+
+const forbiddenFragments = [
+  'Operational snapshot',
+  'id="snapTasks"',
+  'id="snapSafety"',
+  'id="snapBurn"',
+  'id="snapRecent"',
+  'id="secretBreak"',
+  'id="secretMood"',
+  'id="secretAfterHours"',
+  'magnetSecretTap',
+  'brandSecretTap',
+  'recordSecretSequence',
+  'secretUnlocks'
+];
+
+for (const fragment of forbiddenFragments) {
+  if (html.includes(fragment)) fail.push('Removed feature returned unexpectedly: ' + fragment);
 }
 
 const requiredWorkflowCopy = [
