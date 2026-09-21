@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MR Command Center">
+  <rect width="512" height="512" rx="112" fill="#07110f"/>
+  <circle cx="256" cy="256" r="152" fill="none" stroke="#48f0b2" stroke-width="58" stroke-dasharray="720 235" stroke-linecap="round" transform="rotate(-43 256 256)"/>
+  <circle cx="256" cy="256" r="58" fill="#10221e" stroke="#52d7ff" stroke-width="10"/>
+  <path d="M245 216h22v80h-22zM216 245h80v22h-80z" fill="#ecfff8" opacity=".94"/>
+</svg>
