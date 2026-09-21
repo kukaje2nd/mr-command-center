@@ -42,7 +42,12 @@ if (!match) {
     'renderComparisonHistory',
     'restoreComparisonHistory',
     'copyComparisonHistory',
-    'deleteComparisonHistory'
+    'deleteComparisonHistory',
+    'trackUsage',
+    'usageSummary',
+    'renderUsageInsights',
+    'exportUsageInsights',
+    'resetUsageInsights'
   ];
 
   for (const name of requiredFunctions) {
@@ -91,7 +96,13 @@ const requiredIds = [
   'presetList',
   'presetSearch',
   'comparisonHistoryList',
-  'historyName'
+  'historyName',
+  'usageInsights',
+  'usageTopList',
+  'usageShift',
+  'usageAll',
+  'usageDistinct',
+  'usageTopName'
 ];
 
 for (const id of requiredIds) {
