@@ -56,7 +56,16 @@ if (!match) {
     'buildWorkspaceReport',
     'copyWorkspaceReport',
     'downloadWorkspaceReport',
-    'printWorkspaceReport'
+    'printWorkspaceReport',
+    'applySecretUnlocks',
+    'unlockSecret',
+    'magnetSecretTap',
+    'brandSecretTap',
+    'recordSecretSequence',
+    'updateCoffeeSNR',
+    'rollShiftFortune',
+    'rollScannerMood',
+    'toggleGradientGroove'
   ];
 
   for (const name of requiredFunctions) {
@@ -123,7 +132,14 @@ const requiredIds = [
   'reportHandoff',
   'reportProtocol',
   'reportUsage',
-  'reportLearning'
+  'reportLearning',
+  'secretBreak',
+  'secretMood',
+  'secretAfterHours',
+  'coffeeDose',
+  'fortuneResult',
+  'scannerMood',
+  'grooveBtn'
 ];
 
 for (const id of requiredIds) {
