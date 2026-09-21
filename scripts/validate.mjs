@@ -130,6 +130,19 @@ for (const id of requiredIds) {
   if (!html.includes('id="' + id + '"')) fail.push('Required element id is missing: ' + id);
 }
 
+const requiredWorkflowCopy = [
+  'Thermal / RF Setup Check',
+  'TREAT AS MR UNSAFE / STOP',
+  'Completion ≠ clearance',
+  'not a clinical report or patient clearance'
+];
+
+for (const text of requiredWorkflowCopy) {
+  if (!html.toLowerCase().includes(text.toLowerCase())) {
+    fail.push('Required safety/workflow copy is missing: ' + text);
+  }
+}
+
 if (fail.length) {
   console.error('\nMR Command Center validation failed:\n');
   for (const item of fail) console.error('- ' + item);
