@@ -47,7 +47,11 @@ if (!match) {
     'usageSummary',
     'renderUsageInsights',
     'exportUsageInsights',
-    'resetUsageInsights'
+    'resetUsageInsights',
+    'renderLearningProgress',
+    'saveLearningAttempt',
+    'exportLearningProgress',
+    'resetLearningProgress'
   ];
 
   for (const name of requiredFunctions) {
@@ -102,7 +106,13 @@ const requiredIds = [
   'usageShift',
   'usageAll',
   'usageDistinct',
-  'usageTopName'
+  'usageTopName',
+  'learningProgress',
+  'learnHistory',
+  'learnAttempts',
+  'learnBest',
+  'learnLatest',
+  'learnDays'
 ];
 
 for (const id of requiredIds) {
