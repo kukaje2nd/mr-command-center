@@ -65,7 +65,14 @@ if (!match) {
     'updateCoffeeSNR',
     'rollShiftFortune',
     'rollScannerMood',
-    'toggleGradientGroove'
+    'toggleGradientGroove',
+    'readStoredJson',
+    'trapDialogFocus',
+    'localDataHealthy',
+    'renderDataHealth',
+    'runDataHealthCheck',
+    'setTaskStatusFilter',
+    'editTask'
   ];
 
   for (const name of requiredFunctions) {
@@ -139,7 +146,11 @@ const requiredIds = [
   'coffeeDose',
   'fortuneResult',
   'scannerMood',
-  'grooveBtn'
+  'grooveBtn',
+  'taskFilterCategory',
+  'taskFilterCount',
+  'dataHealthSummary',
+  'dataHealthBtn'
 ];
 
 for (const id of requiredIds) {
