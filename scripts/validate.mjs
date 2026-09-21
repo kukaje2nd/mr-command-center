@@ -51,7 +51,12 @@ if (!match) {
     'renderLearningProgress',
     'saveLearningAttempt',
     'exportLearningProgress',
-    'resetLearningProgress'
+    'resetLearningProgress',
+    'workspaceReportText',
+    'buildWorkspaceReport',
+    'copyWorkspaceReport',
+    'downloadWorkspaceReport',
+    'printWorkspaceReport'
   ];
 
   for (const name of requiredFunctions) {
@@ -112,7 +117,13 @@ const requiredIds = [
   'learnAttempts',
   'learnBest',
   'learnLatest',
-  'learnDays'
+  'learnDays',
+  'reports',
+  'workspaceReportPreview',
+  'reportHandoff',
+  'reportProtocol',
+  'reportUsage',
+  'reportLearning'
 ];
 
 for (const id of requiredIds) {
