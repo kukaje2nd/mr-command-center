@@ -35,7 +35,14 @@ if (!match) {
     'runSelfCheck',
     'saveSandboxPreset',
     'exportSandboxPresets',
-    'importSandboxPresets'
+    'importSandboxPresets',
+    'duplicateSandboxPreset',
+    'renameSandboxPreset',
+    'saveComparisonHistory',
+    'renderComparisonHistory',
+    'restoreComparisonHistory',
+    'copyComparisonHistory',
+    'deleteComparisonHistory'
   ];
 
   for (const name of requiredFunctions) {
@@ -81,7 +88,10 @@ const requiredIds = [
   'sbSnr',
   'taskInput',
   'prefsBack',
-  'presetList'
+  'presetList',
+  'presetSearch',
+  'comparisonHistoryList',
+  'historyName'
 ];
 
 for (const id of requiredIds) {
