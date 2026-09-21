@@ -72,7 +72,19 @@ if (!match) {
     'renderDataHealth',
     'runDataHealthCheck',
     'setTaskStatusFilter',
-    'editTask'
+    'editTask',
+    'setTaskPriority',
+    'saveShiftTemplate',
+    'applyShiftTemplate',
+    'renderShiftTemplates',
+    'saveWorkspaceProfile',
+    'loadWorkspaceProfile',
+    'renderWorkspaceProfiles',
+    'saveReportDefaults',
+    'applyReportDefaults',
+    'exportLocalBackup',
+    'importLocalBackup',
+    'buildLocalBackupPayload'
   ];
 
   for (const name of requiredFunctions) {
@@ -150,7 +162,18 @@ const requiredIds = [
   'taskFilterCategory',
   'taskFilterCount',
   'dataHealthSummary',
-  'dataHealthBtn'
+  'dataHealthBtn',
+  'taskPriority',
+  'taskFilterPriority',
+  'shiftTemplates',
+  'shiftTemplateName',
+  'shiftTemplateList',
+  'workspaceProfilesCard',
+  'workspaceProfileName',
+  'workspaceProfileList',
+  'backupCard',
+  'exportBackupBtn',
+  'workspaceBackupImport'
 ];
 
 for (const id of requiredIds) {
