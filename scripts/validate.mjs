@@ -55,7 +55,7 @@ const requiredIds=[
   'safety','math','sandbox','rescue','artifact','burn','learn',
   'brandMark','focusBar','focusTitle','focusGroup','focusPosition','focusModuleIcon','focusRelated','focusStudyBtn','focusPrevBtn','focusNextBtn',
   'mobileNav','paletteBack','paletteFilters','prefsBack','dataHealthSummary',
-  'artifactSelect','context','sbFov','sbFreq','sbPhaseFov','sbAccel','sbPf','sbSnr','parameterGoalPanel','parameterGoalTitle','parameterGoalCopy','parameterGoalTabs','parameterCompareWorkbench',
+  'artifactSelect','context','sbFov','sbFreq','sbPhaseFov','sbAccel','sbPf','sbSnr','parameterGoalPanel','parameterGoalTitle','parameterGoalCopy','parameterGoalTabs','parameterGoalTracker','parameterGoalTarget','parameterGoalMetric','parameterGoalMetricLabel','parameterGoalProgress','parameterGoalProgressCopy','parameterGoalCost','parameterGoalCostCopy','parameterGoalProgressBar','parameterCompareWorkbench',
   'parameterLens','parameterReference','presetList','presetSearch','comparisonHistoryList',
   'learningProgress','learnHistory','learnAttempts','learnBest','learnLatest','learnDays',
   'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn',
@@ -99,7 +99,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI parameter workbench')) fail.push('Manifest description is not the parameter-workbench description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v5.4.0")) fail.push('Service worker cache marker is not v5.4.0.');
+if(!sw.includes("mrcc-v5.5.0")) fail.push('Service worker cache marker is not v5.5.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Parameter Workbench</title>')) fail.push('Page title is not the Parameter Workbench title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -159,10 +159,12 @@ if(html.includes('Buy now')||html.includes('Start subscription')||html.includes(
 if(!html.includes('id="routeAnnouncer"')||!script.includes('function announceRoute')||!script.includes("history[replace?'replaceState':'pushState']")) fail.push('Accessible route announcements or browser history navigation are missing.');
 if(!html.includes('id="workbenchLaunch"')||!html.includes('id="workbenchReuse"')||!html.includes('id="parameterGoalPanel"')) fail.push('Parameter-first workbench surfaces are missing.');
 if(!script.includes('const parameterGoals=')||!script.includes('function openParameterGoal')||!script.includes('function renderWorkbenchHome')) fail.push('Parameter workbench behavior is missing.');
+if(!script.includes('function parameterGoalFeedback')||!script.includes('function renderParameterGoalFeedback')||!script.includes('parameterGoalTargetPct=20')) fail.push('v5.5 goal-tracker behavior is missing.');
+if(!html.includes('Directional only — no universal numeric distortion target is claimed.')||!html.includes('Largest modeled cost')) fail.push('Goal-tracker safety / tradeoff copy is missing.');
 if(!html.includes('id="referenceOnboarding"')||!html.includes('id="practiceLibraryZone"')||!html.includes('id="creatorZone"')) fail.push('Secondary reference/practice/creator zones are missing.');
 if(html.includes('id="returnLoop"')||html.includes('id="sessionStudio"')||html.includes('id="startHere"')) fail.push('Completion-loop surfaces returned to the primary home experience.');
 if(script.includes("id:'dailyfocus'")||script.includes("id:'studysession'")) fail.push('Daily-focus or guided-session commands returned to Quick Console.');
-if(!html.includes('/* v5.4 Parameter Workbench */')||!html.includes('.sliderline.goal-lever')) fail.push('v5.4 workbench visual system is missing.');
+if(!html.includes('/* v5.4 Parameter Workbench */')||!html.includes('.sliderline.goal-lever')||!html.includes('.goal-track-grid')) fail.push('Parameter-workbench / goal-tracker visual system is missing.');
 if(!html.includes('id="packLibrary"')||!html.includes('id="packLibraryGrid"')||!html.includes('id="packLibrarySearch"')) fail.push('Pack Library UI is missing.');
 if(!script.includes('function renderPackLibrary')||!script.includes('function packProgress')||!script.includes('function packResumeCaseId')||!script.includes('function startPackStudyRoute')) fail.push('Pack Library behavior is missing.');
 if(!script.includes('mrcc_pack_resume')||!script.includes('function rememberPackPosition')) fail.push('Per-pack resume state is missing.');
@@ -185,7 +187,7 @@ if(!listingBody||!listingBody.includes('if(!ready.ready)return')) fail.push('Lis
 
 
 
-if(!readme.includes('v5.4 — Parameter Workbench')||!readme.includes('parameter reasoning workspace')) fail.push('README is stale.');
+if(!readme.includes('v5.5 — Goal Tracker')||!readme.includes('parameter reasoning workspace')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -196,4 +198,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v5.4 Parameter Workbench validation passed.');
+console.log('MR Command Center v5.5 Goal Tracker validation passed.');
