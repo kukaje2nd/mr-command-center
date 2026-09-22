@@ -24,7 +24,7 @@ const requiredFunctions=[
   'readStoredJson','trapDialogFocus','localDataHealthy','renderDataHealth',
   'showHome','setFocusedSection','setPaletteCategory','syncMobileNav',
   'routeHash','restoreRouteFromHash','toggleStudyModule','renderStudyProgress','resetStudyProgress',
-  'renderContinueLearning','openContinueModule','stepModule','ensureModuleFooters','applyModuleArt'
+  'renderContinueLearning','openContinueModule','stepModule','ensureModuleFooters','applyModuleArt','renderLearningPath','syncLearningPathCurrent'
 ];
 for(const name of requiredFunctions){
   const declaration=new RegExp('function\\s+'+name+'\\s*\\(');
@@ -44,7 +44,7 @@ for(const name of referenced){
 }
 
 const requiredIds=[
-  'cockpit','toolDock','homeSearchBtn','personalWorkspace','continuePanel','continueTitle','continueMeta','continueBtn','homeFieldGraphic','studyProgress','studyProgressCount','studyProgressBar','studyProgressChips',
+  'cockpit','toolDock','homeSearchBtn','personalWorkspace','continuePanel','continueTitle','continueMeta','continueBtn','continueIcon','homeFieldGraphic','studyProgress','studyProgressCount','studyGauge','studyGaugeValue','learningPath',
   'safety','math','sandbox','rescue','artifact','burn','learn',
   'brandMark','focusBar','focusTitle','focusGroup','focusPosition','focusModuleIcon','focusRelated','focusStudyBtn','focusPrevBtn','focusNextBtn',
   'mobileNav','paletteBack','paletteFilters','prefsBack','dataHealthSummary',
@@ -64,7 +64,7 @@ for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push(
 
 const requiredCopy=[
   'MR Learning Hub','Build MRI intuition, one concept at a time','MR Safety Foundations','Scan Math','Parameter Lab',
-  'Sequence Rescue','Artifact Solver','Thermal / RF Foundations','Micro-Lab','Study progress','Continue learning',
+  'Sequence Rescue','Artifact Solver','Thermal / RF Foundations','Micro-Lab','Learning path','Continue learning',
   'Mark reviewed','Learning-use boundary','Settings & shortcuts'
 ];
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required learning-hub copy is missing: '+text);}
@@ -84,7 +84,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description is not the learning-product description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v4.5.0")) fail.push('Service worker cache marker is not v4.5.0.');
+if(!sw.includes("mrcc-v4.6.0")) fail.push('Service worker cache marker is not v4.6.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Learning Hub</title>')) fail.push('Page title is not the Learning Hub title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -97,7 +97,12 @@ if(!script.includes('const moduleArt=')||!script.includes('function applyModuleA
 for(const key of ['safety','math','sandbox','rescue','artifact','burn','learn']){if(!script.includes(key+':{')) fail.push('Module artwork entry is missing: '+key);}
 for(const caption of ['IDENTIFY → VERIFY → MATCH','SAMPLE → CALCULATE → INTERPRET','CHANGE → TRADEOFF → COMPARE','PROBLEM → LEVER → COST','PATTERN → CAUSE → RESPONSE','GEOMETRY → RF → FEEDBACK','RECALL → SCORE → REVISIT']){if(!script.includes(caption)) fail.push('Module artwork caption is missing: '+caption);}
 if(!html.includes('id="focusModuleIcon"')) fail.push('Focus-bar module icon is missing.');
-if(!readme.includes('v4.5 — Module Art Direction')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
+if(!html.includes('id="learningPath"')||!html.includes('id="studyGauge"')||!html.includes('id="studyGaugeValue"')) fail.push('Learning path / completion gauge is missing.');
+if(!script.includes('function renderLearningPath')||!script.includes('function syncLearningPathCurrent')) fail.push('Learning path behavior is missing.');
+if(!script.includes('const moduleAccent=')) fail.push('Module accent map is missing.');
+if(!html.includes('id="continueIcon"')) fail.push('Continue Learning module icon is missing.');
+if(html.includes('id="studyProgressBar"')||html.includes('id="studyProgressChips"')) fail.push('Legacy chip-based study progress UI returned.');
+if(!readme.includes('v4.6 — Learning Path')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
 
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
@@ -105,4 +110,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v4.5 Module Art Direction validation passed.');
+console.log('MR Command Center v4.6 Learning Path validation passed.');

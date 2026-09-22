@@ -1,9 +1,9 @@
 # MR Command Center
 
-MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, short practice drills, and a module-specific visual learning system.
+MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, short practice drills, module-specific visual identity, and a connected local learning path.
 
 ## Current build
-v4.5 — Module Art Direction
+v4.6 — Learning Path
 
 ## Production
 - Entry point: `index.html`
