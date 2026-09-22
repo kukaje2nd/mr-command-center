@@ -5,7 +5,7 @@ MR Command Center is a static, browser-local MRI parameter reasoning workspace f
 Safety foundations, scan math, sequence rescue, artifact reasoning, thermal/RF concepts, short drills, Case Lab packs, and publishing tools remain available as reference, onboarding, practice, or creator layers rather than equal-weight daily destinations.
 
 ## Current build
-v5.4 — Parameter Workbench
+v5.5 — Goal Tracker
 
 ## Production
 - Entry point: `index.html`
@@ -16,6 +16,7 @@ v5.4 — Parameter Workbench
 
 ## Product principles
 - The Parameter Lab is the primary recurring workspace; reference material supports it rather than competing with it.
+- Goal tracking reports relative model movement and tradeoffs, not protocol recommendations or diagnostic adequacy.
 - Educational learning support, not patient-specific clearance or protocol prescription.
 - Manufacturer labeling, scanner IFU/limits, authoritative MR safety guidance, and local policy take precedence.
 - Parameter presets, snapshots, comparison history, display preferences, pins, practice history, imported case packs, Case Lab completion history, Publisher Studio drafts/product metadata, Pack Library resume state, and study-report data remain browser-local unless the user explicitly exports data.
@@ -37,7 +38,7 @@ Before moving `main`, validate:
 The application is intentionally dependency-light: static HTML/CSS/JavaScript with browser-local storage and no patient-data backend.
 
 ## Product direction
-The strongest reusable value is parameter reasoning, not course completion. Home therefore centers on opening the Lab, selecting an optimization goal, reopening saved parameter stacks, and comparing A/B states. Scan Math, Sequence Rescue, Artifact Solver, safety foundations, and RF material are supporting references. Case packs should increasingly become reusable parameter challenges and scenarios rather than primarily reading exercises.
+The strongest reusable value is parameter reasoning, not course completion. Home therefore centers on opening the Lab, selecting an optimization goal, reopening saved parameter stacks, and comparing A/B states. Goal mode now tracks relative movement against a user-selected teaching target for sampling burden, SNR, or spatial detail and surfaces the largest modeled opposing tradeoff. Distortion remains directional-only because MRCC does not claim a universal distortion equation. Scan Math, Sequence Rescue, Artifact Solver, safety foundations, and RF material are supporting references. Case packs should increasingly become reusable parameter challenges and scenarios rather than primarily reading exercises.
 
 ## Monetization direction
 Core safety foundations and the essential Parameter Lab remain free. Paid differentiation should center on deeper parameter challenge packs, advanced scenario collections, larger reusable preset/comparison libraries, exportable comparison reports, and department-managed learning content after appropriate backend, authentication, and privacy work. Publisher Studio and Product Kit continue to create digital-product handoff assets; commerce itself is not connected in the static app.
