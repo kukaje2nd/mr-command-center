@@ -1,9 +1,9 @@
 # MR Command Center
 
-MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, short practice drills, module-specific visual identity, a connected local learning path, and guided browser-local study sessions, a rotating daily focus, and a local seven-day return loop.
+MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, short practice drills, module-specific visual identity, a connected local learning path, and guided browser-local study sessions, a rotating daily focus, a local seven-day return loop, importable Case Lab packs, and portable study activity reports.
 
 ## Current build
-v4.8 — Return Loop
+v4.9 — Case Packs & Study Reports
 
 ## Production
 - Entry point: `index.html`
@@ -15,7 +15,7 @@ v4.8 — Return Loop
 ## Product principles
 - Educational learning support, not patient-specific clearance or protocol prescription.
 - Manufacturer labeling, scanner IFU/limits, authoritative MR safety guidance, and local policy take precedence.
-- Presets, comparison history, display preferences, pins, study markers, Micro-Lab practice history, and recent study-session history, daily-focus completion, and active-day history remain browser-local unless the user explicitly exports data.
+- Presets, comparison history, display preferences, pins, study markers, Micro-Lab practice history, and recent study-session history, daily-focus completion, active-day history, imported case packs, Case Lab completion history, and study-report data remain browser-local unless the user explicitly exports data.
 - Unknown or incomplete device conditions are never treated as cleared by the application.
 
 ## Release workflow
@@ -33,4 +33,4 @@ Before moving `main`, validate:
 The application is intentionally dependency-light: static HTML/CSS/JavaScript with browser-local storage and no patient-data backend.
 
 ## Monetization direction
-Core safety foundations remain free. Planned paid differentiation should center on deeper case/practice packs, advanced session libraries, larger reusable workspaces, downloadable study summaries, and department-managed training features. Paid plans are not active in the current static build.
+Core safety foundations remain free. The v4.9 Case Lab introduces a versioned `mrcc-case-pack` JSON format so future premium case packs can be delivered as digital products without requiring an account backend on day one. Planned paid differentiation should center on deeper case/practice packs, advanced session libraries, larger reusable workspaces, branded study summaries, and department-managed training features. Paid plans are not active in the current static build.
