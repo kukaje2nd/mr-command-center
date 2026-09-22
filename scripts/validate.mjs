@@ -199,7 +199,7 @@ const forbiddenFragments = [
   'magnetSecretTap',
   'brandSecretTap',
   'recordSecretSequence',
-  'secretUnlocks'
+  'secretUnlocks',
   'Shift pulse',
   'Ready-state dashboard',
   '<aside class="hero-card"',
