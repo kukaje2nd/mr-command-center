@@ -1,13 +1,19 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI technologist shift console for safety workflow support, scan math, protocol tradeoffs, troubleshooting, and shift organization.",
+  "description": "MRI learning workspace for safety foundations, scan math, parameter tradeoffs, troubleshooting, and practice.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#07110f",
   "theme_color": "#07110f",
   "icons": [
+    {
+      "src": "/brand-mark.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/icon.svg",
       "sizes": "any",

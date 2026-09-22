@@ -1,266 +1,110 @@
 import fs from 'node:fs';
 
-const fail = [];
-const html = fs.readFileSync('index.html', 'utf8');
-const trimmed = html.trim();
+const html=fs.readFileSync('index.html','utf8');
+const manifest=fs.readFileSync('manifest.webmanifest','utf8');
+const sw=fs.readFileSync('sw.js','utf8');
+const fail=[];
 
-if (!trimmed.endsWith('</html>')) fail.push('index.html does not end cleanly with </html>.');
-const htmlCloseCount = (html.match(/<\/html>/g) || []).length;
-if (htmlCloseCount !== 1) fail.push('Expected exactly one </html> closing tag; found ' + htmlCloseCount + '.');
+if((html.match(/<\/html>/g)||[]).length!==1||!html.trim().endsWith('</html>')) fail.push('HTML must end cleanly with exactly one </html>.');
 
-const scriptOpenCount = (html.match(/<script>/g) || []).length;
-const scriptCloseCount = (html.match(/<\/script>/g) || []).length;
-if (scriptOpenCount !== 1 || scriptCloseCount !== 1) {
-  fail.push('Expected exactly one inline <script> block.');
+const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+if(scripts.length!==1) fail.push('Expected exactly one inline <script> block.');
+
+const script=scripts[0]?.[1]||'';
+if(script){
+  try{new Function(script)}catch(e){fail.push('Inline JavaScript does not parse: '+e.message)}
 }
 
-const match = html.match(/<script>([\s\S]*?)<\/script>/);
-if (!match) {
-  fail.push('Inline application script was not found.');
-} else {
-  try {
-    new Function(match[1]);
-  } catch (error) {
-    fail.push('JavaScript parse failure: ' + error.message);
-  }
-
-  const script = match[1];
-  const requiredFunctions = [
-    'go',
-    'openPalette',
-    'sandboxUpdate',
-    'solveArtifact',
-    'renderTasks',
-    'openPreferences',
-    'runSelfCheck',
-    'saveSandboxPreset',
-    'exportSandboxPresets',
-    'importSandboxPresets',
-    'duplicateSandboxPreset',
-    'renameSandboxPreset',
-    'saveComparisonHistory',
-    'renderComparisonHistory',
-    'restoreComparisonHistory',
-    'copyComparisonHistory',
-    'deleteComparisonHistory',
-    'trackUsage',
-    'usageSummary',
-    'renderUsageInsights',
-    'exportUsageInsights',
-    'resetUsageInsights',
-    'renderLearningProgress',
-    'saveLearningAttempt',
-    'exportLearningProgress',
-    'resetLearningProgress',
-    'workspaceReportText',
-    'buildWorkspaceReport',
-    'copyWorkspaceReport',
-    'downloadWorkspaceReport',
-    'printWorkspaceReport',
-    'readStoredJson',
-    'trapDialogFocus',
-    'localDataHealthy',
-    'renderDataHealth',
-    'runDataHealthCheck',
-    'setTaskStatusFilter',
-    'editTask',
-    'setTaskPriority',
-    'saveShiftTemplate',
-    'applyShiftTemplate',
-    'renderShiftTemplates',
-    'saveWorkspaceProfile',
-    'loadWorkspaceProfile',
-    'renderWorkspaceProfiles',
-    'saveReportDefaults',
-    'applyReportDefaults',
-    'exportLocalBackup',
-    'importLocalBackup',
-    'buildLocalBackupPayload',
-    'showHome',
-    'showAllTools',
-    'setFocusedSection',
-    'renderFocusBar',
-    'setPaletteCategory',
-    'closeMoreTools',
-    'renderParameterLens',
-    'jumpParameterLab',
-    'syncMobileNav',
-    'routeHash',
-    'restoreRouteFromHash'
-  ];
-
-  for (const name of requiredFunctions) {
-    const declaration = new RegExp('function\\s+' + name + '\\s*\\(');
-    const assignment = new RegExp('(?:const|let|var)\\s+' + name + '\\s*=');
-    if (!declaration.test(script) && !assignment.test(script)) {
-      fail.push('Required function is missing: ' + name);
-    }
-  }
-
-  const handlerAttrs = [...html.matchAll(/on(?:click|change|input|keydown)="([^"]+)"/g)];
-  const referenced = new Set();
-  for (const attr of handlerAttrs) {
-    for (const call of attr[1].matchAll(/\b([A-Za-z_$][\w$]*)\s*\(/g)) {
-      referenced.add(call[1]);
-    }
-  }
-
-  const ignored = new Set(['if']);
-  for (const name of referenced) {
-    if (ignored.has(name)) continue;
-    const declaration = new RegExp('function\\s+' + name + '\\s*\\(');
-    const assignment = new RegExp('(?:const|let|var)\\s+' + name + '\\s*=');
-    if (!declaration.test(script) && !assignment.test(script)) {
-      fail.push('Inline event handler references an undefined function: ' + name);
-    }
-  }
-}
-
-const requiredIds = [
-  'cockpit',
-  'safety',
-  'math',
-  'sandbox',
-  'rescue',
-  'artifact',
-  'burn',
-  'shift',
-  'learn',
-  'artifactSelect',
-  'context',
-  'sbFov',
-  'sbSnr',
-  'taskInput',
-  'prefsBack',
-  'presetList',
-  'presetSearch',
-  'comparisonHistoryList',
-  'historyName',
-  'learningProgress',
-  'learnHistory',
-  'learnAttempts',
-  'learnBest',
-  'learnLatest',
-  'learnDays',
-  'reports',
-  'workspaceReportPreview',
-  'reportHandoff',
-  'reportProtocol',
-  'reportUsage',
-  'reportLearning',
-  'taskFilterCategory',
-  'taskFilterCount',
-  'dataHealthSummary',
-  'dataHealthBtn',
-  'taskPriority',
-  'taskFilterPriority',
-  'shiftTemplates',
-  'shiftTemplateName',
-  'shiftTemplateList',
-  'workspaceProfilesCard',
-  'workspaceProfileName',
-  'workspaceProfileList',
-  'backupCard',
-  'exportBackupBtn',
-  'workspaceBackupImport',
-  'homeBtn',
-  'toolDock',
-  'moreTools',
-  'focusBar',
-  'focusTitle',
-  'focusGroup',
-  'focusRelated',
-  'paletteFilters',
-  'homeSearchBtn',
-  'personalWorkspace',
-  'mobileNav',
-  'parameterJumps',
-  'paramControlsCard',
-  'paramModelCard',
-  'sbFreq',
-  'sbPhaseFov',
-  'sbAccel',
-  'sbPf',
-  'parameterLens',
-  'parameterReference',
-  'sbParamLensTitle',
-  'barAccel',
-  'barPf'
+const requiredFunctions=[
+  'go','openPalette','sandboxUpdate','renderParameterLens','jumpParameterLab',
+  'solveArtifact','calcVoxel','calcTime','updateSafety','burnUpdate',
+  'renderLearningProgress','scoreQuiz','openPreferences','runSelfCheck',
+  'saveSandboxPreset','exportSandboxPresets','importSandboxPresets',
+  'saveComparisonHistory','renderComparisonHistory',
+  'readStoredJson','trapDialogFocus','localDataHealthy','renderDataHealth',
+  'showHome','setFocusedSection','setPaletteCategory','syncMobileNav',
+  'routeHash','restoreRouteFromHash','toggleStudyModule','renderStudyProgress','resetStudyProgress'
 ];
 
-for (const id of requiredIds) {
-  if (!html.includes('id="' + id + '"')) fail.push('Required element id is missing: ' + id);
+for(const name of requiredFunctions){
+  const declaration=new RegExp('function\\s+'+name+'\\s*\\(');
+  const assignment=new RegExp('(?:const|let|var)\\s+'+name+'\\s*=');
+  if(!declaration.test(script)&&!assignment.test(script)) fail.push('Required function is missing: '+name);
 }
 
-const forbiddenFragments = [
+const handlerAttrs=[...html.matchAll(/on(?:click|change|input|keydown)="([^"]+)"/g)];
+const referenced=new Set();
+for(const attr of handlerAttrs){
+  for(const call of attr[1].matchAll(/\b([A-Za-z_$][\w$]*)\s*\(/g)) referenced.add(call[1]);
+}
+const ignored=new Set(['if','confirm','prompt']);
+for(const name of referenced){
+  if(ignored.has(name)) continue;
+  const declaration=new RegExp('function\\s+'+name+'\\s*\\(');
+  const assignment=new RegExp('(?:const|let|var)\\s+'+name+'\\s*=');
+  if(!declaration.test(script)&&!assignment.test(script)) fail.push('Inline event handler references an undefined function: '+name);
+}
+
+const requiredIds=[
+  'cockpit','toolDock','homeSearchBtn','personalWorkspace','studyProgress','studyProgressCount','studyProgressChips',
+  'safety','math','sandbox','rescue','artifact','burn','learn',
+  'brandMark','focusBar','focusTitle','focusGroup','focusRelated','focusStudyBtn',
+  'mobileNav','paletteBack','paletteFilters','prefsBack','dataHealthSummary',
+  'artifactSelect','context','sbFov','sbFreq','sbPhaseFov','sbAccel','sbPf','sbSnr',
+  'parameterLens','parameterReference','presetList','presetSearch','comparisonHistoryList',
+  'learningProgress','learnHistory','learnAttempts','learnBest','learnLatest','learnDays'
+];
+for(const id of requiredIds){
+  if(!html.includes('id="'+id+'"')) fail.push('Required element id is missing: '+id);
+}
+
+const forbiddenFragments=[
+  '<section id="shift"',
+  '<section id="reports"',
+  'id="shiftTemplates"',
+  'id="workspaceProfilesCard"',
+  'id="backupCard"',
+  'data-mobile-route="shift"',
+  '>New Shift<',
   'Operational snapshot',
-  'id="snapTasks"',
-  'id="snapSafety"',
-  'id="snapBurn"',
-  'id="snapRecent"',
-  'id="secretBreak"',
-  'id="secretMood"',
-  'id="secretAfterHours"',
-  'magnetSecretTap',
-  'brandSecretTap',
-  'recordSecretSequence',
-  'secretUnlocks',
   'Shift pulse',
   'Ready-state dashboard',
-  '<aside class="hero-card"',
-  'id="offlineMetric"',
-  '<section class="hero">',
-  'id="parameterHomeCallout"',
-  'One-tap launchpad'
+  'id="secretBreak"',
+  'id="secretMood"',
+  'id="secretAfterHours"'
 ];
-
-for (const fragment of forbiddenFragments) {
-  if (html.includes(fragment)) fail.push('Removed feature returned unexpectedly: ' + fragment);
+for(const fragment of forbiddenFragments){
+  if(html.includes(fragment)) fail.push('Removed non-learning UI returned unexpectedly: '+fragment);
 }
 
-const requiredNavigationCopy = [
-  'Choose the task in front of you',
-  '10 modeled controls + reference',
+const requiredCopy=[
+  'MR Learning Hub',
+  'Build MRI intuition, one concept at a time',
+  'MR Safety Foundations',
   'Parameter Lab',
   'Sequence Rescue',
   'Artifact Solver',
-  'Shift Board',
-  'Pinned tools + recent session'
+  'Scan Math',
+  'Micro-Lab',
+  'Study progress',
+  'Mark reviewed',
+  'Learning-use boundary'
 ];
-
-for (const text of requiredNavigationCopy) {
-  if (!html.includes(text)) fail.push('Required direct-navigation copy is missing: ' + text);
+for(const text of requiredCopy){
+  if(!html.includes(text)) fail.push('Required learning-hub copy is missing: '+text);
 }
 
-const requiredParameterCopy = [
-  'Parameter Lab',
-  'Parallel acceleration R',
-  'Partial Fourier',
-  'idealized 1/√R',
-  'Parameter Reference'
-];
+if(!fs.existsSync('brand-mark.png')) fail.push('brand-mark.png is missing.');
+else if(fs.statSync('brand-mark.png').size<1000) fail.push('brand-mark.png looks unexpectedly small.');
 
-for (const text of requiredParameterCopy) {
-  if (!html.includes(text)) fail.push('Required parameter-lab copy is missing: ' + text);
-}
+if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description was not updated for the learning product.');
+if(!manifest.includes('/brand-mark.png')) fail.push('Manifest does not include the new brand mark.');
+if(!sw.includes("mrcc-v4.0.0")) fail.push('Service worker cache marker is not v4.0.0.');
+if(!sw.includes('/brand-mark.png')) fail.push('Service worker core assets do not include the brand mark.');
 
-const requiredWorkflowCopy = [
-  'Thermal / RF Setup Check',
-  'TREAT AS MR UNSAFE / STOP',
-  'Completion ≠ clearance',
-  'not a clinical report or patient clearance'
-];
-
-for (const text of requiredWorkflowCopy) {
-  if (!html.toLowerCase().includes(text.toLowerCase())) {
-    fail.push('Required safety/workflow copy is missing: ' + text);
-  }
-}
-
-if (fail.length) {
+if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
-  for (const item of fail) console.error('- ' + item);
+  for(const item of fail) console.error('- '+item);
   process.exit(1);
 }
-
-console.log('MR Command Center validation passed.');
+console.log('MR Command Center v4.0 Learning Hub validation passed.');
