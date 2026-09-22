@@ -139,7 +139,7 @@ if(!script.includes("raw.type!=='mrcc-case-pack'")||!script.includes("Number(raw
 if(!html.includes('Imported case packs are user/vendor-supplied')||!html.includes('not validated by MR Command Center')) fail.push('Imported-content verification warning is missing.');
 if(!script.includes("id:'caselab'")||!script.includes("id:'studyreport'")) fail.push('Case Lab / Study Report Quick Console commands are missing.');
 const caseCompleteStart=script.indexOf('function completeActiveCase(){');
-const caseCompleteEnd=script.indexOf('function chooseCasePackFile(){',caseCompleteStart);
+const caseCompleteEnd=script.indexOf('function chooseCasePackFile(',caseCompleteStart);
 const caseCompleteBody=caseCompleteStart>=0&&caseCompleteEnd>caseCompleteStart?script.slice(caseCompleteStart,caseCompleteEnd):'';
 if(!caseCompleteBody||caseCompleteBody.includes('studyState[')||caseCompleteBody.includes('toggleStudyModule')) fail.push('Case completion must remain separate from Reviewed markers.');
 if(!script.includes('function studySummaryData')||!script.includes('function downloadStudyReportJson')) fail.push('Study Report export behavior is missing.');
