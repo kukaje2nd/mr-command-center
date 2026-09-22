@@ -25,7 +25,8 @@ const requiredFunctions=[
   'showHome','setFocusedSection','setPaletteCategory','syncMobileNav',
   'routeHash','restoreRouteFromHash','toggleStudyModule','renderStudyProgress','resetStudyProgress',
   'renderContinueLearning','openContinueModule','stepModule','ensureModuleFooters','applyModuleArt','renderLearningPath','syncLearningPathCurrent',
-  'startStudySession','startStudySessionModules','startCustomSession','renderStudySession','renderSessionBuilder','renderStudySessionHistory','sessionCompleteStep','sessionStep','resumeStudySession','endStudySession','clearStudySessionHistory','syncStudySessionForModule','studySessionProgress'
+  'startStudySession','startStudySessionModules','startCustomSession','renderStudySession','renderSessionBuilder','renderStudySessionHistory','sessionCompleteStep','sessionStep','resumeStudySession','endStudySession','clearStudySessionHistory','syncStudySessionForModule','studySessionProgress',
+  'todayFocusModule','recordEngagement','openDailyFocus','completeDailyFocus','renderReturnLoop'
 ];
 for(const name of requiredFunctions){
   const declaration=new RegExp('function\\s+'+name+'\\s*\\(');
@@ -53,7 +54,8 @@ const requiredIds=[
   'parameterLens','parameterReference','presetList','presetSearch','comparisonHistoryList',
   'learningProgress','learnHistory','learnAttempts','learnBest','learnLatest','learnDays',
   'sessionStudio','sessionStatusPill','sessionCustom','sessionCustomModules','sessionHomeState','sessionHistory','sessionHistoryCount','sessionHistoryList',
-  'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn'
+  'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn',
+  'returnLoop','dailyFocusCard','dailyFocusIcon','dailyFocusTitle','dailyFocusPrompt','dailyFocusCompleteBtn','weeklyActivity','weeklyActiveCount','weeklyFocusCount','weeklySessionCount','weeklyQuizCount','commercialRoadmap'
 ];
 for(const id of requiredIds){if(!html.includes('id="'+id+'"')) fail.push('Required element id is missing: '+id);}
 
@@ -68,7 +70,7 @@ for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push(
 const requiredCopy=[
   'MR Learning Hub','Build MRI intuition, one concept at a time','MR Safety Foundations','Scan Math','Parameter Lab',
   'Sequence Rescue','Artifact Solver','Thermal / RF Foundations','Micro-Lab','Learning path','Continue learning',
-  'Mark reviewed','Learning-use boundary','Settings & shortcuts','Build a focused study session','Quick review','Troubleshooting route','Safety + RF route','Full learning path'
+  'Mark reviewed','Learning-use boundary','Settings & shortcuts','Build a focused study session','Quick review','Troubleshooting route','Safety + RF route','Full learning path','Today’s focus','Commercial roadmap','Planned Pro','Planned Department'
 ];
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required learning-hub copy is missing: '+text);}
 
@@ -87,7 +89,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description is not the learning-product description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v4.7.0")) fail.push('Service worker cache marker is not v4.7.0.');
+if(!sw.includes("mrcc-v4.8.0")) fail.push('Service worker cache marker is not v4.8.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Learning Hub</title>')) fail.push('Page title is not the Learning Hub title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -116,7 +118,14 @@ const sessionCompleteEnd=script.indexOf('function endStudySession(){',sessionCom
 const sessionCompleteBody=sessionCompleteStart>=0&&sessionCompleteEnd>sessionCompleteStart?script.slice(sessionCompleteStart,sessionCompleteEnd):'';
 if(!sessionCompleteBody||sessionCompleteBody.includes('toggleStudyModule')||sessionCompleteBody.includes('studyState[')) fail.push('Study Session completion must remain separate from Reviewed markers.');
 if(!script.includes('Array.isArray(studySessionHistory)')) fail.push('Study Session history is not included in local data health.');
-if(!readme.includes('v4.7 — Study Sessions')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
+if(!html.includes('id="returnLoop"')||!html.includes('id="weeklyActivity"')||!html.includes('id="dailyFocusCompleteBtn"')) fail.push('Daily / weekly return loop UI is missing.');
+if(!script.includes('const dailyFocusPrompts=')||!script.includes('mrcc_engagement_days')||!script.includes('mrcc_daily_focus_history')) fail.push('Return-loop local data model is missing.');
+if(!script.includes('function completeDailyFocus')||!script.includes('function renderReturnLoop')) fail.push('Return-loop behavior is missing.');
+if(!script.includes("id:'dailyfocus'")) fail.push('Quick Console daily focus command is missing.');
+if(!html.includes('id="commercialRoadmap"')||!html.includes('Paid plans are not active yet.')) fail.push('Transparent commercial roadmap is missing.');
+if(html.includes('Buy now')||html.includes('Start subscription')||html.includes('Checkout')) fail.push('Commercial roadmap must not simulate an active checkout.');
+
+if(!readme.includes('v4.8 — Return Loop')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
 
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
@@ -124,4 +133,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v4.7 Study Sessions validation passed.');
+console.log('MR Command Center v4.8 Return Loop validation passed.');

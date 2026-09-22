@@ -1,9 +1,9 @@
 # MR Command Center
 
-MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, short practice drills, module-specific visual identity, a connected local learning path, and guided browser-local study sessions.
+MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, short practice drills, module-specific visual identity, a connected local learning path, and guided browser-local study sessions, a rotating daily focus, and a local seven-day return loop.
 
 ## Current build
-v4.7 — Study Sessions
+v4.8 — Return Loop
 
 ## Production
 - Entry point: `index.html`
@@ -15,7 +15,7 @@ v4.7 — Study Sessions
 ## Product principles
 - Educational learning support, not patient-specific clearance or protocol prescription.
 - Manufacturer labeling, scanner IFU/limits, authoritative MR safety guidance, and local policy take precedence.
-- Presets, comparison history, display preferences, pins, study markers, Micro-Lab practice history, and recent study-session history remain browser-local unless the user explicitly exports data.
+- Presets, comparison history, display preferences, pins, study markers, Micro-Lab practice history, and recent study-session history, daily-focus completion, and active-day history remain browser-local unless the user explicitly exports data.
 - Unknown or incomplete device conditions are never treated as cleared by the application.
 
 ## Release workflow
@@ -31,3 +31,6 @@ Before moving `main`, validate:
 
 ## Architecture
 The application is intentionally dependency-light: static HTML/CSS/JavaScript with browser-local storage and no patient-data backend.
+
+## Monetization direction
+Core safety foundations remain free. Planned paid differentiation should center on deeper case/practice packs, advanced session libraries, larger reusable workspaces, downloadable study summaries, and department-managed training features. Paid plans are not active in the current static build.
