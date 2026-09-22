@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, short practice drills, module-specific visual identity, a connected local learning path, and guided browser-local study sessions, a rotating daily focus, a local seven-day return loop, importable Case Lab packs, portable study activity reports, a browser-local Publisher Studio for authoring case-pack products, a Product Kit for generating storefront metadata, listing copy, and catalog manifests, and a buyer-side Pack Library with progress, resume points, pack routes, and file-based updates.
 
 ## Current build
-v5.2 — Pack Library
+v5.3 — Learner UX
 
 ## Production
 - Entry point: `index.html`
@@ -33,4 +33,4 @@ Before moving `main`, validate:
 The application is intentionally dependency-light: static HTML/CSS/JavaScript with browser-local storage and no patient-data backend.
 
 ## Monetization direction
-Core safety foundations remain free. The v5.2 Pack Library completes the static digital-product loop: Publisher Studio creates packs, Product Kit creates storefront assets, and buyers can install delivered pack files into a persistent local library with completion progress, resume points, and compatible file updates. The manifest deliberately records commerce as not connected; the static app does not simulate payment, purchase verification, licensing, or entitlement. Installed content is not proof of ownership. Planned paid differentiation should center on deeper case/practice packs, advanced session libraries, larger reusable workspaces, branded study summaries, and department-managed training features. Paid plans are not active in the current static build.
+Core safety foundations remain free. The v5.3 learner-UX release keeps the v5.2 Pack Library digital-product loop and improves entry-point clarity, route navigation, dense-control readability, and accessible navigation feedback. Publisher Studio creates packs, Product Kit creates storefront assets, and Publisher Studio creates packs, Product Kit creates storefront assets, and buyers can install delivered pack files into a persistent local library with completion progress, resume points, and compatible file updates. The manifest deliberately records commerce as not connected; the static app does not simulate payment, purchase verification, licensing, or entitlement. Installed content is not proof of ownership. Planned paid differentiation should center on deeper case/practice packs, advanced session libraries, larger reusable workspaces, branded study summaries, and department-managed training features. Paid plans are not active in the current static build.
