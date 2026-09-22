@@ -56,7 +56,7 @@ const requiredIds=[
   'brandMark','focusBar','focusTitle','focusGroup','focusPosition','focusModuleIcon','focusRelated','focusPrimaryBtn','focusSearchBtn',
   'mobileNav','paletteBack','paletteFilters','prefsBack','dataHealthSummary',
   'artifactSelect','context','paramRefGeometry','paramRefSignal','paramRefTime','paramRefContrast','paramRefArtifact','sbFov','sbFreq','sbPhaseFov','sbAccel','sbPf','sbSnr','parameterChallengePanel','parameterChallengeTitle','parameterChallengeCopy','parameterChallengeState','parameterChallengeReference','parameterChallengeConstraints','parameterGoalPanel','parameterGoalTitle','parameterGoalCopy','parameterGoalTabs','parameterGoalTracker','parameterGoalTarget','parameterGoalMetric','parameterGoalMetricLabel','parameterGoalProgress','parameterGoalProgressCopy','parameterGoalCost','parameterGoalCostCopy','parameterGoalProgressBar','parameterCompareWorkbench',
-  'parameterLens','parameterReference','presetList','presetSearch','comparisonHistoryList',
+  'labContinuity','labContinuityTitle','labContinuityMeta','parameterLens','parameterReference','presetList','presetSearch','comparisonHistoryList',
   'learningProgress','learnHistory','learnAttempts','learnBest','learnLatest','learnDays',
   'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn',
   'commercialRoadmap',
@@ -99,7 +99,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI parameter workbench')) fail.push('Manifest description is not the parameter-workbench description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v5.9.0")) fail.push('Service worker cache marker is not v5.9.0.');
+if(!sw.includes("mrcc-v6.0.0")) fail.push('Service worker cache marker is not v6.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Parameter Workbench</title>')) fail.push('Page title is not the Parameter Workbench title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -168,6 +168,7 @@ if(!html.includes('class="param-reference-nav"')||!html.includes('class="param-r
 if((html.match(/reference-tool-section/g)||[]).length<6||!html.includes('/* v5.7 Reference presentation */')) fail.push('v5.7 shared reference-section presentation is missing.');
 if(!html.includes('/* v5.8 Workspace presentation */')||!html.includes('class="challenge-meta"')||!html.includes('support-zone-icon')||!html.includes('workspace-panel-icon')) fail.push('v5.8 workspace presentation system is missing.');
 if(!html.includes('/* v5.9 Workspace navigation */')||!script.includes('function runFocusPrimary')||!script.includes("aria-label','Workspace navigation'")) fail.push('v5.9 workspace navigation is missing.');
+if(!html.includes('/* v6.0 Lab continuity */')||!script.includes("mrcc_sandbox_current")||!script.includes('function restoreSandboxCurrentState')||!script.includes('function quickSaveSandboxPreset')||!script.includes('function queueSandboxAutosave')) fail.push('v6.0 Lab continuity is missing.');
 for(const legacyId of ['focusStudyBtn','focusPrevBtn','focusNextBtn']){if(html.includes('id="'+legacyId+'"')) fail.push('Course-style focus control returned: '+legacyId);}
 if(html.includes('Previous / next module')||html.includes('aria-label="Previous learning module"')||html.includes('aria-label="Next learning module"')) fail.push('Linear course navigation copy returned.');
 if((html.match(/class="challenge-meta"/g)||[]).length<4) fail.push('v5.8 challenge presentation metadata is incomplete.');
@@ -197,7 +198,7 @@ if(!listingBody||!listingBody.includes('if(!ready.ready)return')) fail.push('Lis
 
 
 
-if(!readme.includes('v5.9 — Workspace Navigation')||!readme.includes('parameter reasoning workspace')) fail.push('README is stale.');
+if(!readme.includes('v6.0 — Lab Continuity')||!readme.includes('parameter reasoning workspace')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -208,4 +209,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v5.9 Workspace Navigation validation passed.');
+console.log('MR Command Center v6.0 Lab Continuity validation passed.');
