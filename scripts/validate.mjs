@@ -200,6 +200,10 @@ const forbiddenFragments = [
   'brandSecretTap',
   'recordSecretSequence',
   'secretUnlocks'
+  'Shift pulse',
+  'Ready-state dashboard',
+  '<aside class="hero-card"',
+  'id="offlineMetric"',
 ];
 
 for (const fragment of forbiddenFragments) {
