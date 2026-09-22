@@ -50,21 +50,21 @@ for(const name of referenced){
 }
 
 const requiredIds=[
-  'cockpit','toolDock','homeSearchBtn','personalWorkspace','continuePanel','continueTitle','continueMeta','continueBtn','continueIcon','homeFieldGraphic','studyProgress','studyProgressCount','studyGauge','studyGaugeValue','learningPath',
+  'cockpit','workbenchLaunch','workbenchReuse','homeLabStack','homeLabDetail','homeLabSnr','homeLabTime','homePresetCount','homePresetList','homeComparisonCount','homeSnapshotState',
+  'referenceOnboarding','practiceLibraryZone','creatorZone','toolDock','homeSearchBtn','personalWorkspace','continuePanel','continueTitle','continueMeta','continueBtn','continueIcon','homeFieldGraphic','studyProgress','studyProgressCount','studyGauge','studyGaugeValue','learningPath',
   'safety','math','sandbox','rescue','artifact','burn','learn',
   'brandMark','focusBar','focusTitle','focusGroup','focusPosition','focusModuleIcon','focusRelated','focusStudyBtn','focusPrevBtn','focusNextBtn',
   'mobileNav','paletteBack','paletteFilters','prefsBack','dataHealthSummary',
-  'artifactSelect','context','sbFov','sbFreq','sbPhaseFov','sbAccel','sbPf','sbSnr',
+  'artifactSelect','context','sbFov','sbFreq','sbPhaseFov','sbAccel','sbPf','sbSnr','parameterGoalPanel','parameterGoalTitle','parameterGoalCopy','parameterGoalTabs','parameterCompareWorkbench',
   'parameterLens','parameterReference','presetList','presetSearch','comparisonHistoryList',
   'learningProgress','learnHistory','learnAttempts','learnBest','learnLatest','learnDays',
-  'sessionStudio','sessionStatusPill','sessionCustom','sessionCustomModules','sessionHomeState','sessionHistory','sessionHistoryCount','sessionHistoryList',
   'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn',
-  'returnLoop','dailyFocusCard','dailyFocusIcon','dailyFocusTitle','dailyFocusPrompt','dailyFocusCompleteBtn','weeklyActivity','weeklyActiveCount','weeklyFocusCount','weeklySessionCount','weeklyQuizCount','commercialRoadmap',
+  'commercialRoadmap',
   'packLibrary','packLibraryTitle','packLibraryCount','packLibraryCases','packLibraryCompleted','packLibraryImported','packLibrarySearch','packLibraryFilters','packLibraryGrid',
   'caseLab','caseLabTitle','casePackSource','casePackSelect','casePackRemoveBtn','casePackFile','caseList','caseViewer','studyReport','studyReportTitle','studyReportPreview',
   'packStudio','packStudioDraftSelect','packStudioSaveState','studioPackId','studioPackTitle','studioPackPublisher','studioPackEdition','studioPackDescription','packStudioValidation','studioCaseEditorTitle','studioCaseId','studioCaseTitle','studioCaseModule','studioCasePrompt','studioTask1','studioTask2','studioTask3','studioCaseReflection','studioCaseSaveBtn','studioCaseCount','studioCaseList',
   'packProductKit','studioProductSku','studioProductCategory','studioProductAudience','studioProductHeadline','studioProductOutcomes','productCardPreview','productReadinessStatus','productReadinessScore','productReadinessList','copyProductListingBtn','downloadProductListingBtn','downloadProductManifestBtn'
-];
+]
 for(const id of requiredIds){if(!html.includes('id="'+id+'"')) fail.push('Required element id is missing: '+id);}
 
 const forbiddenFragments=[
@@ -76,10 +76,12 @@ const forbiddenFragments=[
 for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push('Removed legacy surface returned unexpectedly: '+fragment);}
 
 const requiredCopy=[
-  'MR Learning Hub','Build MRI intuition, one concept at a time','MR Safety Foundations','Scan Math','Parameter Lab',
-  'Sequence Rescue','Artifact Solver','Thermal / RF Foundations','Micro-Lab','Learning path','Continue learning',
-  'Mark reviewed','Learning-use boundary','Settings & shortcuts','Build a focused study session','Quick review','Troubleshooting route','Safety + RF route','Full learning path','Today’s focus','Commercial roadmap','Planned Pro','Planned Department','Pack Library','Installed ≠ licensed.','Case Lab','Study Report','Foundations Sampler','Publisher Studio','Build case packs you can distribute'
-];
+  'MRI Parameter Workbench','Reason through MRI parameter tradeoffs','Primary workspace','Solve a constraint','Saved setups','A/B compare',
+  'Reference & onboarding','Practice & packs','Creator tools','MR Safety Foundations','Scan Math','Parameter Lab',
+  'Sequence Rescue','Artifact Solver','Thermal / RF Foundations','Micro-Lab','Learning path','Continue onboarding',
+  'Learning-use boundary','Settings & shortcuts','Commercial roadmap','Planned Pro','Planned Department',
+  'Pack Library','Installed ≠ licensed.','Case Lab','Study Report','Foundations Sampler','Publisher Studio','Build case packs you can distribute'
+]
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required learning-hub copy is missing: '+text);}
 
 const moduleOrder=['safety','math','sandbox','rescue','artifact','burn','learn'];
@@ -95,11 +97,11 @@ for(const name of removedLogic){if(script.includes(name)) fail.push('Obsolete lo
 if(!fs.existsSync('brand-mark.svg')) fail.push('brand-mark.svg is missing.');
 if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not remain in the repository.');
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
-if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description is not the learning-product description.');
+if(!manifest.includes('MRI parameter workbench')) fail.push('Manifest description is not the parameter-workbench description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
 if(!sw.includes("mrcc-v5.3.0")) fail.push('Service worker cache marker is not v5.2.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
-if(!html.includes('<title>MR Command Center — MRI Learning Hub</title>')) fail.push('Page title is not the Learning Hub title.');
+if(!html.includes('<title>MR Command Center — MRI Parameter Workbench</title>')) fail.push('Page title is not the Parameter Workbench title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
 if(!html.includes('data-module-card="burn"')) fail.push('Thermal / RF home module card is missing.');
 if(!html.includes('id="focusPrevBtn"')||!html.includes('id="focusNextBtn"')) fail.push('Previous / next module navigation is missing.');
@@ -115,10 +117,8 @@ if(!script.includes('function renderLearningPath')||!script.includes('function s
 if(!script.includes('const moduleAccent=')) fail.push('Module accent map is missing.');
 if(!html.includes('id="continueIcon"')) fail.push('Continue Learning module icon is missing.');
 if(html.includes('id="studyProgressBar"')||html.includes('id="studyProgressChips"')) fail.push('Legacy chip-based study progress UI returned.');
-if(!html.includes('id="sessionStudio"')||!html.includes('id="sessionBar"')||!html.includes('id="sessionHistoryList"')) fail.push('Study Session UI is missing.');
 if(!script.includes('const studySessionPresets=')||!script.includes('mrcc_study_session')||!script.includes('mrcc_study_session_history')) fail.push('Study Session state model is missing.');
 for(const mode of ['quick','troubleshoot','safety','full']){if(!script.includes(mode+':{label:')) fail.push('Study Session preset is missing: '+mode);}
-if(!script.includes("id:'studysession'")) fail.push('Quick Console Study Sessions command is missing.');
 if(!html.includes('review markers unchanged')||!html.includes('Session completion is separate from your “Reviewed” markers.')) fail.push('Study Session / Reviewed-marker separation copy is missing.');
 if(!script.includes("bar.classList.toggle('show',document.body.classList.contains('nav-focus'))")) fail.push('Study Session bar is not scoped to focused modules.');
 const sessionCompleteStart=script.indexOf('function sessionCompleteStep(){');
@@ -126,10 +126,8 @@ const sessionCompleteEnd=script.indexOf('function endStudySession(){',sessionCom
 const sessionCompleteBody=sessionCompleteStart>=0&&sessionCompleteEnd>sessionCompleteStart?script.slice(sessionCompleteStart,sessionCompleteEnd):'';
 if(!sessionCompleteBody||sessionCompleteBody.includes('toggleStudyModule')||sessionCompleteBody.includes('studyState[')) fail.push('Study Session completion must remain separate from Reviewed markers.');
 if(!script.includes('Array.isArray(studySessionHistory)')) fail.push('Study Session history is not included in local data health.');
-if(!html.includes('id="returnLoop"')||!html.includes('id="weeklyActivity"')||!html.includes('id="dailyFocusCompleteBtn"')) fail.push('Daily / weekly return loop UI is missing.');
 if(!script.includes('const dailyFocusPrompts=')||!script.includes('mrcc_engagement_days')||!script.includes('mrcc_daily_focus_history')) fail.push('Return-loop local data model is missing.');
 if(!script.includes('function completeDailyFocus')||!script.includes('function renderReturnLoop')) fail.push('Return-loop behavior is missing.');
-if(!script.includes("id:'dailyfocus'")) fail.push('Quick Console daily focus command is missing.');
 if(!html.includes('id="commercialRoadmap"')||!html.includes('Paid plans are not active yet.')) fail.push('Transparent commercial roadmap is missing.');
 if(html.includes('Buy now')||html.includes('Start subscription')||html.includes('Checkout')) fail.push('Commercial roadmap must not simulate an active checkout.');
 if(!html.includes('id="caseLab"')||!html.includes('id="caseViewer"')||!html.includes('id="studyReport"')) fail.push('Case Lab / Study Report UI is missing.');
@@ -159,9 +157,13 @@ if(!script.includes("id:'productkit'")) fail.push('Product Kit Quick Console com
 if(!html.includes('metadata completeness only')||!html.includes('No payment flow is simulated here.')) fail.push('Productization boundary copy is missing.');
 if(!html.includes('Commerce connection: not configured')) fail.push('Commerce connection status is missing.');
 if(html.includes('Buy now')||html.includes('Start subscription')||html.includes('Purchase pack')) fail.push('Product Kit must not simulate a live purchase flow.');
-if(!html.includes('id="startHere"')||!html.includes('Choose the fastest route into the learning hub')) fail.push('Learner-first Start Here launcher is missing.');
 if(!html.includes('id="routeAnnouncer"')||!script.includes('function announceRoute')||!script.includes("history[replace?'replaceState':'pushState']")) fail.push('Accessible route announcements or browser history navigation are missing.');
-if(!html.includes('/* v5.3 Learner-first navigation & accessibility */')||!html.includes('.mobile-nav button{min-height:44px}')) fail.push('v5.3 readability / mobile target improvements are missing.');
+if(!html.includes('id="workbenchLaunch"')||!html.includes('id="workbenchReuse"')||!html.includes('id="parameterGoalPanel"')) fail.push('Parameter-first workbench surfaces are missing.');
+if(!script.includes('const parameterGoals=')||!script.includes('function openParameterGoal')||!script.includes('function renderWorkbenchHome')) fail.push('Parameter workbench behavior is missing.');
+if(!html.includes('id="referenceOnboarding"')||!html.includes('id="practiceLibraryZone"')||!html.includes('id="creatorZone"')) fail.push('Secondary reference/practice/creator zones are missing.');
+if(html.includes('id="returnLoop"')||html.includes('id="sessionStudio"')||html.includes('id="startHere"')) fail.push('Completion-loop surfaces returned to the primary home experience.');
+if(script.includes("id:'dailyfocus'")||script.includes("id:'studysession'")) fail.push('Daily-focus or guided-session commands returned to Quick Console.');
+if(!html.includes('/* v5.4 Parameter Workbench */')||!html.includes('.sliderline.goal-lever')) fail.push('v5.4 workbench visual system is missing.');
 if(!html.includes('id="packLibrary"')||!html.includes('id="packLibraryGrid"')||!html.includes('id="packLibrarySearch"')) fail.push('Pack Library UI is missing.');
 if(!script.includes('function renderPackLibrary')||!script.includes('function packProgress')||!script.includes('function packResumeCaseId')||!script.includes('function startPackStudyRoute')) fail.push('Pack Library behavior is missing.');
 if(!script.includes('mrcc_pack_resume')||!script.includes('function rememberPackPosition')) fail.push('Per-pack resume state is missing.');
@@ -184,7 +186,7 @@ if(!listingBody||!listingBody.includes('if(!ready.ready)return')) fail.push('Lis
 
 
 
-if(!readme.includes('v5.3 — Learner UX')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
+if(!readme.includes('v5.4 — Parameter Workbench')||!readme.includes('parameter reasoning workspace')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -195,4 +197,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v5.3 Learner UX validation passed.');
+console.log('MR Command Center v5.4 Parameter Workbench validation passed.');
