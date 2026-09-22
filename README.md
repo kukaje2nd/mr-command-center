@@ -1,19 +1,33 @@
 # MR Command Center
 
-Interactive MRI technologist toolkit.
+MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, and short practice drills.
 
 ## Current build
-v1.6 — Sequence Rescue
+v4.4 — Product Hygiene
 
-## Deployment
-This repository is designed to deploy as a static site. The production entry point is `index.html`.
+## Production
+- Entry point: `index.html`
+- Static PWA manifest: `manifest.webmanifest`
+- Offline worker: `sw.js`
+- Production deploy: Vercel from `main`
+- Release guard: `node scripts/validate.mjs`
 
-Deployment verification marker: 2026-09-21.
+## Product principles
+- Educational learning support, not patient-specific clearance or protocol prescription.
+- Manufacturer labeling, scanner IFU/limits, authoritative MR safety guidance, and local policy take precedence.
+- Presets, comparison history, display preferences, pins, study markers, and Micro-Lab practice history remain browser-local unless the user explicitly exports data.
+- Unknown or incomplete device conditions are never treated as cleared by the application.
 
-## Safety boundary
-This site is an educational and workflow-support tool. It does not replace institutional policy, scanner/manufacturer instructions, implant/device labeling, MR safety leadership, radiologist/physician judgment, or emergency procedures.
+## Release workflow
+MR Command Center uses one consolidated production commit per batch whenever practical. A release commit should include the application change, validator updates, and service-worker cache bump together so one product batch produces one deployment.
 
-## Update workflow
-1. Develop and review changes.
-2. Commit an approved build to `main`.
-3. Vercel automatically deploys the updated site once the repository is connected.
+Before moving `main`, validate:
+1. JavaScript parses.
+2. HTML ends with exactly one `</html>`.
+3. Inline handlers reference defined functions.
+4. Required learning modules and IDs remain present.
+5. Removed legacy product surfaces do not return.
+6. The service-worker cache marker matches the release.
+
+## Architecture
+The application is intentionally dependency-light: static HTML/CSS/JavaScript with browser-local storage and no patient-data backend.
