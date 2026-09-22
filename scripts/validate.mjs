@@ -142,7 +142,7 @@ const caseCompleteBody=caseCompleteStart>=0&&caseCompleteEnd>caseCompleteStart?s
 if(!caseCompleteBody||caseCompleteBody.includes('studyState[')||caseCompleteBody.includes('toggleStudyModule')) fail.push('Case completion must remain separate from Reviewed markers.');
 if(!script.includes('function studySummaryData')||!script.includes('function downloadStudyReportJson')) fail.push('Study Report export behavior is missing.');
 if(!html.includes('not certification, competency documentation, CE credit, or compliance evidence')) fail.push('Study Report non-certification disclaimer is missing.');
-if(!html.includes('Case Lab plus Publisher Studio can now author and deliver pack files')) fail.push('Commercial publisher-roadmap copy is missing.');
+if(!html.includes('Case Lab plus Publisher Studio can now author pack files and generate storefront-ready listing assets')) fail.push('Commercial publisher-roadmap copy is missing.');
 if(!html.includes('id="packStudio"')||!html.includes('id="studioCaseList"')||!html.includes('id="packStudioDraftSelect"')) fail.push('Publisher Studio UI is missing.');
 if(!script.includes('const PACK_DRAFT_LIMIT=6')||!script.includes('mrcc_pack_drafts')) fail.push('Publisher Studio local draft model is missing.');
 if(!script.includes('function packDraftPayload')||!script.includes("type:'mrcc-case-pack'")||!script.includes('version:1')) fail.push('Publisher Studio export schema is missing.');
