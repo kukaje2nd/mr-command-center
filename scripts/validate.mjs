@@ -27,7 +27,8 @@ const requiredFunctions=[
   'renderContinueLearning','openContinueModule','stepModule','ensureModuleFooters','applyModuleArt','renderLearningPath','syncLearningPathCurrent',
   'startStudySession','startStudySessionModules','startCustomSession','renderStudySession','renderSessionBuilder','renderStudySessionHistory','sessionCompleteStep','sessionStep','resumeStudySession','endStudySession','clearStudySessionHistory','syncStudySessionForModule','studySessionProgress',
   'todayFocusModule','recordEngagement','openDailyFocus','completeDailyFocus','renderReturnLoop',
-  'renderCaseLab','selectCasePack','selectCase','updateCaseTaskState','openActiveCaseModule','completeActiveCase','chooseCasePackFile','importCasePack','removeImportedCasePack','downloadCasePackTemplate','downloadPayload','studySummaryData','studySummaryText','renderStudyReport','copyStudyReport','downloadStudyReportText','downloadStudyReportJson'
+  'renderCaseLab','selectCasePack','selectCase','updateCaseTaskState','openActiveCaseModule','completeActiveCase','chooseCasePackFile','importCasePack','removeImportedCasePack','downloadCasePackTemplate','downloadPayload','studySummaryData','studySummaryText','renderStudyReport','copyStudyReport','downloadStudyReportText','downloadStudyReportJson',
+  'renderPackStudio','selectPackDraft','newPackDraft','deletePackDraft','updatePackStudioMeta','saveStudioCase','editStudioCase','removeStudioCase','moveStudioCase','packDraftPayload','exportPackStudio','cloneActiveCasePackToStudio','previewPackStudioInCaseLab'
 ];
 for(const name of requiredFunctions){
   const declaration=new RegExp('function\\s+'+name+'\\s*\\(');
@@ -57,7 +58,8 @@ const requiredIds=[
   'sessionStudio','sessionStatusPill','sessionCustom','sessionCustomModules','sessionHomeState','sessionHistory','sessionHistoryCount','sessionHistoryList',
   'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn',
   'returnLoop','dailyFocusCard','dailyFocusIcon','dailyFocusTitle','dailyFocusPrompt','dailyFocusCompleteBtn','weeklyActivity','weeklyActiveCount','weeklyFocusCount','weeklySessionCount','weeklyQuizCount','commercialRoadmap',
-  'caseLab','caseLabTitle','casePackSource','casePackSelect','casePackRemoveBtn','casePackFile','caseList','caseViewer','studyReport','studyReportTitle','studyReportPreview'
+  'caseLab','caseLabTitle','casePackSource','casePackSelect','casePackRemoveBtn','casePackFile','caseList','caseViewer','studyReport','studyReportTitle','studyReportPreview',
+  'packStudio','packStudioDraftSelect','packStudioSaveState','studioPackId','studioPackTitle','studioPackPublisher','studioPackEdition','studioPackDescription','packStudioValidation','studioCaseEditorTitle','studioCaseId','studioCaseTitle','studioCaseModule','studioCasePrompt','studioTask1','studioTask2','studioTask3','studioCaseReflection','studioCaseSaveBtn','studioCaseCount','studioCaseList'
 ];
 for(const id of requiredIds){if(!html.includes('id="'+id+'"')) fail.push('Required element id is missing: '+id);}
 
@@ -72,7 +74,7 @@ for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push(
 const requiredCopy=[
   'MR Learning Hub','Build MRI intuition, one concept at a time','MR Safety Foundations','Scan Math','Parameter Lab',
   'Sequence Rescue','Artifact Solver','Thermal / RF Foundations','Micro-Lab','Learning path','Continue learning',
-  'Mark reviewed','Learning-use boundary','Settings & shortcuts','Build a focused study session','Quick review','Troubleshooting route','Safety + RF route','Full learning path','Today’s focus','Commercial roadmap','Planned Pro','Planned Department','Case Lab','Study Report','Foundations Sampler'
+  'Mark reviewed','Learning-use boundary','Settings & shortcuts','Build a focused study session','Quick review','Troubleshooting route','Safety + RF route','Full learning path','Today’s focus','Commercial roadmap','Planned Pro','Planned Department','Case Lab','Study Report','Foundations Sampler','Publisher Studio','Build case packs you can distribute'
 ];
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required learning-hub copy is missing: '+text);}
 
@@ -91,7 +93,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description is not the learning-product description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v4.9.0")) fail.push('Service worker cache marker is not v4.9.0.');
+if(!sw.includes("mrcc-v5.0.0")) fail.push('Service worker cache marker is not v5.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Learning Hub</title>')) fail.push('Page title is not the Learning Hub title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -138,10 +140,18 @@ const caseCompleteBody=caseCompleteStart>=0&&caseCompleteEnd>caseCompleteStart?s
 if(!caseCompleteBody||caseCompleteBody.includes('studyState[')||caseCompleteBody.includes('toggleStudyModule')) fail.push('Case completion must remain separate from Reviewed markers.');
 if(!script.includes('function studySummaryData')||!script.includes('function downloadStudyReportJson')) fail.push('Study Report export behavior is missing.');
 if(!html.includes('not certification, competency documentation, CE credit, or compliance evidence')) fail.push('Study Report non-certification disclaimer is missing.');
-if(!html.includes('Case Lab pack format is now ready for digital delivery')) fail.push('Commercial pack-delivery roadmap copy is missing.');
+if(!html.includes('Case Lab plus Publisher Studio can now author and deliver pack files')) fail.push('Commercial publisher-roadmap copy is missing.');
+if(!html.includes('id="packStudio"')||!html.includes('id="studioCaseList"')||!html.includes('id="packStudioDraftSelect"')) fail.push('Publisher Studio UI is missing.');
+if(!script.includes('const PACK_DRAFT_LIMIT=6')||!script.includes('mrcc_pack_drafts')) fail.push('Publisher Studio local draft model is missing.');
+if(!script.includes('function packDraftPayload')||!script.includes("type:'mrcc-case-pack'")||!script.includes('version:1')) fail.push('Publisher Studio export schema is missing.');
+if(!script.includes('function cloneActiveCasePackToStudio')||!script.includes('function previewPackStudioInCaseLab')) fail.push('Publisher Studio clone / preview workflow is missing.');
+if(!script.includes("id:'packstudio'")) fail.push('Publisher Studio Quick Console command is missing.');
+if(!html.includes('Do not include patient identifiers')||!html.includes('MRCC validates file structure—not clinical accuracy, authorship, copyright, or source quality')) fail.push('Publisher Studio authoring boundary is missing.');
+if(!script.includes('draft.cases.length>=12')||!script.includes('packDrafts.length>=PACK_DRAFT_LIMIT')) fail.push('Publisher Studio draft / case limits are missing.');
 
 
-if(!readme.includes('v4.9 — Case Packs & Study Reports')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
+
+if(!readme.includes('v5.0 — Publisher Studio')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
 
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
@@ -149,4 +159,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v4.9 Case Packs & Study Reports validation passed.');
+console.log('MR Command Center v5.0 Publisher Studio validation passed.');
