@@ -1377,10 +1377,10 @@ function setBalanceBar(id,ratio){
 function ledgerItem(param,primary,secondary){return `<div class="impact-item"><div class="impact-param">${param}</div><div class="impact-copy">${primary}<br><span>${secondary}</span></div></div>`}
 
 const parameterChallenges={
-  faster:{title:'Faster, preserve quality',copy:'Reduce the simplified sampling-time proxy while keeping modeled SNR and spatial detail above the guardrails.',goal:'time',goalPct:20,start:{...sbBase},constraints:[{metric:'time',op:'max',ratio:.80,label:'Sampling time',target:'≤ 80% of start'},{metric:'snr',op:'min',ratio:.85,label:'SNR proxy',target:'≥ 85% of start'},{metric:'detail',op:'min',ratio:.90,label:'Spatial detail',target:'≥ 90% of start'}]},
-  detail:{title:'More detail, bounded cost',copy:'Increase the spatial-detail index while limiting modeled signal loss and extra sampling burden.',goal:'detail',goalPct:20,start:{...sbBase},constraints:[{metric:'detail',op:'min',ratio:1.20,label:'Spatial detail',target:'≥ 120% of start'},{metric:'snr',op:'min',ratio:.75,label:'SNR proxy',target:'≥ 75% of start'},{metric:'time',op:'max',ratio:1.20,label:'Sampling time',target:'≤ 120% of start'}]},
-  signal:{title:'Recover signal efficiently',copy:'Start from a generic signal-poor stack and raise the SNR proxy without substantially increasing time or sacrificing in-plane detail.',goal:'snr',goalPct:20,start:{...sbBase,bw:1.5,accel:2},constraints:[{metric:'snr',op:'min',ratio:1.20,label:'SNR proxy',target:'≥ 120% of start'},{metric:'time',op:'max',ratio:1.25,label:'Sampling time',target:'≤ 125% of start'},{metric:'detail',op:'min',ratio:.95,label:'Spatial detail',target:'≥ 95% of start'}]},
-  balanced:{title:'Balanced optimization',copy:'Improve modeled time and spatial detail together while keeping the SNR proxy inside a defined guardrail.',goal:'time',goalPct:20,start:{...sbBase},constraints:[{metric:'time',op:'max',ratio:.80,label:'Sampling time',target:'≤ 80% of start'},{metric:'detail',op:'min',ratio:1.10,label:'Spatial detail',target:'≥ 110% of start'},{metric:'snr',op:'min',ratio:.78,label:'SNR proxy',target:'≥ 78% of start'}]}
+  faster:{title:'Faster, preserve quality',copy:'Reduce the simplified sampling-time proxy while keeping modeled SNR and spatial detail above the guardrails.',goal:'time',goalPct:20,minChanges:2,start:{...sbBase},constraints:[{metric:'time',op:'max',ratio:.80,label:'Sampling time',target:'≤ 80% of start'},{metric:'snr',op:'min',ratio:.85,label:'SNR proxy',target:'≥ 85% of start'},{metric:'detail',op:'min',ratio:.90,label:'Spatial detail',target:'≥ 90% of start'}]},
+  detail:{title:'More detail, bounded cost',copy:'Increase the spatial-detail index while limiting modeled signal loss and extra sampling burden.',goal:'detail',goalPct:20,minChanges:2,start:{...sbBase},constraints:[{metric:'detail',op:'min',ratio:1.20,label:'Spatial detail',target:'≥ 120% of start'},{metric:'snr',op:'min',ratio:.75,label:'SNR proxy',target:'≥ 75% of start'},{metric:'time',op:'max',ratio:1.20,label:'Sampling time',target:'≤ 120% of start'}]},
+  signal:{title:'Recover signal efficiently',copy:'Start from a generic signal-poor stack and raise the SNR proxy without substantially increasing time or sacrificing in-plane detail.',goal:'snr',goalPct:20,minChanges:2,start:{...sbBase,bw:1.5,accel:2},constraints:[{metric:'snr',op:'min',ratio:1.20,label:'SNR proxy',target:'≥ 120% of start'},{metric:'time',op:'max',ratio:1.25,label:'Sampling time',target:'≤ 125% of start'},{metric:'detail',op:'min',ratio:.95,label:'Spatial detail',target:'≥ 95% of start'}]},
+  balanced:{title:'Balanced optimization',copy:'Improve modeled time and spatial detail together while keeping the SNR proxy inside a defined guardrail.',goal:'time',goalPct:20,minChanges:2,start:{...sbBase},constraints:[{metric:'time',op:'max',ratio:.80,label:'Sampling time',target:'≤ 80% of start'},{metric:'detail',op:'min',ratio:1.10,label:'Spatial detail',target:'≥ 110% of start'},{metric:'snr',op:'min',ratio:.78,label:'SNR proxy',target:'≥ 78% of start'}]}
 };
 let activeParameterChallenge='';
 function challengeDefinition(){return parameterChallenges[activeParameterChallenge]||null}
@@ -1394,15 +1394,19 @@ function challengeConstraintStatus(constraint,state){
   const ratio=challengeMetricRatio(constraint.metric,state),met=constraint.op==='max'?ratio<=constraint.ratio:ratio>=constraint.ratio;
   return {ratio,met};
 }
+function challengeChangedControlCount(start,state){
+  const current=state||sandboxState();
+  return Object.keys(sbBase).filter(key=>Math.abs(Number(current[key])-Number(start[key]))>.001).length;
+}
 function renderParameterChallenge(state){
   const panel=$('parameterChallengePanel'),c=challengeDefinition();if(panel)panel.hidden=!c;if(!c)return;
   const title=$('parameterChallengeTitle'),copy=$('parameterChallengeCopy'),ref=$('parameterChallengeReference'),wrap=$('parameterChallengeConstraints'),pill=$('parameterChallengeState');
   if(title)title.textContent=c.title;if(copy)copy.textContent=c.copy;
   const sm=sandboxMetrics(c.start);
   if(ref)ref.textContent='Reference stack: '+presetSummary(c.start)+' · model start: detail '+pct(sm.detail)+' · SNR '+pct(sm.snr)+' · time '+pct(sm.time);
-  const statuses=c.constraints.map(x=>({...x,...challengeConstraintStatus(x,state)})),met=statuses.filter(x=>x.met).length;
-  if(wrap)wrap.innerHTML=statuses.map(x=>'<div class="challenge-constraint '+(x.met?'met':'miss')+'"><small>'+escapeHtml(x.label)+'</small><b>'+(x.met?'Constraint met':'Keep working')+'</b><span>'+escapeHtml(x.target)+' · current '+pct(x.ratio)+' of challenge start</span></div>').join('');
-  if(pill){pill.textContent=met+'/'+statuses.length+' constraints'+(met===statuses.length?' satisfied':'');pill.classList.toggle('complete',met===statuses.length)}
+  const statuses=c.constraints.map(x=>({...x,...challengeConstraintStatus(x,state)})),moves=challengeChangedControlCount(c.start,state),moveStatus={label:'Parameter moves',target:'Use ≥ '+c.minChanges+' controls',met:moves>=c.minChanges,moves},all=[...statuses,moveStatus],met=all.filter(x=>x.met).length;
+  if(wrap)wrap.innerHTML=all.map(x=>'<div class="challenge-constraint '+(x.met?'met':'miss')+'"><small>'+escapeHtml(x.label)+'</small><b>'+(x.met?'Constraint met':'Keep working')+'</b><span>'+(x.moves!==undefined?escapeHtml(x.target)+' · current '+x.moves:escapeHtml(x.target)+' · current '+pct(x.ratio)+' of challenge start')+'</span></div>').join('');
+  if(pill){pill.textContent=met+'/'+all.length+' constraints'+(met===all.length?' satisfied':'');pill.classList.toggle('complete',met===all.length)}
 }
 function startParameterChallenge(id){
   const c=parameterChallenges[id];if(!c)return;
@@ -1413,7 +1417,7 @@ function openParameterChallenge(id){
   go('sandbox');setTimeout(()=>{startParameterChallenge(id);$('parameterChallengePanel')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'})},40);
 }
 function restartParameterChallenge(){const c=challengeDefinition();if(!c)return;applySandboxState(c.start);renderParameterChallenge();toast('Challenge starting stack restored')}
-function exitParameterChallenge(){activeParameterChallenge='';renderParameterChallenge();renderParameterGoal();toast('Challenge closed')}
+function exitParameterChallenge(){activeParameterChallenge='';activeParameterGoal='';renderParameterChallenge();renderParameterGoal();toast('Challenge closed')}
 
 const parameterGoals={
   time:{title:'Reduce scan burden',copy:'Explore phase-encode burden, averages, echo-train efficiency, acceleration, and partial Fourier while watching modeled SNR and detail costs.',levers:['sbPhase','sbNex','sbEtl','sbAccel','sbPf']},
