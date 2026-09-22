@@ -48,7 +48,7 @@ for(const name of referenced){
 }
 
 const requiredIds=[
-  'cockpit','toolDock','homeSearchBtn','personalWorkspace','continuePanel','continueTitle','continueMeta','continueBtn','studyProgress','studyProgressCount','studyProgressBar','studyProgressChips',
+  'cockpit','toolDock','homeSearchBtn','personalWorkspace','continuePanel','continueTitle','continueMeta','continueBtn','homeFieldGraphic','studyProgress','studyProgressCount','studyProgressBar','studyProgressChips',
   'safety','math','sandbox','rescue','artifact','burn','learn',
   'brandMark','focusBar','focusTitle','focusGroup','focusPosition','focusRelated','focusStudyBtn','focusPrevBtn','focusNextBtn',
   'mobileNav','paletteBack','paletteFilters','prefsBack','dataHealthSummary',
@@ -102,7 +102,7 @@ if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand
 
 if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description was not updated for the learning product.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the new brand mark.');
-if(!sw.includes("mrcc-v4.2.0")) fail.push('Service worker cache marker is not v4.2.0.');
+if(!sw.includes("mrcc-v4.3.0")) fail.push('Service worker cache marker is not v4.3.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 
 if(fail.length){
@@ -116,5 +116,8 @@ if(!html.includes('<title>MR Command Center — MRI Learning Hub</title>')) fail
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the new brand mark.');
 if(!html.includes('data-module-card="sandbox"')||!html.includes('id="studyProgressBar"')) fail.push('Professional module-card / progress UI is missing.');
 if(!html.includes('id="focusPrevBtn"')||!html.includes('id="focusNextBtn"')) fail.push('Previous / next module navigation is missing.');
+if(!html.includes('id="homeFieldGraphic"')||!html.includes('FIELD → SIGNAL → IMAGE')) fail.push('MRI field graphic is missing.');
+if(!html.includes('class="system-panel" id="offlineBar"')) fail.push('System status was not converted to the compact drawer.');
+if(!html.includes('max-width:1400px')||!html.includes('@media(min-width:900px){html{font-size:15px}}')) fail.push('De-zoomed visual system is missing.');
 if(fail.length){console.error('\nMR Command Center validation failed:\n');for(const item of fail) console.error('- '+item);process.exit(1);}
-console.log('MR Command Center v4.2 Guided Learning UI validation passed.');
+console.log('MR Command Center v4.3 Visual System validation passed.');
