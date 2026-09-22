@@ -1,8 +1,8 @@
 # Selling MR Command Center Case Packs
 
-MR Command Center v5.1 separates **content creation** from **commerce**.
+MR Command Center v5.2 separates **content creation**, **delivery**, and **commerce**.
 
-Publisher Studio creates the educational product. Product Kit creates storefront-ready metadata and handoff assets. A real commerce or digital-delivery platform should handle payment, tax, customer access, refunds, and file delivery.
+Publisher Studio creates the educational product. Product Kit creates storefront-ready metadata and handoff assets. Pack Library is the buyer-side destination for installing and using delivered files. A real commerce or digital-delivery platform should handle payment, tax, customer access, refunds, licensing, and file delivery.
 
 ## Product workflow
 
@@ -13,6 +13,8 @@ Publisher Studio creates the educational product. Product Kit creates storefront
 5. Export the listing copy and `mrcc-product-manifest`.
 6. Create the corresponding digital product in the chosen commerce platform and attach the case-pack file as the delivered asset.
 7. Keep the product ID/SKU and pack ID stable when publishing updates. Use the edition field for content revisions.
+8. Keep existing case IDs stable whenever the learning case is still conceptually the same. Pack Library preserves compatible completion history by stable `packId` + case ID.
+9. Deliver an updated file with the same `packId`; the buyer can use **Update file** in Pack Library to replace local content while preserving compatible progress.
 
 ## Exported assets
 
@@ -42,3 +44,21 @@ Do not include patient identifiers or other PHI in case-pack content.
 ## Free vs paid
 
 Core safety foundations and the basic learning utility remain part of the free product. Paid differentiation should focus on additional depth and convenience: advanced case packs, larger practice libraries, advanced guided sessions, reusable workspace capacity, premium reporting/customization, and eventually managed department features.
+
+
+## Buyer delivery and update behavior
+
+The buyer receives the case-pack JSON from the commerce/delivery platform, opens **Pack Library**, and chooses **Install pack**.
+
+Pack Library shows:
+- publisher and edition;
+- case count and unique completion progress;
+- module coverage;
+- the buyer's local resume point;
+- last local activity;
+- a pack-level study route;
+- **Update file** for imported packs.
+
+An update file must use the same stable pack ID. Compatible case history is preserved when case IDs are also kept stable.
+
+**Installed does not mean purchased or licensed.** The static application cannot verify ownership or enforce DRM. Do not use Pack Library state as proof of entitlement. Secure customer accounts, signed entitlements, revocation, gated downloads, or DRM require a real backend/commerce integration.

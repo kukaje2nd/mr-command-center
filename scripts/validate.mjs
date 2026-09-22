@@ -28,6 +28,7 @@ const requiredFunctions=[
   'startStudySession','startStudySessionModules','startCustomSession','renderStudySession','renderSessionBuilder','renderStudySessionHistory','sessionCompleteStep','sessionStep','resumeStudySession','endStudySession','clearStudySessionHistory','syncStudySessionForModule','studySessionProgress',
   'todayFocusModule','recordEngagement','openDailyFocus','completeDailyFocus','renderReturnLoop',
   'renderCaseLab','selectCasePack','selectCase','updateCaseTaskState','openActiveCaseModule','completeActiveCase','chooseCasePackFile','importCasePack','removeImportedCasePack','downloadCasePackTemplate','downloadPayload','studySummaryData','studySummaryText','renderStudyReport','copyStudyReport','downloadStudyReportText','downloadStudyReportJson',
+  'renderPackLibrary','packProgress','packResumeCaseId','packRouteModules','packLastActivity','setPackLibraryFilter','openPackFromLibrary','startPackStudyRoute','rememberPackPosition','savePackResume',
   'renderPackStudio','selectPackDraft','newPackDraft','deletePackDraft','updatePackStudioMeta','saveStudioCase','editStudioCase','removeStudioCase','moveStudioCase','packDraftPayload','exportPackStudio','cloneActiveCasePackToStudio','previewPackStudioInCaseLab',
   'normalizeProductMeta','syncPackStudioProductFromForm','updatePackStudioProduct','productReadiness','productCatalogManifest','productListingText','renderProductKit','copyProductListing','downloadProductListing','downloadProductManifest'
 ];
@@ -59,6 +60,7 @@ const requiredIds=[
   'sessionStudio','sessionStatusPill','sessionCustom','sessionCustomModules','sessionHomeState','sessionHistory','sessionHistoryCount','sessionHistoryList',
   'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn',
   'returnLoop','dailyFocusCard','dailyFocusIcon','dailyFocusTitle','dailyFocusPrompt','dailyFocusCompleteBtn','weeklyActivity','weeklyActiveCount','weeklyFocusCount','weeklySessionCount','weeklyQuizCount','commercialRoadmap',
+  'packLibrary','packLibraryTitle','packLibraryCount','packLibraryCases','packLibraryCompleted','packLibraryImported','packLibrarySearch','packLibraryFilters','packLibraryGrid',
   'caseLab','caseLabTitle','casePackSource','casePackSelect','casePackRemoveBtn','casePackFile','caseList','caseViewer','studyReport','studyReportTitle','studyReportPreview',
   'packStudio','packStudioDraftSelect','packStudioSaveState','studioPackId','studioPackTitle','studioPackPublisher','studioPackEdition','studioPackDescription','packStudioValidation','studioCaseEditorTitle','studioCaseId','studioCaseTitle','studioCaseModule','studioCasePrompt','studioTask1','studioTask2','studioTask3','studioCaseReflection','studioCaseSaveBtn','studioCaseCount','studioCaseList',
   'packProductKit','studioProductSku','studioProductCategory','studioProductAudience','studioProductHeadline','studioProductOutcomes','productCardPreview','productReadinessStatus','productReadinessScore','productReadinessList','copyProductListingBtn','downloadProductListingBtn','downloadProductManifestBtn'
@@ -76,7 +78,7 @@ for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push(
 const requiredCopy=[
   'MR Learning Hub','Build MRI intuition, one concept at a time','MR Safety Foundations','Scan Math','Parameter Lab',
   'Sequence Rescue','Artifact Solver','Thermal / RF Foundations','Micro-Lab','Learning path','Continue learning',
-  'Mark reviewed','Learning-use boundary','Settings & shortcuts','Build a focused study session','Quick review','Troubleshooting route','Safety + RF route','Full learning path','Today’s focus','Commercial roadmap','Planned Pro','Planned Department','Case Lab','Study Report','Foundations Sampler','Publisher Studio','Build case packs you can distribute'
+  'Mark reviewed','Learning-use boundary','Settings & shortcuts','Build a focused study session','Quick review','Troubleshooting route','Safety + RF route','Full learning path','Today’s focus','Commercial roadmap','Planned Pro','Planned Department','Pack Library','Installed ≠ licensed.','Case Lab','Study Report','Foundations Sampler','Publisher Studio','Build case packs you can distribute'
 ];
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required learning-hub copy is missing: '+text);}
 
@@ -95,7 +97,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description is not the learning-product description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v5.1.0")) fail.push('Service worker cache marker is not v5.1.0.');
+if(!sw.includes("mrcc-v5.2.0")) fail.push('Service worker cache marker is not v5.2.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Learning Hub</title>')) fail.push('Page title is not the Learning Hub title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -157,6 +159,16 @@ if(!script.includes("id:'productkit'")) fail.push('Product Kit Quick Console com
 if(!html.includes('metadata completeness only')||!html.includes('No payment flow is simulated here.')) fail.push('Productization boundary copy is missing.');
 if(!html.includes('Commerce connection: not configured')) fail.push('Commerce connection status is missing.');
 if(html.includes('Buy now')||html.includes('Start subscription')||html.includes('Purchase pack')) fail.push('Product Kit must not simulate a live purchase flow.');
+if(!html.includes('id="packLibrary"')||!html.includes('id="packLibraryGrid"')||!html.includes('id="packLibrarySearch"')) fail.push('Pack Library UI is missing.');
+if(!script.includes('function renderPackLibrary')||!script.includes('function packProgress')||!script.includes('function packResumeCaseId')||!script.includes('function startPackStudyRoute')) fail.push('Pack Library behavior is missing.');
+if(!script.includes('mrcc_pack_resume')||!script.includes('function rememberPackPosition')) fail.push('Per-pack resume state is missing.');
+if(!script.includes("id:'packlibrary'")) fail.push('Pack Library Quick Console command is missing.');
+if(!html.includes('Installed ≠ licensed.')||!html.includes('does not verify purchase, entitlement, or license status')) fail.push('Installed-vs-licensed boundary is missing.');
+if(!script.includes('expectedPackUpdateId&&pack.packId!==expectedPackUpdateId')) fail.push('Pack update identity guard is missing.');
+if(!script.includes('pack.installedAt=previous.installedAt||now')||!script.includes('pack.updatedAt=now')) fail.push('Pack update metadata preservation is missing.');
+if(!script.includes('compatible progress preserved')) fail.push('Pack-update progress continuity messaging is missing.');
+if(!script.includes('packResume&&typeof packResume===\'object\'')) fail.push('Pack resume state is not included in local data health.');
+
 const productManifestStart=script.indexOf('function productCatalogManifest');
 const productManifestEnd=script.indexOf('function productListingText',productManifestStart);
 const productManifestBody=productManifestStart>=0&&productManifestEnd>productManifestStart?script.slice(productManifestStart,productManifestEnd):'';
@@ -169,8 +181,10 @@ if(!listingBody||!listingBody.includes('if(!ready.ready)return')) fail.push('Lis
 
 
 
-if(!readme.includes('v5.1 — Productization')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
+if(!readme.includes('v5.2 — Pack Library')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
+if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
+else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
 
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
@@ -178,4 +192,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v5.1 Productization validation passed.');
+console.log('MR Command Center v5.2 Pack Library validation passed.');
