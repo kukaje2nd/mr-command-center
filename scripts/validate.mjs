@@ -28,7 +28,8 @@ const requiredFunctions=[
   'startStudySession','startStudySessionModules','startCustomSession','renderStudySession','renderSessionBuilder','renderStudySessionHistory','sessionCompleteStep','sessionStep','resumeStudySession','endStudySession','clearStudySessionHistory','syncStudySessionForModule','studySessionProgress',
   'todayFocusModule','recordEngagement','openDailyFocus','completeDailyFocus','renderReturnLoop',
   'renderCaseLab','selectCasePack','selectCase','updateCaseTaskState','openActiveCaseModule','completeActiveCase','chooseCasePackFile','importCasePack','removeImportedCasePack','downloadCasePackTemplate','downloadPayload','studySummaryData','studySummaryText','renderStudyReport','copyStudyReport','downloadStudyReportText','downloadStudyReportJson',
-  'renderPackStudio','selectPackDraft','newPackDraft','deletePackDraft','updatePackStudioMeta','saveStudioCase','editStudioCase','removeStudioCase','moveStudioCase','packDraftPayload','exportPackStudio','cloneActiveCasePackToStudio','previewPackStudioInCaseLab'
+  'renderPackStudio','selectPackDraft','newPackDraft','deletePackDraft','updatePackStudioMeta','saveStudioCase','editStudioCase','removeStudioCase','moveStudioCase','packDraftPayload','exportPackStudio','cloneActiveCasePackToStudio','previewPackStudioInCaseLab',
+  'normalizeProductMeta','syncPackStudioProductFromForm','updatePackStudioProduct','productReadiness','productCatalogManifest','productListingText','renderProductKit','copyProductListing','downloadProductListing','downloadProductManifest'
 ];
 for(const name of requiredFunctions){
   const declaration=new RegExp('function\\s+'+name+'\\s*\\(');
@@ -59,7 +60,8 @@ const requiredIds=[
   'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn',
   'returnLoop','dailyFocusCard','dailyFocusIcon','dailyFocusTitle','dailyFocusPrompt','dailyFocusCompleteBtn','weeklyActivity','weeklyActiveCount','weeklyFocusCount','weeklySessionCount','weeklyQuizCount','commercialRoadmap',
   'caseLab','caseLabTitle','casePackSource','casePackSelect','casePackRemoveBtn','casePackFile','caseList','caseViewer','studyReport','studyReportTitle','studyReportPreview',
-  'packStudio','packStudioDraftSelect','packStudioSaveState','studioPackId','studioPackTitle','studioPackPublisher','studioPackEdition','studioPackDescription','packStudioValidation','studioCaseEditorTitle','studioCaseId','studioCaseTitle','studioCaseModule','studioCasePrompt','studioTask1','studioTask2','studioTask3','studioCaseReflection','studioCaseSaveBtn','studioCaseCount','studioCaseList'
+  'packStudio','packStudioDraftSelect','packStudioSaveState','studioPackId','studioPackTitle','studioPackPublisher','studioPackEdition','studioPackDescription','packStudioValidation','studioCaseEditorTitle','studioCaseId','studioCaseTitle','studioCaseModule','studioCasePrompt','studioTask1','studioTask2','studioTask3','studioCaseReflection','studioCaseSaveBtn','studioCaseCount','studioCaseList',
+  'packProductKit','studioProductSku','studioProductCategory','studioProductAudience','studioProductHeadline','studioProductOutcomes','productCardPreview','productReadinessStatus','productReadinessScore','productReadinessList','copyProductListingBtn','downloadProductListingBtn','downloadProductManifestBtn'
 ];
 for(const id of requiredIds){if(!html.includes('id="'+id+'"')) fail.push('Required element id is missing: '+id);}
 
@@ -93,7 +95,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description is not the learning-product description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v5.0.0")) fail.push('Service worker cache marker is not v5.0.0.');
+if(!sw.includes("mrcc-v5.1.0")) fail.push('Service worker cache marker is not v5.1.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Learning Hub</title>')) fail.push('Page title is not the Learning Hub title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -148,10 +150,27 @@ if(!script.includes('function cloneActiveCasePackToStudio')||!script.includes('f
 if(!script.includes("id:'packstudio'")) fail.push('Publisher Studio Quick Console command is missing.');
 if(!html.includes('Do not include patient identifiers')||!html.includes('MRCC validates file structure—not clinical accuracy, authorship, copyright, or source quality')) fail.push('Publisher Studio authoring boundary is missing.');
 if(!script.includes('draft.cases.length>=12')||!script.includes('packDrafts.length>=PACK_DRAFT_LIMIT')) fail.push('Publisher Studio draft / case limits are missing.');
+if(!html.includes('id="packProductKit"')||!html.includes('id="productReadinessList"')||!html.includes('id="productCardPreview"')) fail.push('Product Kit UI is missing.');
+if(!script.includes('function productReadiness')||!script.includes('function productCatalogManifest')||!script.includes('function productListingText')) fail.push('Productization logic is missing.');
+if(!script.includes("type:'mrcc-product-manifest'")||!script.includes("format:'mrcc-case-pack'")||!script.includes("checkoutUrl:null")) fail.push('Catalog manifest contract is missing or commerce is not explicitly disconnected.');
+if(!script.includes("id:'productkit'")) fail.push('Product Kit Quick Console command is missing.');
+if(!html.includes('metadata completeness only')||!html.includes('No payment flow is simulated here.')) fail.push('Productization boundary copy is missing.');
+if(!html.includes('Commerce connection: not configured')) fail.push('Commerce connection status is missing.');
+if(html.includes('Buy now')||html.includes('Start subscription')||html.includes('Purchase pack')) fail.push('Product Kit must not simulate a live purchase flow.');
+const productManifestStart=script.indexOf('function productCatalogManifest');
+const productManifestEnd=script.indexOf('function productListingText',productManifestStart);
+const productManifestBody=productManifestStart>=0&&productManifestEnd>productManifestStart?script.slice(productManifestStart,productManifestEnd):'';
+if(!productManifestBody||!productManifestBody.includes('if(!ready.ready)return null')) fail.push('Catalog manifest must require storefront metadata readiness.');
+const listingStart=script.indexOf('function productListingText');
+const listingEnd=script.indexOf('function renderProductKit',listingStart);
+const listingBody=listingStart>=0&&listingEnd>listingStart?script.slice(listingStart,listingEnd):'';
+if(!listingBody||!listingBody.includes('if(!ready.ready)return')) fail.push('Listing export must require storefront metadata readiness.');
 
 
 
-if(!readme.includes('v5.0 — Publisher Studio')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
+
+if(!readme.includes('v5.1 — Productization')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
+if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
@@ -159,4 +178,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v5.0 Publisher Studio validation passed.');
+console.log('MR Command Center v5.1 Productization validation passed.');

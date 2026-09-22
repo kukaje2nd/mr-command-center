@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mrcc-v5.0.0';
+const CACHE_NAME = 'mrcc-v5.1.0';
 const CORE_ASSETS = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg', '/brand-mark.svg'];
 
 self.addEventListener('install', event => {
