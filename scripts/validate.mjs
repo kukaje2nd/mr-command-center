@@ -99,7 +99,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI parameter workbench')) fail.push('Manifest description is not the parameter-workbench description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v5.7.0")) fail.push('Service worker cache marker is not v5.7.0.');
+if(!sw.includes("mrcc-v5.8.0")) fail.push('Service worker cache marker is not v5.8.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Parameter Workbench</title>')) fail.push('Page title is not the Parameter Workbench title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -166,6 +166,8 @@ if(!html.includes('Solve the tradeoff, not a quiz')||!html.includes('Challenge s
 if(!html.includes('Directional only — no universal numeric distortion target is claimed.')||!html.includes('Largest modeled cost')) fail.push('Goal-tracker safety / tradeoff copy is missing.');
 if(!html.includes('class="param-reference-nav"')||!html.includes('class="param-reference-reading-note"')||!script.includes('function openParameterReferenceGroup')) fail.push('v5.7 Parameter Reference presentation is missing.');
 if((html.match(/reference-tool-section/g)||[]).length<6||!html.includes('/* v5.7 Reference presentation */')) fail.push('v5.7 shared reference-section presentation is missing.');
+if(!html.includes('/* v5.8 Workspace presentation */')||!html.includes('class="challenge-meta"')||!html.includes('support-zone-icon')||!html.includes('workspace-panel-icon')) fail.push('v5.8 workspace presentation system is missing.');
+if((html.match(/class="challenge-meta"/g)||[]).length<4) fail.push('v5.8 challenge presentation metadata is incomplete.');
 if(!html.includes('id="referenceOnboarding"')||!html.includes('id="practiceLibraryZone"')||!html.includes('id="creatorZone"')) fail.push('Secondary reference/practice/creator zones are missing.');
 if(html.includes('id="returnLoop"')||html.includes('id="sessionStudio"')||html.includes('id="startHere"')) fail.push('Completion-loop surfaces returned to the primary home experience.');
 if(script.includes("id:'dailyfocus'")||script.includes("id:'studysession'")) fail.push('Daily-focus or guided-session commands returned to Quick Console.');
@@ -192,7 +194,7 @@ if(!listingBody||!listingBody.includes('if(!ready.ready)return')) fail.push('Lis
 
 
 
-if(!readme.includes('v5.7 — Reference Presentation')||!readme.includes('parameter reasoning workspace')) fail.push('README is stale.');
+if(!readme.includes('v5.8 — Workspace Presentation')||!readme.includes('parameter reasoning workspace')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -203,4 +205,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v5.7 Reference Presentation validation passed.');
+console.log('MR Command Center v5.8 Workspace Presentation validation passed.');
