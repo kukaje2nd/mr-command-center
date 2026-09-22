@@ -102,6 +102,19 @@ input[type="range"]{accent-color:var(--mint)}
 @media(max-width:960px){.brand-command{display:none}.quickbtn kbd{display:none}.topin{gap:7px}.home-tools-head{grid-template-columns:1fr auto}}
 @media(max-width:900px){.tool-dock{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+
+/* v4.5 Module Art Direction */
+.module-icon svg,.focus-module-icon svg{width:19px;height:19px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.module-icon{overflow:hidden}.focus-module-icon{display:grid;place-items:center;flex:0 0 31px;width:31px;height:31px;border:1px solid color-mix(in srgb,var(--section-accent,var(--cyan)) 36%,#28483f);border-radius:9px;background:#0a1b17;color:var(--section-accent,var(--cyan))}
+body.nav-focus:has(#safety.active-section){--section-accent:#48f0b2}body.nav-focus:has(#math.active-section){--section-accent:#72b7ff}body.nav-focus:has(#sandbox.active-section){--section-accent:#52d7ff}body.nav-focus:has(#rescue.active-section){--section-accent:#b89cff}body.nav-focus:has(#artifact.active-section){--section-accent:#ffd166}body.nav-focus:has(#burn.active-section){--section-accent:#ff9c7c}body.nav-focus:has(#learn.active-section){--section-accent:#68e1b8}
+@media(min-width:1051px){.section-head{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(260px,.7fr) 164px;align-items:center;column-gap:22px}.section-head>p{align-self:center}.section-visual{position:relative;justify-self:end;width:160px;height:78px;padding:6px 7px 5px;border:1px solid color-mix(in srgb,var(--section-accent) 26%,#24473f);border-radius:12px;background:linear-gradient(145deg,color-mix(in srgb,var(--section-accent) 6%,#081612),#06120f);color:var(--section-accent);overflow:hidden}.section-visual:before{content:"";position:absolute;inset:auto -18px -38px auto;width:88px;height:88px;border-radius:50%;background:var(--section-accent);opacity:.045;filter:blur(8px)}.section-visual-scene{height:54px}.section-visual svg{width:100%;height:54px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.section-visual>span{display:block;margin-top:2px;text-align:right;font-size:.49rem;font-weight:900;letter-spacing:.085em;color:color-mix(in srgb,var(--section-accent) 76%,#dcece7)}.section.reviewed-module .section-visual:after{content:"✓";position:absolute;right:7px;top:6px;display:grid;place-items:center;width:17px;height:17px;border:1px solid color-mix(in srgb,var(--section-accent) 48%,#31584e);border-radius:999px;background:#071511;color:var(--section-accent);font-size:.58rem;font-weight:950}}
+@media(max-width:1050px){.section-visual{display:none}.section-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.7fr);align-items:end;gap:18px}}
+.section .card{position:relative;overflow:hidden}.section .card:before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--section-accent) 45%,transparent),transparent);opacity:.34;pointer-events:none}.section .card:hover:before{opacity:.72}
+.module-card .module-icon{transition:transform .18s ease,background .18s ease}.module-card:hover .module-icon{transform:scale(1.06)}.module-card.reviewed .module-icon:after{content:"";position:absolute}
+.section.active-section .section-visual-scene{animation:artReveal .28s ease-out}@keyframes artReveal{from{opacity:.4;transform:translateX(5px)}to{opacity:1;transform:none}}
+body.ui-reduce-motion .section.active-section .section-visual-scene{animation:none}
+@media(max-width:720px){.section-head{display:flex;flex-direction:column;align-items:flex-start;gap:6px}.focus-module-icon{display:none}}
+
 </style>
 </head>
 <body class="nav-home">
@@ -111,8 +124,8 @@ input[type="range"]{accent-color:var(--mint)}
 <div class="notice compact-notice"><span class="boundary-mark" aria-hidden="true">i</span><span><strong>Learning-use boundary</strong> — educational MRI learning only; no implant clearance, patient-specific decisions, or scanner-specific prescriptions. Manufacturer labeling, scanner limits, and facility MR safety policy control.</span></div>
 <div class="updatebar" id="updateBar" role="status" aria-live="polite"><div><b>Update available</b><p>A newer MR Command Center build is ready.</p></div><button class="updatebtn" onclick="applyAppUpdate()">Update & reload</button></div>
 <section id="cockpit" class="home-workspace" aria-labelledby="cockpitTitle"><div class="home-tools-head"><div class="home-intro-copy"><div class="eyebrow">MR Learning Hub</div><h1 id="cockpitTitle">Build MRI intuition, one concept at a time</h1><p>Study safety foundations, parameter tradeoffs, scan math, sequence rescue, artifact patterns, and short practice drills.</p></div><div class="home-intro-side"><div class="mr-field-graphic" id="homeFieldGraphic" aria-hidden="true"><svg viewBox="0 0 240 112" focusable="false"><defs><linearGradient id="fieldStroke" x1="18" y1="18" x2="215" y2="98" gradientUnits="userSpaceOnUse"><stop stop-color="#48f0b2"/><stop offset=".48" stop-color="#52d7ff"/><stop offset="1" stop-color="#b89cff"/></linearGradient><linearGradient id="planeFill" x1="80" y1="60" x2="210" y2="106" gradientUnits="userSpaceOnUse"><stop stop-color="#48f0b2" stop-opacity=".14"/><stop offset="1" stop-color="#52d7ff" stop-opacity=".02"/></linearGradient></defs><g fill="none" stroke-linecap="round"><circle cx="78" cy="52" r="34" stroke="#173e34" stroke-width="13"/><path d="M48 65a34 34 0 1 1 61 3" stroke="url(#fieldStroke)" stroke-width="8"/><circle cx="78" cy="52" r="16" stroke="url(#fieldStroke)" stroke-width="6"/><path d="M18 43h34M14 54h38M19 66h31" stroke="url(#fieldStroke)" stroke-width="5"/><path d="M68 75h24l52 28H38z" fill="url(#planeFill)" stroke="#225548" stroke-width="2"/><path d="M70 82h22M59 88h46M48 95h70M39 102h92" stroke="url(#fieldStroke)" stroke-width="2.4" opacity=".8"/><path d="M151 32c14-13 28-13 42 0s28 13 39 1M151 48c14-13 28-13 42 0s28 13 39 1M151 64c14-13 28-13 42 0s28 13 39 1" stroke="url(#fieldStroke)" stroke-width="3" opacity=".8"/></g></svg><div class="field-caption"><b>FIELD → SIGNAL → IMAGE</b><span>concepts connected visually</span></div></div><button class="console-mini" id="homeSearchBtn" onclick="openPalette()">⌕ Search learning tools</button></div></div><div class="continue-panel" id="continuePanel"><div class="continue-symbol" aria-hidden="true">↗</div><div class="continue-copy"><span>Continue learning</span><b id="continueTitle">Parameter Lab</b><small id="continueMeta">Open a module to build a recent-study trail.</small></div><button class="continue-action" id="continueBtn" type="button" onclick="openContinueModule()">Open module →</button></div><nav class="tool-dock" id="toolDock" aria-label="Learning modules"><button class="dockbtn module-card" data-module-card="safety" type="button" onclick="go('safety')"><span class="module-icon">S</span><span class="module-copy"><b>MR Safety Foundations</b><small>Labeling + evidence + escalation</small></span><span class="module-number">01</span><span class="module-state">Study</span></button><button class="dockbtn module-card" data-module-card="math" type="button" onclick="go('math')"><span class="module-icon">∑</span><span class="module-copy"><b>Scan Math</b><small>Voxel + acquisition-time math</small></span><span class="module-number">02</span><span class="module-state">Study</span></button><button class="dockbtn module-card dock-primary" data-module-card="sandbox" type="button" onclick="go('sandbox')"><span class="module-icon">⇄</span><span class="module-copy"><b>Parameter Lab</b><small>10 modeled controls + reference</small></span><span class="module-number">03</span><span class="module-state">Study</span></button><button class="dockbtn module-card" data-module-card="rescue" type="button" onclick="go('rescue')"><span class="module-icon">↯</span><span class="module-copy"><b>Sequence Rescue</b><small>Reason through tradeoffs</small></span><span class="module-number">04</span><span class="module-state">Study</span></button><button class="dockbtn module-card" data-module-card="artifact" type="button" onclick="go('artifact')"><span class="module-icon">◫</span><span class="module-copy"><b>Artifact Solver</b><small>Pattern → cause → response</small></span><span class="module-number">05</span><span class="module-state">Study</span></button><button class="dockbtn module-card" data-module-card="burn" type="button" onclick="go('burn')"><span class="module-icon">T</span><span class="module-copy"><b>Thermal / RF Foundations</b><small>Heating + RF safety concepts</small></span><span class="module-number">06</span><span class="module-state">Study</span></button><button class="dockbtn module-card" data-module-card="learn" type="button" onclick="go('learn')"><span class="module-icon">Q</span><span class="module-copy"><b>Micro-Lab</b><small>Short practice + local progress</small></span><span class="module-number">07</span><span class="module-state">Study</span></button></nav><div class="study-progress" id="studyProgress"><div class="study-progress-head"><div><b>Study progress</b><small>Local review markers only — not competency or certification.</small></div><span class="study-progress-count" id="studyProgressCount">0/7 reviewed</span></div><div class="study-track" aria-hidden="true"><i id="studyProgressBar"></i></div><div class="study-progress-chips" id="studyProgressChips"></div><div class="study-progress-actions"><span>Open a module, then use “Mark reviewed” in the module bar.</span><button class="study-reset" type="button" onclick="resetStudyProgress()">Reset markers</button></div></div><div class="home-situations-head"><b>Practice shortcuts</b><span>jump into a concept</span></div><div class="quickstrip"><button onclick="runCommand('unknown')"><span class="qaicon">?</span><span><b>Unknown device labeling</b><small>Evidence + escalation concepts</small></span></button><button onclick="runCommand('heating')"><span class="qaicon">!</span><span><b>Thermal / RF scenario</b><small>Heating-risk concepts</small></span></button><button onclick="runCommand('metal')"><span class="qaicon">◫</span><span><b>Metal artifact</b><small>Susceptibility reasoning</small></span></button><button onclick="runCommand('rescue')"><span class="qaicon">↯</span><span><b>Sequence rescue</b><small>Tradeoff reasoning</small></span></button></div><details class="personal-workspace" id="personalWorkspace"><summary><span><b>My study setup</b><small>Pinned learning tools + recent session</small></span><span>Open</span></summary><div class="personal-workspace-body"><div class="myconsole"><div class="myconsole-head"><div><b>Pinned learning tools</b><div class="small">Pins stay on this browser.</div></div><button class="pinmanage" onclick="togglePinManager()">Customize</button></div><div class="pinned-tools" id="pinnedTools"></div><div class="pin-manager" id="pinManager"></div></div><div class="resume-row"><div class="resume-copy"><b>Resume studying</b><span id="recentLabel">No module opened yet.</span></div><button class="resume-btn" id="resumeBtn" onclick="resumeLast()" disabled>Resume last</button></div><div class="recent-tools" id="recentTools"></div></div></details></section>
-<details class="system-panel" id="offlineBar"><summary><span class="system-title"><span class="mini-dot"></span><b>System & offline status</b></span><span class="system-summary-meta">Build v4.4 <span aria-hidden="true">·</span> details</span></summary><div class="system-panel-body"><div class="systemstrip"><span class="syschip"><span class="mini-dot" id="sysNetDot"></span><span id="sysNetwork">Online</span></span><span class="syschip" id="cacheChip">Offline cache: checking</span><span class="syschip engine-chip" id="engineChip"><span class="mini-dot"></span><span id="engineText">Engine: ready</span></span><button class="selfcheck" onclick="runSelfCheck()">Run self-check</button></div><span id="offlineCopy">Learning tools cache locally after the first successful load. Presets and practice history remain browser-local.</span></div></details>
-<div class="focusbar" id="focusBar" aria-live="polite"><button type="button" class="focus-home" onclick="showHome()">⌂ Home</button><button type="button" class="focus-step" id="focusPrevBtn" onclick="stepModule(-1)" aria-label="Previous learning module">← <span>Previous</span></button><div class="focus-copy"><small><span id="focusGroup">Learning module</span><span class="focus-position" id="focusPosition"></span></small><b id="focusTitle">Current module</b></div><div class="focus-related" id="focusRelated"></div><button type="button" class="focus-study" id="focusStudyBtn" onclick="toggleStudyModule(this.dataset.module)">Mark reviewed</button><button type="button" class="focus-step" id="focusNextBtn" onclick="stepModule(1)" aria-label="Next learning module"><span>Next</span> →</button></div>
+<details class="system-panel" id="offlineBar"><summary><span class="system-title"><span class="mini-dot"></span><b>System & offline status</b></span><span class="system-summary-meta">Build v4.5 <span aria-hidden="true">·</span> details</span></summary><div class="system-panel-body"><div class="systemstrip"><span class="syschip"><span class="mini-dot" id="sysNetDot"></span><span id="sysNetwork">Online</span></span><span class="syschip" id="cacheChip">Offline cache: checking</span><span class="syschip engine-chip" id="engineChip"><span class="mini-dot"></span><span id="engineText">Engine: ready</span></span><button class="selfcheck" onclick="runSelfCheck()">Run self-check</button></div><span id="offlineCopy">Learning tools cache locally after the first successful load. Presets and practice history remain browser-local.</span></div></details>
+<div class="focusbar" id="focusBar" aria-live="polite"><button type="button" class="focus-home" onclick="showHome()">⌂ Home</button><button type="button" class="focus-step" id="focusPrevBtn" onclick="stepModule(-1)" aria-label="Previous learning module">← <span>Previous</span></button><span class="focus-module-icon" id="focusModuleIcon" aria-hidden="true"></span><div class="focus-copy"><small><span id="focusGroup">Learning module</span><span class="focus-position" id="focusPosition"></span></small><b id="focusTitle">Current module</b></div><div class="focus-related" id="focusRelated"></div><button type="button" class="focus-study" id="focusStudyBtn" onclick="toggleStudyModule(this.dataset.module)">Mark reviewed</button><button type="button" class="focus-step" id="focusNextBtn" onclick="stepModule(1)" aria-label="Next learning module"><span>Next</span> →</button></div>
 
 <section id="safety" class="section"><div class="section-head"><div><div class="eyebrow">01 · MR Safety Foundations</div><h2>Device / implant evidence chain</h2></div><p>Teaching checklist only. Completion ≠ clearance; use it to learn the evidence chain that precedes local review.</p></div><div class="grid2"><div class="card"><h3>Device / implant evidence chain</h3><p class="sub">Use exact source documentation—not memory, appearance, or patient recollection alone.</p><div class="checks" id="safetyChecks">
 <label class="check"><input type="checkbox"><span>Exact device / implant identity is positively established (make, model, component set as applicable).</span></label>
@@ -282,6 +295,57 @@ const navGroups={
 };
 const studyModules={safety:'Safety',math:'Scan Math',sandbox:'Parameter Lab',rescue:'Sequence Rescue',artifact:'Artifact Solver',burn:'Thermal / RF',learn:'Micro-Lab'};
 const moduleSequence=['safety','math','sandbox','rescue','artifact','burn','learn'];
+const moduleArt={
+  safety:{
+    caption:'IDENTIFY → VERIFY → MATCH',
+    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5.5 5.7v5.2c0 4.2 2.6 7.8 6.5 9.8 3.9-2 6.5-5.6 6.5-9.8V5.7L12 3Z"/><path d="m8.8 11.9 2.1 2.1 4.5-4.8"/></svg>',
+    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><circle cx="45" cy="43" r="25"/><circle cx="45" cy="43" r="12"/><path d="M73 22h28M73 34h39M73 46h31"/><path d="M132 19 115 26v14c0 12 7 22 17 27 10-5 17-15 17-27V26l-17-7Z"/><path d="m124 42 6 6 12-14"/><circle cx="96" cy="63" r="3"/><circle cx="108" cy="63" r="3"/></svg>'
+  },
+  math:{
+    caption:'SAMPLE → CALCULATE → INTERPRET',
+    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14v12H5z"/><path d="M9.7 6v12M14.3 6v12M5 10h14M5 14h14"/></svg>',
+    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><path d="M17 19h58v46H17z"/><path d="M36 19v46M56 19v46M17 34h58M17 50h58"/><path d="m105 23 24-9 25 13-24 10-25-14Z"/><path d="m105 23v29l25 17V37M154 27v29l-24 13"/><path d="M91 69h72"/><circle cx="91" cy="69" r="3"/></svg>'
+  },
+  sandbox:{
+    caption:'CHANGE → TRADEOFF → COMPARE',
+    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="17" r="2"/></svg>',
+    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><path d="M15 20h62M15 42h62M15 64h62"/><circle cx="35" cy="20" r="5"/><circle cx="58" cy="42" r="5"/><circle cx="28" cy="64" r="5"/><path d="M96 65V20M96 65h68"/><path d="m102 57 15-12 13 5 15-24 14 8"/><path d="m102 37 17 8 14-18 25 22"/></svg>'
+  },
+  rescue:{
+    caption:'PROBLEM → LEVER → COST',
+    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h5M14 7h5M14 17h5M10 12l4-5M10 12l4 5"/><circle cx="5" cy="12" r="1.5"/><circle cx="19" cy="7" r="1.5"/><circle cx="19" cy="17" r="1.5"/></svg>',
+    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><circle cx="28" cy="43" r="9"/><path d="M37 43h25M62 43l26-24M62 43l26 24"/><circle cx="96" cy="19" r="8"/><circle cx="96" cy="67" r="8"/><path d="M105 19h42M105 67h42"/><path d="m137 13 10 6-10 6M137 61l10 6-10 6"/></svg>'
+  },
+  artifact:{
+    caption:'PATTERN → CAUSE → RESPONSE',
+    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7c3-4 5 4 8 0s5 4 8 0M4 12c3-4 5 4 8 0s5 4 8 0M4 17c3-4 5 4 8 0s5 4 8 0"/></svg>',
+    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><rect x="13" y="15" width="68" height="56" rx="4"/><path d="M20 31c8-13 14 13 22 0s14 13 22 0 10 6 12 4M20 46c8-13 14 13 22 0s14 13 22 0 10 6 12 4M20 60c8-13 14 13 22 0s14 13 22 0 10 6 12 4"/><path d="M101 24h57M101 43h45M101 62h52"/><path d="M109 18v49M118 18v49" opacity=".35"/></svg>'
+  },
+  burn:{
+    caption:'GEOMETRY → RF → FEEDBACK',
+    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12a5 5 0 0 1 10 0M4 12a8 8 0 0 1 16 0"/><path d="M12 12v7M9 19h6"/><path d="M8 8 6 5M16 8l2-3"/></svg>',
+    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><path d="M22 50a31 31 0 0 1 62 0M12 50a41 41 0 0 1 82 0"/><circle cx="53" cy="50" r="9"/><path d="M53 59v15M44 74h18"/><path d="M117 23c7 6 7 12 0 18s-7 12 0 18M136 17c10 8 10 17 0 25s-10 17 0 25M155 12c13 11 13 23 0 34s-13 23 0 34"/></svg>'
+  },
+  learn:{
+    caption:'RECALL → SCORE → REVISIT',
+    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M9.7 9.6a2.5 2.5 0 1 1 3.7 2.2c-1 .5-1.4 1.1-1.4 2M12 17h.01"/></svg>',
+    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><circle cx="37" cy="43" r="26"/><path d="M37 17a26 26 0 0 1 23 14"/><path d="m27 44 7 7 14-17"/><path d="M87 20h64M87 35h48M87 50h58M87 65h38"/><circle cx="159" cy="20" r="4"/><circle cx="143" cy="35" r="4"/><circle cx="153" cy="50" r="4"/></svg>'
+  }
+};
+function applyModuleArt(){
+  document.querySelectorAll('[data-module-card]').forEach(card=>{
+    const art=moduleArt[card.dataset.moduleCard],icon=card.querySelector('.module-icon');
+    if(art&&icon)icon.innerHTML=art.icon;
+  });
+  moduleSequence.forEach((id,index)=>{
+    const section=$(id),head=section?.querySelector('.section-head'),art=moduleArt[id];
+    if(!section||!head||!art)return;
+    section.dataset.moduleIndex=String(index+1);
+    let visual=head.querySelector('.section-visual');
+    if(!visual){visual=document.createElement('div');visual.className='section-visual';visual.setAttribute('aria-hidden','true');head.appendChild(visual)}
+    visual.innerHTML='<div class="section-visual-scene">'+art.scene+'</div><span>'+escapeHtml(art.caption)+'</span>';
+  });
+}
 let studyState=readStoredJson(localStorage,'mrcc_study_progress',{});
 if(!studyState||typeof studyState!=='object'||Array.isArray(studyState)){studyState={};dataRepairCount++}
 studyState=Object.fromEntries(Object.keys(studyModules).map(id=>[id,!!studyState[id]]));
@@ -290,7 +354,7 @@ function renderStudyProgress(){
   if(count)count.textContent=done+'/'+ids.length+' reviewed';
   if(bar)bar.style.width=Math.round(done/ids.length*100)+'%';
   if(wrap)wrap.innerHTML=ids.map(id=>'<button type="button" class="study-chip '+(studyState[id]?'reviewed':'')+'" onclick="go(\''+id+'\')">'+(studyState[id]?'✓ ':'')+studyModules[id]+'</button>').join('');
-  document.querySelectorAll('[data-module-card]').forEach(card=>{const id=card.dataset.moduleCard,done=!!studyState[id];card.classList.toggle('reviewed',done);const state=card.querySelector('.module-state');if(state)state.textContent=done?'Reviewed':'Study';card.setAttribute('aria-label',studyModules[id]+(done?' — reviewed':' — not marked reviewed'))});
+  document.querySelectorAll('[data-module-card]').forEach(card=>{const id=card.dataset.moduleCard,done=!!studyState[id];card.classList.toggle('reviewed',done);const state=card.querySelector('.module-state');if(state)state.textContent=done?'Reviewed':'Study';card.setAttribute('aria-label',studyModules[id]+(done?' — reviewed':' — not marked reviewed'))});moduleSequence.forEach(id=>$(id)?.classList.toggle('reviewed-module',!!studyState[id]));
   if(typeof renderContinueLearning==='function')renderContinueLearning();
 }
 function saveStudyProgress(){try{localStorage.setItem('mrcc_study_progress',JSON.stringify(studyState))}catch(e){}renderStudyProgress()}
@@ -309,8 +373,8 @@ function restoreRouteFromHash(){const id=location.hash.replace(/^#/,'');if(secti
 window.addEventListener('hashchange',restoreRouteFromHash);
 function navGroupFor(id){return Object.values(navGroups).find(g=>g.ids.includes(id))||navGroups.learning}
 function renderFocusBar(id){
-  const bar=$('focusBar'),title=$('focusTitle'),groupEl=$('focusGroup'),position=$('focusPosition'),related=$('focusRelated'),group=navGroupFor(id),index=moduleSequence.indexOf(id),prev=$('focusPrevBtn'),next=$('focusNextBtn');
-  if(!bar)return;bar.classList.add('show');if(title)title.textContent=sectionTitles[id]||'All tools';if(groupEl)groupEl.textContent=group.label;if(position)position.textContent=index>=0?'· '+(index+1)+' of '+moduleSequence.length:'';
+  const bar=$('focusBar'),title=$('focusTitle'),groupEl=$('focusGroup'),position=$('focusPosition'),icon=$('focusModuleIcon'),related=$('focusRelated'),group=navGroupFor(id),index=moduleSequence.indexOf(id),prev=$('focusPrevBtn'),next=$('focusNextBtn');
+  if(!bar)return;bar.classList.add('show');if(title)title.textContent=sectionTitles[id]||'All tools';if(groupEl)groupEl.textContent=group.label;if(position)position.textContent=index>=0?'· '+(index+1)+' of '+moduleSequence.length:'';if(icon)icon.innerHTML=moduleArt[id]?.icon||'';
   if(prev)prev.disabled=index<=0;if(next)next.disabled=index<0||index>=moduleSequence.length-1;
   if(related)related.innerHTML=group.ids.map(tool=>'<button type="button" class="'+(tool===id?'active':'')+'" onclick="go(\''+tool+'\')">'+escapeHtml(sectionTitles[tool])+'</button>').join('');syncFocusStudyButton(id);
 }
@@ -826,7 +890,8 @@ function runSelfCheck(){
     ['Mobile navigation',typeof syncMobileNav==='function'&&!!$('mobileNav')&&document.querySelectorAll('[data-mobile-route]').length===5],
     ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'],
     ['Guided module navigation',typeof stepModule==='function'&&typeof ensureModuleFooters==='function'&&!!$('focusPrevBtn')&&!!$('focusNextBtn')],
-    ['Continue learning',typeof renderContinueLearning==='function'&&!!$('continuePanel')&&!!$('continueBtn')]
+    ['Continue learning',typeof renderContinueLearning==='function'&&!!$('continuePanel')&&!!$('continueBtn')],
+    ['Module artwork',typeof applyModuleArt==='function'&&!!moduleArt.safety&&!!moduleArt.sandbox&&!!$('focusModuleIcon')]
   ];
   const failed=checks.filter(x=>!x[1]);const chip=$('engineChip'),txt=$('engineText');
   if(failed.length){if(chip)chip.classList.add('issue');if(txt)txt.textContent='Engine: '+failed.length+' check'+(failed.length===1?'':'s')+' failed';toast('Self-check found: '+failed.map(x=>x[0]).join(', '))}
@@ -877,6 +942,6 @@ function scoreQuiz(){
   const signature=answers.join('|');
   if(signature!==lastRecordedQuizSignature){lastRecordedQuizSignature=signature;saveLearningAttempt(s)}
 }
-renderLearningProgress();renderDataHealth();ensureModuleFooters();renderStudyProgress();renderContinueLearning();restoreRouteFromHash();
+renderLearningProgress();renderDataHealth();applyModuleArt();ensureModuleFooters();renderStudyProgress();renderContinueLearning();restoreRouteFromHash();
 </script>
 </body></html>
