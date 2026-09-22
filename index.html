@@ -1019,7 +1019,13 @@ const mobileRouteMap={safety:'safety',burn:'safety',sandbox:'sandbox',math:'sand
 function syncMobileNav(id='home'){const route=id==='home'?'home':(mobileRouteMap[id]||'');document.querySelectorAll('[data-mobile-route]').forEach(b=>{const on=b.dataset.mobileRoute===route;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
 function announceRoute(label){const el=$('routeAnnouncer');if(!el)return;el.textContent='';setTimeout(()=>{el.textContent=label},20)}
 function routeHash(id,replace=false){try{const home=!id,target=home?location.pathname+location.search:'#'+id;if((home&&!location.hash)||(!home&&location.hash==='#'+id))return;history[replace?'replaceState':'pushState']({mrccRoute:id||'home'},'',target)}catch(e){}}
-function restoreRouteFromHash(){const id=location.hash.replace(/^#/,'');if(sectionTitles[id]){setFocusedSection(id);setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}if(homeSectionTitles[id]){showHome(false,true,false);document.title=homeSectionTitles[id]+' — MR Command Center';announceRoute(homeSectionTitles[id]+' section');setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}showHome(false,true)}
+function revealHomeContainer(id){
+  const direct=$(id);if(direct&&'open' in direct)direct.open=true;
+  if(['packLibrary','caseLab','studyReport'].includes(id)){const z=$('practiceLibraryZone');if(z)z.open=true}
+  if(['packStudio'].includes(id)){const z=$('creatorZone');if(z)z.open=true}
+  if(['toolDock','studyProgress','personalWorkspace'].includes(id)){const z=$('referenceOnboarding');if(z)z.open=true}
+}
+function restoreRouteFromHash(){const id=location.hash.replace(/^#/,'');if(sectionTitles[id]){setFocusedSection(id);setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}if(homeSectionTitles[id]){showHome(false,true,false);revealHomeContainer(id);document.title=homeSectionTitles[id]+' — MR Command Center';announceRoute(homeSectionTitles[id]+' section');setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}showHome(false,true)}
 window.addEventListener('hashchange',restoreRouteFromHash);
 window.addEventListener('popstate',restoreRouteFromHash);
 function navGroupFor(id){return Object.values(navGroups).find(g=>g.ids.includes(id))||navGroups.learning}
@@ -1047,7 +1053,7 @@ function showHome(scroll=true,replaceRoute=false,updateRoute=true){
 function jumpHomeSection(id){
   const el=$(id),label=homeSectionTitles[id];if(!el||!label)return;
   showHome(false,false,false);routeHash(id);document.title=label+' — MR Command Center';announceRoute(label+' section');
-  if('open' in el)el.open=true;
+  revealHomeContainer(id);
   el.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'});
 }
 const pinCatalog=[
@@ -1112,7 +1118,7 @@ function resumeLast(){if(recentUsage.length)openRecent(recentUsage[0].id)}
 function renderCockpit(){renderPins();const label=$('recentLabel'),resume=$('resumeBtn'),recent=$('recentTools');if(label)label.textContent=recentUsage.length?'Last: '+recentUsage[0].title:'No module opened yet.';if(resume)resume.disabled=!recentUsage.length;if(recent)recent.innerHTML=recentUsage.slice(0,4).map(x=>`<button class="recent-chip" onclick="openRecent('${x.id}')">${escapeHtml(x.title)}</button>`).join('');renderContinueLearning()}
 function tick(){const d=new Date();$('clock').textContent=d.toLocaleString([], {weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})}setInterval(tick,1000);tick();
 const commands=[
-{id:'home',title:'Learning Hub home',desc:'Return to the learning modules and local study progress.',cat:'Learning',icon:'⌂',keys:'home learning hub study modules navigation'},
+{id:'home',title:'Parameter Workbench home',desc:'Return to current Lab state, saved setups, comparisons, and optimization goals.',cat:'Parameters',icon:'⌂',keys:'home parameter workbench lab presets compare goals'},
 {id:'unknown',title:'Unknown / unidentified device',desc:'Study the unresolved-device evidence and escalation route.',cat:'Safety',icon:'?',keys:'unknown implant device accessory safety'},
 {id:'conditional',title:'MR Conditional device',desc:'Study conditions-of-use verification.',cat:'Safety',icon:'C',keys:'conditional implant device conditions SAR B1 rms'},
 {id:'heating',title:'Heating / burning scenario',desc:'Study the stop / assess thermal safety route.',cat:'Safety',icon:'!',keys:'burn heating hot pain discomfort patient'},
@@ -1120,6 +1126,11 @@ const commands=[
 {id:'voxel',title:'Voxel / resolution calculator',desc:'Practice FOV, matrix, pixel, and voxel math.',cat:'Math',icon:'▦',keys:'voxel pixel fov matrix resolution'},
 {id:'time',title:'2D scan-time estimator',desc:'Practice TR × phase encodes × NEX ÷ ETL.',cat:'Math',icon:'◷',keys:'time scan duration TR NEX ETL phase'},
 {id:'sandbox',title:'Parameter Lab',desc:'Explore geometry, sampling, SNR, acceleration, partial Fourier, and parameter tradeoffs.',cat:'Parameters',icon:'⇄',keys:'parameter lab protocol tradeoff snr bandwidth nex fov matrix etl acceleration partial Fourier'},
+{id:'goal-time',title:'Goal: reduce scan burden',desc:'Open Parameter Lab with the main sampling-burden levers highlighted.',cat:'Parameters',icon:'◷',keys:'goal reduce scan time burden phase nex etl acceleration partial Fourier'},
+{id:'goal-snr',title:'Goal: improve SNR',desc:'Open Parameter Lab with generic signal-efficiency levers highlighted.',cat:'Parameters',icon:'≈',keys:'goal improve snr signal voxel nex bandwidth acceleration'},
+{id:'goal-detail',title:'Goal: increase detail',desc:'Open Parameter Lab with spatial-sampling levers highlighted.',cat:'Parameters',icon:'▦',keys:'goal resolution detail fov matrix slice spatial'},
+{id:'goal-distortion',title:'Goal: reduce distortion',desc:'Open Parameter Lab with bandwidth and voxel-dimension levers highlighted.',cat:'Parameters',icon:'⌁',keys:'goal distortion off resonance bandwidth voxel susceptibility'},
+{id:'compare',title:'A/B Parameter Compare',desc:'Open Snapshot A versus live B comparison in Parameter Lab.',cat:'Parameters',icon:'A/B',keys:'compare snapshot parameter a b history deltas'},
 {id:'presets',title:'Saved teaching presets',desc:'Open the local teaching-preset library in Parameter Lab.',cat:'Parameters',icon:'P',keys:'preset saved parameter library sandbox local reusable'},
 {id:'parameterref',title:'Parameter Reference',desc:'Open the deeper reference for geometry, SNR, time, contrast, and artifact controls.',cat:'Parameters',icon:'≡',keys:'parameter reference TR TE TI flip angle acceleration partial Fourier phase FOV echo spacing'},
 {id:'rescue',title:'Sequence Rescue',desc:'Reason backward from scan time, SNR, motion, distortion, wrap, or fat-sat failure.',cat:'Troubleshoot',icon:'↯',keys:'rescue sequence too long noisy snr motion distortion wrap fat suppression troubleshoot'},
@@ -1155,6 +1166,11 @@ function runCommand(id){
   if(id==='voxel'){go('math',true);setTimeout(()=>$('fovx').focus(),350);return}
   if(id==='time'){go('math',true);setTimeout(()=>$('tr').focus(),350);return}
   if(id==='sandbox'){go('sandbox',true);return}
+  if(id==='goal-time'){openParameterGoal('time');return}
+  if(id==='goal-snr'){openParameterGoal('snr');return}
+  if(id==='goal-detail'){openParameterGoal('detail');return}
+  if(id==='goal-distortion'){openParameterGoal('distortion');return}
+  if(id==='compare'){openParameterWorkspace('compare');return}
   if(id==='rescue'){go('rescue',true);return}
   if(artifactIds.includes(id)){go('artifact',true);$('artifactSelect').value=id;solveArtifact();setTimeout(()=>$('artifactOut').scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),250);return}
   if(id==='burn'){go('burn',true);return}
@@ -1162,14 +1178,12 @@ function runCommand(id){
   if(id==='presets'){go('sandbox',true);setTimeout(()=>{$('presetLibrary').open=true;$('presetName')?.focus()},300);return}
   if(id==='parameterref'){go('sandbox',true);setTimeout(()=>$('parameterReference')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),250);return}
   if(id==='learningprogress'){go('learn',true);setTimeout(()=>$('learningProgress')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),250);return}
-  if(id==='studyprogress'){showHome(false);setTimeout(()=>$('studyProgress')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),100);return}
-  if(id==='studysession'){showHome(false);setTimeout(()=>$('sessionStudio')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),100);return}
-  if(id==='dailyfocus'){showHome(false);setTimeout(()=>$('returnLoop')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),100);return}
-  if(id==='caselab'){showHome(false);setTimeout(()=>$('caseLab')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),100);return}
-  if(id==='packlibrary'){showHome(false);setTimeout(()=>$('packLibrary')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),100);return}
-  if(id==='studyreport'){showHome(false);setTimeout(()=>$('studyReport')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),100);return}
-  if(id==='packstudio'){showHome(false);const d=$('packStudio');if(d)d.open=true;setTimeout(()=>$('packStudio')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),100);return}
-  if(id==='productkit'){showHome(false);const d=$('packStudio');if(d)d.open=true;setTimeout(()=>$('packProductKit')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),120);return}
+  if(id==='studyprogress'){showHome(false);const z=$('referenceOnboarding');if(z)z.open=true;setTimeout(()=>$('studyProgress')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),100);return}
+  if(id==='caselab'){showHome(false);const z=$('practiceLibraryZone');if(z)z.open=true;setTimeout(()=>$('caseLab')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),100);return}
+  if(id==='packlibrary'){showHome(false);const z=$('practiceLibraryZone');if(z)z.open=true;setTimeout(()=>$('packLibrary')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),100);return}
+  if(id==='studyreport'){showHome(false);const z=$('practiceLibraryZone');if(z)z.open=true;setTimeout(()=>$('studyReport')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),100);return}
+  if(id==='packstudio'){showHome(false);const z=$('creatorZone');if(z)z.open=true;const d=$('packStudio');if(d)d.open=true;setTimeout(()=>$('packStudio')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),100);return}
+  if(id==='productkit'){showHome(false);const z=$('creatorZone');if(z)z.open=true;const d=$('packStudio');if(d)d.open=true;setTimeout(()=>$('packProductKit')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),120);return}
 }
 document.addEventListener('keydown',e=>{const tag=(e.target.tagName||'').toLowerCase(),typing=['input','textarea','select'].includes(tag);if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPalette();return}if(e.key==='?'&&!typing&&!$('paletteBack').classList.contains('open')){e.preventDefault();openPreferences();return}if(e.key==='Escape'&&$('prefsBack')?.classList.contains('open')){closePreferences();return}if(e.key==='/'&&!typing&&!$('paletteBack').classList.contains('open')&&!$('prefsBack')?.classList.contains('open')){e.preventDefault();openPalette();return}if(!typing&&document.body.classList.contains('nav-focus')&&!$('paletteBack').classList.contains('open')&&!$('prefsBack')?.classList.contains('open')&&(e.key==='['||e.key===']')){e.preventDefault();stepModule(e.key==='['?-1:1);return}if(!$('paletteBack').classList.contains('open'))return;if(e.key==='Escape'){closePalette();return}if(e.key==='ArrowDown'){e.preventDefault();if(filteredCommands.length){paletteIndex=(paletteIndex+1)%filteredCommands.length;renderPalette()}return}if(e.key==='ArrowUp'){e.preventDefault();if(filteredCommands.length){paletteIndex=(paletteIndex-1+filteredCommands.length)%filteredCommands.length;renderPalette()}return}if(e.key==='Enter'&&filteredCommands.length){e.preventDefault();runCommand(filteredCommands[paletteIndex].id)}});
 document.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const prefs=$('prefsBack'),palette=$('paletteBack');if(prefs?.classList.contains('open')){trapDialogFocus(prefs,e);return}if(palette?.classList.contains('open'))trapDialogFocus(palette,e)});
