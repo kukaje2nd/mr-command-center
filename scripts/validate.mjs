@@ -24,7 +24,8 @@ const requiredFunctions=[
   'readStoredJson','trapDialogFocus','localDataHealthy','renderDataHealth',
   'showHome','setFocusedSection','setPaletteCategory','syncMobileNav',
   'routeHash','restoreRouteFromHash','toggleStudyModule','renderStudyProgress','resetStudyProgress',
-  'renderContinueLearning','openContinueModule','stepModule','ensureModuleFooters','applyModuleArt','renderLearningPath','syncLearningPathCurrent'
+  'renderContinueLearning','openContinueModule','stepModule','ensureModuleFooters','applyModuleArt','renderLearningPath','syncLearningPathCurrent',
+  'startStudySession','startStudySessionModules','startCustomSession','renderStudySession','renderSessionBuilder','renderStudySessionHistory','sessionCompleteStep','sessionStep','resumeStudySession','endStudySession','clearStudySessionHistory','syncStudySessionForModule','studySessionProgress'
 ];
 for(const name of requiredFunctions){
   const declaration=new RegExp('function\\s+'+name+'\\s*\\(');
@@ -50,7 +51,9 @@ const requiredIds=[
   'mobileNav','paletteBack','paletteFilters','prefsBack','dataHealthSummary',
   'artifactSelect','context','sbFov','sbFreq','sbPhaseFov','sbAccel','sbPf','sbSnr',
   'parameterLens','parameterReference','presetList','presetSearch','comparisonHistoryList',
-  'learningProgress','learnHistory','learnAttempts','learnBest','learnLatest','learnDays'
+  'learningProgress','learnHistory','learnAttempts','learnBest','learnLatest','learnDays',
+  'sessionStudio','sessionStatusPill','sessionCustom','sessionCustomModules','sessionHomeState','sessionHistory','sessionHistoryCount','sessionHistoryList',
+  'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn'
 ];
 for(const id of requiredIds){if(!html.includes('id="'+id+'"')) fail.push('Required element id is missing: '+id);}
 
@@ -65,7 +68,7 @@ for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push(
 const requiredCopy=[
   'MR Learning Hub','Build MRI intuition, one concept at a time','MR Safety Foundations','Scan Math','Parameter Lab',
   'Sequence Rescue','Artifact Solver','Thermal / RF Foundations','Micro-Lab','Learning path','Continue learning',
-  'Mark reviewed','Learning-use boundary','Settings & shortcuts'
+  'Mark reviewed','Learning-use boundary','Settings & shortcuts','Build a focused study session','Quick review','Troubleshooting route','Safety + RF route','Full learning path'
 ];
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required learning-hub copy is missing: '+text);}
 
@@ -84,7 +87,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description is not the learning-product description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v4.6.0")) fail.push('Service worker cache marker is not v4.6.0.');
+if(!sw.includes("mrcc-v4.7.0")) fail.push('Service worker cache marker is not v4.7.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Learning Hub</title>')) fail.push('Page title is not the Learning Hub title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -102,7 +105,18 @@ if(!script.includes('function renderLearningPath')||!script.includes('function s
 if(!script.includes('const moduleAccent=')) fail.push('Module accent map is missing.');
 if(!html.includes('id="continueIcon"')) fail.push('Continue Learning module icon is missing.');
 if(html.includes('id="studyProgressBar"')||html.includes('id="studyProgressChips"')) fail.push('Legacy chip-based study progress UI returned.');
-if(!readme.includes('v4.6 — Learning Path')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
+if(!html.includes('id="sessionStudio"')||!html.includes('id="sessionBar"')||!html.includes('id="sessionHistoryList"')) fail.push('Study Session UI is missing.');
+if(!script.includes('const studySessionPresets=')||!script.includes('mrcc_study_session')||!script.includes('mrcc_study_session_history')) fail.push('Study Session state model is missing.');
+for(const mode of ['quick','troubleshoot','safety','full']){if(!script.includes(mode+':{label:')) fail.push('Study Session preset is missing: '+mode);}
+if(!script.includes("id:'studysession'")) fail.push('Quick Console Study Sessions command is missing.');
+if(!html.includes('review markers unchanged')||!html.includes('Session completion is separate from your “Reviewed” markers.')) fail.push('Study Session / Reviewed-marker separation copy is missing.');
+if(!script.includes("bar.classList.toggle('show',document.body.classList.contains('nav-focus'))")) fail.push('Study Session bar is not scoped to focused modules.');
+const sessionCompleteStart=script.indexOf('function sessionCompleteStep(){');
+const sessionCompleteEnd=script.indexOf('function endStudySession(){',sessionCompleteStart);
+const sessionCompleteBody=sessionCompleteStart>=0&&sessionCompleteEnd>sessionCompleteStart?script.slice(sessionCompleteStart,sessionCompleteEnd):'';
+if(!sessionCompleteBody||sessionCompleteBody.includes('toggleStudyModule')||sessionCompleteBody.includes('studyState[')) fail.push('Study Session completion must remain separate from Reviewed markers.');
+if(!script.includes('Array.isArray(studySessionHistory)')) fail.push('Study Session history is not included in local data health.');
+if(!readme.includes('v4.7 — Study Sessions')||!readme.includes('MRI learning hub')) fail.push('README is stale.');
 
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
@@ -110,4 +124,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v4.6 Learning Path validation passed.');
+console.log('MR Command Center v4.7 Study Sessions validation passed.');

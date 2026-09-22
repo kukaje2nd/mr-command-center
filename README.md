@@ -1,9 +1,9 @@
 # MR Command Center
 
-MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, short practice drills, module-specific visual identity, and a connected local learning path.
+MR Command Center is a static, browser-local MRI learning hub for trained professionals. It combines safety foundations, scan math, parameter tradeoff modeling, sequence rescue, artifact reasoning, thermal/RF concepts, short practice drills, module-specific visual identity, a connected local learning path, and guided browser-local study sessions.
 
 ## Current build
-v4.6 — Learning Path
+v4.7 — Study Sessions
 
 ## Production
 - Entry point: `index.html`
@@ -15,7 +15,7 @@ v4.6 — Learning Path
 ## Product principles
 - Educational learning support, not patient-specific clearance or protocol prescription.
 - Manufacturer labeling, scanner IFU/limits, authoritative MR safety guidance, and local policy take precedence.
-- Presets, comparison history, display preferences, pins, study markers, and Micro-Lab practice history remain browser-local unless the user explicitly exports data.
+- Presets, comparison history, display preferences, pins, study markers, Micro-Lab practice history, and recent study-session history remain browser-local unless the user explicitly exports data.
 - Unknown or incomplete device conditions are never treated as cleared by the application.
 
 ## Release workflow
