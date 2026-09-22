@@ -1,6 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MR Command Center">
-  <rect width="512" height="512" rx="112" fill="#07110f"/>
-  <circle cx="256" cy="256" r="152" fill="none" stroke="#48f0b2" stroke-width="58" stroke-dasharray="720 235" stroke-linecap="round" transform="rotate(-43 256 256)"/>
-  <circle cx="256" cy="256" r="58" fill="#10221e" stroke="#52d7ff" stroke-width="10"/>
-  <path d="M245 216h22v80h-22zM216 245h80v22h-80z" fill="#ecfff8" opacity=".94"/>
+<defs>
+  <linearGradient id="g" x1="86" y1="78" x2="423" y2="432" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#48f0b2"/><stop offset=".48" stop-color="#25dce7"/><stop offset=".74" stop-color="#52a8ff"/><stop offset="1" stop-color="#b89cff"/>
+  </linearGradient>
+</defs>
+<rect width="512" height="512" rx="104" fill="#07110f"/>
+<circle cx="258" cy="220" r="143" fill="none" stroke="#0b2b24" stroke-width="48"/>
+<path d="M132 274a143 143 0 1 1 270 5" fill="none" stroke="url(#g)" stroke-width="29" stroke-linecap="round"/>
+<circle cx="258" cy="220" r="67" fill="none" stroke="url(#g)" stroke-width="25"/>
+<path d="M91 216h82M82 258h91M94 300h75" fill="none" stroke="url(#g)" stroke-width="20" stroke-linecap="round"/>
+<path d="M214 287h88l96 145H116z" fill="#071a16" stroke="#0b2b24" stroke-width="10" stroke-linejoin="round"/>
+<path d="M224 315h69M205 344h108M184 378h150M157 414h202" fill="none" stroke="url(#g)" stroke-width="16" stroke-linecap="round"/>
 </svg>

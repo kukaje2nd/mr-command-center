@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MR Command Center mark">
+<defs>
+  <linearGradient id="mrcc-g" x1="70" y1="80" x2="430" y2="440" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#48f0b2"/>
+    <stop offset=".48" stop-color="#25dce7"/>
+    <stop offset=".74" stop-color="#52a8ff"/>
+    <stop offset="1" stop-color="#b89cff"/>
+  </linearGradient>
+  <linearGradient id="mrcc-dark" x1="256" y1="90" x2="256" y2="430" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#10322b"/>
+    <stop offset="1" stop-color="#06110f"/>
+  </linearGradient>
+</defs>
+<g stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="258" cy="226" r="151" fill="none" stroke="#09231e" stroke-width="52"/>
+  <path d="M123 282a151 151 0 1 1 286 4" fill="none" stroke="url(#mrcc-g)" stroke-width="31"/>
+  <circle cx="258" cy="226" r="72" fill="none" stroke="url(#mrcc-g)" stroke-width="27"/>
+  <path d="M82 221h90M72 266h100M84 311h82" fill="none" stroke="url(#mrcc-g)" stroke-width="22"/>
+  <path d="M211 296h94l101 149H108z" fill="url(#mrcc-dark)" stroke="#08231e" stroke-width="12"/>
+  <path d="M222 324h72M203 354h111M181 389h156M153 426h210" fill="none" stroke="url(#mrcc-g)" stroke-width="18"/>
+</g>
+</svg>

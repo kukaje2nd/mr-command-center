@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 const html=fs.readFileSync('index.html','utf8');
 const manifest=fs.readFileSync('manifest.webmanifest','utf8');
+const brand=fs.readFileSync('brand-mark.svg','utf8');
 const sw=fs.readFileSync('sw.js','utf8');
 const fail=[];
 
@@ -94,17 +95,22 @@ for(const text of requiredCopy){
   if(!html.includes(text)) fail.push('Required learning-hub copy is missing: '+text);
 }
 
-if(!fs.existsSync('brand-mark.png')) fail.push('brand-mark.png is missing.');
-else if(fs.statSync('brand-mark.png').size<1000) fail.push('brand-mark.png looks unexpectedly small.');
+if(!fs.existsSync('brand-mark.svg')) fail.push('brand-mark.svg is missing.');
+if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 
 if(!manifest.includes('MRI learning workspace')) fail.push('Manifest description was not updated for the learning product.');
-if(!manifest.includes('/brand-mark.png')) fail.push('Manifest does not include the new brand mark.');
-if(!sw.includes("mrcc-v4.0.0")) fail.push('Service worker cache marker is not v4.0.0.');
-if(!sw.includes('/brand-mark.png')) fail.push('Service worker core assets do not include the brand mark.');
+if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the new brand mark.');
+if(!sw.includes("mrcc-v4.1.0")) fail.push('Service worker cache marker is not v4.1.0.');
+if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
   for(const item of fail) console.error('- '+item);
   process.exit(1);
 }
-console.log('MR Command Center v4.0 Learning Hub validation passed.');
+const removedLogic=['normalizeTaskRecord','saveWorkspaceProfile','trackUsage','workspaceReportText','buildLocalBackupPayload','newShift'];
+for(const name of removedLogic){if(script.includes(name)) fail.push('Obsolete operational logic is still present: '+name);}
+if(!html.includes('<title>MR Command Center — MRI Learning Hub</title>')) fail.push('Page title is not the Learning Hub title.');
+if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the new brand mark.');
+if(fail.length){console.error('\nMR Command Center validation failed:\n');for(const item of fail) console.error('- '+item);process.exit(1);}
+console.log('MR Command Center v4.1 Brand & Cleanup validation passed.');
