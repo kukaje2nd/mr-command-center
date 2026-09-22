@@ -83,7 +83,10 @@ if (!match) {
     'setPaletteCategory',
     'closeMoreTools',
     'renderParameterLens',
-    'jumpParameterLab'
+    'jumpParameterLab',
+    'syncMobileNav',
+    'routeHash',
+    'restoreRouteFromHash'
   ];
 
   for (const name of requiredFunctions) {
@@ -168,7 +171,9 @@ const requiredIds = [
   'focusGroup',
   'focusRelated',
   'paletteFilters',
-  'parameterHomeCallout',
+  'homeSearchBtn',
+  'personalWorkspace',
+  'mobileNav',
   'parameterJumps',
   'paramControlsCard',
   'paramModelCard',
@@ -204,6 +209,9 @@ const forbiddenFragments = [
   'Ready-state dashboard',
   '<aside class="hero-card"',
   'id="offlineMetric"',
+  '<section class="hero">',
+  'id="parameterHomeCallout"',
+  'One-tap launchpad'
 ];
 
 for (const fragment of forbiddenFragments) {
@@ -211,11 +219,13 @@ for (const fragment of forbiddenFragments) {
 }
 
 const requiredNavigationCopy = [
-  '10 modeled controls + deeper parameter reference',
+  'Choose the task in front of you',
+  '10 modeled controls + reference',
   'Parameter Lab',
   'Sequence Rescue',
   'Artifact Solver',
-  'Shift Board'
+  'Shift Board',
+  'Pinned tools + recent session'
 ];
 
 for (const text of requiredNavigationCopy) {
