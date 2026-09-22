@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "MRI learning workspace for safety foundations, scan math, parameter tradeoffs, troubleshooting, and practice.",
+  "description": "MRI parameter workbench for exploring tradeoffs, comparing parameter stacks, saving reusable setups, and accessing safety and troubleshooting references.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
