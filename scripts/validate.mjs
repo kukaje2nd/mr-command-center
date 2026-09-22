@@ -82,7 +82,8 @@ if (!match) {
     'renderFocusBar',
     'setPaletteCategory',
     'closeMoreTools',
-    'renderParameterLens'
+    'renderParameterLens',
+    'jumpParameterLab'
   ];
 
   for (const name of requiredFunctions) {
@@ -132,12 +133,6 @@ const requiredIds = [
   'presetSearch',
   'comparisonHistoryList',
   'historyName',
-  'usageInsights',
-  'usageTopList',
-  'usageShift',
-  'usageAll',
-  'usageDistinct',
-  'usageTopName',
   'learningProgress',
   'learnHistory',
   'learnAttempts',
@@ -173,6 +168,10 @@ const requiredIds = [
   'focusGroup',
   'focusRelated',
   'paletteFilters',
+  'parameterHomeCallout',
+  'parameterJumps',
+  'paramControlsCard',
+  'paramModelCard',
   'sbFreq',
   'sbPhaseFov',
   'sbAccel',
@@ -205,6 +204,18 @@ const forbiddenFragments = [
 
 for (const fragment of forbiddenFragments) {
   if (html.includes(fragment)) fail.push('Removed feature returned unexpectedly: ' + fragment);
+}
+
+const requiredNavigationCopy = [
+  '10 modeled controls + deeper parameter reference',
+  'Parameter Lab',
+  'Sequence Rescue',
+  'Artifact Solver',
+  'Shift Board'
+];
+
+for (const text of requiredNavigationCopy) {
+  if (!html.includes(text)) fail.push('Required direct-navigation copy is missing: ' + text);
 }
 
 const requiredParameterCopy = [
