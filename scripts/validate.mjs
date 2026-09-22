@@ -104,7 +104,7 @@ if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not
 if(!html.includes('<title>MR Command Center — MRI Parameter Workbench</title>')) fail.push('Page title is not the Parameter Workbench title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
 if(!html.includes('data-module-card="burn"')) fail.push('Thermal / RF home module card is missing.');
-if(!html.includes('id="focusPrevBtn"')||!html.includes('id="focusNextBtn"')) fail.push('Previous / next module navigation is missing.');
+if(!html.includes('id="focusPrimaryBtn"')||!html.includes('id="focusSearchBtn"')) fail.push('Workspace focus navigation is missing.');
 if(!html.includes('id="homeFieldGraphic"')||!html.includes('FIELD → SIGNAL → IMAGE')) fail.push('MRI field graphic is missing.');
 if(!html.includes('class="system-panel" id="offlineBar"')) fail.push('Compact system-status drawer is missing.');
 if(!html.includes('max-width:1400px')||!html.includes('@media(min-width:900px){html{font-size:15px}}')) fail.push('De-zoomed visual system is missing.');
