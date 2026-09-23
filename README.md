@@ -1,11 +1,9 @@
 # MR Command Center
 
-MR Command Center is a static, browser-local MRI parameter reasoning workspace for trained professionals. Its recurring core is the Parameter Lab: a relative educational model for changing parameter stacks, inspecting tradeoffs, saving reusable generic setups, comparing A/B states, and approaching common constraints such as scan burden, SNR, spatial detail, and distortion sensitivity.
-
-Safety foundations, scan math, sequence rescue, artifact reasoning, thermal/RF concepts, short drills, Case Lab packs, and publishing tools remain available as reference, onboarding, practice, or creator layers rather than equal-weight daily destinations.
+MR Command Center is a static, browser-local MRI parameter reasoning workspace for trained professionals. The product opens directly into the Parameter Workspace: a relative educational model for changing parameter stacks, inspecting tradeoffs, comparing A/B states, saving reusable generic setups, and working through common constraints such as scan burden, SNR, spatial detail, and distortion sensitivity.
 
 ## Current build
-v6.1 — Compare Flow
+v7.0 — Workspace
 
 ## Production
 - Entry point: `index.html`
@@ -14,37 +12,34 @@ v6.1 — Compare Flow
 - Production deploy: Vercel from `main`
 - Release guard: `node scripts/validate.mjs`
 
+## Product architecture
+The primary interface has five destinations:
+
+1. **Workspace** — the Parameter Lab and live modeled tradeoffs.
+2. **Compare** — Snapshot A vs live B experiments and saved comparison history.
+3. **Challenges** — reusable multi-constraint parameter problems.
+4. **Reference** — Parameter Reference plus supporting Scan Math, troubleshooting, and artifact tools.
+5. **Safety** — MR safety evidence-chain reference, with RF / thermal details inside the safety context.
+
+The legacy course-style homepage, learning-path/review UI, Pack Library, Case Lab, Study Report, Publisher Studio, creator/commercial surfaces, and Micro-Lab are retired from the normal user interface. Existing browser-local data structures may remain for backward compatibility until a later cleanup release.
+
 ## Product principles
-- The Parameter Lab is the primary recurring workspace; reference material supports it rather than competing with it.
+- Parameter reasoning is the product; reference material supports the workspace rather than competing with it.
+- The root route opens the Parameter Workspace instead of a dashboard or curriculum.
+- A/B comparison, presets, local continuity, and constraint challenges are designed for repeat use.
 - Goal tracking reports relative model movement and tradeoffs, not protocol recommendations or diagnostic adequacy.
-- Constraint challenges use generic starting stacks and relative model guardrails for repeatable practice; satisfying a challenge is not protocol validation.
-- Dense reference material is presented as indexed, scan-friendly reference UI rather than undifferentiated reading blocks.
-- Home, reusable Parameter Lab tools, and secondary workspaces share a consistent hierarchy so the recurring workbench remains visually dominant.
-- Focus navigation is workspace-oriented rather than course-oriented: the Lab stays primary, references expose related tools, and linear previous/next completion controls are not part of the main flow.
-- The live Parameter Lab stack auto-saves browser-locally and restores on return, including active goal/challenge context when available.
-- A/B Compare is optimized for rapid experiments: explicit A/B state summaries, changed-controls-only diffs, swap/restore actions, and preset-to-compare shortcuts.
-- Educational learning support, not patient-specific clearance or protocol prescription.
+- Constraint challenges use generic starting stacks and relative model guardrails; satisfying a challenge is not protocol validation.
+- Parameter Reference is indexed and contextual; Scan Math, Rescue, Artifact, and Safety are supporting tools.
+- Educational support only: no patient-specific clearance, protocol prescription, or scanner-specific recommendation.
 - Manufacturer labeling, scanner IFU/limits, authoritative MR safety guidance, and local policy take precedence.
-- Parameter presets, snapshots, comparison history, display preferences, pins, practice history, imported case packs, Case Lab completion history, Publisher Studio drafts/product metadata, Pack Library resume state, and study-report data remain browser-local unless the user explicitly exports data.
-- Unknown or incomplete device conditions are never treated as cleared by the application.
-- Engagement mechanics such as daily streaks or required study-session loops are not part of the primary product experience.
-
-## Release workflow
-MR Command Center uses one consolidated production commit per batch whenever practical. A release commit should include the application change, validator updates, and service-worker cache bump together so one product batch produces one deployment.
-
-Before moving `main`, validate:
-1. JavaScript parses.
-2. HTML ends with exactly one `</html>`.
-3. Inline handlers reference defined functions.
-4. Required Parameter Lab, reference, pack, and creator IDs remain present.
-5. Removed legacy/engagement surfaces do not return.
-6. The service-worker cache marker matches the release.
+- Unknown or incomplete device conditions are never treated as cleared.
+- The live Parameter Workspace, presets, snapshots, comparison history, and display preferences stay browser-local unless explicitly exported.
 
 ## Architecture
 The application is intentionally dependency-light: static HTML/CSS/JavaScript with browser-local storage and no patient-data backend.
 
-## Product direction
-The strongest reusable value is parameter reasoning, not course completion. Home therefore centers on opening the Lab, selecting an optimization goal, reopening saved parameter stacks, and comparing A/B states. Goal mode tracks relative movement against a user-selected teaching target for sampling burden, SNR, or spatial detail and surfaces the largest modeled opposing tradeoff. Distortion remains directional-only because MRCC does not claim a universal distortion equation. Constraint Challenges add repeatable multi-lever exercises with generic starting stacks and simultaneous relative guardrails, evaluated against each challenge's own reference state. The Parameter Reference is organized as an indexed reference desk, and Safety, Scan Math, Rescue, Artifact, RF, and Micro-Lab use a shared presentation system for faster scanning. Home, constraint challenges, presets, comparisons, histories, and the Reference/Practice/Creator zones use the same workbench-oriented visual language. Focused tools use a workspace context bar and contextual footer navigation instead of a linear course sequence. The live Parameter Lab workspace persists locally between visits, with explicit current-state status, one-click Snapshot A capture, and quick preset saving. A/B Compare now behaves like an experiment console: A and B are explicit, unchanged controls are suppressed from the diff, and users can set, swap, restore, copy, and save comparisons with fewer steps. Scan Math, Sequence Rescue, Artifact Solver, safety foundations, and RF material are supporting references. Case packs should increasingly become reusable parameter challenges and scenarios rather than primarily reading exercises.
+## Release workflow
+Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, retired-surface guards, and the release cache marker.
 
-## Monetization direction
-Core safety foundations and the essential Parameter Lab remain free. Paid differentiation should center on deeper parameter challenge packs, advanced scenario collections, larger reusable preset/comparison libraries, exportable comparison reports, and department-managed learning content after appropriate backend, authentication, and privacy work. Publisher Studio and Product Kit continue to create digital-product handoff assets; commerce itself is not connected in the static app.
+## Product direction
+Future product work should deepen the Parameter Workspace rather than restore broad course navigation. The most valuable additions are better parameter scenarios, faster comparison workflows, stronger contextual references, and reusable professional workspace features.
