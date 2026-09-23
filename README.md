@@ -1,9 +1,9 @@
 # MR Command Center
 
-MR Command Center is a static, browser-local MRI parameter reasoning workspace for trained professionals. The product opens directly into the Parameter Workspace: a relative educational model for changing parameter stacks, inspecting tradeoffs, comparing A/B states, saving reusable generic setups, and working through common constraints such as scan burden, SNR, spatial detail, and distortion sensitivity.
+MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, and K-Space experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v7.3 — K-Space Lab
+v7.4 — Lab Reactivity + Stability
 
 ## Production
 - Entry point: `index.html`
@@ -31,7 +31,8 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - K-Space Lab uses a browser-computed 32 × 32 synthetic phantom, discrete Fourier transform, coefficient masks, and inverse transform to teach center/periphery, truncation, and uniform phase undersampling.
 - The root route opens a Labs-first home screen rather than a curriculum or generic dashboard.
 - A/B comparison, presets, local continuity, and constraint challenges are designed for repeat use.
-- Home previews the current browser-local state of Parameter Lab and Contrast Lab so users can resume without rebuilding experiments.
+- Home previews the current browser-local state of Parameter Lab, Contrast Lab, and K-Space Lab so users can resume without rebuilding experiments.
+- Lab restoration is ordered after each lab engine initializes; mobile active states and the built-in self-check use the current Home/Labs navigation contract.
 - Goal tracking reports relative model movement and tradeoffs, not protocol recommendations or diagnostic adequacy.
 - Constraint challenges use generic starting stacks and relative model guardrails; satisfying a challenge is not protocol validation.
 - Parameter Reference is indexed and contextual; Scan Math, Rescue, Artifact, and Safety are supporting tools.
@@ -44,7 +45,7 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 The application is intentionally dependency-light: static HTML/CSS/JavaScript with browser-local storage and no patient-data backend.
 
 ## Release workflow
-Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, retired-surface guards, and the release cache marker.
+Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, retired-surface guards, and the release cache marker.
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, and K-Space Lab establish that pattern; likely future candidates include Artifact, Sequence Timing, Motion, and RF/SAR teaching labs.

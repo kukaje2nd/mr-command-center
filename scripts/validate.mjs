@@ -92,7 +92,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('Fourier-based K-Space')) fail.push('Manifest description is not the v7.3 K-Space Labs description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v7.3.0")) fail.push('Service worker cache marker is not v7.3.0.');
+if(!sw.includes("mrcc-v7.4.0")) fail.push('Service worker cache marker is not v7.4.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the v7.2 MRI Labs title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -129,13 +129,20 @@ if(!script.includes("retiredV7Commands")||!script.includes("'caselab'")||!script
 if(!script.includes("if(id==='learn'){openWorkspaceView('challenges');return}")) fail.push('Retired Micro-Lab route does not redirect to Challenges.');
 if(!html.includes('data-workspace-tab="home"')||!html.includes('data-workspace-tab="labs"')||!html.includes('data-workspace-tab="compare"')||!html.includes('data-workspace-tab="reference"')||!html.includes('data-workspace-tab="safety"')) fail.push('Five-destination Home/Labs navigation is incomplete.');
 if((html.match(/onclick="openLab\('kspace'\)"/g)||[]).length<4||html.includes('title="Planned lab"')) fail.push('K-Space Lab is not fully activated across Labs navigation and home.');
+const contrastModelPos=script.indexOf('const contrastMaterialsModel='),contrastRestorePos=script.lastIndexOf('restoreContrastState();');
+const kspaceModelPos=script.indexOf('const KS_N=32'),kspaceRestorePos=script.lastIndexOf('restoreKspaceState();');
+if(contrastModelPos<0||contrastRestorePos<=contrastModelPos||kspaceModelPos<0||kspaceRestorePos<=kspaceModelPos) fail.push('Contrast/K-Space state restoration runs before the lab engines initialize.');
+if(script.includes('restoreSandboxCurrentState();restoreContrastState()')||script.includes('restoreContrastState();restoreKspaceState();renderPresetLibrary')) fail.push('Early lab restore ordering regression detected.');
+if(!script.includes("#mobileNav [data-workspace-tab]")||script.includes("document.querySelectorAll('[data-mobile-route]')")) fail.push('Mobile active-state sync is using the retired navigation contract.');
+if(!script.includes("Engine: Labs checks passed")||!script.includes("['K-Space Lab',typeof kspaceUpdate==='function'")) fail.push('Built-in self-check is not aligned with the current Labs product.');
 
 
 
 
 
 
-if(!readme.includes('v7.3 — K-Space Lab')||!readme.includes('discrete Fourier transform')) fail.push('README is stale.');
+
+if(!readme.includes('v7.4 — Lab Reactivity + Stability')||!readme.includes('initialization order')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -146,4 +153,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v7.3 K-Space Lab validation passed.');
+console.log('MR Command Center v7.4 Lab Reactivity + Stability validation passed.');
