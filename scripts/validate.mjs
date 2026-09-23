@@ -92,7 +92,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('Fourier-based K-Space')) fail.push('Manifest description is not the v7.3 K-Space Labs description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v7.4.0")) fail.push('Service worker cache marker is not v7.4.0.');
+if(!sw.includes("mrcc-v7.5.0")) fail.push('Service worker cache marker is not v7.5.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the v7.2 MRI Labs title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -135,6 +135,12 @@ if(contrastModelPos<0||contrastRestorePos<=contrastModelPos||kspaceModelPos<0||k
 if(script.includes('restoreSandboxCurrentState();restoreContrastState()')||script.includes('restoreContrastState();restoreKspaceState();renderPresetLibrary')) fail.push('Early lab restore ordering regression detected.');
 if(!script.includes("#mobileNav [data-workspace-tab]")||script.includes("document.querySelectorAll('[data-mobile-route]')")) fail.push('Mobile active-state sync is using the retired navigation contract.');
 if(!script.includes("Engine: Labs checks passed")||!script.includes("['K-Space Lab',typeof kspaceUpdate==='function'")) fail.push('Built-in self-check is not aligned with the current Labs product.');
+const bootMarker="restoreContrastState();restoreKspaceState();renderLabsHome();";
+const bootPos=script.lastIndexOf(bootMarker),bootTail=bootPos>=0?script.slice(bootPos,script.indexOf('</script>',bootPos)):'';
+for(const retired of ['renderLearningProgress();','renderCaseLab();','renderPackLibrary();','renderPackStudio();','renderStudyReport();','renderSessionBuilder();','renderStudyProgress();','renderContinueLearning();','renderStudySession();','renderStudySessionHistory();','recordEngagement();','renderReturnLoop();']){if(bootTail.includes(retired)) fail.push('Retired runtime call returned to Labs boot: '+retired);}
+if(script.includes("syncMobileNav(id);syncLearningPathCurrent(id);syncStudySessionForModule(id)")) fail.push('Retired study/session route hooks returned.');
+if(!script.includes("const footerIds=['safety','math','rescue','artifact','burn']")) fail.push('Workspace footer generation is not scoped to current supporting tools.');
+if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdate();renderCockpit()")) fail.push('Safety tools still trigger retired cockpit rendering.');
 
 
 
@@ -142,7 +148,8 @@ if(!script.includes("Engine: Labs checks passed")||!script.includes("['K-Space L
 
 
 
-if(!readme.includes('v7.4 — Lab Reactivity + Stability')||!readme.includes('initialization order')) fail.push('README is stale.');
+
+if(!readme.includes('v7.5 — Runtime Cleanup')||!readme.includes('normal boot or navigation path')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -153,4 +160,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v7.4 Lab Reactivity + Stability validation passed.');
+console.log('MR Command Center v7.5 Runtime Cleanup validation passed.');
