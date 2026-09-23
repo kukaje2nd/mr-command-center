@@ -71,7 +71,7 @@ const forbiddenFragments=[
 for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push('Removed legacy surface returned unexpectedly: '+fragment);}
 
 const requiredCopy=[
-  'MRCC Workspace','Build, compare, and reason through the parameter stack',
+  'Parameter Lab','Build, compare, and reason through the parameter stack',
   'Contrast Lab','Change timing. Watch synthetic signals separate.','Model boundary','Synthetic material definitions',
   'Current workspace','Problem mode','Start from a constraint',
   'A/B Parameter Compare','Parameter Reference','Related tools',
