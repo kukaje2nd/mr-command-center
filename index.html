@@ -605,13 +605,14 @@ function syncModalScrollLock(){document.body.classList.toggle('modal-open',!!doc
 let prefsReturnFocus=null,paletteReturnFocus=null;
 function localDataHealthy(){
   try{
-    return Array.isArray(sbPresets)&&Array.isArray(comparisonHistory)&&Array.isArray(learningAttempts)&&Array.isArray(studySessionHistory)&&Array.isArray(engagementDays)&&Array.isArray(dailyFocusHistory)&&Array.isArray(importedCasePacks)&&Array.isArray(caseHistory)&&packResume&&typeof packResume==='object'&&Array.isArray(packDrafts)&&uiPrefs&&typeof uiPrefs==='object';
+    return Array.isArray(sbPresets)&&Array.isArray(comparisonHistory)&&uiPrefs&&typeof uiPrefs==='object';
   }catch(e){return false}
 }
 function renderDataHealth(){
   const el=$('dataHealthSummary');if(!el)return;
-  if(!localDataHealthy()){el.textContent='A saved-data structure is unavailable. Run self-check.';return}
-  const readyDrafts=packDrafts.filter(d=>productReadiness(d).ready).length;el.textContent='Presets '+sbPresets.length+' · comparisons '+comparisonHistory.length+' · practice attempts '+learningAttempts.length+' · study sessions '+studySessionHistory.length+' · case completions '+caseHistory.length+' · imported packs '+importedCasePacks.length+' · pack drafts '+packDrafts.length+' ('+readyDrafts+' storefront-ready) · active days '+engagementDays.length+' · daily focuses '+dailyFocusHistory.length+'. '+(dataRepairCount?dataRepairCount+' malformed saved value'+(dataRepairCount===1?' was':'s were')+' repaired or ignored this load.':'Saved learning data structures look healthy.');
+  if(!localDataHealthy()){el.textContent='A current workspace data structure is unavailable. Run self-check.';return}
+  const activeStates=['mrcc_sandbox_current','mrcc_contrast_current','mrcc_kspace_current','mrcc_artifact_current'].filter(k=>{try{return !!localStorage.getItem(k)}catch(e){return false}}).length;
+  el.textContent='Saved parameter setups '+sbPresets.length+' · comparisons '+comparisonHistory.length+' · active Lab states '+activeStates+'/4. '+(dataRepairCount?dataRepairCount+' malformed saved value'+(dataRepairCount===1?' was':'s were')+' repaired or ignored this load.':'Current workspace data structures look healthy.');
 }
 function runDataHealthCheck(){renderDataHealth();toast(localDataHealthy()?'Local data check passed':'Local data check found an issue')}
 
@@ -2185,12 +2186,13 @@ function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':
 function runSelfCheck(){
   const checks=[
     ['Brand + shell',!!$('brandMark')&&!!$('workspaceRail')&&!!$('cockpit')&&!!$('mobileNav')],
-    ['Labs home',typeof renderLabsHome==='function'&&!!$('homeParameterState')&&!!$('homeContrastState')&&!!$('homeKspaceState')],
+    ['Labs home',typeof renderLabsHome==='function'&&!!$('homeParameterState')&&!!$('homeContrastState')&&!!$('homeKspaceState')&&!!$('homeArtifactState')],
     ['Parameter Lab',typeof sandboxUpdate==='function'&&typeof sandboxMetrics==='function'&&!!$('sbFreq')&&!!$('sbAccel')&&!!$('parameterReference')],
     ['Parameter continuity',typeof restoreSandboxCurrentState==='function'&&typeof quickSaveSandboxPreset==='function'&&!!$('labContinuity')],
     ['Contrast Lab',typeof contrastUpdate==='function'&&typeof contrastSignal==='function'&&Array.isArray(contrastMaterialsModel)&&contrastMaterialsModel.length===3&&!!$('clTr')&&!!$('clTe')],
     ['K-Space Lab',typeof kspaceUpdate==='function'&&typeof kspaceDft2D==='function'&&typeof kspaceApplyMask==='function'&&KS_N===32&&!!$('ksKspaceCanvas')&&!!$('ksImageCanvas')],
-    ['Lab persistence',typeof restoreContrastState==='function'&&typeof restoreKspaceState==='function'&&typeof persistContrastState==='function'&&typeof persistKspaceState==='function'],
+    ['Artifact Lab',typeof artifactLabUpdate==='function'&&typeof artifactLabRender==='function'&&!!$('artifactCanvas')&&!!$('artifactStrength')],
+    ['Lab persistence',typeof restoreContrastState==='function'&&typeof restoreKspaceState==='function'&&typeof restoreArtifactLabState==='function'&&typeof persistContrastState==='function'&&typeof persistKspaceState==='function'&&typeof persistArtifactLabState==='function'],
     ['A/B Compare',typeof swapSandboxComparison==='function'&&typeof renderSandboxCompare==='function'&&!!$('parameterCompareWorkbench')],
     ['Preset library',Array.isArray(sbPresets)&&typeof exportSandboxPresets==='function'&&typeof importSandboxPresets==='function'&&!!$('presetList')],
     ['Comparison history',Array.isArray(comparisonHistory)&&typeof saveComparisonHistory==='function'&&!!$('comparisonHistoryList')],
@@ -2200,7 +2202,7 @@ function runSelfCheck(){
     ['Search + settings',typeof runCommand==='function'&&typeof openPalette==='function'&&typeof openPreferences==='function'&&!!$('paletteBack')&&!!$('prefsBack')],
     ['Home/Labs navigation',typeof openLab==='function'&&typeof setWorkspaceTabActive==='function'&&document.querySelectorAll('[data-workspace-tab]').length===10],
     ['Mobile navigation',typeof syncMobileNav==='function'&&document.querySelectorAll('#mobileNav [data-workspace-tab]').length===5],
-    ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'&&sectionTitles.contrast==='Contrast Lab'&&sectionTitles.kspace==='K-Space Lab'],
+    ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'&&sectionTitles.contrast==='Contrast Lab'&&sectionTitles.kspace==='K-Space Lab'&&sectionTitles.artifact==='Artifact Lab'],
     ['Local data layer',typeof readStoredJson==='function'&&typeof localDataHealthy==='function'&&localDataHealthy()],
     ['Offline update flow',typeof applyAppUpdate==='function'],
     ['Runtime monitor',typeof window.__mrccRuntimeErrors==='number'],
