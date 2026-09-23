@@ -569,10 +569,10 @@ updateNetworkState();
 const sectionTitles={safety:'MR Safety Foundations',math:'Scan Math',sandbox:'Parameter Lab',rescue:'Sequence Rescue',artifact:'Artifact Solver',burn:'Thermal / RF Foundations',learn:'Micro-Lab'};
 const homeSectionTitles={referenceOnboarding:'Reference & onboarding',practiceLibraryZone:'Practice & packs',creatorZone:'Creator tools',packLibrary:'Pack Library',caseLab:'Case Lab',packStudio:'Publisher Studio',studyReport:'Study Report'};
 const navGroups={
-  safety:{label:'Safety foundations',ids:['safety','burn']},
-  protocol:{label:'Parameters & math',ids:['math','sandbox']},
-  troubleshoot:{label:'Troubleshooting',ids:['rescue','artifact']},
-  learning:{label:'Practice',ids:['learn']}
+  safety:{label:'Safety reference',ids:['safety','burn']},
+  workspace:{label:'Parameter workspace',ids:['sandbox']},
+  reference:{label:'Supporting reference',ids:['math','rescue','artifact']},
+  legacy:{label:'Archived practice',ids:['learn']}
 };
 const studyModules={safety:'Safety',math:'Scan Math',sandbox:'Parameter Lab',rescue:'Sequence Rescue',artifact:'Artifact Solver',burn:'Thermal / RF',learn:'Micro-Lab'};
 const moduleSequence=['safety','math','sandbox','rescue','artifact','burn','learn'];
@@ -1148,10 +1148,15 @@ function revealHomeContainer(id){
   if(['packStudio'].includes(id)){const z=$('creatorZone');if(z)z.open=true}
   if(['toolDock','studyProgress','personalWorkspace'].includes(id)){const z=$('referenceOnboarding');if(z)z.open=true}
 }
-function restoreRouteFromHash(){const id=location.hash.replace(/^#/,'');if(sectionTitles[id]){setFocusedSection(id);setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}if(homeSectionTitles[id]){showHome(false,true,false);revealHomeContainer(id);document.title=homeSectionTitles[id]+' — MR Command Center';announceRoute(homeSectionTitles[id]+' section');setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}showHome(false,true)}
+function restoreRouteFromHash(){
+  const id=location.hash.replace(/^#/,'');
+  if(id==='learn'||homeSectionTitles[id]){showHome(false,true);return}
+  if(sectionTitles[id]){setFocusedSection(id);setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}
+  showHome(false,true);
+}
 window.addEventListener('hashchange',restoreRouteFromHash);
 window.addEventListener('popstate',restoreRouteFromHash);
-function navGroupFor(id){return Object.values(navGroups).find(g=>g.ids.includes(id))||navGroups.learning}
+function navGroupFor(id){return Object.values(navGroups).find(g=>g.ids.includes(id))||navGroups.reference}
 function setWorkspaceTabActive(tab='workspace'){
   document.querySelectorAll('[data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===tab;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
 }
@@ -1273,7 +1278,7 @@ function go(id,skipTrack=false){
   el.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'});
   if(!skipTrack&&sectionTitles[id])remember(id,sectionTitles[id]);
 }
-function openRecent(id){const cmd=commands.find(c=>c.id===id);if(cmd){runCommand(id);return}if(sectionTitles[id]){go(id);return}recentUsage=recentUsage.filter(x=>x.id!==id);try{sessionStorage.setItem('mrcc_recent',JSON.stringify(recentUsage))}catch(e){}renderCockpit();toast('That older workspace item was removed from the Learning Hub')}
+function openRecent(id){const cmd=commands.find(c=>c.id===id);if(cmd){runCommand(id);return}if(sectionTitles[id]){go(id);return}recentUsage=recentUsage.filter(x=>x.id!==id);try{sessionStorage.setItem('mrcc_recent',JSON.stringify(recentUsage))}catch(e){}renderCockpit();toast('That older item is no longer part of the MRCC workspace')}
 function resumeLast(){if(recentUsage.length)openRecent(recentUsage[0].id)}
 function renderCockpit(){renderPins();const label=$('recentLabel'),resume=$('resumeBtn'),recent=$('recentTools');if(label)label.textContent=recentUsage.length?'Last: '+recentUsage[0].title:'No module opened yet.';if(resume)resume.disabled=!recentUsage.length;if(recent)recent.innerHTML=recentUsage.slice(0,4).map(x=>`<button class="recent-chip" onclick="openRecent('${x.id}')">${escapeHtml(x.title)}</button>`).join('');renderContinueLearning()}
 function tick(){const d=new Date();$('clock').textContent=d.toLocaleString([], {weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'})}setInterval(tick,1000);tick();
