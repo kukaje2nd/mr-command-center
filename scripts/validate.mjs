@@ -17,6 +17,7 @@ if(script){try{new Function(script)}catch(e){fail.push('Inline JavaScript does n
 
 const requiredFunctions=[
   'go','showHome','setFocusedSection','openWorkspaceView','setWorkspaceTabActive','openLab','renderLabsHome',
+  'artifactLabUpdate','artifactLabRender','artifactTeachingCue','applyArtifactLabPreset','restoreArtifactLabState','artifactLabReset',
   'kspaceUpdate','kspaceDft1D','kspaceDft2D','kspaceApplyMask','kspaceModeChanged','applyKspacePreset','restoreKspaceState','kspaceReset',
   'openPalette','setPaletteCategory','openPreferences','runSelfCheck',
   'routeHash','restoreRouteFromHash','syncMobileNav',
@@ -49,7 +50,8 @@ for(const name of referenced){
 }
 
 const requiredIds=[
-  'workspaceRail','cockpit','cockpitTitle','homeParameterState','homeParameterMeta','homeContrastState','homeContrastMeta','homeKspaceState','homeKspaceMeta','homePresetResumeCount','homeCompareResumeCount','sandbox','contrast','kspace','mobileNav',
+  'workspaceRail','cockpit','cockpitTitle','homeParameterState','homeParameterMeta','homeContrastState','homeContrastMeta','homeKspaceState','homeKspaceMeta','homeArtifactState','homeArtifactMeta','homePresetResumeCount','homeCompareResumeCount','sandbox','contrast','kspace','artifact','mobileNav',
+  'artifactCanvas','artifactStrength','artifactStrengthOut','artifactDirection','artifactVisualCue','artifactVisualDetail','artifactVisualBadge','artifactPhaseLabel',
   'ksMode','ksAmount','ksAmountRow','ksAmountLabel','ksAmountHint','ksAmountOut','ksExplain','ksKspaceCanvas','ksImageCanvas','ksRetainedBadge','ksEffectBadge','ksRetained','ksEffect','ksEffectDetail','ksKeyIdea','ksKeyDetail',
   'labContinuity','labContinuityTitle','labContinuityMeta','labChallengeLauncher',
   'paramControlsCard','paramModelCard','parameterLens','parameterReference','workspaceReferenceHub',
@@ -77,6 +79,7 @@ const requiredCopy=[
   'Parameter Lab','Build, compare, and reason through the parameter stack',
   'Contrast Lab','Change timing. Watch synthetic signals separate.','Model boundary','Synthetic material definitions',
   'K-Space Lab','Mask frequency space. Reconstruct the consequence.','Sampled k-space','Teaching reconstruction',
+  'Artifact Lab','Change the pattern. Connect it to the troubleshooting logic.','Visualization boundary','Troubleshooting reference',
   'Current workspace','Problem mode','Start from a constraint',
   'A/B Parameter Compare','Parameter Reference','Related tools',
   'MR Safety Reference','RF / thermal details',
@@ -90,9 +93,9 @@ for(const name of removedLogic){if(script.includes(name)) fail.push('Obsolete lo
 if(!fs.existsSync('brand-mark.svg')) fail.push('brand-mark.svg is missing.');
 if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not remain in the repository.');
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
-if(!manifest.includes('Fourier-based K-Space')) fail.push('Manifest description is not the v7.3 K-Space Labs description.');
+if(!manifest.includes('K-Space, and Artifact')) fail.push('Manifest description is not the v7.6 four-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v7.5.0")) fail.push('Service worker cache marker is not v7.5.0.');
+if(!sw.includes("mrcc-v7.6.0")) fail.push('Service worker cache marker is not v7.6.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the v7.2 MRI Labs title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -102,6 +105,15 @@ if(!html.includes('id="workspaceRail"')||!html.includes('id="labChallengeLaunche
 if(!html.includes('/* v7.1 Labs + Contrast Lab */')||!script.includes('const contrastMaterialsModel=')||!script.includes('mrcc_contrast_current')) fail.push('v7.1 Contrast Lab implementation is missing.');
 if(!html.includes('/* v7.2 Labs home + polish */')||!html.includes('class="labs-library"')||!html.includes('class="labs-home-work"')||!script.includes('function renderLabsHome')) fail.push('v7.2 Labs home implementation is missing.');
 if(!html.includes('/* v7.3 K-Space Lab */')||!script.includes('const KS_N=32')||!script.includes('function kspaceDft2D')||!script.includes('function kspaceApplyMask')||!script.includes('mrcc_kspace_current')) fail.push('v7.3 K-Space Lab implementation is missing.');
+if(!html.includes('/* v7.6 Artifact Lab */')||!script.includes('function artifactLabRender')||!script.includes('mrcc_artifact_current')||!html.includes('id="artifactCanvas"')) fail.push('v7.6 Artifact Lab implementation is missing.');
+if(!html.includes('not scanner data, patient anatomy, or a physical MRI artifact simulator')||!html.includes('Look for structure, not realism.')) fail.push('Artifact Lab visualization boundary is missing.');
+if(!script.includes("artifact:'labs'")||!script.includes("ids:['sandbox','contrast','kspace','artifact']")) fail.push('Artifact Lab is not part of Labs routing.');
+const artifactRestorePos=script.lastIndexOf('restoreArtifactLabState();'),artifactEnginePos=script.indexOf('function artifactLabRender');
+if(artifactEnginePos<0||artifactRestorePos<=artifactEnginePos) fail.push('Artifact Lab state restoration runs before its engine initializes.');
+if(!script.includes("sectionTitles.artifact==='Artifact Lab'")||!script.includes("['Artifact Lab',typeof artifactLabUpdate==='function'")) fail.push('Built-in self-check does not include Artifact Lab.');
+if(!script.includes("active Lab states '+activeStates+'/4")||script.includes("practice attempts '+learningAttempts.length")) fail.push('Local data health is still reporting retired course data.');
+
+
 if(!html.includes('not MRI raw data from a patient or scanner')||!html.includes('Brightness is normalized for visibility')) fail.push('K-Space Lab model-boundary copy is missing.');
 if(!html.includes('not human tissue values')||!html.includes('They do not predict real image intensity.')) fail.push('Contrast Lab model-boundary copy is missing.');
 if(!script.includes("function showHome")||!script.includes("setWorkspaceTabActive('home')")||!script.includes("routeHash('',replaceRoute)")||!script.includes("renderLabsHome()")) fail.push('Labs-first home route behavior is missing.');
@@ -139,7 +151,7 @@ const bootMarker="restoreContrastState();restoreKspaceState();renderLabsHome();"
 const bootPos=script.lastIndexOf(bootMarker),bootTail=bootPos>=0?script.slice(bootPos,script.indexOf('</script>',bootPos)):'';
 for(const retired of ['renderLearningProgress();','renderCaseLab();','renderPackLibrary();','renderPackStudio();','renderStudyReport();','renderSessionBuilder();','renderStudyProgress();','renderContinueLearning();','renderStudySession();','renderStudySessionHistory();','recordEngagement();','renderReturnLoop();']){if(bootTail.includes(retired)) fail.push('Retired runtime call returned to Labs boot: '+retired);}
 if(script.includes("syncMobileNav(id);syncLearningPathCurrent(id);syncStudySessionForModule(id)")) fail.push('Retired study/session route hooks returned.');
-if(!script.includes("const footerIds=['safety','math','rescue','artifact','burn']")) fail.push('Workspace footer generation is not scoped to current supporting tools.');
+if(!script.includes("const footerIds=['safety','math','rescue','burn']")) fail.push('Workspace footer generation is not scoped to current supporting tools.');
 if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdate();renderCockpit()")) fail.push('Safety tools still trigger retired cockpit rendering.');
 
 
@@ -149,7 +161,7 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v7.5 — Runtime Cleanup')||!readme.includes('normal boot or navigation path')) fail.push('README is stale.');
+if(!readme.includes('v7.6 — Artifact Lab')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -160,4 +172,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v7.5 Runtime Cleanup validation passed.');
+console.log('MR Command Center v7.6 Artifact Lab validation passed.');

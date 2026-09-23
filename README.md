@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, and K-Space experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v7.5 — Runtime Cleanup
+v7.6 — Artifact Lab
 
 ## Production
 - Entry point: `index.html`
@@ -16,7 +16,7 @@ v7.5 — Runtime Cleanup
 The primary interface has five destinations:
 
 1. **Home** — a Labs-first launcher showing current local lab state and available labs.
-2. **Labs** — interactive MRI reasoning tools. Parameter Lab, Contrast Lab, and K-Space Lab are active reusable labs.
+2. **Labs** — interactive MRI reasoning tools. Parameter Lab, Contrast Lab, K-Space Lab, and Artifact Lab are active reusable labs.
 3. **Compare** — Snapshot A vs live B experiments and saved comparison history.
 4. **Reference** — Parameter Reference plus supporting Scan Math, troubleshooting, and artifact tools.
 5. **Safety** — MR safety evidence-chain reference, with RF / thermal details inside the safety context.
@@ -29,6 +29,7 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - Interactive MRI reasoning labs are the product; reference material supports the labs rather than competing with them.
 - Parameter Lab remains the flagship tradeoff workspace; Contrast Lab adds a simplified synthetic relaxation experiment for TR, TE, and TI.
 - K-Space Lab uses a browser-computed 32 × 32 synthetic phantom, discrete Fourier transform, coefficient masks, and inverse transform to teach center/periphery, truncation, and uniform phase undersampling.
+- Artifact Lab applies deliberately stylized artifact patterns to a synthetic 2D phantom while preserving the existing cause / first-move / tradeoff troubleshooting reference.
 - The root route opens a Labs-first home screen rather than a curriculum or generic dashboard.
 - A/B comparison, presets, local continuity, and constraint challenges are designed for repeat use.
 - Home previews the current browser-local state of Parameter Lab, Contrast Lab, and K-Space Lab so users can resume without rebuilding experiments.
@@ -49,4 +50,4 @@ The application is intentionally dependency-light: static HTML/CSS/JavaScript wi
 Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, the Labs-only runtime path, retired-surface guards, and the release cache marker.
 
 ## Product direction
-Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, and K-Space Lab establish that pattern; likely future candidates include Artifact, Sequence Timing, Motion, and RF/SAR teaching labs.
+Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, K-Space Lab, and Artifact Lab establish that pattern; likely future candidates include Sequence Timing, Motion, and RF/SAR teaching labs.
