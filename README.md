@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, and K-Space experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v7.4 — Lab Reactivity + Stability
+v7.5 — Runtime Cleanup
 
 ## Production
 - Entry point: `index.html`
@@ -33,6 +33,7 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - A/B comparison, presets, local continuity, and constraint challenges are designed for repeat use.
 - Home previews the current browser-local state of Parameter Lab, Contrast Lab, and K-Space Lab so users can resume without rebuilding experiments.
 - Lab restoration is ordered after each lab engine initializes; mobile active states and the built-in self-check use the current Home/Labs navigation contract.
+- Retired course, study-session, pack, creator, engagement, and dashboard renderers remain available only for backward compatibility; they are no longer executed by the normal boot or navigation path.
 - Goal tracking reports relative model movement and tradeoffs, not protocol recommendations or diagnostic adequacy.
 - Constraint challenges use generic starting stacks and relative model guardrails; satisfying a challenge is not protocol validation.
 - Parameter Reference is indexed and contextual; Scan Math, Rescue, Artifact, and Safety are supporting tools.
@@ -45,7 +46,7 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 The application is intentionally dependency-light: static HTML/CSS/JavaScript with browser-local storage and no patient-data backend.
 
 ## Release workflow
-Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, retired-surface guards, and the release cache marker.
+Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, the Labs-only runtime path, retired-surface guards, and the release cache marker.
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, and K-Space Lab establish that pattern; likely future candidates include Artifact, Sequence Timing, Motion, and RF/SAR teaching labs.
