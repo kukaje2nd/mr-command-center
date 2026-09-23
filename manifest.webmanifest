@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs with Parameter, Contrast, and Fourier-based K-Space experiments, comparisons, contextual references, and MR safety support.",
+  "description": "Interactive MRI reasoning labs with Parameter, Contrast, K-Space, and Artifact experiments, comparisons, contextual references, and MR safety support.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
