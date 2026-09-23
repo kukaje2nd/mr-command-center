@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs for exploring parameter tradeoffs, simplified contrast behavior, comparisons, constraints, and contextual MR safety references.",
+  "description": "Interactive MRI reasoning labs with a Labs-first home, live Parameter and Contrast experiments, comparisons, contextual references, and MR safety support.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
