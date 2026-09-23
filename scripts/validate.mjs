@@ -16,7 +16,7 @@ const script=scripts[0]?.[1]||'';
 if(script){try{new Function(script)}catch(e){fail.push('Inline JavaScript does not parse: '+e.message)}}
 
 const requiredFunctions=[
-  'go','showHome','setFocusedSection','openWorkspaceView','setWorkspaceTabActive',
+  'go','showHome','setFocusedSection','openWorkspaceView','setWorkspaceTabActive','openLab',
   'openPalette','setPaletteCategory','openPreferences','runSelfCheck',
   'routeHash','restoreRouteFromHash','syncMobileNav',
   'sandboxUpdate','renderParameterLens','jumpParameterLab',
@@ -26,6 +26,7 @@ const requiredFunctions=[
   'saveSandboxPreset','exportSandboxPresets','importSandboxPresets',
   'swapSandboxComparison','saveComparisonHistory','renderComparisonHistory',
   'openParameterReferenceGroup',
+  'contrastUpdate','contrastSignal','contrastTeachingCue','applyContrastPreset','contrastReset','restoreContrastState',
   'calcVoxel','calcTime','solveArtifact','updateSafety','burnUpdate',
   'readStoredJson','trapDialogFocus','localDataHealthy','renderDataHealth'
 ];
@@ -47,9 +48,10 @@ for(const name of referenced){
 }
 
 const requiredIds=[
-  'workspaceRail','sandbox','mobileNav',
+  'workspaceRail','sandbox','contrast','mobileNav',
   'labContinuity','labContinuityTitle','labContinuityMeta','labChallengeLauncher',
   'paramControlsCard','paramModelCard','parameterLens','parameterReference','workspaceReferenceHub',
+  'clMode','clTr','clTe','clTi','clTiRow','clTrOut','clTeOut','clTiOut','contrastMaterials','clModeBadge','clSpread','clBrightest','clCue','clCueDetail','contrastEquation',
   'presetLibrary','presetList','presetSearch',
   'parameterChallengePanel','parameterChallengeTitle','parameterChallengeCopy','parameterChallengeState','parameterChallengeReference','parameterChallengeConstraints',
   'parameterGoalPanel','parameterGoalTitle','parameterGoalCopy','parameterGoalTabs','parameterGoalTracker','parameterGoalTarget','parameterGoalMetric','parameterGoalMetricLabel','parameterGoalProgress','parameterGoalProgressCopy','parameterGoalCost','parameterGoalCostCopy','parameterGoalProgressBar',
@@ -69,7 +71,8 @@ const forbiddenFragments=[
 for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push('Removed legacy surface returned unexpectedly: '+fragment);}
 
 const requiredCopy=[
-  'MRCC Workspace','Build, compare, and reason through the parameter stack',
+  'Parameter Lab','Build, compare, and reason through the parameter stack',
+  'Contrast Lab','Change timing. Watch synthetic signals separate.','Model boundary','Synthetic material definitions',
   'Current workspace','Problem mode','Start from a constraint',
   'A/B Parameter Compare','Parameter Reference','Related tools',
   'MR Safety Reference','RF / thermal details',
@@ -83,15 +86,17 @@ for(const name of removedLogic){if(script.includes(name)) fail.push('Obsolete lo
 if(!fs.existsSync('brand-mark.svg')) fail.push('brand-mark.svg is missing.');
 if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not remain in the repository.');
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
-if(!manifest.includes('MRI parameter reasoning workspace')) fail.push('Manifest description is not the v7 workspace description.');
+if(!manifest.includes('Interactive MRI reasoning labs')) fail.push('Manifest description is not the v7.1 Labs description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v7.0.0")) fail.push('Service worker cache marker is not v7.0.0.');
+if(!sw.includes("mrcc-v7.1.0")) fail.push('Service worker cache marker is not v7.1.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Workspace</title>')) fail.push('Page title is not the v7 MRI Workspace title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
 if(!html.includes('class="system-panel" id="offlineBar"')) fail.push('Compact system-status drawer is missing.');
 if(!html.includes('id="routeAnnouncer"')||!script.includes('function announceRoute')||!script.includes("history[replace?'replaceState':'pushState']")) fail.push('Accessible route announcements or browser history navigation are missing.');
 if(!html.includes('id="workspaceRail"')||!html.includes('id="labChallengeLauncher"')||!html.includes('id="workspaceReferenceHub"')) fail.push('V7 workspace navigation / contextual surfaces are missing.');
+if(!html.includes('/* v7.1 Labs + Contrast Lab */')||!script.includes('const contrastMaterialsModel=')||!script.includes('mrcc_contrast_current')) fail.push('v7.1 Contrast Lab implementation is missing.');
+if(!html.includes('not human tissue values')||!html.includes('They do not predict real image intensity.')) fail.push('Contrast Lab model-boundary copy is missing.');
 if(!script.includes("function showHome")||!script.includes("setFocusedSection('sandbox')")||!script.includes("routeHash('',replaceRoute)")) fail.push('Root workspace behavior is missing.');
 if(!html.includes('id="parameterCompareWorkbench"')||!html.includes('id="parameterReference"')||!html.includes('id="presetLibrary"')) fail.push('Core reusable workspace tools are missing.');
 if(!html.includes('id="safety"')||!html.includes('RF / thermal details')) fail.push('Safety reference or integrated RF / thermal path is missing.');
@@ -115,14 +120,14 @@ if(!script.includes("setFocusedSection('sandbox')")||!script.includes("document.
 if(!html.includes('#cockpit{display:none!important}')||!html.includes('.creator-zone,.practice-zone,.reference-onboarding{display:none!important}')) fail.push('Retired dashboard / secondary product surfaces are not hidden from the v7 primary UI.');
 if(!script.includes("retiredV7Commands")||!script.includes("'caselab'")||!script.includes("'packstudio'")||!script.includes("'learningprogress'")) fail.push('Retired v7 commands are not filtered from Search.');
 if(!script.includes("if(id==='learn'){openWorkspaceView('challenges');return}")) fail.push('Retired Micro-Lab route does not redirect to Challenges.');
-if(!html.includes('data-workspace-tab="workspace"')||!html.includes('data-workspace-tab="compare"')||!html.includes('data-workspace-tab="challenges"')||!html.includes('data-workspace-tab="reference"')||!html.includes('data-workspace-tab="safety"')) fail.push('Five-destination workspace navigation is incomplete.');
+if(!html.includes('data-workspace-tab="labs"')||!html.includes('data-workspace-tab="compare"')||!html.includes('data-workspace-tab="challenges"')||!html.includes('data-workspace-tab="reference"')||!html.includes('data-workspace-tab="safety"')) fail.push('Five-destination Labs navigation is incomplete.');
 
 
 
 
 
 
-if(!readme.includes('v7.0 — Workspace')||!readme.includes('five destinations')) fail.push('README is stale.');
+if(!readme.includes('v7.1 — Labs + Contrast Lab')||!readme.includes('Contrast Lab')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -133,4 +138,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v7.0 Workspace validation passed.');
+console.log('MR Command Center v7.1 Labs + Contrast Lab validation passed.');
