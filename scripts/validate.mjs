@@ -50,20 +50,16 @@ for(const name of referenced){
 }
 
 const requiredIds=[
-  'cockpit','workbenchLaunch','challengeShelf','workbenchReuse','homeLabStack','homeLabDetail','homeLabSnr','homeLabTime','homePresetCount','homePresetList','homeComparisonCount','homeSnapshotState',
-  'referenceOnboarding','practiceLibraryZone','creatorZone','toolDock','homeSearchBtn','personalWorkspace','continuePanel','continueTitle','continueMeta','continueBtn','continueIcon','homeFieldGraphic','studyProgress','studyProgressCount','studyGauge','studyGaugeValue','learningPath',
-  'safety','math','sandbox','rescue','artifact','burn','learn',
-  'brandMark','focusBar','focusTitle','focusGroup','focusPosition','focusModuleIcon','focusRelated','focusPrimaryBtn','focusSearchBtn',
-  'mobileNav','paletteBack','paletteFilters','prefsBack','dataHealthSummary',
-  'artifactSelect','context','paramRefGeometry','paramRefSignal','paramRefTime','paramRefContrast','paramRefArtifact','sbFov','sbFreq','sbPhaseFov','sbAccel','sbPf','sbSnr','parameterChallengePanel','parameterChallengeTitle','parameterChallengeCopy','parameterChallengeState','parameterChallengeReference','parameterChallengeConstraints','parameterGoalPanel','parameterGoalTitle','parameterGoalCopy','parameterGoalTabs','parameterGoalTracker','parameterGoalTarget','parameterGoalMetric','parameterGoalMetricLabel','parameterGoalProgress','parameterGoalProgressCopy','parameterGoalCost','parameterGoalCostCopy','parameterGoalProgressBar','parameterCompareWorkbench',
-  'labContinuity','labContinuityTitle','labContinuityMeta','parameterLens','parameterReference','presetList','presetSearch','comparisonHistoryList','compareContext','compareASummary','compareAMeta','compareBSummary','compareBMeta','compareSwapBtn','compareRestoreBtn','compareClearBtn',
-  'learningProgress','learnHistory','learnAttempts','learnBest','learnLatest','learnDays',
-  'sessionBar','sessionBarIcon','sessionBarTitle','sessionBarProgressText','sessionBarProgressFill','sessionPrevBtn','sessionNextBtn','sessionCompleteBtn',
-  'commercialRoadmap',
-  'packLibrary','packLibraryTitle','packLibraryCount','packLibraryCases','packLibraryCompleted','packLibraryImported','packLibrarySearch','packLibraryFilters','packLibraryGrid',
-  'caseLab','caseLabTitle','casePackSource','casePackSelect','casePackRemoveBtn','casePackFile','caseList','caseViewer','studyReport','studyReportTitle','studyReportPreview',
-  'packStudio','packStudioDraftSelect','packStudioSaveState','studioPackId','studioPackTitle','studioPackPublisher','studioPackEdition','studioPackDescription','packStudioValidation','studioCaseEditorTitle','studioCaseId','studioCaseTitle','studioCaseModule','studioCasePrompt','studioTask1','studioTask2','studioTask3','studioCaseReflection','studioCaseSaveBtn','studioCaseCount','studioCaseList',
-  'packProductKit','studioProductSku','studioProductCategory','studioProductAudience','studioProductHeadline','studioProductOutcomes','productCardPreview','productReadinessStatus','productReadinessScore','productReadinessList','copyProductListingBtn','downloadProductListingBtn','downloadProductManifestBtn'
+  'workspaceRail','sandbox','mobileNav',
+  'labContinuity','labContinuityTitle','labContinuityMeta','labChallengeLauncher',
+  'paramControlsCard','paramModelCard','parameterLens','parameterReference','workspaceReferenceHub',
+  'presetLibrary','presetList','presetSearch',
+  'parameterChallengePanel','parameterChallengeTitle','parameterChallengeCopy','parameterChallengeState','parameterChallengeReference','parameterChallengeConstraints',
+  'parameterGoalPanel','parameterGoalTitle','parameterGoalCopy','parameterGoalTabs','parameterGoalTracker','parameterGoalTarget','parameterGoalMetric','parameterGoalMetricLabel','parameterGoalProgress','parameterGoalProgressCopy','parameterGoalCost','parameterGoalCostCopy','parameterGoalProgressBar',
+  'parameterCompareWorkbench','compareContext','compareASummary','compareAMeta','compareBSummary','compareBMeta','compareSwapBtn','compareRestoreBtn','compareClearBtn','comparisonHistoryList',
+  'paramRefGeometry','paramRefSignal','paramRefTime','paramRefContrast','paramRefArtifact',
+  'math','rescue','artifact','safety','burn',
+  'brandMark','paletteBack','paletteFilters','prefsBack','dataHealthSummary'
 ]
 for(const id of requiredIds){if(!html.includes('id="'+id+'"')) fail.push('Required element id is missing: '+id);}
 
@@ -76,20 +72,13 @@ const forbiddenFragments=[
 for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push('Removed legacy surface returned unexpectedly: '+fragment);}
 
 const requiredCopy=[
-  'MRI Parameter Workbench','Reason through MRI parameter tradeoffs','Primary workspace','Solve a constraint','Saved setups','A/B compare',
-  'Reference & onboarding','Practice & packs','Creator tools','MR Safety Foundations','Scan Math','Parameter Lab',
-  'Sequence Rescue','Artifact Solver','Thermal / RF Foundations','Micro-Lab','Learning path','Continue onboarding',
-  'Learning-use boundary','Settings & shortcuts','Commercial roadmap','Planned Pro','Planned Department',
-  'Pack Library','Installed ≠ licensed.','Case Lab','Study Report','Foundations Sampler','Publisher Studio','Build case packs you can distribute'
+  'MRCC Workspace','Build, compare, and reason through the parameter stack',
+  'Current workspace','Problem mode','Start from a constraint',
+  'A/B Parameter Compare','Parameter Reference','Related tools',
+  'MR Safety Reference','RF / thermal details',
+  'Learning-use boundary','Settings & shortcuts'
 ]
-for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required learning-hub copy is missing: '+text);}
-
-const moduleOrder=['safety','math','sandbox','rescue','artifact','burn','learn'];
-const navStart=html.indexOf('<nav class="tool-dock" id="toolDock"');
-const navEnd=html.indexOf('</nav>',navStart);
-const navHtml=navStart>=0&&navEnd>navStart?html.slice(navStart,navEnd):'';
-const positions=moduleOrder.map(id=>navHtml.indexOf('data-module-card="'+id+'"'));
-if(positions.some(x=>x<0)||positions.some((x,i)=>i>0&&x<=positions[i-1])) fail.push('Home learning cards are missing or not in guided-sequence order.');
+for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required v7 workspace copy is missing: '+text);}
 
 const removedLogic=['normalizeTaskRecord','saveWorkspaceProfile','trackUsage','workspaceReportText','buildLocalBackupPayload','newShift','moduleMeta'];
 for(const name of removedLogic){if(script.includes(name)) fail.push('Obsolete logic is still present: '+name);}
@@ -99,7 +88,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('MRI parameter workbench')) fail.push('Manifest description is not the parameter-workbench description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v6.1.0")) fail.push('Service worker cache marker is not v6.1.0.');
+if(!sw.includes("mrcc-v7.0.0")) fail.push('Service worker cache marker is not v7.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Parameter Workbench</title>')) fail.push('Page title is not the Parameter Workbench title.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
@@ -172,34 +161,19 @@ if(!html.includes('/* v6.0 Lab continuity */')||!script.includes("mrcc_sandbox_c
 if(!html.includes('/* v6.1 Compare flow */')||!script.includes('function swapSandboxComparison')||!html.includes('Only changed controls are shown below')||!html.includes('Compare vs current')) fail.push('v6.1 compare flow is missing.');
 for(const legacyId of ['focusStudyBtn','focusPrevBtn','focusNextBtn']){if(html.includes('id="'+legacyId+'"')) fail.push('Course-style focus control returned: '+legacyId);}
 if(html.includes('Previous / next module')||html.includes('aria-label="Previous learning module"')||html.includes('aria-label="Next learning module"')) fail.push('Linear course navigation copy returned.');
-if((html.match(/class="challenge-meta"/g)||[]).length<4) fail.push('v5.8 challenge presentation metadata is incomplete.');
-if(!html.includes('id="referenceOnboarding"')||!html.includes('id="practiceLibraryZone"')||!html.includes('id="creatorZone"')) fail.push('Secondary reference/practice/creator zones are missing.');
-if(html.includes('id="returnLoop"')||html.includes('id="sessionStudio"')||html.includes('id="startHere"')) fail.push('Completion-loop surfaces returned to the primary home experience.');
-if(script.includes("id:'dailyfocus'")||script.includes("id:'studysession'")) fail.push('Daily-focus or guided-session commands returned to Quick Console.');
-if(!html.includes('/* v5.4 Parameter Workbench */')||!html.includes('.sliderline.goal-lever')||!html.includes('.goal-track-grid')||!html.includes('.challenge-home-grid')||!html.includes('.challenge-constraints')) fail.push('Parameter-workbench / challenge visual system is missing.');
-if(!html.includes('id="packLibrary"')||!html.includes('id="packLibraryGrid"')||!html.includes('id="packLibrarySearch"')) fail.push('Pack Library UI is missing.');
-if(!script.includes('function renderPackLibrary')||!script.includes('function packProgress')||!script.includes('function packResumeCaseId')||!script.includes('function startPackStudyRoute')) fail.push('Pack Library behavior is missing.');
-if(!script.includes('mrcc_pack_resume')||!script.includes('function rememberPackPosition')) fail.push('Per-pack resume state is missing.');
-if(!script.includes("id:'packlibrary'")) fail.push('Pack Library Quick Console command is missing.');
-if(!html.includes('Installed ≠ licensed.')||!html.includes('does not verify purchase, entitlement, or license status')) fail.push('Installed-vs-licensed boundary is missing.');
-if(!script.includes('expectedPackUpdateId&&pack.packId!==expectedPackUpdateId')) fail.push('Pack update identity guard is missing.');
-if(!script.includes('pack.installedAt=previous.installedAt||now')||!script.includes('pack.updatedAt=now')) fail.push('Pack update metadata preservation is missing.');
-if(!script.includes('compatible progress preserved')) fail.push('Pack-update progress continuity messaging is missing.');
-if(!script.includes('packResume&&typeof packResume===\'object\'')) fail.push('Pack resume state is not included in local data health.');
-
-const productManifestStart=script.indexOf('function productCatalogManifest');
-const productManifestEnd=script.indexOf('function productListingText',productManifestStart);
-const productManifestBody=productManifestStart>=0&&productManifestEnd>productManifestStart?script.slice(productManifestStart,productManifestEnd):'';
-if(!productManifestBody||!productManifestBody.includes('if(!ready.ready)return null')) fail.push('Catalog manifest must require storefront metadata readiness.');
-const listingStart=script.indexOf('function productListingText');
-const listingEnd=script.indexOf('function renderProductKit',listingStart);
-const listingBody=listingStart>=0&&listingEnd>listingStart?script.slice(listingStart,listingEnd):'';
-if(!listingBody||!listingBody.includes('if(!ready.ready)return')) fail.push('Listing export must require storefront metadata readiness.');
+if(!html.includes('/* v7.0 Workspace architecture */')||!script.includes('function openWorkspaceView')||!script.includes('function setWorkspaceTabActive')) fail.push('v7.0 workspace architecture is missing.');
+if(!script.includes("setFocusedSection('sandbox')")||!script.includes("document.title='MR Command Center — MRI Workspace'")) fail.push('Root route no longer opens the Parameter Workspace.');
+if(!html.includes('#cockpit{display:none!important}')||!html.includes('.creator-zone,.practice-zone,.reference-onboarding{display:none!important}')) fail.push('Retired dashboard / secondary product surfaces are not hidden from the v7 primary UI.');
+if(!script.includes("retiredV7Commands")||!script.includes("'caselab'")||!script.includes("'packstudio'")||!script.includes("'learningprogress'")) fail.push('Retired v7 commands are not filtered from Search.');
+if(!script.includes("if(id==='learn'){openWorkspaceView('challenges');return}")) fail.push('Retired Micro-Lab route does not redirect to Challenges.');
+if(!html.includes('data-workspace-tab="workspace"')||!html.includes('data-workspace-tab="compare"')||!html.includes('data-workspace-tab="challenges"')||!html.includes('data-workspace-tab="reference"')||!html.includes('data-workspace-tab="safety"')) fail.push('Five-destination workspace navigation is incomplete.');
 
 
 
 
-if(!readme.includes('v6.1 — Compare Flow')||!readme.includes('parameter reasoning workspace')) fail.push('README is stale.');
+
+
+if(!readme.includes('v7.0 — Workspace')||!readme.includes('five destinations')) fail.push('README is stale.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -210,4 +184,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v6.1 Compare Flow validation passed.');
+console.log('MR Command Center v7.0 Workspace validation passed.');
