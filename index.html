@@ -466,7 +466,7 @@ body.nav-home #cockpit{display:block!important}body.nav-focus #cockpit{display:n
     <div><span>03</span><b>Explain</b><small>Connect the direction to the underlying tradeoff.</small></div>
   </section>
 </section>
-<details class="system-panel" id="offlineBar"><summary><span class="system-title"><span class="mini-dot"></span><b>System & offline status</b></span><span class="system-summary-meta">Build v7.3 <span aria-hidden="true">·</span> details</span></summary><div class="system-panel-body"><div class="systemstrip"><span class="syschip"><span class="mini-dot" id="sysNetDot"></span><span id="sysNetwork">Online</span></span><span class="syschip" id="cacheChip">Offline cache: checking</span><span class="syschip engine-chip" id="engineChip"><span class="mini-dot"></span><span id="engineText">Engine: ready</span></span><button class="selfcheck" onclick="runSelfCheck()">Run self-check</button></div><span id="offlineCopy">Core labs cache locally after the first successful load. Lab states, presets, and comparison history remain browser-local.</span></div></details>
+<details class="system-panel" id="offlineBar"><summary><span class="system-title"><span class="mini-dot"></span><b>System & offline status</b></span><span class="system-summary-meta">Build v7.4 <span aria-hidden="true">·</span> details</span></summary><div class="system-panel-body"><div class="systemstrip"><span class="syschip"><span class="mini-dot" id="sysNetDot"></span><span id="sysNetwork">Online</span></span><span class="syschip" id="cacheChip">Offline cache: checking</span><span class="syschip engine-chip" id="engineChip"><span class="mini-dot"></span><span id="engineText">Engine: ready</span></span><button class="selfcheck" onclick="runSelfCheck()">Run self-check</button></div><span id="offlineCopy">Core labs cache locally after the first successful load. Lab states, presets, and comparison history remain browser-local.</span></div></details>
 <div class="focusbar" id="focusBar" aria-live="polite"><button type="button" class="focus-home" onclick="showHome()">⌂ Home</button><span class="focus-module-icon" id="focusModuleIcon" aria-hidden="true"></span><div class="focus-copy"><small><span id="focusGroup">Reference tool</span><span class="focus-position" id="focusPosition"></span></small><b id="focusTitle">Current tool</b></div><div class="focus-related" id="focusRelated"></div><button type="button" class="focus-primary" id="focusPrimaryBtn" onclick="runFocusPrimary()">Parameter Lab →</button><button type="button" class="focus-search" id="focusSearchBtn" onclick="openPalette()" aria-label="Search workspace">⌕</button></div>
 <div class="sessionbar" id="sessionBar" aria-live="polite"><span class="sessionbar-icon" id="sessionBarIcon" aria-hidden="true"></span><div class="sessionbar-copy"><small id="sessionBarKicker">Study session</small><b id="sessionBarTitle">Current route</b></div><div class="sessionbar-progress"><span id="sessionBarProgressText">0/0 complete</span><i><em id="sessionBarProgressFill"></em></i></div><button type="button" class="sessionbar-step" id="sessionPrevBtn" onclick="sessionStep(-1)" aria-label="Previous session module">←</button><button type="button" class="sessionbar-complete" id="sessionCompleteBtn" onclick="sessionCompleteStep()">Complete & next</button><button type="button" class="sessionbar-step" id="sessionNextBtn" onclick="sessionStep(1)" aria-label="Next session module">→</button><button type="button" class="sessionbar-end" onclick="endStudySession()">End</button></div>
 
@@ -1232,8 +1232,11 @@ function endStudySession(){
   if(!studySession.finished)archiveStudySession('ended');
   studySession=null;saveStudySession();renderStudySession();renderDataHealth();toast('Study session closed');
 }
-const mobileRouteMap={safety:'safety',burn:'safety',sandbox:'sandbox',math:'sandbox',rescue:'rescue',artifact:'rescue',learn:'learn'};
-function syncMobileNav(id='home'){const route=id==='home'?'home':(mobileRouteMap[id]||'');document.querySelectorAll('[data-mobile-route]').forEach(b=>{const on=b.dataset.mobileRoute===route;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
+const mobileRouteMap={safety:'safety',burn:'safety',sandbox:'labs',contrast:'labs',kspace:'labs',math:'reference',rescue:'reference',artifact:'reference'};
+function syncMobileNav(id='home'){
+  const tab=id==='home'?'home':(mobileRouteMap[id]||'reference');
+  document.querySelectorAll('#mobileNav [data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===tab;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+}
 function announceRoute(label){const el=$('routeAnnouncer');if(!el)return;el.textContent='';setTimeout(()=>{el.textContent=label},20)}
 function routeHash(id,replace=false){try{const home=!id,target=home?location.pathname+location.search:'#'+id;if((home&&!location.hash)||(!home&&location.hash==='#'+id))return;history[replace?'replaceState':'pushState']({mrccRoute:id||'home'},'',target)}catch(e){}}
 function revealHomeContainer(id){
@@ -1942,7 +1945,7 @@ function sandboxReset(){
   for(const [id,value] of Object.entries(values))if($(id))$(id).value=value;
   sandboxUpdate('fov');renderParameterGoal();renderParameterChallenge();toast('Parameter Lab reset');
 }
-restoreSandboxCurrentState();restoreContrastState();restoreKspaceState();renderPresetLibrary();renderComparisonHistory();
+restoreSandboxCurrentState();renderPresetLibrary();renderComparisonHistory();
 
 let rescueMode='time';
 const rescueLibrary={
@@ -2062,42 +2065,32 @@ const burn=[...document.querySelectorAll('.burncheck')];function burnUpdate(){co
 function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function runSelfCheck(){
   const checks=[
-    ['Brand system',!!$('brandMark')&&$('brandMark').getAttribute('src')==='/brand-mark.svg'],
-    ['Safety foundations',typeof updateSafety==='function'&&!!$('safetyChecks')&&!!$('safetyState')],
-    ['Scan Math',typeof calcVoxel==='function'&&typeof calcTime==='function'&&!!$('fovx')&&!!$('tr')],
-    ['Parameter Lab',typeof sandboxUpdate==='function'&&typeof renderParameterLens==='function'&&!!$('sbFreq')&&!!$('sbAccel')&&!!$('parameterReference')],
-    ['Sequence Rescue',typeof rescueLibrary==='object'&&!!$('rescue')],
-    ['Artifact Solver',typeof solveArtifact==='function'&&!!$('artifactSelect')&&!!$('context')],
-    ['Thermal / RF foundations',typeof burnUpdate==='function'&&!!$('burnState')],
-    ['Micro-Lab',typeof scoreQuiz==='function'&&Array.isArray(learningAttempts)&&!!$('learnHistory')],
-    ['Study progress',typeof renderStudyProgress==='function'&&!!$('studyProgress')&&!!$('focusStudyBtn')],
+    ['Brand + shell',!!$('brandMark')&&!!$('workspaceRail')&&!!$('cockpit')&&!!$('mobileNav')],
+    ['Labs home',typeof renderLabsHome==='function'&&!!$('homeParameterState')&&!!$('homeContrastState')&&!!$('homeKspaceState')],
+    ['Parameter Lab',typeof sandboxUpdate==='function'&&typeof sandboxMetrics==='function'&&!!$('sbFreq')&&!!$('sbAccel')&&!!$('parameterReference')],
+    ['Parameter continuity',typeof restoreSandboxCurrentState==='function'&&typeof quickSaveSandboxPreset==='function'&&!!$('labContinuity')],
+    ['Contrast Lab',typeof contrastUpdate==='function'&&typeof contrastSignal==='function'&&Array.isArray(contrastMaterialsModel)&&contrastMaterialsModel.length===3&&!!$('clTr')&&!!$('clTe')],
+    ['K-Space Lab',typeof kspaceUpdate==='function'&&typeof kspaceDft2D==='function'&&typeof kspaceApplyMask==='function'&&KS_N===32&&!!$('ksKspaceCanvas')&&!!$('ksImageCanvas')],
+    ['Lab persistence',typeof restoreContrastState==='function'&&typeof restoreKspaceState==='function'&&typeof persistContrastState==='function'&&typeof persistKspaceState==='function'],
+    ['A/B Compare',typeof swapSandboxComparison==='function'&&typeof renderSandboxCompare==='function'&&!!$('parameterCompareWorkbench')],
     ['Preset library',Array.isArray(sbPresets)&&typeof exportSandboxPresets==='function'&&typeof importSandboxPresets==='function'&&!!$('presetList')],
     ['Comparison history',Array.isArray(comparisonHistory)&&typeof saveComparisonHistory==='function'&&!!$('comparisonHistoryList')],
-    ['Learning data layer',typeof readStoredJson==='function'&&typeof localDataHealthy==='function'&&localDataHealthy()],
+    ['Parameter Reference',typeof openParameterReferenceGroup==='function'&&!!$('paramRefGeometry')&&!!$('paramRefArtifact')],
+    ['Supporting tools',typeof calcVoxel==='function'&&typeof calcTime==='function'&&typeof solveArtifact==='function'&&typeof renderRescue==='function'],
+    ['Safety reference',typeof updateSafety==='function'&&typeof burnUpdate==='function'&&!!$('safety')&&!!$('burn')],
+    ['Search + settings',typeof runCommand==='function'&&typeof openPalette==='function'&&typeof openPreferences==='function'&&!!$('paletteBack')&&!!$('prefsBack')],
+    ['Home/Labs navigation',typeof openLab==='function'&&typeof setWorkspaceTabActive==='function'&&document.querySelectorAll('[data-workspace-tab]').length===10],
+    ['Mobile navigation',typeof syncMobileNav==='function'&&document.querySelectorAll('#mobileNav [data-workspace-tab]').length===5],
+    ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'&&sectionTitles.contrast==='Contrast Lab'&&sectionTitles.kspace==='K-Space Lab'],
+    ['Local data layer',typeof readStoredJson==='function'&&typeof localDataHealthy==='function'&&localDataHealthy()],
     ['Offline update flow',typeof applyAppUpdate==='function'],
     ['Runtime monitor',typeof window.__mrccRuntimeErrors==='number'],
-    ['Display preferences',typeof applyUiPrefs==='function'&&!!$('prefsBack')],
-    ['Dialog focus',typeof trapDialogFocus==='function'&&!!$('paletteBack')],
-    ['Focus navigation',typeof showHome==='function'&&typeof setFocusedSection==='function'&&!!$('toolDock')&&!!$('focusBar')],
-    ['Console filters',typeof setPaletteCategory==='function'&&!!$('paletteFilters')],
-    ['Mobile navigation',typeof syncMobileNav==='function'&&!!$('mobileNav')&&document.querySelectorAll('[data-mobile-route]').length===5],
-    ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'],
-    ['Guided module navigation',typeof stepModule==='function'&&typeof ensureModuleFooters==='function'&&!!$('focusPrevBtn')&&!!$('focusNextBtn')],
-    ['Continue learning',typeof renderContinueLearning==='function'&&!!$('continuePanel')&&!!$('continueBtn')],
-    ['Module artwork',typeof applyModuleArt==='function'&&!!moduleArt.safety&&!!moduleArt.sandbox&&!!$('focusModuleIcon')],
-    ['Learning path',typeof renderLearningPath==='function'&&typeof syncLearningPathCurrent==='function'&&!!$('learningPath')&&!!$('studyGauge')&&!!$('studyGaugeValue')],
-    ['Study sessions',typeof startStudySession==='function'&&typeof renderStudySession==='function'&&typeof sessionCompleteStep==='function'&&Array.isArray(studySessionHistory)&&!!$('sessionStudio')&&!!$('sessionBar')],
-    ['Return loop',typeof renderReturnLoop==='function'&&typeof completeDailyFocus==='function'&&Array.isArray(engagementDays)&&Array.isArray(dailyFocusHistory)&&!!$('returnLoop')&&!!$('weeklyActivity')],
-    ['Case Lab',typeof renderCaseLab==='function'&&typeof importCasePack==='function'&&Array.isArray(importedCasePacks)&&Array.isArray(caseHistory)&&!!$('caseLab')&&!!$('caseViewer')],
-    ['Pack Library',typeof renderPackLibrary==='function'&&typeof packProgress==='function'&&typeof openPackFromLibrary==='function'&&typeof startPackStudyRoute==='function'&&packResume&&typeof packResume==='object'&&!!$('packLibrary')&&!!$('packLibraryGrid')],
-    ['Study Report',typeof studySummaryData==='function'&&typeof downloadStudyReportJson==='function'&&!!$('studyReport')&&!!$('studyReportPreview')],
-    ['Publisher Studio',typeof renderPackStudio==='function'&&typeof exportPackStudio==='function'&&typeof cloneActiveCasePackToStudio==='function'&&Array.isArray(packDrafts)&&!!$('packStudio')&&!!$('studioCaseList')],
-    ['Product Kit',typeof productReadiness==='function'&&typeof productCatalogManifest==='function'&&typeof productListingText==='function'&&!!$('packProductKit')&&!!$('productReadinessList')]
+    ['Dialog focus',typeof trapDialogFocus==='function']
   ];
-  const failed=checks.filter(x=>!x[1]);const chip=$('engineChip'),txt=$('engineText');
+  const failed=checks.filter(x=>!x[1]),chip=$('engineChip'),txt=$('engineText');
   if(failed.length){if(chip)chip.classList.add('issue');if(txt)txt.textContent='Engine: '+failed.length+' check'+(failed.length===1?'':'s')+' failed';toast('Self-check found: '+failed.map(x=>x[0]).join(', '))}
   else if(window.__mrccRuntimeErrors){if(chip)chip.classList.add('issue');if(txt)txt.textContent='Engine: '+window.__mrccRuntimeErrors+' runtime issue'+(window.__mrccRuntimeErrors===1?'':'s');toast('Self-check: runtime issue recorded')}
-  else{if(chip)chip.classList.remove('issue');if(txt)txt.textContent='Engine: checks passed';toast('Self-check passed')}
+  else{if(chip)chip.classList.remove('issue');if(txt)txt.textContent='Engine: Labs checks passed';toast('Self-check passed')}
 }
 renderCockpit();
 const rawLearning=readStoredJson(localStorage,'mrcc_learning_attempts',[]);
@@ -2323,6 +2316,7 @@ function restoreKspaceState(){
 }
 function kspaceReset(notify=true){if($('ksMode'))$('ksMode').value='full';if($('ksAmount'))$('ksAmount').value=100;kspaceUpdate();if(notify)toast('K-Space Lab reset')}
 window.addEventListener('pagehide',()=>{if(sandboxAutosaveTimer){clearTimeout(sandboxAutosaveTimer);sandboxAutosaveTimer=null}try{persistSandboxCurrentState()}catch(e){}});
+restoreContrastState();restoreKspaceState();renderLabsHome();
 renderLearningProgress();applyModuleArt();renderCaseLab();renderPackLibrary();renderPackStudio();renderStudyReport();renderSessionBuilder();ensureModuleFooters();renderStudyProgress();renderContinueLearning();renderStudySession();renderStudySessionHistory();recordEngagement();renderReturnLoop();renderStudyReport();renderParameterGoal();renderParameterChallenge();renderWorkbenchHome();renderDataHealth();restoreRouteFromHash();
 </script>
 </body></html>
