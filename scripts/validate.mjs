@@ -93,11 +93,17 @@ for(const name of removedLogic){if(script.includes(name)) fail.push('Obsolete lo
 if(!fs.existsSync('brand-mark.svg')) fail.push('brand-mark.svg is missing.');
 if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not remain in the repository.');
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
-if(!manifest.includes('K-Space, and Artifact')) fail.push('Manifest description is not the v7.6 four-Lab description.');
+if(!manifest.includes('K-Space, and Artifact')) fail.push('Manifest description is not the four-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v7.6.0")) fail.push('Service worker cache marker is not v7.6.0.');
+if(!sw.includes("mrcc-v7.7.0")) fail.push('Service worker cache marker is not v7.6.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
-if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the v7.2 MRI Labs title.');
+if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the MRI Labs title.');
+if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
+if(!html.includes('property="og:title" content="MR Command Center — MRI Labs"')) fail.push('Open Graph title metadata is missing.');
+if(!html.includes('@media(prefers-reduced-motion:reduce)')) fail.push('Native reduced-motion fallback is missing.');
+if(!html.includes('node-artifact">◫</span>')) fail.push('Labs home graphic does not represent Artifact Lab.');
+if((html.match(/<span>Search workspace<\/span><kbd>\/<\/kbd>/g)||[]).length!==1) fail.push('Keyboard shortcut list contains a duplicate Search workspace entry.');
+if(!html.includes('aria-label="Search tools and problems"')) fail.push('Quick Console search field lacks an accessible name.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
 if(!html.includes('class="system-panel" id="offlineBar"')) fail.push('Compact system-status drawer is missing.');
 if(!html.includes('id="routeAnnouncer"')||!script.includes('function announceRoute')||!script.includes("history[replace?'replaceState':'pushState']")) fail.push('Accessible route announcements or browser history navigation are missing.');
@@ -161,7 +167,9 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v7.6 — Artifact Lab')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!readme.includes('v7.7 — Product Polish')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#artifact')) fail.push('Manifest is missing v7.7 app identity or Lab shortcuts.');
+if(!sw.includes('navigationPreload.enable()')) fail.push('Service worker navigation preload is missing.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
 else{const using=fs.readFileSync('USING_CASE_PACKS.md','utf8');if(!using.includes('Installed does not mean licensed')||!using.includes('stable pack ID')) fail.push('USING_CASE_PACKS.md is missing buyer-side delivery/update guidance.');}
@@ -172,4 +180,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v7.6 Artifact Lab validation passed.');
+console.log('MR Command Center v7.7 Product Polish validation passed.');
