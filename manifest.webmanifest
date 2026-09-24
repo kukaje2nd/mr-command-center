@@ -20,5 +20,65 @@
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
+  ],
+  "id": "/",
+  "categories": [
+    "education",
+    "medical",
+    "utilities"
+  ],
+  "shortcuts": [
+    {
+      "name": "Parameter Lab",
+      "short_name": "Parameters",
+      "description": "Open the MRI parameter tradeoff lab.",
+      "url": "/#sandbox",
+      "icons": [
+        {
+          "src": "/icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Contrast Lab",
+      "short_name": "Contrast",
+      "description": "Open the synthetic MRI contrast lab.",
+      "url": "/#contrast",
+      "icons": [
+        {
+          "src": "/icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "K-Space Lab",
+      "short_name": "K-Space",
+      "description": "Open the synthetic k-space sampling lab.",
+      "url": "/#kspace",
+      "icons": [
+        {
+          "src": "/icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Artifact Lab",
+      "short_name": "Artifacts",
+      "description": "Open the synthetic MRI artifact teaching lab.",
+      "url": "/#artifact",
+      "icons": [
+        {
+          "src": "/icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
   ]
 }
