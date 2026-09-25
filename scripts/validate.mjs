@@ -95,7 +95,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('K-Space, and Artifact')) fail.push('Manifest description is not the four-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v7.7.0")) fail.push('Service worker cache marker is not v7.6.0.');
+if(!sw.includes("mrcc-v7.8.0")) fail.push('Service worker cache marker is not v7.8.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the MRI Labs title.');
 if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
@@ -104,6 +104,11 @@ if(!html.includes('@media(prefers-reduced-motion:reduce)')) fail.push('Native re
 if(!html.includes('node-artifact">◫</span>')) fail.push('Labs home graphic does not represent Artifact Lab.');
 if((html.match(/<span>Search workspace<\/span><kbd>\/<\/kbd>/g)||[]).length!==1) fail.push('Keyboard shortcut list contains a duplicate Search workspace entry.');
 if(!html.includes('aria-label="Search tools and problems"')) fail.push('Quick Console search field lacks an accessible name.');
+if(!html.includes('id="homeResumeLabBtn"')||!script.includes("mrcc_last_lab")||!script.includes('function resumeLastLab')) fail.push('Persistent last-Lab resume flow is missing.');
+if(!script.includes("workspaceViewTargets={compare:'parameterCompareWorkbench'")||!script.includes("challenges:'labChallengeLauncher'")||!script.includes("presets:'presetLibrary'")) fail.push('Deep-link workspace route aliases are missing.');
+const labSwitchers=[...html.matchAll(/<div class="lab-switcher"[\s\S]*?<\/div>/g)].map(m=>m[0]);
+if(labSwitchers.length!==4||labSwitchers.some(x=>!x.includes("openLab('artifact')"))) fail.push('All four Lab switchers must expose Artifact Lab.');
+if((html.match(/data-workspace-tab="labs" onclick="resumeLastLab\(\)"/g)||[]).length!==2) fail.push('Desktop and mobile Labs navigation must resume the last Lab.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
 if(!html.includes('class="system-panel" id="offlineBar"')) fail.push('Compact system-status drawer is missing.');
 if(!html.includes('id="routeAnnouncer"')||!script.includes('function announceRoute')||!script.includes("history[replace?'replaceState':'pushState']")) fail.push('Accessible route announcements or browser history navigation are missing.');
@@ -167,8 +172,8 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v7.7 — Product Polish')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
-if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#artifact')) fail.push('Manifest is missing v7.7 app identity or Lab shortcuts.');
+if(!readme.includes('v7.8 — Navigation & Continuity')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or Lab shortcuts.');
 if(!sw.includes('navigationPreload.enable()')) fail.push('Service worker navigation preload is missing.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
@@ -180,4 +185,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v7.7 Product Polish validation passed.');
+console.log('MR Command Center v7.8 Navigation & Continuity validation passed.');
