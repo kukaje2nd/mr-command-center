@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, and K-Space experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v7.8 — Navigation & Continuity
+v8.0 — Workspace Portability & Recovery
 
 ## Production
 - Entry point: `index.html`
@@ -51,6 +51,15 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, K-Space Lab, and Artifact Lab establish that pattern; likely future candidates include Sequence Timing, Motion, and RF/SAR teaching labs.
+
+### v8.0 release notes
+- Added versioned active-workspace JSON backup/export for browser-local MRCC data.
+- Added staged import with format/schema validation, a 1 MB file limit, allowlisted active keys, and per-feature normalization before restore.
+- Backup scope is intentionally limited to the current product: four Lab states, Parameter presets/snapshot/comparisons, display preferences, pins, and last-Lab continuity.
+- Retired course, case-pack, publisher, and historical learning keys are not exported or overwritten by v8 workspace restore.
+- Added non-sensitive workspace diagnostics for support; diagnostics report counts/status only and exclude Lab values and user-entered labels.
+- Added Export, Import, and Diagnostics actions to both Settings and the Quick Console.
+- Extended in-app self-check coverage to the portability/recovery layer.
 
 ### v7.8 release notes
 - Added a persistent “resume last lab” flow across the Home hero and Labs navigation.
