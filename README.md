@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, and K-Space experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v7.7 — Product Polish
+v7.8 — Navigation & Continuity
 
 ## Production
 - Entry point: `index.html`
@@ -51,6 +51,13 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, K-Space Lab, and Artifact Lab establish that pattern; likely future candidates include Sequence Timing, Motion, and RF/SAR teaching labs.
+
+### v7.8 release notes
+- Added a persistent “resume last lab” flow across the Home hero and Labs navigation.
+- Added stable deep links for A/B Compare, Constraint Challenges, Parameter Reference, and Presets.
+- Updated back/forward and direct-hash restoration so workspace subviews reopen in the intended place.
+- Fixed the K-Space Lab switcher so all four active Labs are available consistently.
+- Routed Parameter workspace shortcuts through the new deep-link navigation without changing model behavior.
 
 ### v7.7 release notes
 - Added canonical/social metadata and installed-PWA shortcuts for the four active labs.
