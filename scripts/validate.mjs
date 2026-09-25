@@ -95,7 +95,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('K-Space, and Artifact')) fail.push('Manifest description is not the four-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v7.8.0")) fail.push('Service worker cache marker is not v7.8.0.');
+if(!sw.includes("mrcc-v8.0.0")) fail.push('Service worker cache marker is not v8.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the MRI Labs title.');
 if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
@@ -109,6 +109,18 @@ if(!script.includes("workspaceViewTargets={compare:'parameterCompareWorkbench'")
 const labSwitchers=[...html.matchAll(/<div class="lab-switcher"[\s\S]*?<\/div>/g)].map(m=>m[0]);
 if(labSwitchers.length!==4||labSwitchers.some(x=>!x.includes("openLab('artifact')"))) fail.push('All four Lab switchers must expose Artifact Lab.');
 if((html.match(/data-workspace-tab="labs" onclick="resumeLastLab\(\)"/g)||[]).length!==2) fail.push('Desktop and mobile Labs navigation must resume the last Lab.');
+if(!html.includes('id="workspaceImportFile"')||!html.includes('id="workspaceExportBtn"')||!html.includes('id="workspaceDiagnosticsBtn"')) fail.push('Workspace portability controls are missing from Settings.');
+if(!script.includes("const MRCC_WORKSPACE_BACKUP_FORMAT='mrcc-workspace'")||!script.includes('MRCC_WORKSPACE_BACKUP_SCHEMA=1')) fail.push('Workspace backup format/schema markers are missing.');
+if(!script.includes('function exportWorkspaceBackup')||!script.includes('function sanitizeWorkspaceBackup')||!script.includes('function handleWorkspaceImportFile')||!script.includes('function applyWorkspaceImport')||!script.includes('function copyWorkspaceDiagnostics')) fail.push('Workspace portability implementation is incomplete.');
+const backupKeyMatch=script.match(/const MRCC_WORKSPACE_ACTIVE_KEYS=\[([^\]]+)\]/);
+const backupKeys=backupKeyMatch?[...backupKeyMatch[1].matchAll(/'([^']+)'/g)].map(x=>x[1]):[];
+const expectedBackupKeys=['mrcc_sandbox_current','mrcc_contrast_current','mrcc_kspace_current','mrcc_artifact_current','mrcc_sandbox_presets','mrcc_sandbox_snapshot','mrcc_compare_history','mrcc_ui_prefs','mrcc_pins','mrcc_last_lab'];
+if(backupKeys.length!==expectedBackupKeys.length||expectedBackupKeys.some(k=>!backupKeys.includes(k))) fail.push('Workspace backup allowlist is not the expected 10 active keys.');
+const retiredBackupKeys=['mrcc_case_history','mrcc_case_packs','mrcc_pack_drafts','mrcc_pack_resume','mrcc_learning_attempts','mrcc_study_progress','mrcc_study_session_history','mrcc_daily_focus_history','mrcc_engagement_days'];
+if(retiredBackupKeys.some(k=>backupKeys.includes(k))) fail.push('Retired product data leaked into the v8 workspace backup allowlist.');
+if(!script.includes('file.size>1000000')||!script.includes("scope:'active-workspace-only'")) fail.push('Workspace import size guard or active-only scope marker is missing.');
+if(!script.includes("id:'workspace-export'")||!script.includes("id:'workspace-import'")||!script.includes("id:'workspace-diagnostics'")) fail.push('Workspace portability Quick Console commands are missing.');
+if(!script.includes("['Workspace portability'")||!script.includes('MRCC_WORKSPACE_ACTIVE_KEYS.length===10')) fail.push('Workspace portability is missing from self-check coverage.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
 if(!html.includes('class="system-panel" id="offlineBar"')) fail.push('Compact system-status drawer is missing.');
 if(!html.includes('id="routeAnnouncer"')||!script.includes('function announceRoute')||!script.includes("history[replace?'replaceState':'pushState']")) fail.push('Accessible route announcements or browser history navigation are missing.');
@@ -172,7 +184,7 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v7.8 — Navigation & Continuity')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!readme.includes('v8.0 — Workspace Portability & Recovery')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
 if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or Lab shortcuts.');
 if(!sw.includes('navigationPreload.enable()')) fail.push('Service worker navigation preload is missing.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
@@ -185,4 +197,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v7.8 Navigation & Continuity validation passed.');
+console.log('MR Command Center v8.0 Workspace Portability & Recovery validation passed.');
