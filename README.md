@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v10.1 — Interface Refinement
+v10.2 — Live Release Identity
 
 ## Production
 - Entry point: `index.html`
@@ -53,6 +53,17 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern; likely future candidates include RF/SAR teaching labs.
+
+### v10.2 release notes
+- Merged the accumulated v7.7–v10.1 work to production before beginning this release.
+- Added a visible **v10.2** build badge beside the MR Command Center brand so the running release can be identified immediately.
+- Kept **Edon Kukaj** visible in the responsive brand treatment instead of hiding the creator credit on narrower screens.
+- Added an always-visible footer signature: **Created by Edon Kukaj · v10.2**.
+- Added a live current-route chip on larger screens for clearer workspace orientation.
+- Added mobile safe-area handling for the bottom navigation.
+- Added automatic centering of the active Lab button in the horizontally scrolling mobile Lab switcher.
+- Corrected workspace restore copy so it refers to the current v10 active workspace rather than the older v8 wording.
+- MRI teaching models and calculations are unchanged.
 
 ### v10.1 release notes
 - Added **Edon Kukaj** to the MR Command Center brand lockup and page author metadata.
