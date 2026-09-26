@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v11.1 — Diffusion Premium Preview
+v11.2 — Parallel Imaging Premium Preview
 
 ## Production
 - Entry point: `index.html`
@@ -54,6 +54,17 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v11.2 release notes
+- Turned **Parallel Imaging Lab** into the second interactive Premium Lab teaser.
+- Added a limited acceleration model with user controls for acceleration factor R and a generic 0–1 encoding-diversity factor.
+- Added live readouts for relative sampling burden, a synthetic g-like noise-amplification proxy, and an SNR-like efficiency proxy using `1 / (√R · g̃)`.
+- Added a visualization of retained synthetic phase-line burden and two stylized encoding profiles that separate more strongly as encoding diversity increases.
+- Kept g̃ explicitly non-physical: it is an invented teaching relationship rather than a measured g-factor or reconstruction output.
+- The preview does not model real coil arrays, calibration data, alias unfolding, reconstruction algorithms, noise covariance, image quality, or protocol adequacy.
+- Diffusion & b-Value remains an interactive premium teaser; RF Power Concepts remains a locked product preview.
+- Billing remains disabled; v11.2 cannot initiate a charge.
+- Updated visible release identity and offline cache marker to v11.2 / v11.2.0.
 
 ### v11.1 release notes
 - Turned **Diffusion & b-Value Lab** into the first interactive Premium Lab teaser.

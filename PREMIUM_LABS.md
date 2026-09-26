@@ -12,7 +12,7 @@ Two entitlement types are planned:
 Initial Premium Lab catalog:
 
 - Diffusion & b-Value Lab — v11.1 includes a deliberately limited public teaser using one normalized mono-exponential model; the full premium workspace remains entitlement-gated.
-- Parallel Imaging Lab
+- Parallel Imaging Lab — v11.2 includes a deliberately limited public teaser for acceleration, synthetic encoding diversity, sampling burden, and an invented g-like penalty; the full reconstruction-focused workspace remains entitlement-gated.
 - RF Power Concepts Lab
 
 The free Lab catalog remains available independently of Premium access.
@@ -132,4 +132,16 @@ For the v11.1 Diffusion teaser:
 - the public model is limited to one generic normalized mono-exponential relationship;
 - it contains no saved premium workspace, multi-model comparison, premium history, or account entitlement;
 - no tissue labels, diagnostic categories, thresholds, or patient-specific interpretation are included;
+- the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.
+
+
+## Parallel Imaging teaser rule
+
+For the v11.2 Parallel Imaging teaser:
+
+- acceleration R is a pedagogical sampling factor rather than a scanner-specific implementation;
+- encoding diversity is a generic 0–1 teaching variable and does not represent a measured coil-sensitivity matrix;
+- g̃ is explicitly an invented noise-amplification proxy, not a calculated g-factor;
+- the displayed SNR-like efficiency is a relative teaching relationship only;
+- no coil calibration, alias unfolding, noise covariance, reconstruction method, image adequacy, or scanner-specific recommendation is modeled;
 - the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.
