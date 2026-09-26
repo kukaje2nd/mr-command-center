@@ -101,7 +101,7 @@ const requiredCopy=[
   'Current workspace','Problem mode','Start from a constraint',
   'A/B Parameter Compare','Parameter Reference','Related tools',
   'MR Safety Reference','RF / thermal details',
-  'Premium Labs · preview','Advanced labs built for paid access.','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','No charges are active in v11.3.',
+  'Premium Labs · access preview','Advanced labs with a real entitlement model.','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','No charges are active in v11.4.',
   'Learning-use boundary','Settings & shortcuts'
 ]
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required v7 workspace copy is missing: '+text);}
