@@ -14,6 +14,7 @@ Initial Premium Lab catalog:
 - Diffusion & b-Value Lab — v11.1 includes a deliberately limited public teaser using one normalized mono-exponential model; the full premium workspace remains entitlement-gated.
 - Parallel Imaging Lab — v11.2 includes a deliberately limited public teaser for acceleration, synthetic encoding diversity, sampling burden, and an invented g-like penalty; the full reconstruction-focused workspace remains entitlement-gated.
 - RF Power Concepts Lab — v11.3 includes a deliberately limited public teaser with a normalized relative RF-activity sensitivity index; the full safety-bounded premium workspace remains entitlement-gated.
+- Gradient Encoding Concepts Lab — v11.5 includes a deliberately limited public teaser using a dimensionless trapezoidal-lobe area model; the full premium workspace remains entitlement-gated.
 
 The free Lab catalog remains available independently of Premium access.
 
@@ -168,7 +169,8 @@ Stable public product keys:
 - `premium_membership` — recurring access to all Premium Labs while active;
 - `premium_diffusion` — one-time entitlement to Diffusion & b-Value Lab;
 - `premium_parallel` — one-time entitlement to Parallel Imaging Lab;
-- `premium_rfpower` — one-time entitlement to RF Power Concepts Lab.
+- `premium_rfpower` — one-time entitlement to RF Power Concepts Lab;
+- `premium_gradient` — one-time entitlement to Gradient Encoding Concepts Lab.
 
 These are MRCC product identifiers, not payment-provider price IDs.
 
@@ -179,3 +181,14 @@ Rules:
 - purchase controls remain non-charging readiness controls until identity, pricing, checkout, webhook verification, and entitlement persistence are all connected;
 - `PREMIUM_ACCESS_MODE='preview-only'` is a product-state marker, not an entitlement;
 - ownership must still come from authenticated server-side entitlement checks.
+
+
+## Gradient Encoding Concepts teaser rule
+
+For the v11.5 Gradient Encoding Concepts teaser:
+
+- amplitude, duration, and ramp share are dimensionless teaching variables;
+- the displayed area is normalized to a reference trapezoid and is not a physical gradient moment;
+- no output may be represented as gradient strength, slew rate, PNS, acoustic behavior, k-space position, timing feasibility, or scanner hardware compliance;
+- no setting may be described as optimal, feasible, scanner-valid, safe, or within hardware limits;
+- the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.
