@@ -29,6 +29,7 @@ const requiredFunctions=[
   'swapSandboxComparison','saveComparisonHistory','renderComparisonHistory',
   'openParameterReferenceGroup',
   'contrastUpdate','contrastSignal','contrastTeachingCue','applyContrastPreset','contrastReset','restoreContrastState',
+  'normalizeTimingState','timingState','timingMetrics','timingUpdate','persistTimingState','applyTimingPreset','restoreTimingState','timingReset',
   'calcVoxel','calcTime','solveArtifact','updateSafety','burnUpdate',
   'readStoredJson','trapDialogFocus','localDataHealthy','renderDataHealth'
 ];
@@ -50,12 +51,13 @@ for(const name of referenced){
 }
 
 const requiredIds=[
-  'workspaceRail','cockpit','cockpitTitle','homeParameterState','homeParameterMeta','homeContrastState','homeContrastMeta','homeKspaceState','homeKspaceMeta','homeArtifactState','homeArtifactMeta','homePresetResumeCount','homeCompareResumeCount','sandbox','contrast','kspace','artifact','mobileNav',
+  'workspaceRail','cockpit','cockpitTitle','homeParameterState','homeParameterMeta','homeContrastState','homeContrastMeta','homeTimingState','homeTimingMeta','homeKspaceState','homeKspaceMeta','homeArtifactState','homeArtifactMeta','homePresetResumeCount','homeCompareResumeCount','sandbox','contrast','timing','kspace','artifact','mobileNav',
   'artifactCanvas','artifactStrength','artifactStrengthOut','artifactDirection','artifactVisualCue','artifactVisualDetail','artifactVisualBadge','artifactPhaseLabel',
   'ksMode','ksAmount','ksAmountRow','ksAmountLabel','ksAmountHint','ksAmountOut','ksExplain','ksKspaceCanvas','ksImageCanvas','ksRetainedBadge','ksEffectBadge','ksRetained','ksEffect','ksEffectDetail','ksKeyIdea','ksKeyDetail',
   'labContinuity','labContinuityTitle','labContinuityMeta','labChallengeLauncher',
   'paramControlsCard','paramModelCard','parameterLens','parameterReference','workspaceReferenceHub',
   'clMode','clTr','clTe','clTi','clTiRow','clTrOut','clTeOut','clTiOut','contrastMaterials','clModeBadge','clSpread','clBrightest','clCue','clCueDetail','contrastEquation',
+  'timingTr','timingFirstEcho','timingSpacing','timingEtl','timingCenter','timingPhase','timingNex','timingCueTitle','timingCueDetail','timingFitBadge','timingTrMarker','timingTrainBand','timingEchoRow','timingEffectiveTe','timingTrainSpan','timingTrainCount','timingTimeProxy',
   'presetLibrary','presetList','presetSearch',
   'parameterChallengePanel','parameterChallengeTitle','parameterChallengeCopy','parameterChallengeState','parameterChallengeReference','parameterChallengeConstraints',
   'parameterGoalPanel','parameterGoalTitle','parameterGoalCopy','parameterGoalTabs','parameterGoalTracker','parameterGoalTarget','parameterGoalMetric','parameterGoalMetricLabel','parameterGoalProgress','parameterGoalProgressCopy','parameterGoalCost','parameterGoalCostCopy','parameterGoalProgressBar',
@@ -78,6 +80,7 @@ const requiredCopy=[
   'Learn MRI by changing the model.','Lab library','Pick the model you want to interrogate.','Your local workspace','Resume without rebuilding the experiment.',
   'Parameter Lab','Build, compare, and reason through the parameter stack',
   'Contrast Lab','Change timing. Watch synthetic signals separate.','Model boundary','Synthetic material definitions',
+  'Sequence Timing Lab','Build an echo train. See where the timing goes.','One repetition window','Echo-train timeline',
   'K-Space Lab','Mask frequency space. Reconstruct the consequence.','Sampled k-space','Teaching reconstruction',
   'Artifact Lab','Change the pattern. Connect it to the troubleshooting logic.','Visualization boundary','Troubleshooting reference',
   'Current workspace','Problem mode','Start from a constraint',
@@ -93,34 +96,35 @@ for(const name of removedLogic){if(script.includes(name)) fail.push('Obsolete lo
 if(!fs.existsSync('brand-mark.svg')) fail.push('brand-mark.svg is missing.');
 if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not remain in the repository.');
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
-if(!manifest.includes('K-Space, and Artifact')) fail.push('Manifest description is not the four-Lab description.');
+if(!manifest.includes('Sequence Timing, K-Space, and Artifact')) fail.push('Manifest description is not the five-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v8.0.0")) fail.push('Service worker cache marker is not v8.0.0.');
+if(!sw.includes("mrcc-v9.0.0")) fail.push('Service worker cache marker is not v9.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the MRI Labs title.');
 if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
 if(!html.includes('property="og:title" content="MR Command Center — MRI Labs"')) fail.push('Open Graph title metadata is missing.');
 if(!html.includes('@media(prefers-reduced-motion:reduce)')) fail.push('Native reduced-motion fallback is missing.');
-if(!html.includes('node-artifact">◫</span>')) fail.push('Labs home graphic does not represent Artifact Lab.');
+if(!html.includes('node-artifact">◫</span>')||!html.includes('node-timing">◷</span>')) fail.push('Labs home graphic does not represent all active Labs.');
 if((html.match(/<span>Search workspace<\/span><kbd>\/<\/kbd>/g)||[]).length!==1) fail.push('Keyboard shortcut list contains a duplicate Search workspace entry.');
 if(!html.includes('aria-label="Search tools and problems"')) fail.push('Quick Console search field lacks an accessible name.');
 if(!html.includes('id="homeResumeLabBtn"')||!script.includes("mrcc_last_lab")||!script.includes('function resumeLastLab')) fail.push('Persistent last-Lab resume flow is missing.');
 if(!script.includes("workspaceViewTargets={compare:'parameterCompareWorkbench'")||!script.includes("challenges:'labChallengeLauncher'")||!script.includes("presets:'presetLibrary'")) fail.push('Deep-link workspace route aliases are missing.');
 const labSwitchers=[...html.matchAll(/<div class="lab-switcher"[\s\S]*?<\/div>/g)].map(m=>m[0]);
-if(labSwitchers.length!==4||labSwitchers.some(x=>!x.includes("openLab('artifact')"))) fail.push('All four Lab switchers must expose Artifact Lab.');
+if(labSwitchers.length!==5||labSwitchers.some(x=>!x.includes("openLab('timing')")||!x.includes("openLab('artifact')"))) fail.push('All five Lab switchers must expose Timing and Artifact Labs.');
 if((html.match(/data-workspace-tab="labs" onclick="resumeLastLab\(\)"/g)||[]).length!==2) fail.push('Desktop and mobile Labs navigation must resume the last Lab.');
 if(!html.includes('id="workspaceImportFile"')||!html.includes('id="workspaceExportBtn"')||!html.includes('id="workspaceDiagnosticsBtn"')) fail.push('Workspace portability controls are missing from Settings.');
-if(!script.includes("const MRCC_WORKSPACE_BACKUP_FORMAT='mrcc-workspace'")||!script.includes('MRCC_WORKSPACE_BACKUP_SCHEMA=1')) fail.push('Workspace backup format/schema markers are missing.');
+if(!script.includes("const MRCC_WORKSPACE_BACKUP_FORMAT='mrcc-workspace'")||!script.includes('MRCC_WORKSPACE_BACKUP_SCHEMA=2')) fail.push('Workspace backup format/schema markers are missing.');
 if(!script.includes('function exportWorkspaceBackup')||!script.includes('function sanitizeWorkspaceBackup')||!script.includes('function handleWorkspaceImportFile')||!script.includes('function applyWorkspaceImport')||!script.includes('function copyWorkspaceDiagnostics')) fail.push('Workspace portability implementation is incomplete.');
 const backupKeyMatch=script.match(/const MRCC_WORKSPACE_ACTIVE_KEYS=\[([^\]]+)\]/);
 const backupKeys=backupKeyMatch?[...backupKeyMatch[1].matchAll(/'([^']+)'/g)].map(x=>x[1]):[];
-const expectedBackupKeys=['mrcc_sandbox_current','mrcc_contrast_current','mrcc_kspace_current','mrcc_artifact_current','mrcc_sandbox_presets','mrcc_sandbox_snapshot','mrcc_compare_history','mrcc_ui_prefs','mrcc_pins','mrcc_last_lab'];
-if(backupKeys.length!==expectedBackupKeys.length||expectedBackupKeys.some(k=>!backupKeys.includes(k))) fail.push('Workspace backup allowlist is not the expected 10 active keys.');
+const expectedBackupKeys=['mrcc_sandbox_current','mrcc_contrast_current','mrcc_timing_current','mrcc_kspace_current','mrcc_artifact_current','mrcc_sandbox_presets','mrcc_sandbox_snapshot','mrcc_compare_history','mrcc_ui_prefs','mrcc_pins','mrcc_last_lab'];
+if(backupKeys.length!==expectedBackupKeys.length||expectedBackupKeys.some(k=>!backupKeys.includes(k))) fail.push('Workspace backup allowlist is not the expected 11 active keys.');
 const retiredBackupKeys=['mrcc_case_history','mrcc_case_packs','mrcc_pack_drafts','mrcc_pack_resume','mrcc_learning_attempts','mrcc_study_progress','mrcc_study_session_history','mrcc_daily_focus_history','mrcc_engagement_days'];
-if(retiredBackupKeys.some(k=>backupKeys.includes(k))) fail.push('Retired product data leaked into the v8 workspace backup allowlist.');
+if(retiredBackupKeys.some(k=>backupKeys.includes(k))) fail.push('Retired product data leaked into the v9 workspace backup allowlist.');
 if(!script.includes('file.size>1000000')||!script.includes("scope:'active-workspace-only'")) fail.push('Workspace import size guard or active-only scope marker is missing.');
+if(!script.includes("![1,MRCC_WORKSPACE_BACKUP_SCHEMA].includes(Number(payload.schema))")) fail.push('v9 workspace import must remain backward-compatible with schema-1 v8 backups.');
 if(!script.includes("id:'workspace-export'")||!script.includes("id:'workspace-import'")||!script.includes("id:'workspace-diagnostics'")) fail.push('Workspace portability Quick Console commands are missing.');
-if(!script.includes("['Workspace portability'")||!script.includes('MRCC_WORKSPACE_ACTIVE_KEYS.length===10')) fail.push('Workspace portability is missing from self-check coverage.');
+if(!script.includes("['Workspace portability'")||!script.includes('MRCC_WORKSPACE_ACTIVE_KEYS.length===11')) fail.push('Workspace portability is missing from self-check coverage.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
 if(!html.includes('class="system-panel" id="offlineBar"')) fail.push('Compact system-status drawer is missing.');
 if(!html.includes('id="routeAnnouncer"')||!script.includes('function announceRoute')||!script.includes("history[replace?'replaceState':'pushState']")) fail.push('Accessible route announcements or browser history navigation are missing.');
@@ -129,6 +133,10 @@ if(!html.includes('/* v7.1 Labs + Contrast Lab */')||!script.includes('const con
 if(!html.includes('/* v7.2 Labs home + polish */')||!html.includes('class="labs-library"')||!html.includes('class="labs-home-work"')||!script.includes('function renderLabsHome')) fail.push('v7.2 Labs home implementation is missing.');
 if(!html.includes('/* v7.3 K-Space Lab */')||!script.includes('const KS_N=32')||!script.includes('function kspaceDft2D')||!script.includes('function kspaceApplyMask')||!script.includes('mrcc_kspace_current')) fail.push('v7.3 K-Space Lab implementation is missing.');
 if(!html.includes('/* v7.6 Artifact Lab */')||!script.includes('function artifactLabRender')||!script.includes('mrcc_artifact_current')||!html.includes('id="artifactCanvas"')) fail.push('v7.6 Artifact Lab implementation is missing.');
+if(!html.includes('/* v9.0 Sequence Timing Lab */')||!script.includes('function timingMetrics')||!script.includes('function timingUpdate')||!script.includes('mrcc_timing_current')||!html.includes('id="timingEchoRow"')) fail.push('v9.0 Sequence Timing Lab implementation is missing.');
+if(!script.includes("const target=id==='contrast'?'contrast':id==='timing'?'timing'")||!script.includes("timing:{id:'timing',label:'Sequence Timing Lab'}")) fail.push('Sequence Timing Lab routing / resume integration is missing.');
+if(!script.includes("restoreContrastState();restoreTimingState();restoreKspaceState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Sequence Timing Lab.');
+
 if(!html.includes('not scanner data, patient anatomy, or a physical MRI artifact simulator')||!html.includes('Look for structure, not realism.')) fail.push('Artifact Lab visualization boundary is missing.');
 if(!script.includes("artifact:'labs'")||!script.includes("ids:['sandbox','contrast','kspace','artifact']")) fail.push('Artifact Lab is not part of Labs routing.');
 const artifactRestorePos=script.lastIndexOf('restoreArtifactLabState();'),artifactEnginePos=script.indexOf('function artifactLabRender');
@@ -184,8 +192,8 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v8.0 — Workspace Portability & Recovery')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
-if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or Lab shortcuts.');
+if(!readme.includes('v9.0 — Sequence Timing Lab')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#timing')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or Lab shortcuts.');
 if(!sw.includes('navigationPreload.enable()')) fail.push('Service worker navigation preload is missing.');
 if(!fs.existsSync('SELLING_CASE_PACKS.md')) fail.push('SELLING_CASE_PACKS.md is missing.');
 if(!fs.existsSync('USING_CASE_PACKS.md')) fail.push('USING_CASE_PACKS.md is missing.');
@@ -197,4 +205,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v8.0 Workspace Portability & Recovery validation passed.');
+console.log('MR Command Center v9.0 Sequence Timing Lab validation passed.');
