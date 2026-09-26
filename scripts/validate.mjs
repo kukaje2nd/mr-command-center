@@ -36,7 +36,8 @@ const requiredFunctions=[
   'readStoredJson','trapDialogFocus','localDataHealthy','renderDataHealth',
   'openPremiumAccess','closePremiumAccess','premiumBackdrop','openPremiumCatalog',
   'diffusionPreviewSignal','drawDiffusionPreview','updateDiffusionPreview',
-  'parallelPreviewMetrics','drawParallelPreview','updateParallelPreview'
+  'parallelPreviewMetrics','drawParallelPreview','updateParallelPreview',
+  'rfPreviewMetrics','drawRfPreview','updateRfPreview'
 ];
 for(const name of requiredFunctions){
   const declaration=new RegExp('function\\s+'+name+'\\s*\\(');
@@ -73,7 +74,8 @@ const requiredIds=[
   'brandMark','paletteBack','paletteFilters','prefsBack','dataHealthSummary',
   'premiumLabs','premiumLabsTitle','premiumBack','premiumModalTitle','premiumModalKicker','premiumModalDescription',
   'diffusionPreview','diffusionPreviewTitle','diffPreviewB','diffPreviewD','diffPreviewBOut','diffPreviewDOut','diffPreviewSignal','diffPreviewLoss','diffPreviewCanvas','diffPreviewPointLabel',
-  'parallelPreview','parallelPreviewTitle','parallelPreviewR','parallelPreviewDiversity','parallelPreviewROut','parallelPreviewDiversityOut','parallelPreviewSampling','parallelPreviewG','parallelPreviewEfficiency','parallelPreviewCanvas','parallelPreviewLineLabel','parallelPreviewPenaltyLabel'
+  'parallelPreview','parallelPreviewTitle','parallelPreviewR','parallelPreviewDiversity','parallelPreviewROut','parallelPreviewDiversityOut','parallelPreviewSampling','parallelPreviewG','parallelPreviewEfficiency','parallelPreviewCanvas','parallelPreviewLineLabel','parallelPreviewPenaltyLabel',
+  'rfPreview','rfPreviewTitle','rfPreviewScale','rfPreviewPulses','rfPreviewRate','rfPreviewScaleOut','rfPreviewPulsesOut','rfPreviewRateOut','rfPreviewIndex','rfPreviewPulseContribution','rfPreviewRateContribution','rfPreviewCanvas','rfPreviewTrendLabel','rfPreviewIndexLabel'
 ]
 for(const id of requiredIds){if(!html.includes('id="'+id+'"')) fail.push('Required element id is missing: '+id);}
 
@@ -96,7 +98,7 @@ const requiredCopy=[
   'Current workspace','Problem mode','Start from a constraint',
   'A/B Parameter Compare','Parameter Reference','Related tools',
   'MR Safety Reference','RF / thermal details',
-  'Premium Labs · preview','Advanced labs built for paid access.','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','No charges are active in v11.2.',
+  'Premium Labs · preview','Advanced labs built for paid access.','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','No charges are active in v11.3.',
   'Learning-use boundary','Settings & shortcuts'
 ]
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required v7 workspace copy is missing: '+text);}
@@ -109,7 +111,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('Sequence Timing, Motion, K-Space, and Artifact')) fail.push('Manifest description is not the six-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v11.2.0")) fail.push('Service worker cache marker is not v11.2.0.');
+if(!sw.includes("mrcc-v11.3.0")) fail.push('Service worker cache marker is not v11.3.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the MRI Labs title.');
 if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
@@ -118,7 +120,7 @@ if(!html.includes('<meta name="author" content="Edon Kukaj" />')) fail.push('Edo
 if(!html.includes('<span class="brandcredit">Edon Kukaj</span>')||!html.includes('aria-label="MR Command Center by Edon Kukaj"')) fail.push('Edon Kukaj brand credit is missing from the header.');
 if(!html.includes('class="top-actions"')||!html.includes('class="top-status"')) fail.push('v10.1 header action/status grouping is missing.');
 if(!html.includes('/* v10.1 Interface refinement */')||!html.includes('scroll-snap-type:x proximity')||!html.includes('.workspace-rail button.active:before')||!html.includes('.lab-home-card:hover,.lab-home-card:focus-within')) fail.push('v10.1 interface refinement styles are incomplete.');
-if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v11.2</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v11.2</span>')) fail.push('Current live release identity is incomplete.');
+if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v11.3</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v11.3</span>')) fail.push('Current live release identity is incomplete.');
 if(!script.includes("function setRouteContext(label='Home')")||!script.includes('function keepActiveLabVisible(target)')||!script.includes("setRouteContext(sectionTitles[id])")) fail.push('v10.2 route context or active-Lab mobile navigation is incomplete.');
 if(!html.includes('env(safe-area-inset-bottom)')) fail.push('v10.2 mobile safe-area handling is missing.');
 if(!html.includes('active v10 workspace keys')) fail.push('Workspace restore copy still references an outdated workspace generation.');
@@ -138,6 +140,12 @@ if(!script.includes('function parallelPreviewMetrics')||!script.includes('1/(Mat
 if(!script.includes("parallel:{title:'Parallel Imaging Lab'")||!script.includes("id==='parallel'&&!!lab.preview")) fail.push('Parallel Imaging preview is not attached to the Premium catalog.');
 if(!html.includes('g̃ is an invented teaching proxy')||!html.includes('generic 0–1 sensitivity-separation proxy')||!premiumDoc.includes('Parallel Imaging teaser rule')) fail.push('Parallel Imaging preview educational boundary is incomplete.');
 if(html.includes('GRAPPA factor recommendation')||html.includes('SENSE factor recommendation')||html.includes('optimal acceleration factor')) fail.push('Parallel Imaging teaser contains scanner- or protocol-prescriptive language.');
+if(!html.includes('/* v11.3 RF Power Concepts premium teaser */')||!html.includes('id="rfPreview"')||!html.includes('id="rfPreviewCanvas"')) fail.push('v11.3 RF Power Concepts premium teaser UI is incomplete.');
+if(!script.includes('function rfPreviewMetrics')||!script.includes('index=scaleContribution*pulseContribution*r')||!script.includes('function drawRfPreview')||!script.includes('function updateRfPreview')) fail.push('v11.3 RF Power Concepts preview model is incomplete.');
+if(!script.includes("rfpower:{title:'RF Power Concepts Lab'")||!script.includes("id==='rfpower'&&!!lab.preview")) fail.push('RF Power Concepts preview is not attached to the Premium catalog.');
+if(!html.includes('invented sensitivity proxy')||!html.includes('never means “safe” or “unsafe.”')||!premiumDoc.includes('RF Power Concepts teaser rule')) fail.push('RF Power Concepts preview safety boundary is incomplete.');
+if(html.includes('SAR estimate:')||html.includes('B1+rms estimate:')||html.includes('safe RF setting')||html.includes('unsafe RF setting')) fail.push('RF Power Concepts teaser contains prohibited compliance or safety outputs.');
+
 
 
 
@@ -235,7 +243,7 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v11.2 — Parallel Imaging Premium Preview')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!readme.includes('v11.3 — RF Power Concepts Premium Preview')||!readme.includes('v11.3 release notes')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
 if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#timing')||!manifest.includes('/#motion')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or Lab shortcuts.');
 if(!sw.includes('navigationPreload.enable()')) fail.push('Service worker navigation preload is missing.');
 if(!fs.existsSync('PREMIUM_LABS.md')) fail.push('PREMIUM_LABS.md is missing.');
@@ -249,4 +257,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v11.2 Parallel Imaging Premium Preview validation passed.');
+console.log('MR Command Center v11.3 RF Power Concepts Premium Preview validation passed.');
