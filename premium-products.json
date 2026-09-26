@@ -32,6 +32,12 @@
       "type": "one_time",
       "scope": "gradient",
       "price_status": "not_configured"
+    },
+    {
+      "key": "premium_offresonance",
+      "type": "one_time",
+      "scope": "offresonance",
+      "price_status": "not_configured"
     }
   ]
 }
