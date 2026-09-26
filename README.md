@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v10.2 — Live Release Identity
+v11.0 — Premium Labs Foundation
 
 ## Production
 - Entry point: `index.html`
@@ -13,7 +13,7 @@ v10.2 — Live Release Identity
 - Release guard: `node scripts/validate.mjs`
 
 ## Product architecture
-The primary interface has five destinations:
+The primary interface keeps the same five top-level destinations; Premium Labs are introduced inside Home as a paid product surface rather than a separate global navigation mode:
 
 1. **Home** — a Labs-first launcher showing current local lab state and available labs.
 2. **Labs** — interactive MRI reasoning tools. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab are active reusable labs.
@@ -34,7 +34,7 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - Artifact Lab applies deliberately stylized artifact patterns to a synthetic 2D phantom while preserving the existing cause / first-move / tradeoff troubleshooting reference.
 - The root route opens a Labs-first home screen rather than a curriculum or generic dashboard.
 - A/B comparison, presets, local continuity, and constraint challenges are designed for repeat use.
-- Home previews the current browser-local state of all five active Labs so users can resume without rebuilding experiments.
+- Home previews the current browser-local state of all six active free Labs so users can resume without rebuilding experiments.
 - Lab restoration is ordered after each lab engine initializes; mobile active states and the built-in self-check use the current Home/Labs navigation contract.
 - Retired course, study-session, pack, creator, engagement, and dashboard renderers remain available only for backward compatibility; they are no longer executed by the normal boot or navigation path.
 - Goal tracking reports relative model movement and tradeoffs, not protocol recommendations or diagnostic adequacy.
@@ -44,15 +44,29 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - Manufacturer labeling, scanner IFU/limits, authoritative MR safety guidance, and local policy take precedence.
 - Unknown or incomplete device conditions are never treated as cleared.
 - The live Parameter Workspace, presets, snapshots, comparison history, and display preferences stay browser-local unless explicitly exported.
+- Premium entitlement decisions are never browser-local. A production billing release must use authenticated server-side entitlement checks confirmed from trusted payment events.
 
 ## Architecture
-The application is intentionally dependency-light: static HTML/CSS/JavaScript with browser-local storage and no patient-data backend.
+The current free application remains intentionally dependency-light: static HTML/CSS/JavaScript with browser-local workspace storage and no patient-data backend. v11.0 adds the Premium Labs product surface but deliberately does not activate billing until authenticated server-side entitlements are available. See `PREMIUM_LABS.md` for the planned Stripe / identity / entitlement architecture.
 
 ## Release workflow
 Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, the Labs-only runtime path, retired-surface guards, and the release cache marker.
 
 ## Product direction
-Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern; likely future candidates include RF/SAR teaching labs.
+Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v11.0 release notes
+- Added a dedicated Premium Labs product surface to Home while keeping all six existing Labs free and unchanged.
+- Added three initial Premium Lab candidates: **Diffusion & b-Value Lab**, **Parallel Imaging Lab**, and **RF Power Concepts Lab**.
+- Added two future purchase modes: an all-Premium recurring membership and a permanent one-time unlock for an individual Lab.
+- Added a Premium access modal that explains the selected Lab, both entitlement types, and the production entitlement flow.
+- Added Premium Labs to Quick Console search with a dedicated Premium category.
+- Added a stable `#premiumLabs` Home deep link through the existing Home-section routing contract.
+- Explicitly disabled checkout in v11.0: no payment can be initiated from this release.
+- Added `PREMIUM_LABS.md` documenting the server-authoritative Stripe, identity, webhook, and entitlement architecture required before live billing.
+- Premium access is intentionally not represented by a browser-local flag or included in workspace backups.
+- Updated the visible release identity and offline cache marker to v11.0 / v11.0.0.
+- MRI teaching models and calculations in the free Labs are unchanged.
 
 ### v10.2 release notes
 - Merged the accumulated v7.7–v10.1 work to production before beginning this release.
