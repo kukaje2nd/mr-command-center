@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v11.3 — RF Power Concepts Premium Preview
+v11.4 — Premium Access Readiness
 
 ## Production
 - Entry point: `index.html`
@@ -54,6 +54,18 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v11.4 release notes
+- Added explicit **Guest / Preview-only / Purchases unavailable** access states across the Premium Labs surface.
+- Added a launch access matrix comparing Free, Premium Membership, and one-time Lab unlock behavior.
+- Added stable provider-neutral product keys: `premium_membership`, `premium_diffusion`, `premium_parallel`, and `premium_rfpower`.
+- Added `premium-products.json` as a provider-neutral product manifest; prices remain intentionally unconfigured.
+- Added launch-price placeholders rather than inventing subscription or one-time prices before the payment provider is provisioned.
+- Added a purchase-readiness panel for identity, price catalog, and checkout/entitlement status.
+- Purchase controls now report readiness only; they cannot create a payment.
+- Premium ownership is still never represented by browser-local state.
+- Added `premium-products.json` to the offline asset cache and bumped the release marker to v11.4 / v11.4.0.
+- No MRI teaching model changed.
 
 ### v11.3 release notes
 - Turned **RF Power Concepts Lab** into the third interactive Premium Lab teaser.
