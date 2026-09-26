@@ -830,7 +830,7 @@ function trapDialogFocus(root,e){
   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
   else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
 }
-function syncModalScrollLock(){document.body.classList.toggle('modal-open',!!document.querySelector('.prefsback.open,.paletteback.open'))}
+function syncModalScrollLock(){document.body.classList.toggle('modal-open',!!document.querySelector('.prefsback.open,.paletteback.open,.premiumback.open'))}
 let prefsReturnFocus=null,paletteReturnFocus=null;
 function localDataHealthy(){
   try{
