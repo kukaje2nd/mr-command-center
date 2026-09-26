@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v12.0 — Premium Lab Hub & Off-Resonance Concepts
+v13.0 — Premium Workspace & Challenge Mode
 
 ## Production
 - Entry point: `index.html`
@@ -54,6 +54,19 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v13.0 release notes
+- Promoted Premium Labs to a **sixth top-level MRCC workspace destination** on desktop and mobile.
+- Added a focused `nav-premium` workspace mode that hides unrelated Home content while keeping the Premium Hub, access model, and previews together.
+- Added stable Premium workspace routing at `#premium`.
+- Added direct deep routes for all five previews: `#premium-diffusion`, `#premium-parallel`, `#premium-rfpower`, `#premium-gradient`, and `#premium-offresonance`.
+- Added a five-question **Premium Concept Challenge** spanning Diffusion, Parallel Imaging, RF Power Concepts, Gradient Encoding, and Off-Resonance.
+- Challenge feedback explains only the relationships represented by the public teaching models.
+- Added session-only challenge score/progress; it is not persisted as an entitlement and does not unlock paid content.
+- Added one-click navigation from each challenge to its related interactive preview.
+- Updated Quick Console Premium commands to open the dedicated Premium workspace and deep-linked preview.
+- Billing remains disabled and Premium ownership remains server-authoritative.
+- Updated visible release identity and offline cache marker to v13.0 / v13.0.0.
 
 ### v12.0 release notes
 - Promoted Premium Labs from a simple card collection into a dedicated **Premium Lab Hub**.

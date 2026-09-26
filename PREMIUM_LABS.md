@@ -217,3 +217,32 @@ For the v12.0 Off-Resonance & Phase teaser:
 - wrapped phase and vector projection are mathematical teaching outputs only;
 - the teaser is not a field map, shim recommendation, chemical-species classifier, artifact severity predictor, correction algorithm, or image-quality assessment;
 - the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.
+
+
+## v13.0 Premium workspace routing
+
+Premium is now a first-class workspace destination rather than only a Home subsection.
+
+Supported public routes:
+
+- `#premium` — Premium Lab Hub;
+- `#premium-diffusion`;
+- `#premium-parallel`;
+- `#premium-rfpower`;
+- `#premium-gradient`;
+- `#premium-offresonance`.
+
+Routing is presentation state only. A Premium route never implies ownership and never bypasses entitlement checks.
+
+## Premium Concept Challenge
+
+v13.0 adds five short relationship-based challenge questions, one for each public Premium teaser.
+
+Challenge rules:
+
+- challenge progress is session-only;
+- challenge score is not an entitlement, purchase, certification, credential, or unlock;
+- a correct answer never changes billing/access state;
+- questions must remain constrained to the public educational model boundary;
+- RF questions must not imply safe/unsafe operation;
+- no challenge may provide patient-specific, diagnostic, device-clearance, or scanner-specific recommendations.
