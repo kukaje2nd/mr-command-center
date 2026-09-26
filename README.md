@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v11.4 — Premium Access Readiness
+v11.5 — Gradient Encoding Concepts Premium Preview
 
 ## Production
 - Entry point: `index.html`
@@ -54,6 +54,17 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v11.5 release notes
+- Added **Gradient Encoding Concepts Lab** as the fourth interactive Premium Lab teaser.
+- Added a dimensionless trapezoidal gradient-lobe model with controls for relative amplitude, relative duration, and combined ramp share.
+- Added normalized readouts for relative lobe area, plateau share, and shape efficiency.
+- Added a live gradient-lobe visualization so amplitude, duration, and ramp-shape effects can be seen directly.
+- Added stable product key `premium_gradient` to the Premium product catalog and Quick Console.
+- The preview deliberately does not calculate gradient strength, slew rate, PNS, acoustic behavior, hardware limits, k-space coordinates, timing feasibility, or protocol adequacy.
+- Diffusion & b-Value, Parallel Imaging, RF Power Concepts, and Gradient Encoding Concepts are now all interactive Premium teasers.
+- Billing remains disabled; v11.5 cannot initiate a charge.
+- Updated visible release identity and offline cache marker to v11.5 / v11.5.0.
 
 ### v11.4 release notes
 - Added explicit **Guest / Preview-only / Purchases unavailable** access states across the Premium Labs surface.
