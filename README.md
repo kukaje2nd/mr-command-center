@@ -1,9 +1,9 @@
 # MR Command Center
 
-MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
+MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v9.0 — Sequence Timing Lab
+v10.0 — Motion Lab
 
 ## Production
 - Entry point: `index.html`
@@ -16,7 +16,7 @@ v9.0 — Sequence Timing Lab
 The primary interface has five destinations:
 
 1. **Home** — a Labs-first launcher showing current local lab state and available labs.
-2. **Labs** — interactive MRI reasoning tools. Parameter Lab, Contrast Lab, Sequence Timing Lab, K-Space Lab, and Artifact Lab are active reusable labs.
+2. **Labs** — interactive MRI reasoning tools. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab are active reusable labs.
 3. **Compare** — Snapshot A vs live B experiments and saved comparison history.
 4. **Reference** — Parameter Reference plus supporting Scan Math, troubleshooting, and artifact tools.
 5. **Safety** — MR safety evidence-chain reference, with RF / thermal details inside the safety context.
@@ -29,6 +29,7 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - Interactive MRI reasoning labs are the product; reference material supports the labs rather than competing with them.
 - Parameter Lab remains the flagship tradeoff workspace; Contrast Lab adds a simplified synthetic relaxation experiment for TR, TE, and TI.
 - Sequence Timing Lab models a deliberately simplified echo train: TR, first echo, constant echo spacing, echo-train length, abstract center-echo assignment, phase encodes, and averages. Its outputs are educational timing relationships rather than scanner-feasibility or protocol recommendations.
+- Motion Lab applies idealized rigid translation to individual synthetic phase-encoding lines using the Fourier shift theorem, then reconstructs the inconsistent dataset so users can compare motion timing and line-order effects.
 - K-Space Lab uses a browser-computed 32 × 32 synthetic phantom, discrete Fourier transform, coefficient masks, and inverse transform to teach center/periphery, truncation, and uniform phase undersampling.
 - Artifact Lab applies deliberately stylized artifact patterns to a synthetic 2D phantom while preserving the existing cause / first-move / tradeoff troubleshooting reference.
 - The root route opens a Labs-first home screen rather than a curriculum or generic dashboard.
@@ -51,7 +52,20 @@ The application is intentionally dependency-light: static HTML/CSS/JavaScript wi
 Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, the Labs-only runtime path, retired-surface guards, and the release cache marker.
 
 ## Product direction
-Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, K-Space Lab, and Artifact Lab establish that pattern; likely future candidates include Motion and RF/SAR teaching labs.
+Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern; likely future candidates include RF/SAR teaching labs.
+
+### v10.0 release notes
+- Added Motion Lab as the sixth active reusable Lab.
+- Added a line-by-line synthetic acquisition model that applies translation-dependent Fourier phase before inverse reconstruction.
+- Added motion patterns for no-motion reference, single shift, periodic translation, and slow drift.
+- Added controls for translation direction, peak displacement, onset timing, periodic cycles, and linear versus centric phase-line ordering.
+- Added an acquisition-history plot showing displacement by acquired phase line and when the synthetic k-space center is sampled.
+- Added side-by-side stationary and motion-corrupted reconstructions from the same 32 × 32 teaching phantom.
+- Added readouts for affected lines, peak translation, center-line shift, and the dominant qualitative teaching cue.
+- Persisted Motion Lab state locally and integrated it with Home previews, last-Lab resume, deep links, mobile navigation, Quick Console, pinning, self-check, and every Lab switcher.
+- Upgraded workspace backup schema to v3 with Motion Lab state as the 12th active key; schema-1 and schema-2 backups remain importable.
+- Added a sixth PWA Lab shortcut and updated the service-worker release marker to v10.0.0.
+- Motion Lab deliberately omits rotation, deformation, through-plane motion, coil sensitivity, signal evolution, gradients, gating, navigator methods, motion correction, parallel imaging, noise, and vendor reconstruction.
 
 ### v9.0 release notes
 - Added Sequence Timing Lab as the fifth active reusable Lab.
