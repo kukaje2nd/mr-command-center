@@ -138,11 +138,11 @@ if(!script.includes("const target=id==='contrast'?'contrast':id==='timing'?'timi
 if(!script.includes("restoreContrastState();restoreTimingState();restoreKspaceState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Sequence Timing Lab.');
 
 if(!html.includes('not scanner data, patient anatomy, or a physical MRI artifact simulator')||!html.includes('Look for structure, not realism.')) fail.push('Artifact Lab visualization boundary is missing.');
-if(!script.includes("artifact:'labs'")||!script.includes("ids:['sandbox','contrast','kspace','artifact']")) fail.push('Artifact Lab is not part of Labs routing.');
+if(!script.includes("timing:'labs'")||!script.includes("artifact:'labs'")||!script.includes("ids:['sandbox','contrast','timing','kspace','artifact']")) fail.push('Active Labs are not fully represented in Labs routing.');
 const artifactRestorePos=script.lastIndexOf('restoreArtifactLabState();'),artifactEnginePos=script.indexOf('function artifactLabRender');
 if(artifactEnginePos<0||artifactRestorePos<=artifactEnginePos) fail.push('Artifact Lab state restoration runs before its engine initializes.');
 if(!script.includes("sectionTitles.artifact==='Artifact Lab'")||!script.includes("['Artifact Lab',typeof artifactLabUpdate==='function'")) fail.push('Built-in self-check does not include Artifact Lab.');
-if(!script.includes("active Lab states '+activeStates+'/4")||script.includes("practice attempts '+learningAttempts.length")) fail.push('Local data health is still reporting retired course data.');
+if(!script.includes("active Lab states '+activeStates+'/5")||script.includes("practice attempts '+learningAttempts.length")) fail.push('Local data health is not using the five-Lab active-state contract.');
 
 
 if(!html.includes('not MRI raw data from a patient or scanner')||!html.includes('Brightness is normalized for visibility')) fail.push('K-Space Lab model-boundary copy is missing.');
