@@ -1440,7 +1440,7 @@ function endStudySession(){
   if(!studySession.finished)archiveStudySession('ended');
   studySession=null;saveStudySession();renderStudySession();renderDataHealth();toast('Study session closed');
 }
-const mobileRouteMap={safety:'safety',burn:'safety',sandbox:'labs',contrast:'labs',kspace:'labs',artifact:'labs',math:'reference',rescue:'reference'};
+const mobileRouteMap={safety:'safety',burn:'safety',sandbox:'labs',contrast:'labs',timing:'labs',kspace:'labs',artifact:'labs',math:'reference',rescue:'reference'};
 function syncMobileNav(id='home'){
   const tab=id==='home'?'home':(mobileRouteMap[id]||'reference');
   document.querySelectorAll('#mobileNav [data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===tab;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
