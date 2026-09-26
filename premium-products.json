@@ -26,6 +26,12 @@
       "type": "one_time",
       "scope": "rfpower",
       "price_status": "not_configured"
+    },
+    {
+      "key": "premium_gradient",
+      "type": "one_time",
+      "scope": "gradient",
+      "price_status": "not_configured"
     }
   ]
 }
