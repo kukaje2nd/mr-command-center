@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs with Parameter, Contrast, K-Space, and Artifact experiments, comparisons, contextual references, and MR safety support.",
+  "description": "Interactive MRI reasoning labs with Parameter, Contrast, Sequence Timing, K-Space, and Artifact experiments, comparisons, contextual references, and MR safety support.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -46,6 +46,19 @@
       "short_name": "Contrast",
       "description": "Open the synthetic MRI contrast lab.",
       "url": "/#contrast",
+      "icons": [
+        {
+          "src": "/icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Sequence Timing Lab",
+      "short_name": "Timing",
+      "description": "Open the simplified echo-train timing teaching lab.",
+      "url": "/#timing",
       "icons": [
         {
           "src": "/icon.svg",
