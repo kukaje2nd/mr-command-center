@@ -15,6 +15,7 @@ Initial Premium Lab catalog:
 - Parallel Imaging Lab — v11.2 includes a deliberately limited public teaser for acceleration, synthetic encoding diversity, sampling burden, and an invented g-like penalty; the full reconstruction-focused workspace remains entitlement-gated.
 - RF Power Concepts Lab — v11.3 includes a deliberately limited public teaser with a normalized relative RF-activity sensitivity index; the full safety-bounded premium workspace remains entitlement-gated.
 - Gradient Encoding Concepts Lab — v11.5 includes a deliberately limited public teaser using a dimensionless trapezoidal-lobe area model; the full premium workspace remains entitlement-gated.
+- Off-Resonance & Phase Lab — v12.0 includes a deliberately limited public teaser for generic frequency-offset phase accrual; the full premium workspace remains entitlement-gated.
 
 The free Lab catalog remains available independently of Premium access.
 
@@ -170,7 +171,8 @@ Stable public product keys:
 - `premium_diffusion` — one-time entitlement to Diffusion & b-Value Lab;
 - `premium_parallel` — one-time entitlement to Parallel Imaging Lab;
 - `premium_rfpower` — one-time entitlement to RF Power Concepts Lab;
-- `premium_gradient` — one-time entitlement to Gradient Encoding Concepts Lab.
+- `premium_gradient` — one-time entitlement to Gradient Encoding Concepts Lab;
+- `premium_offresonance` — one-time entitlement to Off-Resonance & Phase Lab.
 
 These are MRCC product identifiers, not payment-provider price IDs.
 
@@ -191,4 +193,27 @@ For the v11.5 Gradient Encoding Concepts teaser:
 - the displayed area is normalized to a reference trapezoid and is not a physical gradient moment;
 - no output may be represented as gradient strength, slew rate, PNS, acoustic behavior, k-space position, timing feasibility, or scanner hardware compliance;
 - no setting may be described as optimal, feasible, scanner-valid, safe, or within hardware limits;
+- the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.
+
+
+## Premium Lab Hub
+
+v12.0 introduces a filterable Premium Lab Hub. Categories are presentation metadata only and never entitlement boundaries.
+
+Current preview categories:
+
+- Signal — Diffusion & b-Value; Off-Resonance & Phase
+- Acquisition — Parallel Imaging; Gradient Encoding Concepts
+- Safety-bounded — RF Power Concepts
+
+Filtering is client-side discovery only. It must not alter product ownership, billing, or server authorization.
+
+## Off-Resonance & Phase teaser rule
+
+For the v12.0 Off-Resonance & Phase teaser:
+
+- the model uses the generic relationship `φ = 2π·Δf·t`;
+- frequency offset and elapsed time are teaching inputs, not scanner prescriptions;
+- wrapped phase and vector projection are mathematical teaching outputs only;
+- the teaser is not a field map, shim recommendation, chemical-species classifier, artifact severity predictor, correction algorithm, or image-quality assessment;
 - the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.

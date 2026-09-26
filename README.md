@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v11.5 — Gradient Encoding Concepts Premium Preview
+v12.0 — Premium Lab Hub & Off-Resonance Concepts
 
 ## Production
 - Entry point: `index.html`
@@ -54,6 +54,19 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v12.0 release notes
+- Promoted Premium Labs from a simple card collection into a dedicated **Premium Lab Hub**.
+- Added category filters for **All**, **Signal**, **Acquisition**, and **Safety-bounded** Premium Labs.
+- Added live visible/total preview counts and explicit preview-ready status to every Premium card.
+- Added **Off-Resonance & Phase Lab** as the fifth interactive Premium teaser.
+- The new teaser uses the transparent relationship `φ = 2π·Δf·t` with controls for generic frequency offset and observation time.
+- Added live readouts for signed phase cycles, wrapped phase angle, and cosine vector projection.
+- Added a phase-vector / elapsed-time visualization to make phase accrual visible.
+- Added stable product key `premium_offresonance` to the product catalog and Quick Console.
+- Off-Resonance preview is explicitly not a field map, shim tool, chemical-species classifier, artifact-severity predictor, or scanner correction model.
+- Premium access remains preview-only and billing remains disabled.
+- Updated visible release identity and offline cache marker to v12.0 / v12.0.0.
 
 ### v11.5 release notes
 - Added **Gradient Encoding Concepts Lab** as the fourth interactive Premium Lab teaser.
