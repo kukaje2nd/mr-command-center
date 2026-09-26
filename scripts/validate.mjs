@@ -143,7 +143,7 @@ if(!script.includes("const target=id==='contrast'?'contrast':id==='timing'?'timi
 if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Motion Lab.');
 
 if(!script.includes("const target=id==='contrast'?'contrast':id==='timing'?'timing'")||!script.includes("timing:{id:'timing',label:'Sequence Timing Lab'}")) fail.push('Sequence Timing Lab routing / resume integration is missing.');
-if(!script.includes("restoreContrastState();restoreTimingState();restoreKspaceState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Sequence Timing Lab.');
+if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Sequence Timing or Motion Lab.');
 
 if(!html.includes('not scanner data, patient anatomy, or a physical MRI artifact simulator')||!html.includes('Look for structure, not realism.')) fail.push('Artifact Lab visualization boundary is missing.');
 if(!script.includes("timing:'labs'")||!script.includes("motion:'labs'")||!script.includes("artifact:'labs'")||!script.includes("ids:['sandbox','contrast','timing','motion','kspace','artifact']")) fail.push('Active Labs are not fully represented in Labs routing.');
