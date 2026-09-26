@@ -13,7 +13,7 @@ Initial Premium Lab catalog:
 
 - Diffusion & b-Value Lab — v11.1 includes a deliberately limited public teaser using one normalized mono-exponential model; the full premium workspace remains entitlement-gated.
 - Parallel Imaging Lab — v11.2 includes a deliberately limited public teaser for acceleration, synthetic encoding diversity, sampling burden, and an invented g-like penalty; the full reconstruction-focused workspace remains entitlement-gated.
-- RF Power Concepts Lab
+- RF Power Concepts Lab — v11.3 includes a deliberately limited public teaser with a normalized relative RF-activity sensitivity index; the full safety-bounded premium workspace remains entitlement-gated.
 
 The free Lab catalog remains available independently of Premium access.
 
@@ -144,4 +144,16 @@ For the v11.2 Parallel Imaging teaser:
 - g̃ is explicitly an invented noise-amplification proxy, not a calculated g-factor;
 - the displayed SNR-like efficiency is a relative teaching relationship only;
 - no coil calibration, alias unfolding, noise covariance, reconstruction method, image adequacy, or scanner-specific recommendation is modeled;
+- the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.
+
+
+## RF Power Concepts teaser rule
+
+For the v11.3 RF Power Concepts teaser:
+
+- all controls are generic, unitless teaching variables;
+- the RF-activity index is an invented relative sensitivity proxy;
+- no output may be represented as SAR, B1+rms, RF power, deposited energy, temperature, operating mode, scanner compliance, or patient/device heating;
+- no result may be described as safe, unsafe, compliant, cleared, or acceptable;
+- manufacturer labeling, scanner IFU, authoritative MR safety guidance, and local policy remain controlling;
 - the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.
