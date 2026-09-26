@@ -849,12 +849,12 @@ input,select,textarea{transition:border-color .15s var(--ease-ui),box-shadow .15
               <div class="rf-control"><span><label for="rfPreviewRate">Relative repetition rate</label><small>unitless cycle-rate factor</small></span><input id="rfPreviewRate" type="range" min=".5" max="2" step=".1" value="1" oninput="updateRfPreview()"><output id="rfPreviewRateOut">1.0×</output></div>
             </div>
             <div class="rf-readout">
-              <div><small>RF-activity index</small><b id="rfPreviewIndex">0.56×</b><span>normalized teaching proxy</span></div>
+              <div><small>RF-activity index</small><b id="rfPreviewIndex">1.00×</b><span>normalized teaching proxy</span></div>
               <div><small>Pulse-count contribution</small><b id="rfPreviewPulseContribution">1.00×</b><span>relative to 4-pulse reference</span></div>
               <div><small>Rate contribution</small><b id="rfPreviewRateContribution">1.00×</b><span>relative cycle-rate factor</span></div>
             </div>
           </div>
-          <div class="rf-viz"><canvas id="rfPreviewCanvas" width="640" height="240" aria-label="Relative RF activity teaching visualization"></canvas><div class="rf-viz-meta"><span>reference index = 1.00</span><span id="rfPreviewTrendLabel">below reference</span><span id="rfPreviewIndexLabel">index 0.56×</span></div></div>
+          <div class="rf-viz"><canvas id="rfPreviewCanvas" width="640" height="240" aria-label="Relative RF activity teaching visualization"></canvas><div class="rf-viz-meta"><span>reference index = 1.00</span><span id="rfPreviewTrendLabel">near reference</span><span id="rfPreviewIndexLabel">index 1.00×</span></div></div>
         </div>
         <div class="rf-preview-note"><b>Preview boundary:</b> the RF-activity index is an invented sensitivity proxy. It does not calculate or estimate SAR, B1+rms, deposited power, temperature rise, implant/device conditions, operating mode, or scanner compliance. A lower or higher index never means “safe” or “unsafe.” Manufacturer labeling, scanner IFU, authoritative MR safety guidance, and local policy remain controlling.</div>
       </div>
