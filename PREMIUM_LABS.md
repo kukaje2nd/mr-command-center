@@ -11,7 +11,7 @@ Two entitlement types are planned:
 
 Initial Premium Lab catalog:
 
-- Diffusion & b-Value Lab
+- Diffusion & b-Value Lab — v11.1 includes a deliberately limited public teaser using one normalized mono-exponential model; the full premium workspace remains entitlement-gated.
 - Parallel Imaging Lab
 - RF Power Concepts Lab
 
@@ -121,3 +121,15 @@ Premium Labs must retain the same MRCC product boundary:
 - no claim of diagnostic adequacy;
 - no substitution for manufacturer labeling, scanner IFU, authoritative MR safety guidance, or local policy;
 - advanced RF / safety teaching models must not calculate or imply patient- or device-specific clearance.
+
+
+## Public teaser rule
+
+Premium marketing may include limited interactive teasers, but a teaser must not become the entitlement boundary.
+
+For the v11.1 Diffusion teaser:
+
+- the public model is limited to one generic normalized mono-exponential relationship;
+- it contains no saved premium workspace, multi-model comparison, premium history, or account entitlement;
+- no tissue labels, diagnostic categories, thresholds, or patient-specific interpretation are included;
+- the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.
