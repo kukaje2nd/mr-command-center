@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v11.0 — Premium Labs Foundation
+v11.1 — Diffusion Premium Preview
 
 ## Production
 - Entry point: `index.html`
@@ -54,6 +54,17 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v11.1 release notes
+- Turned **Diffusion & b-Value Lab** into the first interactive Premium Lab teaser.
+- Added a limited normalized mono-exponential diffusion model using `S/S₀ = e^(−bD)`.
+- Added preview controls for b-value and a generic modeled diffusivity coefficient.
+- Added live normalized-signal and attenuation readouts plus a plotted diffusion-decay curve.
+- Kept the teaser intentionally generic: no tissue labels, lesion categories, diagnostic thresholds, or patient-specific ADC interpretation.
+- The full paid Diffusion Lab remains reserved for authenticated premium access and is planned to add multi-model comparison, structured sweeps, saved experiments, and deeper teaching prompts.
+- Parallel Imaging and RF Power Concepts remain locked product previews.
+- Billing remains disabled; v11.1 cannot initiate a charge.
+- Updated visible release identity and offline cache marker to v11.1 / v11.1.0.
 
 ### v11.0 release notes
 - Added a dedicated Premium Labs product surface to Home while keeping all six existing Labs free and unchanged.
