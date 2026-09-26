@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "billing_enabled": false,
+  "access_mode": "preview-only",
+  "products": [
+    {
+      "key": "premium_membership",
+      "type": "subscription",
+      "scope": "all_premium_labs",
+      "price_status": "not_configured"
+    },
+    {
+      "key": "premium_diffusion",
+      "type": "one_time",
+      "scope": "diffusion",
+      "price_status": "not_configured"
+    },
+    {
+      "key": "premium_parallel",
+      "type": "one_time",
+      "scope": "parallel",
+      "price_status": "not_configured"
+    },
+    {
+      "key": "premium_rfpower",
+      "type": "one_time",
+      "scope": "rfpower",
+      "price_status": "not_configured"
+    }
+  ]
+}

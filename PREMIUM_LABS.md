@@ -157,3 +157,25 @@ For the v11.3 RF Power Concepts teaser:
 - no result may be described as safe, unsafe, compliant, cleared, or acceptable;
 - manufacturer labeling, scanner IFU, authoritative MR safety guidance, and local policy remain controlling;
 - the full premium implementation must remain behind server-authoritative entitlement checks once billing launches.
+
+
+## v11.4 product-key contract
+
+v11.4 adds a provider-neutral `premium-products.json` manifest before any payment provider is provisioned.
+
+Stable public product keys:
+
+- `premium_membership` — recurring access to all Premium Labs while active;
+- `premium_diffusion` — one-time entitlement to Diffusion & b-Value Lab;
+- `premium_parallel` — one-time entitlement to Parallel Imaging Lab;
+- `premium_rfpower` — one-time entitlement to RF Power Concepts Lab.
+
+These are MRCC product identifiers, not payment-provider price IDs.
+
+Rules:
+
+- prices remain unconfigured until the payment integration is actually provisioned;
+- the browser may display the stable MRCC product key, but never a secret or arbitrary provider price ID;
+- purchase controls remain non-charging readiness controls until identity, pricing, checkout, webhook verification, and entitlement persistence are all connected;
+- `PREMIUM_ACCESS_MODE='preview-only'` is a product-state marker, not an entitlement;
+- ownership must still come from authenticated server-side entitlement checks.
