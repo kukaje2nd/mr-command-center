@@ -13,15 +13,16 @@ v13.0 — Premium Workspace & Challenge Mode
 - Release guard: `node scripts/validate.mjs`
 
 ## Product architecture
-The primary interface keeps the same five top-level destinations; Premium Labs are introduced inside Home as a paid product surface rather than a separate global navigation mode:
+The primary interface has six top-level workspace destinations:
 
 1. **Home** — a Labs-first launcher showing current local lab state and available labs.
 2. **Labs** — interactive MRI reasoning tools. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab are active reusable labs.
 3. **Compare** — Snapshot A vs live B experiments and saved comparison history.
 4. **Reference** — Parameter Reference plus supporting Scan Math, troubleshooting, and artifact tools.
 5. **Safety** — MR safety evidence-chain reference, with RF / thermal details inside the safety context.
+6. **Premium** — the dedicated Premium Lab workspace with public previews, deep links, access-state UI, and session-only concept challenges.
 
-Constraint challenges live inside Parameter Lab rather than occupying a global navigation slot.
+Constraint challenges live inside Parameter Lab rather than occupying a global navigation slot. Premium Concept Challenge is scoped to the Premium workspace and does not change entitlement state.
 
 The legacy course-style homepage, learning-path/review UI, Pack Library, Case Lab, Study Report, Publisher Studio, creator/commercial surfaces, and Micro-Lab are retired from the normal user interface. Existing browser-local data structures may remain for backward compatibility until a later cleanup release.
 
