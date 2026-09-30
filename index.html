@@ -3366,11 +3366,12 @@ function normalizeSpatialState(raw){
   };
 }
 function spatialState(){return normalizeSpatialState({phaseFov:+($('spPhaseFov')?.value||100),readFov:+($('spReadFov')?.value||100),phaseSamples:+($('spPhaseSamples')?.value||128),readSamples:+($('spReadSamples')?.value||128)})}
+const spatialFeatures=[[-.23,-.10,.105,.78],[.20,.12,.085,.96],[-.08,.25,.065,.62],[.28,-.24,.055,.72],[-.34,.25,.045,.55]];
+let spatialWorldBase=null;
 function spatialObject(x,y){
   let v=0;
   if((x*x)/(.43*.43)+(y*y)/(.47*.47)<=1)v=.18;
-  const features=[[-.23,-.10,.105,.78],[.20,.12,.085,.96],[-.08,.25,.065,.62],[.28,-.24,.055,.72],[-.34,.25,.045,.55]];
-  for(const [cx,cy,r,a] of features){const dx=x-cx,dy=y-cy;if(dx*dx+dy*dy<=r*r)v=Math.max(v,a)}
+  for(const [cx,cy,r,a] of spatialFeatures){const dx=x-cx,dy=y-cy;if(dx*dx+dy*dy<=r*r)v=Math.max(v,a)}
   if(Math.abs(x)<.035&&Math.abs(y)<.31)v=Math.max(v,.38);
   return v;
 }
@@ -3393,12 +3394,16 @@ function spatialTeachingCopy(state,m=spatialMetrics(state)){
   return {short:'No modeled wrap',title:'Reference coverage',detail:'The teaching object fits within both encoded dimensions; sampling controls the discrete grid and relative pixel width.'};
 }
 function drawSpatialWorld(state){
-  const c=$('spWorldCanvas');if(!c)return;const ctx=c.getContext('2d'),w=c.width,h=c.height,extent=.70,img=ctx.createImageData(w,h);
-  for(let py=0;py<h;py++)for(let px=0;px<w;px++){
-    const x=(px/(w-1)*2-1)*extent,y=(py/(h-1)*2-1)*extent,v=spatialObject(x,y),i=(py*w+px)*4,g=Math.round(18+v*220);
-    img.data[i]=Math.round(g*.75);img.data[i+1]=g;img.data[i+2]=Math.round(g*.91);img.data[i+3]=255;
+  const c=$('spWorldCanvas');if(!c)return;const ctx=c.getContext('2d'),w=c.width,h=c.height,extent=.70;
+  if(!spatialWorldBase||spatialWorldBase.width!==w||spatialWorldBase.height!==h){
+    const img=ctx.createImageData(w,h);
+    for(let py=0;py<h;py++)for(let px=0;px<w;px++){
+      const x=(px/(w-1)*2-1)*extent,y=(py/(h-1)*2-1)*extent,v=spatialObject(x,y),i=(py*w+px)*4,g=Math.round(18+v*220);
+      img.data[i]=Math.round(g*.75);img.data[i+1]=g;img.data[i+2]=Math.round(g*.91);img.data[i+3]=255;
+    }
+    spatialWorldBase=img;
   }
-  ctx.putImageData(img,0,0);
+  ctx.putImageData(spatialWorldBase,0,0);
   const fw=(state.readFov/100)/(extent*2)*w,fh=(state.phaseFov/100)/(extent*2)*h;
   ctx.fillStyle='rgba(82,215,255,.035)';ctx.fillRect((w-fw)/2,(h-fh)/2,fw,fh);
   ctx.strokeStyle='rgba(82,215,255,.92)';ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.strokeRect((w-fw)/2,(h-fh)/2,fw,fh);ctx.setLineDash([]);
