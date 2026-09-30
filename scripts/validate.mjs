@@ -227,17 +227,17 @@ if(!html.includes('/* v9.0 Sequence Timing Lab */')||!script.includes('function 
 if(!html.includes('/* v10.0 Motion Lab */')||!script.includes('function motionAcquire')||!script.includes('function motionUpdate')||!script.includes('mrcc_motion_current')||!html.includes('id="motionHistoryCanvas"')||!html.includes('id="motionResultCanvas"')) fail.push('v10.0 Motion Lab implementation is missing.');
 if(!html.includes('applies idealized rigid translation to individual synthetic phase-encoding lines using the Fourier shift theorem')||!html.includes('This is not correction modeling')) fail.push('Motion Lab model-boundary or correction-boundary copy is missing.');
 if(!script.includes("const target=id==='contrast'?'contrast':id==='timing'?'timing':id==='motion'?'motion'")||!script.includes("motion:{id:'motion',label:'Motion Lab'}")) fail.push('Motion Lab routing / resume integration is missing.');
-if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Motion Lab.');
+if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Motion or Spatial Lab.');
 
 if(!script.includes("const target=id==='contrast'?'contrast':id==='timing'?'timing'")||!script.includes("timing:{id:'timing',label:'Sequence Timing Lab'}")) fail.push('Sequence Timing Lab routing / resume integration is missing.');
-if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Sequence Timing or Motion Lab.');
+if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Sequence Timing, Motion, or Spatial Lab.');
 
 if(!html.includes('not scanner data, patient anatomy, or a physical MRI artifact simulator')||!html.includes('Look for structure, not realism.')) fail.push('Artifact Lab visualization boundary is missing.');
-if(!script.includes("timing:'labs'")||!script.includes("motion:'labs'")||!script.includes("artifact:'labs'")||!script.includes("ids:['sandbox','contrast','timing','motion','kspace','artifact']")) fail.push('Active Labs are not fully represented in Labs routing.');
+if(!script.includes("timing:'labs'")||!script.includes("motion:'labs'")||!script.includes("spatial:'labs'")||!script.includes("artifact:'labs'")||!script.includes("ids:['sandbox','contrast','timing','motion','kspace','spatial','artifact']")) fail.push('Active Labs are not fully represented in Labs routing.');
 const artifactRestorePos=script.lastIndexOf('restoreArtifactLabState();'),artifactEnginePos=script.indexOf('function artifactLabRender');
 if(artifactEnginePos<0||artifactRestorePos<=artifactEnginePos) fail.push('Artifact Lab state restoration runs before its engine initializes.');
 if(!script.includes("sectionTitles.artifact==='Artifact Lab'")||!script.includes("['Artifact Lab',typeof artifactLabUpdate==='function'")) fail.push('Built-in self-check does not include Artifact Lab.');
-if(!script.includes("active Lab states '+activeStates+'/6")||script.includes("practice attempts '+learningAttempts.length")) fail.push('Local data health is not using the six-Lab active-state contract.');
+if(!script.includes("active Lab states '+activeStates+'/7")||script.includes("practice attempts '+learningAttempts.length")) fail.push('Local data health is not using the seven-Lab active-state contract.');
 
 
 if(!html.includes('not MRI raw data from a patient or scanner')||!html.includes('Brightness is normalized for visibility')) fail.push('K-Space Lab model-boundary copy is missing.');
