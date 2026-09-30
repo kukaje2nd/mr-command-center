@@ -1,9 +1,9 @@
 # MR Command Center
 
-MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
+MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v13.0 — Premium Workspace & Challenge Mode
+v14.0 — Spatial Encoding & Aliasing Lab
 
 ## Production
 - Entry point: `index.html`
@@ -16,7 +16,7 @@ v13.0 — Premium Workspace & Challenge Mode
 The primary interface has six top-level workspace destinations:
 
 1. **Home** — a Labs-first launcher showing current local lab state and available labs.
-2. **Labs** — interactive MRI reasoning tools. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab are active reusable labs.
+2. **Labs** — interactive MRI reasoning tools. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab are active reusable labs.
 3. **Compare** — Snapshot A vs live B experiments and saved comparison history.
 4. **Reference** — Parameter Reference plus supporting Scan Math, troubleshooting, and artifact tools.
 5. **Safety** — MR safety evidence-chain reference, with RF / thermal details inside the safety context.
@@ -32,10 +32,11 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - Sequence Timing Lab models a deliberately simplified echo train: TR, first echo, constant echo spacing, echo-train length, abstract center-echo assignment, phase encodes, and averages. Its outputs are educational timing relationships rather than scanner-feasibility or protocol recommendations.
 - Motion Lab applies idealized rigid translation to individual synthetic phase-encoding lines using the Fourier shift theorem, then reconstructs the inconsistent dataset so users can compare motion timing and line-order effects.
 - K-Space Lab uses a browser-computed 32 × 32 synthetic phantom, discrete Fourier transform, coefficient masks, and inverse transform to teach center/periphery, truncation, and uniform phase undersampling.
+- Spatial Encoding Lab uses a synthetic object-space phantom, explicit encoded-FOV overlays, periodic folding, and a discrete sampling grid to distinguish undersized FOV wrap from sample-count / relative-pixel-width changes.
 - Artifact Lab applies deliberately stylized artifact patterns to a synthetic 2D phantom while preserving the existing cause / first-move / tradeoff troubleshooting reference.
 - The root route opens a Labs-first home screen rather than a curriculum or generic dashboard.
 - A/B comparison, presets, local continuity, and constraint challenges are designed for repeat use.
-- Home previews the current browser-local state of all six active free Labs so users can resume without rebuilding experiments.
+- Home previews the current browser-local state of all seven active free Labs so users can resume without rebuilding experiments.
 - Lab restoration is ordered after each lab engine initializes; mobile active states and the built-in self-check use the current Home/Labs navigation contract.
 - Retired course, study-session, pack, creator, engagement, and dashboard renderers remain available only for backward compatibility; they are no longer executed by the normal boot or navigation path.
 - Goal tracking reports relative model movement and tradeoffs, not protocol recommendations or diagnostic adequacy.
@@ -54,7 +55,21 @@ The current free application remains intentionally dependency-light: static HTML
 Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, the Labs-only runtime path, retired-surface guards, and the release cache marker.
 
 ## Product direction
-Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v14.0 release notes
+- Added **Spatial Encoding Lab** as the seventh free MRI reasoning Lab.
+- Added independent phase/read FOV controls and independent phase/read sample-count controls.
+- Added a synthetic object-space view with an explicit encoded-FOV overlay.
+- Added a periodic-folding teaching reconstruction so undersized encoded FOV visibly wraps object content across the selected axis.
+- Added relative read/phase pixel-width proxies and a relative 2D sample-burden readout.
+- Added presets for phase wrap, read wrap, coarse sampling, and expanded FOV with compensating samples.
+- Added current Spatial Lab state to Labs Home, persistent last-Lab resume, deep routing at `#spatial`, Quick Console discovery, and mobile Lab-switcher continuity.
+- Migrated workspace backups to **schema 4**, adding `mrcc_spatial_current` while retaining import compatibility with schemas 1–3.
+- Expanded active workspace portability from 12 to 13 allowlisted keys and from six to seven Lab states.
+- Added a Spatial Encoding PWA shortcut and bumped the offline cache marker to v14.0.0.
+- Corrected stale v13 self-check expectations for six top-level workspace buttons (desktop + mobile).
+- Spatial Encoding Lab is a synthetic periodic-folding model only; it does not model scanner reconstruction, anti-aliasing, oversampling, coil sensitivity, parallel imaging, gradient calibration, or protocol feasibility.
 
 ### v13.0 release notes
 - Promoted Premium Labs to a **sixth top-level MRCC workspace destination** on desktop and mobile.
