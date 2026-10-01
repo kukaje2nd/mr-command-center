@@ -662,6 +662,10 @@
         <div><small>Grid lever</small><b>Sample count</b><span>Changes discrete pixel width at a fixed FOV. Fewer samples alone do not create periodic FOV wrap in this model.</span></div>
       </div>
       <div id="spatialGridDiagnosis" class="spatial-grid-diagnosis">Both axes are at the 100% FOV / 128-sample reference.</div>
+      <div class="spatial-match-solver">
+        <div><small>Preserve baseline pixel width</small><b>Match sample count to the current FOV</b><span>Uses the Lab’s baseline relationship: samples ≈ 128 × FOV ratio, rounded to the available 16-sample grid.</span></div>
+        <div class="spatial-match-actions"><button type="button" onclick="spatialMatchSamples('read')">Match read</button><button type="button" onclick="spatialMatchSamples('phase')">Match phase</button><button type="button" onclick="spatialMatchSamples('both')">Match both</button></div>
+      </div>
     </article>
   </div>
 
