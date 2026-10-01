@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs plus a simple browser-local Protocol Scan Assist: enter patient/scanner context, paste a protocol image or sequence list, and get an ordered source-tracked scanner-side plan.",
+  "description": "Interactive MRI reasoning labs with Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, plus a simple browser-local Protocol Scan Assist for patient/scanner context, protocol images or sequence lists, and source-tracked scanner-side guidance.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
