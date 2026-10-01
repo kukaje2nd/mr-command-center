@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs with Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, plus a Sequence Families Lab with interactive acquisition anatomy, vendor terminology, comparison, and recognition challenges.",
+  "description": "Interactive MRI reasoning labs with deep Parameter and Contrast experiments, Sequence Timing, Motion, K-Space, Spatial Encoding, Artifact, plus a Sequence Families Lab with acquisition anatomy, vendor terminology, comparison, and recognition challenges.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
