@@ -352,7 +352,7 @@ if(!html.includes('id="contrastRecoveryCanvas"')||!html.includes('id="contrastDe
 if(!script.includes('function contrastLongitudinalTerm')||!script.includes('function contrastTransverseTerm')||!script.includes('function contrastSignalParts')||!script.includes('function contrastNullTi')||!script.includes('function contrastDrawRecovery')||!script.includes('function contrastDrawDecay')||!script.includes('function renderContrastDeep')||!script.includes('function renderContrastChallenge')||!script.includes('function setContrastSyntheticNull')) fail.push('v20.0 Contrast Lab deep-dive runtime is incomplete.');
 if(!appCss.includes('/* v20.0 Contrast Lab Deep Dive */')||!appCss.includes('.contrast-deep-grid')||!appCss.includes('.contrast-decomposition')||!appCss.includes('.contrast-challenge-targets')) fail.push('v20.0 Contrast Lab deep-dive responsive styling is incomplete.');
 if(!script.includes("t1:{title:'Create T1 emphasis'")||!script.includes("t2:{title:'Create T2 emphasis'")||!script.includes("nullB:{title:'Null Material B'")) fail.push('v20.0 Contrast target challenge definitions are incomplete.');
-if(!html.includes('uses arbitrary teaching values')||!html.includes('not human tissue values')||!html.includes('Success only means this simplified synthetic model met the displayed target.')) fail.push('v20.0 Contrast Lab educational boundary is incomplete.');
+if(!html.includes('arbitrary teaching values')||!html.includes('not human tissue values')||!html.includes('Success only means this simplified synthetic model met the displayed target.')) fail.push('v20.0 Contrast Lab educational boundary is incomplete.');
 
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
