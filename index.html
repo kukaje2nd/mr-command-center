@@ -21,6 +21,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="MR Command Center" />
 <meta name="color-scheme" content="dark" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"MR Command Center","url":"https://mr-command-center.vercel.app/","description":"Interactive MRI reasoning labs for trained professionals and learners, with browser-local experiments, comparison tools, references, and explicit educational model boundaries.","applicationCategory":"EducationalApplication","operatingSystem":"Web","author":{"@type":"Person","name":"Edon Kukaj"},"browserRequirements":"Requires a modern browser with JavaScript enabled"}
+</script>
 <link rel="manifest" href="/manifest.webmanifest" />
 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <link rel="alternate icon" href="/brand-mark.svg" type="image/svg+xml" />
@@ -538,6 +542,10 @@ body.nav-premium .premium-zone{border-color:rgba(184,156,255,.42);box-shadow:0 2
 .premium-challenge-zone{margin:0 0 11px;padding:12px;border:1px solid #4f4568;border-radius:12px;background:linear-gradient(145deg,rgba(184,156,255,.045),#071511)}.premium-challenge-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.premium-challenge-head h3{margin:.12rem 0 0;font-size:.92rem}.premium-challenge-head p{margin:4px 0 0;color:#8fa9a1;font-size:.62rem;line-height:1.45}.premium-challenge-progress{padding:5px 8px;border:1px solid #4f4568;border-radius:999px;color:#d9cdff;font-size:.55rem;font-weight:900;white-space:nowrap}.premium-challenge-card{margin-top:10px;padding:11px;border:1px solid #334943;border-radius:10px;background:#071511}.premium-challenge-lab{color:#b89cff;font-size:.52rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.premium-challenge-card h4{margin:4px 0 8px;font-size:.8rem}.premium-challenge-options{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.premium-challenge-options button{min-height:54px;border:1px solid #354d47;border-radius:9px;background:#091914;color:#cfe0db;padding:8px;text-align:left;font-size:.61rem;font-weight:800;line-height:1.35}.premium-challenge-options button:hover:not(:disabled){border-color:#b89cff;background:rgba(184,156,255,.045)}.premium-challenge-options button.correct{border-color:#3c806b;background:rgba(72,240,178,.07);color:#dffff4}.premium-challenge-options button.wrong{border-color:#7b4b45;background:rgba(255,156,124,.06);color:#ffd8cc}.premium-challenge-options button:disabled{cursor:default;opacity:.84}.premium-challenge-feedback{display:none;margin-top:8px;padding:9px;border:1px solid #354d47;border-radius:9px;background:#081713;color:#97b0a9;font-size:.60rem;line-height:1.45}.premium-challenge-feedback.show{display:block}.premium-challenge-feedback b{color:#e9f7f3}.premium-challenge-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.premium-challenge-actions button{border:1px solid #31584e;border-radius:8px;background:#0a1a16;color:#cfe0db;padding:7px 9px;font-size:.58rem;font-weight:900}.premium-challenge-actions button.primary{border-color:#4f4568;background:rgba(184,156,255,.07);color:#e6ddff}.premium-challenge-actions button:disabled{opacity:.45}.premium-session-score{color:#78988f;font-size:.55rem;margin-left:auto;align-self:center}
 @media(max-width:720px){.mobile-nav{grid-template-columns:repeat(6,1fr)}.mobile-nav button{font-size:.55rem;padding-left:1px;padding-right:1px}.premium-workspace-banner{grid-template-columns:1fr}.premium-workspace-banner button{justify-self:start}.premium-challenge-options{grid-template-columns:1fr}.premium-session-score{width:100%;margin-left:0}}
 
+/* v15.0 Public launch + runtime hygiene */
+.footer-links{display:flex;flex-wrap:wrap;gap:7px 12px;align-items:center}.footer-links a{color:#9fcfc1;font-size:.61rem;font-weight:850;text-decoration:none}.footer-links a:hover{text-decoration:underline;color:#dff8f0}.legacy-data-card{border-color:#4c4430!important;background:rgba(255,209,102,.025)!important}.legacy-data-card h4{color:#ffe29a}.legacy-data-card .legacy-data-note{color:#8fa89f;font-size:.62rem;line-height:1.5}.legacy-data-card button{border-color:#66572f!important;color:#ffe29a!important}
+@media(max-width:760px){.footer-links{order:3}.footer-signature{order:2}}
+
 /* v14.0 Spatial Encoding Lab */
 .lab-home-spatial:before{background:linear-gradient(90deg,#68e1b8,#72b7ff)}.lab-home-spatial .lab-home-icon{color:#b9f6e3;border-color:#397666}
 .node-timing{transform:translate(0,-120px)}.node-parameter{transform:translate(-110px,-58px)}.node-contrast{transform:translate(110px,-58px)}.node-kspace{transform:translate(-116px,58px)}.node-artifact{transform:translate(116px,58px)}.node-motion{transform:translate(-58px,116px)}.node-spatial{transform:translate(58px,116px);color:#b9f6e3;border-color:#397666}
@@ -557,7 +565,7 @@ body.nav-premium .premium-zone{border-color:rgba(184,156,255,.42);box-shadow:0 2
 </head>
 <body class="nav-home">
 <a class="skiplink" href="#mainContent">Skip to main content</a><div class="sr-only" id="routeAnnouncer" role="status" aria-live="polite" aria-atomic="true"></div>
-<header class="topbar"><div class="topin"><a class="brandlockup" href="#" onclick="showHome();return false" aria-label="MR Command Center by Edon Kukaj"><img class="brandmark" id="brandMark" src="/brand-mark.svg" alt=""><span class="brandidentity"><span class="brandname"><span class="brand-mr">MR</span><span class="brand-command">COMMAND CENTER</span></span><span class="brandcredit">Edon Kukaj</span></span><span class="releasebadge" aria-label="Current build version">v14.0</span></a><div class="grow"></div><span class="routechip" id="routeChip" aria-live="polite">Home</span><div class="top-actions" aria-label="Workspace actions"><button class="homebtn" id="homeBtn" onclick="showHome()" aria-label="Return to MR Command Center home"><span>Home</span></button><button class="quickbtn" onclick="openPalette()" aria-label="Search MR Command Center"><span>Search</span><kbd>⌘/Ctrl K</kbd></button><button class="displaybtn" onclick="openPreferences()" aria-label="Open settings and keyboard shortcuts"><span>Settings</span><kbd>?</kbd></button><button class="installbtn" id="installBtn" onclick="promptInstall()" aria-label="Install MR Command Center">Install</button></div><div class="top-status"><div class="netpill" id="netState" title="Browser network state"><span class="status-dot"></span><span id="netText">Online</span></div><div class="clock" id="clock">Local time</div></div></div></header>
+<header class="topbar"><div class="topin"><a class="brandlockup" href="#" onclick="showHome();return false" aria-label="MR Command Center by Edon Kukaj"><img class="brandmark" id="brandMark" src="/brand-mark.svg" alt=""><span class="brandidentity"><span class="brandname"><span class="brand-mr">MR</span><span class="brand-command">COMMAND CENTER</span></span><span class="brandcredit">Edon Kukaj</span></span><span class="releasebadge" aria-label="Current build version">v15.0</span></a><div class="grow"></div><span class="routechip" id="routeChip" aria-live="polite">Home</span><div class="top-actions" aria-label="Workspace actions"><button class="homebtn" id="homeBtn" onclick="showHome()" aria-label="Return to MR Command Center home"><span>Home</span></button><button class="quickbtn" onclick="openPalette()" aria-label="Search MR Command Center"><span>Search</span><kbd>⌘/Ctrl K</kbd></button><button class="displaybtn" onclick="openPreferences()" aria-label="Open settings and keyboard shortcuts"><span>Settings</span><kbd>?</kbd></button><button class="installbtn" id="installBtn" onclick="promptInstall()" aria-label="Install MR Command Center">Install</button></div><div class="top-status"><div class="netpill" id="netState" title="Browser network state"><span class="status-dot"></span><span id="netText">Online</span></div><div class="clock" id="clock">Local time</div></div></div></header>
 <main class="shell" id="mainContent">
 <div class="notice compact-notice"><span class="boundary-mark" aria-hidden="true">i</span><span><strong>Learning-use boundary</strong> — educational MRI learning only; no implant clearance, patient-specific decisions, or scanner-specific prescriptions. Manufacturer labeling, scanner limits, and facility MR safety policy control.</span></div>
 <div class="updatebar" id="updateBar" role="status" aria-live="polite"><div><b>Update available</b><p>A newer MR Command Center build is ready.</p></div><button class="updatebtn" onclick="applyAppUpdate()">Update & reload</button></div>
@@ -710,10 +718,8 @@ body.nav-premium .premium-zone{border-color:rgba(184,156,255,.42);box-shadow:0 2
     <div><span>03</span><b>Explain</b><small>Connect the direction to the underlying tradeoff.</small></div>
   </section>
 </section>
-<details class="system-panel" id="offlineBar"><summary><span class="system-title"><span class="mini-dot"></span><b>System & offline status</b></span><span class="system-summary-meta">Build v14.0 <span aria-hidden="true">·</span> details</span></summary><div class="system-panel-body"><div class="systemstrip"><span class="syschip"><span class="mini-dot" id="sysNetDot"></span><span id="sysNetwork">Online</span></span><span class="syschip" id="cacheChip">Offline cache: checking</span><span class="syschip engine-chip" id="engineChip"><span class="mini-dot"></span><span id="engineText">Engine: ready</span></span><button class="selfcheck" onclick="runSelfCheck()">Run self-check</button></div><span id="offlineCopy">Core labs cache locally after the first successful load. Lab states, presets, and comparison history remain browser-local.</span></div></details>
+<details class="system-panel" id="offlineBar"><summary><span class="system-title"><span class="mini-dot"></span><b>System & offline status</b></span><span class="system-summary-meta">Build v15.0 <span aria-hidden="true">·</span> details</span></summary><div class="system-panel-body"><div class="systemstrip"><span class="syschip"><span class="mini-dot" id="sysNetDot"></span><span id="sysNetwork">Online</span></span><span class="syschip" id="cacheChip">Offline cache: checking</span><span class="syschip engine-chip" id="engineChip"><span class="mini-dot"></span><span id="engineText">Engine: ready</span></span><button class="selfcheck" onclick="runSelfCheck()">Run self-check</button></div><span id="offlineCopy">Core labs cache locally after the first successful load. Lab states, presets, and comparison history remain browser-local.</span></div></details>
 <div class="focusbar" id="focusBar" aria-live="polite"><button type="button" class="focus-home" onclick="showHome()">⌂ Home</button><span class="focus-module-icon" id="focusModuleIcon" aria-hidden="true"></span><div class="focus-copy"><small><span id="focusGroup">Reference tool</span><span class="focus-position" id="focusPosition"></span></small><b id="focusTitle">Current tool</b></div><div class="focus-related" id="focusRelated"></div><button type="button" class="focus-primary" id="focusPrimaryBtn" onclick="runFocusPrimary()">Parameter Lab →</button><button type="button" class="focus-search" id="focusSearchBtn" onclick="openPalette()" aria-label="Search workspace">⌕</button></div>
-<div class="sessionbar" id="sessionBar" aria-live="polite"><span class="sessionbar-icon" id="sessionBarIcon" aria-hidden="true"></span><div class="sessionbar-copy"><small id="sessionBarKicker">Study session</small><b id="sessionBarTitle">Current route</b></div><div class="sessionbar-progress"><span id="sessionBarProgressText">0/0 complete</span><i><em id="sessionBarProgressFill"></em></i></div><button type="button" class="sessionbar-step" id="sessionPrevBtn" onclick="sessionStep(-1)" aria-label="Previous session module">←</button><button type="button" class="sessionbar-complete" id="sessionCompleteBtn" onclick="sessionCompleteStep()">Complete & next</button><button type="button" class="sessionbar-step" id="sessionNextBtn" onclick="sessionStep(1)" aria-label="Next session module">→</button><button type="button" class="sessionbar-end" onclick="endStudySession()">End</button></div>
-
 <section id="safety" class="section reference-tool-section"><div class="section-head"><div><div class="eyebrow">MR Safety Reference</div><h2>Device / implant evidence chain</h2></div><p>Teaching checklist only. Completion ≠ clearance; use it to review the evidence chain that precedes local review.</p><button class="safety-rf-link" type="button" onclick="go('burn')">RF / thermal details →</button></div><div class="grid2"><div class="card"><h3>Device / implant evidence chain</h3><p class="sub">Use exact source documentation—not memory, appearance, or patient recollection alone.</p><div class="checks" id="safetyChecks">
 <label class="check"><input type="checkbox"><span>Exact device / implant identity is positively established (make, model, component set as applicable).</span></label>
 <label class="check"><input type="checkbox"><span>Current manufacturer MR labeling / approved safety source has been located.</span></label>
@@ -898,10 +904,8 @@ body.nav-premium .premium-zone{border-color:rgba(184,156,255,.42);box-shadow:0 2
 
 <section id="burn" class="section reference-tool-section"><div class="section-head"><div><div class="eyebrow">06 · Thermal / RF Foundations</div><h2>RF heating / burn-risk setup concepts</h2></div><p>Focused on common preventable mechanisms: body loops, bore proximity, cables, conductive materials, and communication.</p></div><div class="grid3"><div class="card"><h3>Body geometry</h3><div class="checks"><label class="check"><input class="burncheck" type="checkbox"><span>Avoid skin-to-skin loops / small contact points; use appropriate manufacturer-specified insulating pads.</span></label><label class="check"><input class="burncheck" type="checkbox"><span>Maintain required spacing from the bore / transmit RF coil using appropriate padding.</span></label></div></div><div class="card"><h3>Cables & accessories</h3><div class="checks"><label class="check"><input class="burncheck" type="checkbox"><span>Route cables per manufacturer instructions; avoid loops and avoid direct patient contact where prohibited.</span></label><label class="check"><input class="burncheck" type="checkbox"><span>All devices / accessories entering the MR environment have appropriate MR status and conditions verified.</span></label></div></div><div class="card"><h3>Patient feedback</h3><div class="checks"><label class="check"><input class="burncheck" type="checkbox"><span>Patient knows to report warming, burning, pulling, or focal discomfort immediately.</span></label><label class="check"><input class="burncheck" type="checkbox"><span>Communication / monitoring plan is appropriate to the patient and exam.</span></label></div><div id="burnState" class="state warn">Setup review not complete.</div></div></div></section>
 
-<section id="learn" class="section reference-tool-section"><div class="section-head"><div><div class="eyebrow">07 · Micro-Lab</div><h2>90-second safety drill</h2></div><p>A compact refresher—not competency documentation.</p></div><div class="grid2"><div class="card"><form id="quiz"><div class="quizq"><p>1. An implant is described only as “MRI compatible” on an old note. What is the safest next step?</p><label><input type="radio" name="q1" value="a"> Scan in Normal Operating Mode</label><label><input type="radio" name="q1" value="b"> Positively identify the device and verify current MR labeling / conditions</label><label><input type="radio" name="q1" value="c"> Use a lower field scanner without further review</label></div><div class="quizq"><p>2. For an MR Conditional device, which statement is correct?</p><label><input type="radio" name="q2" value="a"> Conditional means safe on any modern scanner</label><label><input type="radio" name="q2" value="b"> It is safe only under the specified conditions of use</label><label><input type="radio" name="q2" value="c"> Only field strength matters</label></div><div class="quizq"><p>3. Which setup can contribute to RF burn risk?</p><label><input type="radio" name="q3" value="a"> Inadequate insulation allowing skin-to-skin contact</label><label><input type="radio" name="q3" value="b"> Proper manufacturer-specified padding</label><label><input type="radio" name="q3" value="c"> Confirmed MR Safe positioning aids</label></div><button type="button" class="btn" onclick="scoreQuiz()">Score drill</button><div id="score" class="score"></div></form><div class="learn-progress" id="learningProgress"><div class="learn-progress-head"><div><div class="eyebrow">Practice Progress</div><h3>Local drill history</h3></div><span class="compare-state">not certification</span></div><div class="learn-kpis"><div class="learn-kpi"><b id="learnAttempts">0</b><span>completed drills</span></div><div class="learn-kpi"><b id="learnBest">—</b><span>best score</span></div><div class="learn-kpi"><b id="learnLatest">—</b><span>latest score</span></div><div class="learn-kpi"><b id="learnDays">0</b><span>practice days</span></div></div><div id="learnHistory" class="learn-history"></div><div class="learn-actions"><button type="button" onclick="exportLearningProgress()">Export practice JSON</button><button type="button" class="danger" onclick="resetLearningProgress()">Reset practice history</button></div><div class="small" style="margin-top:8px">Practice history stays in this browser. It records only drill score and timestamp and is not competency, credentialing, or compliance documentation.</div></div></div><div class="card"><h3>Reference Desk</h3><p class="sub">Current authoritative resources to verify against—not copied protocol substitutes.</p><div class="refcards"><div class="ref"><b>ACR Manual on MR Safety — 2026</b><span class="small">Current ACR MR safety manual and updates.</span><br><a href="https://www.acr.org/Clinical-Resources/Clinical-Tools-and-Reference/Radiology-Safety/MR-Safety" target="_blank" rel="noopener">Open ACR MR Safety</a></div><div class="ref"><b>FDA MRI Safety</b><span class="small">Benefits, risks, device labeling, and professional resources.</span><br><a href="https://www.fda.gov/radiation-emitting-products/mri-magnetic-resonance-imaging" target="_blank" rel="noopener">Open FDA MRI</a></div><div class="ref"><b>ACR Contrast Manual</b><span class="small">Contrast guidance, reaction tables, and updated chapters.</span><br><a href="https://www.acr.org/Clinical-Resources/Clinical-Tools-and-Reference/Contrast-Manual" target="_blank" rel="noopener">Open Contrast Manual</a></div></div><div class="notice" style="margin-top:14px;margin-bottom:0">Contrast dosing, reaction treatment, renal-risk decisions, sedation, and emergency management are intentionally not automated here. Use your institution’s approved protocol and supervising clinician.</div></div></div></section>
-
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile workspace navigation"><button type="button" data-workspace-tab="home" onclick="showHome()"><span>⌂</span><span>Home</span></button><button type="button" data-workspace-tab="labs" onclick="resumeLastLab()"><span>◈</span><span>Labs</span></button><button type="button" data-workspace-tab="premium" onclick="openPremiumWorkspace()"><span>◆</span><span>Premium</span></button><button type="button" data-workspace-tab="compare" onclick="openWorkspaceView('compare')"><span>A/B</span><span>Compare</span></button><button type="button" data-workspace-tab="reference" onclick="openWorkspaceView('reference')"><span>≡</span><span>Reference</span></button><button type="button" data-workspace-tab="safety" onclick="openWorkspaceView('safety')"><span>S</span><span>Safety</span></button></nav>
-<footer class="footer"><span class="footer-main"><strong>MR Command Center</strong> · interactive MRI reasoning labs for trained professionals. Lab models and references are educational—not patient-specific clearance, diagnostic image simulation, or scanner-specific protocol prescriptions. Verify manufacturer labeling, scanner IFU, authoritative MR safety guidance, and local policy. Lab state stays browser-local.</span><span class="footer-signature">Created by <b>Edon Kukaj</b><span class="footer-version">v14.0</span></span></footer>
+<footer class="footer"><span class="footer-main"><strong>MR Command Center</strong> · interactive MRI reasoning labs for trained professionals. Lab models and references are educational—not patient-specific clearance, diagnostic image simulation, or scanner-specific protocol prescriptions. Verify manufacturer labeling, scanner IFU, authoritative MR safety guidance, and local policy. Lab state stays browser-local.</span><span class="footer-links"><a href="/about.html">About & scope</a><a href="/privacy.html">Privacy & data</a><a href="https://github.com/kukaje2nd/mr-command-center" target="_blank" rel="noopener">Source</a></span><span class="footer-signature">Created by <b>Edon Kukaj</b><span class="footer-version">v15.0</span></span></footer>
 </main>
 
 <div class="premiumback" id="premiumBack" onclick="premiumBackdrop(event)" aria-hidden="true">
@@ -1005,13 +1009,13 @@ body.nav-premium .premium-zone{border-color:rgba(184,156,255,.42);box-shadow:0 2
         <div class="premium-option"><b>One-time Lab Unlock</b><small>Single purchase. Creates a permanent entitlement to this Lab for the signed-in account.<span class="premium-price" id="premiumLabPrice">Price set at launch</span><code class="premium-product-key" id="premiumLabProductKey">premium_lab</code></small><button type="button" onclick="requestPremiumPurchase('one_time')" aria-disabled="true">Purchase unavailable · check readiness</button></div>
       </div>
       <div class="premium-readiness" id="premiumReadiness"><div class="premium-readiness-head"><b>Purchase readiness</b><span class="premium-readiness-state" id="premiumReadinessState">Not ready</span></div><div class="premium-readiness-grid"><div class="pending"><small>Account identity</small><b id="premiumAuthState">Not connected</b></div><div class="pending"><small>Price catalog</small><b id="premiumPriceState">Not configured</b></div><div class="pending"><small>Checkout + entitlements</small><b id="premiumCheckoutState">Not connected</b></div></div></div>
-      <div class="premium-billing-state"><span><strong>No charges are active in v14.0.</strong> Purchase controls only report readiness; they cannot create a payment.</span><span>preview only</span></div>
+      <div class="premium-billing-state"><span><strong>No charges are active in v15.0.</strong> Purchase controls only report readiness; they cannot create a payment.</span><span>preview only</span></div>
       <div class="premium-security"><b>Production entitlement flow</b><ol><li>User signs in to an MRCC account.</li><li>Server creates Stripe Checkout for subscription or one-time purchase.</li><li>Signed Stripe webhook confirms the transaction.</li><li>Server writes the entitlement to an account-linked entitlement store.</li><li>Premium Lab content is served only after a server-side entitlement check.</li></ol></div>
     </div>
   </div>
 </div>
-<div class="prefsback" id="prefsBack" onclick="prefsBackdrop(event)" aria-hidden="true"><div class="prefs" role="dialog" aria-modal="true" aria-labelledby="prefsTitle"><div class="prefs-head"><div><div class="eyebrow">Workspace preferences</div><h3 id="prefsTitle">Settings & shortcuts</h3><p class="sub" style="margin:4px 0 0">These settings stay only in this browser.</p></div><button class="prefs-close" onclick="closePreferences()" aria-label="Close settings">✕</button></div><div class="prefs-grid"><div class="pref-card"><h4>Text size</h4><p>Increase interface text without changing browser zoom.</p><div class="segmented" id="textSizeControls"><button data-size="standard" aria-pressed="false" onclick="setTextSize('standard')">Standard</button><button data-size="large" aria-pressed="false" onclick="setTextSize('large')">Large</button><button data-size="xl" aria-pressed="false" onclick="setTextSize('xl')">Extra large</button></div></div><div class="pref-card"><h4>Layout density</h4><p>Compact mode reduces spacing while keeping the same tools.</p><div class="segmented"><button id="compactPref" onclick="toggleUiPref('compact')">Compact mode</button></div></div><div class="pref-card"><h4>Contrast</h4><p>Increase text and border contrast for bright control rooms or lower-quality displays.</p><div class="segmented"><button id="contrastPref" onclick="toggleUiPref('contrast')">Higher contrast</button></div></div><div class="pref-card"><h4>Motion</h4><p>Disable smooth scrolling and interface transitions.</p><div class="segmented"><button id="motionPref" onclick="toggleUiPref('reduceMotion')">Reduce motion</button></div></div><div class="pref-card"><h4>Local data health</h4><p id="dataHealthSummary">Checking saved browser data…</p><div class="segmented"><button id="dataHealthBtn" onclick="runDataHealthCheck()">Run data check</button></div></div><div class="pref-card" style="grid-column:1/-1"><h4>Workspace backup & restore</h4><p>Move the active MRCC workspace between browsers without a backend. Backups include the seven Lab states, Parameter presets/snapshot/comparisons, display preferences, pins, and last-Lab continuity. Keep any labels you create free of patient identifiers.</p><p id="workspaceBackupStatus" style="margin-top:8px">Checking active workspace data…</p><div class="segmented"><button id="workspaceExportBtn" onclick="exportWorkspaceBackup()">Export backup</button><button id="workspaceImportChooseBtn" onclick="chooseWorkspaceBackup()">Choose backup</button><button id="workspaceImportApplyBtn" hidden onclick="applyWorkspaceImport()">Apply selected backup</button><button id="workspaceDiagnosticsBtn" onclick="copyWorkspaceDiagnostics()">Copy diagnostics</button></div><input id="workspaceImportFile" type="file" accept=".json,application/json" hidden onchange="handleWorkspaceImportFile(this)"><p id="workspaceImportStatus" style="margin-top:9px">No backup selected. Import replaces only the active v14 workspace keys and leaves retired legacy data untouched.</p></div></div><div class="pref-card" style="margin-top:12px"><h4>Keyboard shortcuts</h4><div class="shortcut-grid"><div class="shortcut"><span>Open Quick Console</span><kbd>⌘/Ctrl K</kbd></div><div class="shortcut"><span>Search workspace</span><kbd>/</kbd></div><div class="shortcut"><span>Settings & shortcuts</span><kbd>?</kbd></div><div class="shortcut"><span>Close open panel</span><kbd>Esc</kbd></div></div></div><div class="prefs-foot"><span class="prefs-note">Preferences affect presentation only; learning content and parameter-model logic are unchanged.</span><button class="btn secondary" onclick="resetUiPrefs()">Reset display</button></div></div></div>
-<div class="paletteback" id="paletteBack" onclick="paletteBackdrop(event)" aria-hidden="true"><div class="palette" role="dialog" aria-modal="true" aria-labelledby="paletteTitle"><div class="palettehead"><div><div class="eyebrow">Quick Console</div><h3 id="paletteTitle">Find a tool or problem</h3></div><button class="paletteclose" onclick="closePalette()" aria-label="Close Quick Console">✕</button></div><div class="paletteinput"><span aria-hidden="true">⌕</span><input id="paletteSearch" autocomplete="off" aria-label="Search tools and problems" placeholder="Try “metal”, “unknown implant”, “scan time”…" oninput="renderPalette()"></div><div class="palhint">Type to search · ↑/↓ to move · Enter to open · Esc to close</div><div class="palettefilters" id="paletteFilters" role="group" aria-label="Quick Console category filter"><button type="button" class="active" data-palcat="all" aria-pressed="true" onclick="setPaletteCategory('all')">All</button><button type="button" data-palcat="Safety" aria-pressed="false" onclick="setPaletteCategory('Safety')">Safety</button><button type="button" data-palcat="Parameters" aria-pressed="false" onclick="setPaletteCategory('Parameters')">Parameters</button><button type="button" data-palcat="Math" aria-pressed="false" onclick="setPaletteCategory('Math')">Math</button><button type="button" data-palcat="Troubleshoot" aria-pressed="false" onclick="setPaletteCategory('Troubleshoot')">Troubleshoot</button><button type="button" data-palcat="Artifact" aria-pressed="false" onclick="setPaletteCategory('Artifact')">Artifact</button><button type="button" data-palcat="Premium" aria-pressed="false" onclick="setPaletteCategory('Premium')">Premium</button><button type="button" data-palcat="Learning" aria-pressed="false" onclick="setPaletteCategory('Learning')">Learning</button></div><div id="paletteResults" class="palresults"></div></div></div>
+<div class="prefsback" id="prefsBack" onclick="prefsBackdrop(event)" aria-hidden="true"><div class="prefs" role="dialog" aria-modal="true" aria-labelledby="prefsTitle"><div class="prefs-head"><div><div class="eyebrow">Workspace preferences</div><h3 id="prefsTitle">Settings & shortcuts</h3><p class="sub" style="margin:4px 0 0">These settings stay only in this browser.</p></div><button class="prefs-close" onclick="closePreferences()" aria-label="Close settings">✕</button></div><div class="prefs-grid"><div class="pref-card"><h4>Text size</h4><p>Increase interface text without changing browser zoom.</p><div class="segmented" id="textSizeControls"><button data-size="standard" aria-pressed="false" onclick="setTextSize('standard')">Standard</button><button data-size="large" aria-pressed="false" onclick="setTextSize('large')">Large</button><button data-size="xl" aria-pressed="false" onclick="setTextSize('xl')">Extra large</button></div></div><div class="pref-card"><h4>Layout density</h4><p>Compact mode reduces spacing while keeping the same tools.</p><div class="segmented"><button id="compactPref" onclick="toggleUiPref('compact')">Compact mode</button></div></div><div class="pref-card"><h4>Contrast</h4><p>Increase text and border contrast for bright control rooms or lower-quality displays.</p><div class="segmented"><button id="contrastPref" onclick="toggleUiPref('contrast')">Higher contrast</button></div></div><div class="pref-card"><h4>Motion</h4><p>Disable smooth scrolling and interface transitions.</p><div class="segmented"><button id="motionPref" onclick="toggleUiPref('reduceMotion')">Reduce motion</button></div></div><div class="pref-card"><h4>Local data health</h4><p id="dataHealthSummary">Checking saved browser data…</p><div class="segmented"><button id="dataHealthBtn" onclick="runDataHealthCheck()">Run data check</button></div></div><div class="pref-card legacy-data-card"><h4>Retired local data</h4><p class="legacy-data-note" id="retiredDataSummary">Checking older MRCC data…</p><div class="segmented"><button id="clearRetiredDataBtn" onclick="clearRetiredLegacyData()">Clear retired data</button></div></div><div class="pref-card" style="grid-column:1/-1"><h4>Workspace backup & restore</h4><p>Move the active MRCC workspace between browsers without a backend. Backups include the seven Lab states, Parameter presets/snapshot/comparisons, display preferences, pins, and last-Lab continuity. Keep any labels you create free of patient identifiers.</p><p id="workspaceBackupStatus" style="margin-top:8px">Checking active workspace data…</p><div class="segmented"><button id="workspaceExportBtn" onclick="exportWorkspaceBackup()">Export backup</button><button id="workspaceImportChooseBtn" onclick="chooseWorkspaceBackup()">Choose backup</button><button id="workspaceImportApplyBtn" hidden onclick="applyWorkspaceImport()">Apply selected backup</button><button id="workspaceDiagnosticsBtn" onclick="copyWorkspaceDiagnostics()">Copy diagnostics</button></div><input id="workspaceImportFile" type="file" accept=".json,application/json" hidden onchange="handleWorkspaceImportFile(this)"><p id="workspaceImportStatus" style="margin-top:9px">No backup selected. Import replaces only the active v15 workspace keys and leaves retired legacy data untouched.</p></div></div><div class="pref-card" style="margin-top:12px"><h4>Keyboard shortcuts</h4><div class="shortcut-grid"><div class="shortcut"><span>Open Quick Console</span><kbd>⌘/Ctrl K</kbd></div><div class="shortcut"><span>Search workspace</span><kbd>/</kbd></div><div class="shortcut"><span>Settings & shortcuts</span><kbd>?</kbd></div><div class="shortcut"><span>Close open panel</span><kbd>Esc</kbd></div></div></div><div class="prefs-foot"><span class="prefs-note">Preferences affect presentation only; learning content and parameter-model logic are unchanged.</span><button class="btn secondary" onclick="resetUiPrefs()">Reset display</button></div></div></div>
+<div class="paletteback" id="paletteBack" onclick="paletteBackdrop(event)" aria-hidden="true"><div class="palette" role="dialog" aria-modal="true" aria-labelledby="paletteTitle"><div class="palettehead"><div><div class="eyebrow">Quick Console</div><h3 id="paletteTitle">Find a tool or problem</h3></div><button class="paletteclose" onclick="closePalette()" aria-label="Close Quick Console">✕</button></div><div class="paletteinput"><span aria-hidden="true">⌕</span><input id="paletteSearch" autocomplete="off" aria-label="Search tools and problems" placeholder="Try “metal”, “unknown implant”, “scan time”…" oninput="renderPalette()"></div><div class="palhint">Type to search · ↑/↓ to move · Enter to open · Esc to close</div><div class="palettefilters" id="paletteFilters" role="group" aria-label="Quick Console category filter"><button type="button" class="active" data-palcat="all" aria-pressed="true" onclick="setPaletteCategory('all')">All</button><button type="button" data-palcat="Safety" aria-pressed="false" onclick="setPaletteCategory('Safety')">Safety</button><button type="button" data-palcat="Parameters" aria-pressed="false" onclick="setPaletteCategory('Parameters')">Parameters</button><button type="button" data-palcat="Math" aria-pressed="false" onclick="setPaletteCategory('Math')">Math</button><button type="button" data-palcat="Troubleshoot" aria-pressed="false" onclick="setPaletteCategory('Troubleshoot')">Troubleshoot</button><button type="button" data-palcat="Artifact" aria-pressed="false" onclick="setPaletteCategory('Artifact')">Artifact</button><button type="button" data-palcat="Premium" aria-pressed="false" onclick="setPaletteCategory('Premium')">Premium</button></div><div id="paletteResults" class="palresults"></div></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">Saved</div>
 <script>
 window.__mrccRuntimeErrors=0;
@@ -1052,7 +1056,25 @@ function renderDataHealth(){
   const activeStates=['mrcc_sandbox_current','mrcc_contrast_current','mrcc_timing_current','mrcc_motion_current','mrcc_kspace_current','mrcc_spatial_current','mrcc_artifact_current'].filter(k=>{try{return !!localStorage.getItem(k)}catch(e){return false}}).length;
   el.textContent='Saved parameter setups '+sbPresets.length+' · comparisons '+comparisonHistory.length+' · active Lab states '+activeStates+'/7. '+(dataRepairCount?dataRepairCount+' malformed saved value'+(dataRepairCount===1?' was':'s were')+' repaired or ignored this load.':'Current workspace data structures look healthy.');
 }
-function runDataHealthCheck(){renderDataHealth();renderWorkspacePortability();toast(localDataHealthy()?'Local data check passed':'Local data check found an issue')}
+const MRCC_RETIRED_DATA_KEYS=['mrcc_case_history','mrcc_case_packs','mrcc_pack_drafts','mrcc_pack_resume','mrcc_active_case_pack','mrcc_learning_attempts','mrcc_study_progress','mrcc_study_session_history','mrcc_daily_focus_history','mrcc_engagement_days'];
+function retiredLegacyDataStats(){
+  let local=0,session=0;
+  for(const key of MRCC_RETIRED_DATA_KEYS){try{if(localStorage.getItem(key)!==null)local++}catch(e){}}
+  try{if(sessionStorage.getItem('mrcc_study_session')!==null)session++}catch(e){}
+  return {local,session,total:local+session};
+}
+function renderRetiredDataSummary(){
+  const el=$('retiredDataSummary');if(!el)return;const st=retiredLegacyDataStats();
+  el.textContent=st.total?st.total+' retired data area'+(st.total===1?' remains':'s remain')+' from older course / pack features. They are no longer read by the active MRCC runtime.':'No retired course / pack browser data detected.';
+}
+function clearRetiredLegacyData(){
+  const st=retiredLegacyDataStats();if(!st.total){renderRetiredDataSummary();toast('No retired data to clear');return}
+  if(!confirm('Clear retired MRCC course, study-session, and case-pack data from this browser? Current Lab states, presets, comparisons, settings, and workspace backups are not affected.'))return;
+  for(const key of MRCC_RETIRED_DATA_KEYS){try{localStorage.removeItem(key)}catch(e){}}
+  try{sessionStorage.removeItem('mrcc_study_session')}catch(e){}
+  renderRetiredDataSummary();renderDataHealth();toast('Retired local data cleared');
+}
+function runDataHealthCheck(){renderDataHealth();renderWorkspacePortability();renderRetiredDataSummary();toast(localDataHealthy()?'Local data check passed':'Local data check found an issue')}
 
 const MRCC_WORKSPACE_BACKUP_FORMAT='mrcc-workspace';
 const MRCC_WORKSPACE_BACKUP_SCHEMA=4;
@@ -1085,7 +1107,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'14.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'15.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -1135,7 +1157,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v14.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/6','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v15.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/6','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1162,7 +1184,7 @@ function applyUiPrefs(){
 function setTextSize(size){uiPrefs.textSize=['standard','large','xl'].includes(size)?size:'standard';saveUiPrefs()}
 function toggleUiPref(key){if(!['compact','contrast','reduceMotion'].includes(key))return;uiPrefs[key]=!uiPrefs[key];saveUiPrefs()}
 function resetUiPrefs(){uiPrefs={textSize:'standard',compact:false,contrast:false,reduceMotion:false};saveUiPrefs();toast('Presentation settings reset')}
-function openPreferences(){const b=$('prefsBack');if(!b)return;prefsReturnFocus=document.activeElement;b.classList.add('open');b.setAttribute('aria-hidden','false');syncModalScrollLock();applyUiPrefs();renderDataHealth();renderWorkspacePortability();setTimeout(()=>b.querySelector('button')?.focus(),20)}
+function openPreferences(){const b=$('prefsBack');if(!b)return;prefsReturnFocus=document.activeElement;b.classList.add('open');b.setAttribute('aria-hidden','false');syncModalScrollLock();applyUiPrefs();renderDataHealth();renderWorkspacePortability();renderRetiredDataSummary();setTimeout(()=>b.querySelector('button')?.focus(),20)}
 function closePreferences(){const b=$('prefsBack');if(!b)return;b.classList.remove('open');b.setAttribute('aria-hidden','true');syncModalScrollLock();const target=prefsReturnFocus;prefsReturnFocus=null;if(target&&typeof target.focus==='function')setTimeout(()=>target.focus(),0)}
 function prefsBackdrop(e){if(e.target===$('prefsBack'))closePreferences()}
 applyUiPrefs();
@@ -1175,7 +1197,7 @@ function updateNetworkState(){
   if(text) text.textContent=online?'Online':'Offline';
   if(sys) sys.textContent=online?'Online':'Offline';
   if(dot){dot.style.background=online?'var(--mint)':'var(--amber)';dot.style.boxShadow=online?'0 0 7px rgba(72,240,178,.6)':'0 0 7px rgba(255,209,102,.7)'}
-  if(copy) copy.textContent=online?'Learning tools are available online and cache locally after the first successful load. Presets and practice history remain browser-only.':'Offline mode active — using the locally cached learning tools. Presets and practice history remain on this browser.';
+  if(copy) copy.textContent=online?'Core tools are available online and cache locally after the first successful load. Active Lab state, presets, comparisons, and preferences remain browser-local.':'Offline mode active — using the locally cached core tools. Active Lab state, presets, comparisons, and preferences remain on this browser.';
 }
 window.addEventListener('online',updateNetworkState);
 window.addEventListener('offline',updateNetworkState);
@@ -1231,578 +1253,14 @@ if('serviceWorker' in navigator){
 }
 updateNetworkState();
 
-const sectionTitles={safety:'MR Safety Foundations',math:'Scan Math',sandbox:'Parameter Lab',contrast:'Contrast Lab',timing:'Sequence Timing Lab',motion:'Motion Lab',kspace:'K-Space Lab',spatial:'Spatial Encoding Lab',rescue:'Sequence Rescue',artifact:'Artifact Lab',burn:'Thermal / RF Foundations',learn:'Micro-Lab'};
-const homeSectionTitles={premiumLabs:'Premium Labs',referenceOnboarding:'Reference & onboarding',practiceLibraryZone:'Practice & packs',creatorZone:'Creator tools',packLibrary:'Pack Library',caseLab:'Case Lab',packStudio:'Publisher Studio',studyReport:'Study Report'};
+const sectionTitles={safety:'MR Safety Foundations',math:'Scan Math',sandbox:'Parameter Lab',contrast:'Contrast Lab',timing:'Sequence Timing Lab',motion:'Motion Lab',kspace:'K-Space Lab',spatial:'Spatial Encoding Lab',rescue:'Sequence Rescue',artifact:'Artifact Lab',burn:'Thermal / RF Foundations'};
+const homeSectionTitles={premiumLabs:'Premium Labs',referenceOnboarding:'Reference & onboarding'};
 const navGroups={
   safety:{label:'Safety reference',ids:['safety','burn']},
   workspace:{label:'MRI Labs',ids:['sandbox','contrast','timing','motion','kspace','spatial','artifact']},
-  reference:{label:'Supporting reference',ids:['math','rescue']},
-  legacy:{label:'Archived practice',ids:['learn']}
+  reference:{label:'Supporting reference',ids:['math','rescue']}
 };
-const studyModules={safety:'Safety',math:'Scan Math',sandbox:'Parameter Lab',rescue:'Sequence Rescue',artifact:'Artifact Solver',burn:'Thermal / RF',learn:'Micro-Lab'};
-const moduleSequence=['safety','math','sandbox','rescue','artifact','burn','learn'];
 const moduleAccent={safety:'#48f0b2',math:'#72b7ff',sandbox:'#52d7ff',contrast:'#b89cff',timing:'#52d7ff',motion:'#ff9c7c',kspace:'#ffd166',spatial:'#68e1b8',rescue:'#b89cff',artifact:'#ffd166',burn:'#ff9c7c',learn:'#68e1b8'};
-const dailyFocusPrompts={
-  safety:'Review one evidence-chain item and one red-flag route. Focus on how you would verify rather than memorize.',
-  math:'Run one Scan Math example, then change a single input and observe how the result moves.',
-  sandbox:'Change one Parameter Lab control, compare the modeled tradeoff, then return it to baseline.',
-  rescue:'Pick one limiting problem in Sequence Rescue and work backward through the available levers and costs.',
-  artifact:'Choose one artifact pattern, inspect the likely causes, and compare the response stack.',
-  burn:'Review one thermal / RF setup concept and the associated patient-feedback or escalation reminder.',
-  learn:'Complete the three-question Micro-Lab drill and review any missed item.'
-};
-const rawEngagementDays=readStoredJson(localStorage,'mrcc_engagement_days',[]);
-let engagementDays=Array.isArray(rawEngagementDays)?[...new Set(rawEngagementDays.filter(x=>typeof x==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x)))].slice(-90):[];
-if(!Array.isArray(rawEngagementDays))dataRepairCount++;
-const rawDailyFocusHistory=readStoredJson(localStorage,'mrcc_daily_focus_history',[]);
-let dailyFocusHistory=Array.isArray(rawDailyFocusHistory)?rawDailyFocusHistory.filter(x=>x&&typeof x.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x.date)&&moduleSequence.includes(x.module)&&validDateString(x.completedAt)).slice(-90):[];
-if(!Array.isArray(rawDailyFocusHistory))dataRepairCount++;
-function dayOrdinal(d=new Date()){return Math.floor(new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()/86400000)}
-function todayFocusModule(){return moduleSequence[((dayOrdinal()%moduleSequence.length)+moduleSequence.length)%moduleSequence.length]}
-function startOfWeek(d=new Date()){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()),offset=(x.getDay()+6)%7;x.setDate(x.getDate()-offset);return x}
-function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function datesThisWeek(){const start=startOfWeek();return Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return d})}
-function isThisWeek(at){const t=new Date(at);if(Number.isNaN(t.getTime()))return false;const start=startOfWeek(),end=new Date(start);end.setDate(start.getDate()+7);return t>=start&&t<end}
-function saveEngagementDays(){try{localStorage.setItem('mrcc_engagement_days',JSON.stringify(engagementDays.slice(-90)))}catch(e){}}
-function recordEngagement(){
-  const key=dateKey(new Date());if(!engagementDays.includes(key)){engagementDays.push(key);engagementDays=engagementDays.slice(-90);saveEngagementDays()}
-  if(typeof renderReturnLoop==='function'&&typeof learningAttempts!=='undefined')renderReturnLoop();
-}
-function openDailyFocus(){const id=todayFocusModule();recordEngagement();go(id)}
-function completeDailyFocus(){
-  const date=dateKey(new Date()),module=todayFocusModule();
-  if(dailyFocusHistory.some(x=>x.date===date)){toast('Today’s focus is already complete');return}
-  dailyFocusHistory.push({date,module,completedAt:new Date().toISOString()});dailyFocusHistory=dailyFocusHistory.slice(-90);
-  try{localStorage.setItem('mrcc_daily_focus_history',JSON.stringify(dailyFocusHistory))}catch(e){}
-  recordEngagement();renderReturnLoop();renderStudyReport();renderDataHealth();toast('Today’s focus complete');
-}
-function renderReturnLoop(){
-  const module=todayFocusModule(),art=moduleArt[module],title=$('dailyFocusTitle'),prompt=$('dailyFocusPrompt'),icon=$('dailyFocusIcon'),day=$('dailyFocusDay'),state=$('dailyFocusState'),complete=$('dailyFocusCompleteBtn'),today=dateKey(new Date()),done=dailyFocusHistory.some(x=>x.date===today);
-  if(title)title.textContent=sectionTitles[module]||studyModules[module];
-  if(prompt)prompt.textContent=dailyFocusPrompts[module]||'Open today’s module and complete a short review.';
-  if(icon){icon.innerHTML=art?.icon||'';icon.style.setProperty('--daily-accent',moduleAccent[module]||'#52d7ff')}
-  if(day)day.textContent=new Date().toLocaleDateString([], {weekday:'short',month:'short',day:'numeric'});
-  if(state)state.textContent=done?'Completed today':'Not completed';
-  if(complete){complete.disabled=done;complete.textContent=done?'Completed ✓':'Mark today complete'}
-  const week=datesThisWeek(),todayKey=dateKey(new Date()),wrap=$('weeklyActivity');
-  if(wrap)wrap.innerHTML=week.map(d=>{const key=dateKey(d),active=engagementDays.includes(key),focus=dailyFocusHistory.some(x=>x.date===key),future=d>new Date(),isToday=key===todayKey;return '<div class="return-day '+(active?'active ':'')+(focus?'focus ':'')+(isToday?'today ':'')+(future?'future ':'')+'"><b>'+d.toLocaleDateString([], {weekday:'short'}).slice(0,1)+'</b><span></span><small>'+d.getDate()+'</small></div>'}).join('');
-  const weekKeys=new Set(week.map(dateKey)),activeCount=engagementDays.filter(x=>weekKeys.has(x)).length,focusCount=dailyFocusHistory.filter(x=>weekKeys.has(x.date)).length,sessionCount=studySessionHistory.filter(x=>isThisWeek(x.endedAt)).length,quizCount=learningAttempts.filter(x=>isThisWeek(x.at)).length;
-  const activeEl=$('weeklyActiveCount');if(activeEl)activeEl.textContent=Math.min(activeCount,7)+'/3 active days';
-  const focusEl=$('weeklyFocusCount'),sessionEl=$('weeklySessionCount'),quizEl=$('weeklyQuizCount');if(focusEl)focusEl.textContent=focusCount;if(sessionEl)sessionEl.textContent=sessionCount;if(quizEl)quizEl.textContent=quizCount;
-}
-
-const moduleArt={
-  safety:{
-    caption:'IDENTIFY → VERIFY → MATCH',
-    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5.5 5.7v5.2c0 4.2 2.6 7.8 6.5 9.8 3.9-2 6.5-5.6 6.5-9.8V5.7L12 3Z"/><path d="m8.8 11.9 2.1 2.1 4.5-4.8"/></svg>',
-    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><circle cx="45" cy="43" r="25"/><circle cx="45" cy="43" r="12"/><path d="M73 22h28M73 34h39M73 46h31"/><path d="M132 19 115 26v14c0 12 7 22 17 27 10-5 17-15 17-27V26l-17-7Z"/><path d="m124 42 6 6 12-14"/><circle cx="96" cy="63" r="3"/><circle cx="108" cy="63" r="3"/></svg>'
-  },
-  math:{
-    caption:'SAMPLE → CALCULATE → INTERPRET',
-    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14v12H5z"/><path d="M9.7 6v12M14.3 6v12M5 10h14M5 14h14"/></svg>',
-    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><path d="M17 19h58v46H17z"/><path d="M36 19v46M56 19v46M17 34h58M17 50h58"/><path d="m105 23 24-9 25 13-24 10-25-14Z"/><path d="m105 23v29l25 17V37M154 27v29l-24 13"/><path d="M91 69h72"/><circle cx="91" cy="69" r="3"/></svg>'
-  },
-  sandbox:{
-    caption:'CHANGE → TRADEOFF → COMPARE',
-    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="17" r="2"/></svg>',
-    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><path d="M15 20h62M15 42h62M15 64h62"/><circle cx="35" cy="20" r="5"/><circle cx="58" cy="42" r="5"/><circle cx="28" cy="64" r="5"/><path d="M96 65V20M96 65h68"/><path d="m102 57 15-12 13 5 15-24 14 8"/><path d="m102 37 17 8 14-18 25 22"/></svg>'
-  },
-  rescue:{
-    caption:'PROBLEM → LEVER → COST',
-    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h5M14 7h5M14 17h5M10 12l4-5M10 12l4 5"/><circle cx="5" cy="12" r="1.5"/><circle cx="19" cy="7" r="1.5"/><circle cx="19" cy="17" r="1.5"/></svg>',
-    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><circle cx="28" cy="43" r="9"/><path d="M37 43h25M62 43l26-24M62 43l26 24"/><circle cx="96" cy="19" r="8"/><circle cx="96" cy="67" r="8"/><path d="M105 19h42M105 67h42"/><path d="m137 13 10 6-10 6M137 61l10 6-10 6"/></svg>'
-  },
-  artifact:{
-    caption:'PATTERN → CAUSE → RESPONSE',
-    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7c3-4 5 4 8 0s5 4 8 0M4 12c3-4 5 4 8 0s5 4 8 0M4 17c3-4 5 4 8 0s5 4 8 0"/></svg>',
-    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><rect x="13" y="15" width="68" height="56" rx="4"/><path d="M20 31c8-13 14 13 22 0s14 13 22 0 10 6 12 4M20 46c8-13 14 13 22 0s14 13 22 0 10 6 12 4M20 60c8-13 14 13 22 0s14 13 22 0 10 6 12 4"/><path d="M101 24h57M101 43h45M101 62h52"/><path d="M109 18v49M118 18v49" opacity=".35"/></svg>'
-  },
-  burn:{
-    caption:'GEOMETRY → RF → FEEDBACK',
-    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12a5 5 0 0 1 10 0M4 12a8 8 0 0 1 16 0"/><path d="M12 12v7M9 19h6"/><path d="M8 8 6 5M16 8l2-3"/></svg>',
-    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><path d="M22 50a31 31 0 0 1 62 0M12 50a41 41 0 0 1 82 0"/><circle cx="53" cy="50" r="9"/><path d="M53 59v15M44 74h18"/><path d="M117 23c7 6 7 12 0 18s-7 12 0 18M136 17c10 8 10 17 0 25s-10 17 0 25M155 12c13 11 13 23 0 34s-13 23 0 34"/></svg>'
-  },
-  learn:{
-    caption:'RECALL → SCORE → REVISIT',
-    icon:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M9.7 9.6a2.5 2.5 0 1 1 3.7 2.2c-1 .5-1.4 1.1-1.4 2M12 17h.01"/></svg>',
-    scene:'<svg viewBox="0 0 180 86" aria-hidden="true"><circle cx="37" cy="43" r="26"/><path d="M37 17a26 26 0 0 1 23 14"/><path d="m27 44 7 7 14-17"/><path d="M87 20h64M87 35h48M87 50h58M87 65h38"/><circle cx="159" cy="20" r="4"/><circle cx="143" cy="35" r="4"/><circle cx="153" cy="50" r="4"/></svg>'
-  }
-};
-function applyModuleArt(){
-  document.querySelectorAll('[data-module-card]').forEach(card=>{
-    const art=moduleArt[card.dataset.moduleCard],icon=card.querySelector('.module-icon');
-    if(art&&icon)icon.innerHTML=art.icon;
-  });
-  moduleSequence.forEach((id,index)=>{
-    const section=$(id),head=section?.querySelector('.section-head'),art=moduleArt[id];
-    if(!section||!head||!art)return;
-    section.dataset.moduleIndex=String(index+1);
-    let visual=head.querySelector('.section-visual');
-    if(!visual){visual=document.createElement('div');visual.className='section-visual';visual.setAttribute('aria-hidden','true');head.appendChild(visual)}
-    visual.innerHTML='<div class="section-visual-scene">'+art.scene+'</div><span>'+escapeHtml(art.caption)+'</span>';
-  });
-}
-const builtInCasePacks=[{
-  packId:'mrcc-foundations-sampler',title:'Foundations Sampler',publisher:'MR Command Center',description:'Three non-scored reasoning drills built from the learning tools already in MRCC.',kind:'built-in',
-  cases:[
-    {id:'parameter-tradeoff',title:'Parameter tradeoff drill',module:'sandbox',prompt:'Use Parameter Lab to make one deliberate change from baseline. Your goal is to explain what the model says moved, what tradeoff appeared, and what the model does not know.',tasks:['Open Parameter Lab and change exactly one modeled control.','Compare at least two modeled outputs before and after the change.','Use Parameter Lens to identify one scanner- or sequence-dependent limitation of the simplified model.'],reflection:'A strong response separates the modeled relative change from scanner-specific prescription. Return the control to baseline when you are done.'},
-    {id:'artifact-reasoning',title:'Artifact reasoning drill',module:'artifact',prompt:'Start with a visible-pattern mindset. Use Artifact Solver to choose the closest pattern family, then reason from pattern to likely cause to response.',tasks:['Choose one artifact family in Artifact Solver.','Identify the pattern cue and the likely mechanism described by the learning stack.','Compare one response option with its practical tradeoff or limitation.'],reflection:'The exercise is about a reasoning chain, not declaring a diagnosis from a single image pattern.'},
-    {id:'evidence-chain',title:'Evidence-chain drill',module:'safety',prompt:'Use MR Safety Foundations to practice handling an incomplete information chain. Keep unresolved information unresolved while you identify the documentation and escalation route shown in the learning module.',tasks:['Open MR Safety Foundations and review the documentation/evidence sequence.','Identify which part of the information chain remains unresolved in your hypothetical example.','State which verification or escalation step the learning module points to next.'],reflection:'This drill does not clear a device or patient. It reinforces documentation, verification, and escalation habits.'}
-  ]
-}];
-function caseText(v,max){return String(v??'').replace(/\s+/g,' ').trim().slice(0,max)}
-function normalizeCaseItem(raw,index=0){
-  if(!raw||typeof raw!=='object'||Array.isArray(raw))return null;
-  const module=moduleSequence.includes(raw.module)?raw.module:'';
-  const title=caseText(raw.title,80),prompt=caseText(raw.prompt,600),reflection=caseText(raw.reflection,500);
-  const tasks=Array.isArray(raw.tasks)?raw.tasks.map(x=>caseText(x,220)).filter(Boolean).slice(0,5):[];
-  if(!module||!title||!prompt||tasks.length<2)return null;
-  const sourceId=caseText(raw.id,60).replace(/[^a-z0-9._-]+/gi,'-').replace(/^-+|-+$/g,'').toLowerCase();
-  return {id:sourceId||'case-'+(index+1),title,module,prompt,tasks,reflection};
-}
-function normalizeCasePack(raw,kind='imported'){
-  if(!raw||typeof raw!=='object'||Array.isArray(raw))return null;
-  const source=raw.type==='mrcc-case-pack'?raw:raw;
-  const title=caseText(source.title,80),publisher=caseText(source.publisher||'Imported publisher',80),description=caseText(source.description,280);
-  const packId=caseText(source.packId,60).replace(/[^a-z0-9._-]+/gi,'-').replace(/^-+|-+$/g,'').toLowerCase();
-  const cases=Array.isArray(source.cases)?source.cases.map(normalizeCaseItem).filter(Boolean).slice(0,12):[];
-  if(!packId||!title||!cases.length)return null;
-  const edition=caseText(source.edition,30),sourceExportedAt=validDateString(source.sourceExportedAt)?source.sourceExportedAt:(validDateString(source.exportedAt)?source.exportedAt:''),installedAt=validDateString(source.installedAt)?source.installedAt:'',updatedAt=validDateString(source.updatedAt)?source.updatedAt:'';
-  return {packId,title,publisher,description,edition,kind,formatVersion:1,sourceExportedAt,installedAt,updatedAt,cases};
-}
-const rawImportedCasePacks=readStoredJson(localStorage,'mrcc_case_packs',[]);
-let importedCasePacks=Array.isArray(rawImportedCasePacks)?rawImportedCasePacks.map(x=>normalizeCasePack(x,'imported')).filter(Boolean).slice(0,6):[];
-if(!Array.isArray(rawImportedCasePacks))dataRepairCount++;
-let packMetadataMigrated=false;const packMetadataMigrationAt=new Date().toISOString();
-importedCasePacks=importedCasePacks.map(p=>{if(!p.installedAt){p.installedAt=packMetadataMigrationAt;packMetadataMigrated=true}if(!p.updatedAt){p.updatedAt=p.installedAt;packMetadataMigrated=true}return p});
-const rawCaseHistory=readStoredJson(localStorage,'mrcc_case_history',[]);
-let caseHistory=Array.isArray(rawCaseHistory)?rawCaseHistory.filter(x=>x&&typeof x.packId==='string'&&typeof x.caseId==='string'&&validDateString(x.completedAt)).map(x=>({packId:x.packId.slice(0,60),caseId:x.caseId.slice(0,60),completedAt:x.completedAt})).slice(-100):[];
-if(!Array.isArray(rawCaseHistory))dataRepairCount++;
-const rawPackResume=readStoredJson(localStorage,'mrcc_pack_resume',{});
-let packResume=rawPackResume&&typeof rawPackResume==='object'&&!Array.isArray(rawPackResume)?Object.fromEntries(Object.entries(rawPackResume).filter(([packId,x])=>typeof packId==='string'&&x&&typeof x.caseId==='string'&&validDateString(x.at)).slice(0,20).map(([packId,x])=>[packId.slice(0,60),{caseId:x.caseId.slice(0,60),at:x.at}])):{};
-if(!rawPackResume||typeof rawPackResume!=='object'||Array.isArray(rawPackResume))dataRepairCount++;
-let activeCasePackId=caseText(localStorage.getItem('mrcc_active_case_pack')||'mrcc-foundations-sampler',60),activeCaseId='parameter-tradeoff',packLibraryFilter='all',expectedPackUpdateId='';
-function allCasePacks(){return [...builtInCasePacks,...importedCasePacks]}
-function activeCasePack(){return allCasePacks().find(p=>p.packId===activeCasePackId)||builtInCasePacks[0]}
-function activeCase(){const pack=activeCasePack();return pack.cases.find(c=>c.id===activeCaseId)||pack.cases[0]}
-function saveImportedCasePacks(){try{localStorage.setItem('mrcc_case_packs',JSON.stringify(importedCasePacks))}catch(e){}}
-function saveCaseHistory(){try{localStorage.setItem('mrcc_case_history',JSON.stringify(caseHistory.slice(-100)))}catch(e){}}
-function caseCompletionCount(packId,caseId){return caseHistory.filter(x=>x.packId===packId&&x.caseId===caseId).length}
-function savePackResume(){try{localStorage.setItem('mrcc_pack_resume',JSON.stringify(packResume))}catch(e){}}
-function rememberPackPosition(packId,caseId){if(!packId||!caseId)return;packResume[packId]={caseId,at:new Date().toISOString()};savePackResume();try{localStorage.setItem('mrcc_active_case_pack',packId)}catch(e){}}
-function packCompletedCaseIds(pack){const valid=new Set(pack.cases.map(c=>c.id));return new Set(caseHistory.filter(x=>x.packId===pack.packId&&valid.has(x.caseId)).map(x=>x.caseId))}
-function packProgress(pack){const completed=packCompletedCaseIds(pack).size,total=pack.cases.length;return {completed,total,pct:total?Math.round(completed/total*100):0,status:completed>=total?'complete':completed?'progress':'new'}}
-function packLastActivity(packId){
-  const times=caseHistory.filter(x=>x.packId===packId).map(x=>new Date(x.completedAt).getTime()).filter(Number.isFinite),resume=packResume[packId];
-  if(resume&&validDateString(resume.at))times.push(new Date(resume.at).getTime());
-  const pack=allCasePacks().find(p=>p.packId===packId);if(pack&&validDateString(pack.updatedAt))times.push(new Date(pack.updatedAt).getTime());
-  if(!times.length)return '';return new Date(Math.max(...times)).toISOString();
-}
-function packResumeCaseId(pack){
-  const completed=packCompletedCaseIds(pack),remembered=packResume[pack.packId]?.caseId;
-  if(remembered&&pack.cases.some(c=>c.id===remembered)&&!completed.has(remembered))return remembered;
-  const next=pack.cases.find(c=>!completed.has(c.id));if(next)return next.id;
-  if(remembered&&pack.cases.some(c=>c.id===remembered))return remembered;
-  return pack.cases[0].id;
-}
-function packRouteModules(pack){return [...new Set(pack.cases.map(c=>c.module).filter(id=>moduleSequence.includes(id)))]}
-function setPackLibraryFilter(filter){packLibraryFilter=['all','progress','complete','imported'].includes(filter)?filter:'all';renderPackLibrary()}
-function renderPackLibrary(){
-  const grid=$('packLibraryGrid'),search=$('packLibrarySearch'),q=String(search?.value||'').trim().toLowerCase(),packs=allCasePacks();
-  const totalCases=packs.reduce((n,p)=>n+p.cases.length,0),totalCompleted=packs.reduce((n,p)=>n+packCompletedCaseIds(p).size,0);
-  const count=$('packLibraryCount'),cases=$('packLibraryCases'),completed=$('packLibraryCompleted'),imported=$('packLibraryImported');
-  if(count)count.textContent=packs.length;if(cases)cases.textContent=totalCases;if(completed)completed.textContent=totalCompleted;if(imported)imported.textContent=importedCasePacks.length;
-  document.querySelectorAll('[data-pack-filter]').forEach(b=>b.classList.toggle('active',b.dataset.packFilter===packLibraryFilter));
-  if(!grid)return;
-  const visible=packs.filter(pack=>{
-    const progress=packProgress(pack),modules=packRouteModules(pack).map(id=>sectionTitles[id]).join(' '),hay=[pack.title,pack.publisher,pack.description,pack.edition,modules].join(' ').toLowerCase();
-    if(q&&!hay.includes(q))return false;
-    if(packLibraryFilter==='progress'&&progress.status!=='progress')return false;
-    if(packLibraryFilter==='complete'&&progress.status!=='complete')return false;
-    if(packLibraryFilter==='imported'&&pack.kind!=='imported')return false;
-    return true;
-  });
-  if(!visible.length){grid.innerHTML='<div class="pack-library-empty">No installed packs match this view.</div>';return}
-  grid.innerHTML=visible.map(pack=>{
-    const progress=packProgress(pack),last=packLastActivity(pack.packId),lastText=last?new Date(last).toLocaleDateString([], {month:'short',day:'numeric'}):'',modules=packRouteModules(pack),resumeId=packResumeCaseId(pack),resumeCase=pack.cases.find(c=>c.id===resumeId)||pack.cases[0],status=progress.status==='complete'?'Complete':progress.status==='progress'?'In progress':'Not started',edition=pack.edition?'Edition '+escapeHtml(pack.edition):'No edition label',kind=pack.kind==='imported'?'Installed file':'Free sampler';
-    return '<article class="pack-card '+progress.status+' '+(pack.packId===activeCasePackId?'active':'')+'" data-library-pack="'+escapeHtml(pack.packId)+'"><div class="pack-card-top"><span class="pack-card-kind '+(pack.kind==='imported'?'imported':'free')+'">'+kind+'</span><span class="pack-card-status">'+status+'</span></div><h4>'+escapeHtml(pack.title)+'</h4><div class="pack-card-byline">'+escapeHtml(pack.publisher)+' · '+edition+'</div><p>'+escapeHtml(pack.description||'Installed MRCC Case Lab content.')+'</p><div class="pack-card-modules">'+modules.map(id=>'<span style="--pack-accent:'+moduleAccent[id]+'">'+(moduleArt[id]?.icon||'')+'<small>'+escapeHtml(sectionTitles[id])+'</small></span>').join('')+'</div><div class="pack-card-progress"><span><b>'+progress.completed+'/'+progress.total+'</b> cases completed</span><span>'+progress.pct+'%</span><i><em style="width:'+progress.pct+'%"></em></i></div><div class="pack-card-resume"><small>'+(progress.status==='complete'?'Review case':progress.status==='progress'?'Resume':'Start with')+'</small><b>'+escapeHtml(resumeCase.title)+'</b>'+(lastText?'<span>Last activity '+escapeHtml(lastText)+'</span>':'')+'</div><div class="pack-card-actions"><button type="button" onclick="openPackFromLibrary(\''+escapeHtml(pack.packId)+'\')">'+(progress.status==='progress'?'Resume pack':'Open pack')+'</button><button type="button" onclick="startPackStudyRoute(\''+escapeHtml(pack.packId)+'\')">Study route</button>'+(pack.kind==='imported'?'<button type="button" class="secondary" onclick="chooseCasePackFile(\''+escapeHtml(pack.packId)+'\')">Update file</button>':'')+'</div></article>';
-  }).join('');
-}
-function openPackFromLibrary(packId){
-  const pack=allCasePacks().find(p=>p.packId===packId);if(!pack)return;activeCasePackId=pack.packId;activeCaseId=packResumeCaseId(pack);rememberPackPosition(pack.packId,activeCaseId);renderCaseLab();renderPackLibrary();setTimeout(()=>$('caseLab')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),30);
-}
-function startPackStudyRoute(packId){
-  const pack=allCasePacks().find(p=>p.packId===packId);if(!pack)return;const route=packRouteModules(pack);if(!route.length){toast('No supported learning modules in this pack');return}startStudySessionModules(pack.title+' · pack route',route);
-}
-if(packMetadataMigrated)saveImportedCasePacks();
-function renderCaseLab(){
-  const select=$('casePackSelect'),list=$('caseList'),viewer=$('caseViewer'),badge=$('casePackSource'),remove=$('casePackRemoveBtn'),pack=activeCasePack();
-  if(!pack)return;if(pack.packId!==activeCasePackId)activeCasePackId=pack.packId;
-  if(!pack.cases.some(c=>c.id===activeCaseId))activeCaseId=packResumeCaseId(pack);
-  if(select){select.innerHTML=allCasePacks().map(p=>'<option value="'+escapeHtml(p.packId)+'" '+(p.packId===pack.packId?'selected':'')+'>'+escapeHtml(p.title)+(p.kind==='imported'?' · imported':' · free')+'</option>').join('')}
-  if(badge){badge.textContent=pack.kind==='imported'?'Imported pack':'MRCC sampler';badge.classList.toggle('imported',pack.kind==='imported')}
-  if(remove)remove.style.display=pack.kind==='imported'?'inline-flex':'none';rememberPackPosition(pack.packId,activeCaseId);
-  if(list)list.innerHTML=pack.cases.map((c,i)=>{const count=caseCompletionCount(pack.packId,c.id);return '<button type="button" class="case-list-item '+(c.id===activeCaseId?'active':'')+'" onclick="selectCase(\''+escapeHtml(c.id)+'\')"><span class="case-list-index">'+String(i+1).padStart(2,'0')+'</span><span><b>'+escapeHtml(c.title)+'</b><small>'+escapeHtml(sectionTitles[c.module])+(count?' · completed '+count+'×':'')+'</small></span></button>'}).join('');
-  const c=activeCase(),count=caseCompletionCount(pack.packId,c.id);
-  if(viewer)viewer.innerHTML='<div class="case-viewer-head"><span class="case-module-icon" style="--case-accent:'+moduleAccent[c.module]+'">'+(moduleArt[c.module]?.icon||'')+'</span><div><span class="case-module-label">'+escapeHtml(sectionTitles[c.module])+'</span><h4>'+escapeHtml(c.title)+'</h4></div><span class="case-completion">'+(count?count+' completion'+(count===1?'':'s'):'Not completed')+'</span></div><p class="case-prompt">'+escapeHtml(c.prompt)+'</p><div class="case-task-list" id="caseTaskList">'+c.tasks.map((task,i)=>'<label><input type="checkbox" onchange="updateCaseTaskState()"><span><b>Step '+(i+1)+'</b>'+escapeHtml(task)+'</span></label>').join('')+'</div>'+(c.reflection?'<div class="case-reflection"><b>Reflection</b><span>'+escapeHtml(c.reflection)+'</span></div>':'')+'<div class="case-viewer-actions"><button type="button" onclick="openActiveCaseModule()">Open '+escapeHtml(sectionTitles[c.module])+'</button><button type="button" class="case-complete-btn" id="caseCompleteBtn" onclick="completeActiveCase()" disabled>Complete all steps</button></div><div class="case-source">'+(pack.kind==='imported'?'Imported content · publisher: '+escapeHtml(pack.publisher)+(pack.edition?' · edition '+escapeHtml(pack.edition):'')+' · verify source material before relying on it.':'Built-in MRCC sampler · non-scored practice using existing learning concepts.')+'</div>';
-}
-function selectCasePack(id){const pack=allCasePacks().find(p=>p.packId===id);if(!pack)return;activeCasePackId=pack.packId;activeCaseId=packResumeCaseId(pack);rememberPackPosition(pack.packId,activeCaseId);renderCaseLab();renderPackLibrary()}
-function selectCase(id){const pack=activeCasePack();if(!pack.cases.some(c=>c.id===id))return;activeCaseId=id;rememberPackPosition(pack.packId,id);renderCaseLab();renderPackLibrary()}
-function updateCaseTaskState(){const boxes=[...document.querySelectorAll('#caseTaskList input[type="checkbox"]')],btn=$('caseCompleteBtn'),done=boxes.length&&boxes.every(x=>x.checked);if(btn){btn.disabled=!done;btn.textContent=done?'Mark case complete':'Complete all steps'}}
-function openActiveCaseModule(){const c=activeCase();if(c){recordEngagement();go(c.module)}}
-function completeActiveCase(){
-  const boxes=[...document.querySelectorAll('#caseTaskList input[type="checkbox"]')];if(!boxes.length||!boxes.every(x=>x.checked)){toast('Complete each case step first');return}
-  const pack=activeCasePack(),c=activeCase();caseHistory.push({packId:pack.packId,caseId:c.id,completedAt:new Date().toISOString()});caseHistory=caseHistory.slice(-100);saveCaseHistory();recordEngagement();renderCaseLab();renderPackLibrary();renderStudyReport();renderDataHealth();toast('Case practice recorded');
-}
-function chooseCasePackFile(expectedPackId=''){expectedPackUpdateId=caseText(expectedPackId,60);const input=$('casePackFile');if(input)input.click()}
-async function importCasePack(event){
-  const input=event&&event.target,file=input&&input.files&&input.files[0];if(!file)return;
-  try{
-    if(file.size>150000)throw new Error('Pack file too large');
-    const raw=JSON.parse(await file.text());
-    if(!raw||raw.type!=='mrcc-case-pack'||Number(raw.version)!==1)throw new Error('Unsupported pack format');
-    const pack=normalizeCasePack(raw,'imported');if(!pack)throw new Error('No valid cases found');
-    if(expectedPackUpdateId&&pack.packId!==expectedPackUpdateId)throw new Error('Update file belongs to another pack');
-    if(builtInCasePacks.some(p=>p.packId===pack.packId))throw new Error('Pack id is reserved');
-    const existing=importedCasePacks.findIndex(p=>p.packId===pack.packId),now=new Date().toISOString();let wasUpdate=false;
-    if(existing>=0){
-      const previous=importedCasePacks[existing];
-      if(!expectedPackUpdateId&&!confirm('Replace the installed pack “'+previous.title+'” with this file? Compatible case-history progress will be preserved by pack ID and case ID.'))return;
-      pack.installedAt=previous.installedAt||now;pack.updatedAt=now;importedCasePacks[existing]=pack;wasUpdate=true;
-    }else{
-      if(expectedPackUpdateId)throw new Error('Expected installed pack was not found');
-      if(importedCasePacks.length>=6)throw new Error('Imported pack limit reached');
-      pack.installedAt=now;pack.updatedAt=now;importedCasePacks.push(pack);
-    }
-    saveImportedCasePacks();activeCasePackId=pack.packId;activeCaseId=packResumeCaseId(pack);rememberPackPosition(pack.packId,activeCaseId);renderCaseLab();renderPackLibrary();renderStudyReport();renderDataHealth();toast(wasUpdate?'Pack updated · compatible progress preserved':'Case pack installed');
-  }catch(e){toast(expectedPackUpdateId?'Pack update failed — check the pack file':'Case pack install failed — check the pack file')}
-  finally{expectedPackUpdateId='';if(input)input.value=''}
-}
-function removeImportedCasePack(){
-  const pack=activeCasePack();if(!pack||pack.kind!=='imported')return;if(!confirm('Remove imported pack “'+pack.title+'” from this browser? Case completion history will remain in the study report.'))return;
-  importedCasePacks=importedCasePacks.filter(p=>p.packId!==pack.packId);delete packResume[pack.packId];savePackResume();saveImportedCasePacks();activeCasePackId=builtInCasePacks[0].packId;activeCaseId=packResumeCaseId(builtInCasePacks[0]);renderCaseLab();renderPackLibrary();renderStudyReport();renderDataHealth();toast('Imported case pack removed');
-}
-function downloadPayload(name,text,type='application/json'){const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function downloadCasePackTemplate(){
-  const payload={type:'mrcc-case-pack',version:1,packId:'your-pack-id',title:'Your MRI reasoning pack',publisher:'Your organization or publisher',description:'Short description of this learning pack.',cases:[{id:'case-1',title:'Reasoning case title',module:'sandbox',prompt:'Describe the learning scenario without patient identifiers.',tasks:['Step one for the learner.','Step two for the learner.','Step three for the learner.'],reflection:'Optional reflection text. Do not imply certification or patient-specific clearance.'}]};
-  downloadPayload('mrcc-case-pack-template.json',JSON.stringify(payload,null,2));toast('Case pack template downloaded');
-}
-const PACK_DRAFT_LIMIT=6;
-function newDraftId(){return 'draft-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)}
-const productCategories={general:'General MRI learning',parameters:'Parameters & scan math',troubleshooting:'Troubleshooting',artifacts:'Artifacts',safety:'Safety foundations',onboarding:'Onboarding'};
-function normalizeProductMeta(raw){
-  const x=raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{};
-  const category=Object.prototype.hasOwnProperty.call(productCategories,x.category)?x.category:'general';
-  const outcomes=Array.isArray(x.outcomes)?x.outcomes.map(v=>caseText(v,160)).filter(Boolean).slice(0,5):[];
-  return {sku:caseText(x.sku,40).replace(/[^a-z0-9._-]+/gi,'-').replace(/^-+|-+$/g,'').toUpperCase(),category,audience:caseText(x.audience,120),headline:caseText(x.headline,120),outcomes};
-}
-function normalizePackDraft(raw){
-  if(!raw||typeof raw!=='object'||Array.isArray(raw))return null;
-  const cases=Array.isArray(raw.cases)?raw.cases.map(normalizeCaseItem).filter(Boolean).slice(0,12):[];
-  return {draftId:caseText(raw.draftId,60)||newDraftId(),packId:caseText(raw.packId,60).replace(/[^a-z0-9._-]+/gi,'-').replace(/^-+|-+$/g,'').toLowerCase(),title:caseText(raw.title,80),publisher:caseText(raw.publisher,80),edition:caseText(raw.edition,30),description:caseText(raw.description,280),product:normalizeProductMeta(raw.product),cases,updatedAt:validDateString(raw.updatedAt)?raw.updatedAt:new Date().toISOString()};
-}
-const rawPackDrafts=readStoredJson(localStorage,'mrcc_pack_drafts',[]);
-let packDrafts=Array.isArray(rawPackDrafts)?rawPackDrafts.map(normalizePackDraft).filter(Boolean).slice(0,PACK_DRAFT_LIMIT):[];
-if(!Array.isArray(rawPackDrafts))dataRepairCount++;
-if(!packDrafts.length)packDrafts=[normalizePackDraft({draftId:newDraftId(),packId:'',title:'Untitled case pack',publisher:'',edition:'',description:'',cases:[]})];
-let activePackDraftId=packDrafts[0].draftId,studioEditingCaseIndex=-1,studioPreviewPackId='';
-function activePackDraft(){return packDrafts.find(x=>x.draftId===activePackDraftId)||packDrafts[0]}
-function savePackDrafts(){try{localStorage.setItem('mrcc_pack_drafts',JSON.stringify(packDrafts.slice(0,PACK_DRAFT_LIMIT)))}catch(e){}}
-function packDraftValidation(draft=activePackDraft()){
-  const errors=[];if(!draft.packId)errors.push('pack ID');if(!draft.title)errors.push('title');if(!draft.publisher)errors.push('publisher');if(!draft.cases.length)errors.push('at least one case');
-  const ids=draft.cases.map(x=>x.id);if(new Set(ids).size!==ids.length)errors.push('unique case IDs');
-  return {ok:!errors.length,errors};
-}
-function syncPackStudioDraftFromForm(){
-  const draft=activePackDraft();if(!draft)return;
-  draft.packId=caseText($('studioPackId')?.value,60).replace(/[^a-z0-9._-]+/gi,'-').replace(/^-+|-+$/g,'').toLowerCase();
-  draft.title=caseText($('studioPackTitle')?.value,80);draft.publisher=caseText($('studioPackPublisher')?.value,80);draft.edition=caseText($('studioPackEdition')?.value,30);draft.description=caseText($('studioPackDescription')?.value,280);draft.updatedAt=new Date().toISOString();savePackDrafts();
-}
-function syncPackStudioProductFromForm(){
-  const draft=activePackDraft();if(!draft)return;
-  draft.product=normalizeProductMeta({sku:$('studioProductSku')?.value,category:$('studioProductCategory')?.value,audience:$('studioProductAudience')?.value,headline:$('studioProductHeadline')?.value,outcomes:String($('studioProductOutcomes')?.value||'').split(/\n+/)});
-  draft.updatedAt=new Date().toISOString();savePackDrafts();
-}
-function updatePackStudioProduct(){syncPackStudioProductFromForm();renderProductKit();renderDataHealth()}
-function updatePackStudioMeta(){syncPackStudioDraftFromForm();renderPackStudio(false);renderDataHealth()}
-function renderPackStudio(fillForm=true){
-  const draft=activePackDraft(),select=$('packStudioDraftSelect'),list=$('studioCaseList'),count=$('studioCaseCount'),validation=$('packStudioValidation'),state=$('packStudioSaveState');if(!draft)return;
-  if(select)select.innerHTML=packDrafts.map((d,i)=>'<option value="'+escapeHtml(d.draftId)+'" '+(d.draftId===draft.draftId?'selected':'')+'>'+escapeHtml(d.title||'Untitled pack')+' · '+(i+1)+'</option>').join('');
-  if(fillForm){if($('studioPackId'))$('studioPackId').value=draft.packId;if($('studioPackTitle'))$('studioPackTitle').value=draft.title;if($('studioPackPublisher'))$('studioPackPublisher').value=draft.publisher;if($('studioPackEdition'))$('studioPackEdition').value=draft.edition||'';if($('studioPackDescription'))$('studioPackDescription').value=draft.description;if($('studioProductSku'))$('studioProductSku').value=draft.product?.sku||'';if($('studioProductCategory'))$('studioProductCategory').value=draft.product?.category||'general';if($('studioProductAudience'))$('studioProductAudience').value=draft.product?.audience||'';if($('studioProductHeadline'))$('studioProductHeadline').value=draft.product?.headline||'';if($('studioProductOutcomes'))$('studioProductOutcomes').value=(draft.product?.outcomes||[]).join('\n')}
-  if(count)count.textContent=draft.cases.length+' case'+(draft.cases.length===1?'':'s');
-  const check=packDraftValidation(draft);if(validation){validation.textContent=check.ok?'Ready to export · '+draft.cases.length+' valid case'+(draft.cases.length===1?'':'s'):'Needs: '+check.errors.join(', ');validation.classList.toggle('ok',check.ok)}
-  if(state)state.textContent='Saved locally · '+new Date(draft.updatedAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  if(list)list.innerHTML=draft.cases.length?draft.cases.map((c,i)=>'<div class="studio-case-row"><span class="studio-case-order">'+String(i+1).padStart(2,'0')+'</span><span class="studio-case-module" style="--studio-accent:'+moduleAccent[c.module]+'">'+(moduleArt[c.module]?.icon||'')+'</span><span class="studio-case-copy"><b>'+escapeHtml(c.title)+'</b><small>'+escapeHtml(sectionTitles[c.module])+' · '+c.tasks.length+' steps · '+escapeHtml(c.id)+'</small></span><span class="studio-case-actions"><button type="button" onclick="moveStudioCase('+i+',-1)" '+(i===0?'disabled':'')+' aria-label="Move case up">↑</button><button type="button" onclick="moveStudioCase('+i+',1)" '+(i===draft.cases.length-1?'disabled':'')+' aria-label="Move case down">↓</button><button type="button" onclick="editStudioCase('+i+')">Edit</button><button type="button" class="studio-danger" onclick="removeStudioCase('+i+')">Remove</button></span></div>').join(''):'<div class="studio-empty">No cases yet. Add your first case using the editor above.</div>';renderProductKit();
-}
-function selectPackDraft(id){if(!packDrafts.some(x=>x.draftId===id))return;activePackDraftId=id;studioEditingCaseIndex=-1;resetStudioCaseEditor(false);renderPackStudio(true)}
-function newPackDraft(){
-  if(packDrafts.length>=PACK_DRAFT_LIMIT){toast('Local draft limit reached');return}
-  const draft=normalizePackDraft({draftId:newDraftId(),packId:'',title:'Untitled case pack',publisher:'',edition:'',description:'',cases:[]});packDrafts.unshift(draft);activePackDraftId=draft.draftId;savePackDrafts();studioEditingCaseIndex=-1;resetStudioCaseEditor(false);renderPackStudio(true);renderDataHealth();toast('New pack draft created');
-}
-function deletePackDraft(){
-  if(packDrafts.length===1){toast('Keep at least one local draft');return}
-  const draft=activePackDraft();if(!confirm('Delete local draft “'+(draft.title||'Untitled case pack')+'”?'))return;
-  packDrafts=packDrafts.filter(x=>x.draftId!==draft.draftId);activePackDraftId=packDrafts[0].draftId;savePackDrafts();studioEditingCaseIndex=-1;resetStudioCaseEditor(false);renderPackStudio(true);renderDataHealth();toast('Pack draft deleted');
-}
-function studioCaseFromEditor(index=-1){
-  const raw={id:$('studioCaseId')?.value,title:$('studioCaseTitle')?.value,module:$('studioCaseModule')?.value,prompt:$('studioCasePrompt')?.value,tasks:[$('studioTask1')?.value,$('studioTask2')?.value,$('studioTask3')?.value],reflection:$('studioCaseReflection')?.value};
-  return normalizeCaseItem(raw,index<0?activePackDraft().cases.length:index);
-}
-function resetStudioCaseEditor(updateTitle=true){
-  studioEditingCaseIndex=-1;['studioCaseId','studioCaseTitle','studioCasePrompt','studioTask1','studioTask2','studioTask3','studioCaseReflection'].forEach(id=>{if($(id))$(id).value=''});if($('studioCaseModule'))$('studioCaseModule').value='sandbox';
-  if(updateTitle&&$('studioCaseEditorTitle'))$('studioCaseEditorTitle').textContent='Add a case';if($('studioCaseSaveBtn'))$('studioCaseSaveBtn').textContent='Add case to draft';
-}
-function saveStudioCase(){
-  const draft=activePackDraft(),c=studioCaseFromEditor(studioEditingCaseIndex);if(!c){toast('Add a case title, module, prompt, and at least two steps');return}
-  const duplicate=draft.cases.findIndex((x,i)=>x.id===c.id&&i!==studioEditingCaseIndex);if(duplicate>=0){toast('Case ID must be unique in this pack');return}
-  if(studioEditingCaseIndex>=0&&studioEditingCaseIndex<draft.cases.length)draft.cases[studioEditingCaseIndex]=c;else{if(draft.cases.length>=12){toast('Case pack limit reached');return}draft.cases.push(c)}
-  draft.updatedAt=new Date().toISOString();savePackDrafts();resetStudioCaseEditor();renderPackStudio(false);renderDataHealth();toast('Case saved to draft');
-}
-function editStudioCase(i){
-  const c=activePackDraft().cases[i];if(!c)return;studioEditingCaseIndex=i;
-  if($('studioCaseId'))$('studioCaseId').value=c.id;if($('studioCaseTitle'))$('studioCaseTitle').value=c.title;if($('studioCaseModule'))$('studioCaseModule').value=c.module;if($('studioCasePrompt'))$('studioCasePrompt').value=c.prompt;if($('studioTask1'))$('studioTask1').value=c.tasks[0]||'';if($('studioTask2'))$('studioTask2').value=c.tasks[1]||'';if($('studioTask3'))$('studioTask3').value=c.tasks[2]||'';if($('studioCaseReflection'))$('studioCaseReflection').value=c.reflection||'';
-  if($('studioCaseEditorTitle'))$('studioCaseEditorTitle').textContent='Edit case';if($('studioCaseSaveBtn'))$('studioCaseSaveBtn').textContent='Update case';$('studioCaseEditorTitle')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'});
-}
-function removeStudioCase(i){const draft=activePackDraft(),c=draft.cases[i];if(!c)return;if(!confirm('Remove “'+c.title+'” from this draft?'))return;draft.cases.splice(i,1);draft.updatedAt=new Date().toISOString();savePackDrafts();resetStudioCaseEditor();renderPackStudio(false);renderDataHealth();toast('Case removed')}
-function moveStudioCase(i,delta){const draft=activePackDraft(),j=i+delta;if(i<0||j<0||i>=draft.cases.length||j>=draft.cases.length)return;[draft.cases[i],draft.cases[j]]=[draft.cases[j],draft.cases[i]];draft.updatedAt=new Date().toISOString();savePackDrafts();renderPackStudio(false)}
-function packDraftPayload(draft=activePackDraft()){
-  const check=packDraftValidation(draft);if(!check.ok)return null;
-  return {type:'mrcc-case-pack',version:1,packId:draft.packId,title:draft.title,publisher:draft.publisher,edition:draft.edition||undefined,description:draft.description||'',exportedAt:new Date().toISOString(),note:'Educational case content. Review source accuracy, copyright permissions, manufacturer information, and local policy before distribution.',cases:draft.cases.map(c=>({id:c.id,title:c.title,module:c.module,prompt:c.prompt,tasks:c.tasks,reflection:c.reflection||''}))};
-}
-function exportPackStudio(){
-  syncPackStudioDraftFromForm();const draft=activePackDraft(),payload=packDraftPayload(draft);if(!payload){renderPackStudio(false);toast('Complete the required pack fields before export');return}
-  downloadPayload((draft.packId||'mrcc-case-pack')+'.json',JSON.stringify(payload,null,2));toast('Case pack exported');
-}
-function cloneActiveCasePackToStudio(){
-  if(packDrafts.length>=PACK_DRAFT_LIMIT){toast('Local draft limit reached');return}
-  const pack=activeCasePack(),copy=normalizePackDraft({draftId:newDraftId(),packId:(pack.packId+'-copy').slice(0,60),title:pack.title+' — Copy',publisher:pack.publisher,edition:pack.edition||'',description:pack.description,cases:pack.cases,updatedAt:new Date().toISOString()});
-  packDrafts.unshift(copy);activePackDraftId=copy.draftId;savePackDrafts();resetStudioCaseEditor(false);renderPackStudio(true);renderDataHealth();toast('Case Lab pack cloned into Publisher Studio');
-}
-function previewPackStudioInCaseLab(){
-  syncPackStudioDraftFromForm();const payload=packDraftPayload();if(!payload){renderPackStudio(false);toast('Complete the pack before preview');return}
-  const preview=normalizeCasePack(payload,'imported');if(!preview)return;
-  const existing=importedCasePacks.findIndex(p=>p.packId===preview.packId),now=new Date().toISOString();if(existing>=0){preview.installedAt=importedCasePacks[existing].installedAt||now;preview.updatedAt=now;importedCasePacks[existing]=preview}else{if(importedCasePacks.length>=6){toast('Imported pack limit reached');return}preview.installedAt=now;preview.updatedAt=now;importedCasePacks.push(preview)}
-  saveImportedCasePacks();studioPreviewPackId=preview.packId;activeCasePackId=preview.packId;activeCaseId=packResumeCaseId(preview);rememberPackPosition(preview.packId,activeCaseId);renderCaseLab();renderPackLibrary();renderStudyReport();renderDataHealth();$('caseLab')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'});toast('Draft copied into Case Lab preview');
-}
-
-function productReadiness(draft=activePackDraft()){
-  const pack=packDraftValidation(draft),p=normalizeProductMeta(draft.product),checks=[
-    {label:'Case-pack structure validates',ok:pack.ok,required:true},
-    {label:'SKU added',ok:!!p.sku,required:true},
-    {label:'Audience defined',ok:!!p.audience,required:true},
-    {label:'Storefront headline added',ok:!!p.headline,required:true},
-    {label:'At least 2 learning outcomes',ok:p.outcomes.length>=2,required:true},
-    {label:'Description is 60+ characters',ok:(draft.description||'').length>=60,required:true},
-    {label:'Edition/version label added',ok:!!draft.edition,required:false},
-    {label:'3+ cases recommended for a paid pack',ok:draft.cases.length>=3,required:false}
-  ];
-  const blockers=checks.filter(x=>x.required&&!x.ok),passed=checks.filter(x=>x.ok).length;
-  return {ready:!blockers.length,checks,passed,total:checks.length,blockers};
-}
-function productCatalogManifest(draft=activePackDraft()){
-  const ready=productReadiness(draft);if(!ready.ready)return null;
-  const p=normalizeProductMeta(draft.product),modules=[...new Set(draft.cases.map(c=>c.module))];
-  return {type:'mrcc-product-manifest',version:1,generatedAt:new Date().toISOString(),sku:p.sku,packId:draft.packId,packFile:(draft.packId||'mrcc-case-pack')+'.json',title:draft.title,headline:p.headline,publisher:draft.publisher,edition:draft.edition||'',category:p.category,categoryLabel:productCategories[p.category],audience:p.audience,description:draft.description,outcomes:p.outcomes,caseCount:draft.cases.length,modules:modules.map(id=>({id,title:sectionTitles[id]})),delivery:{format:'mrcc-case-pack',formatVersion:1},commerce:{status:'not-connected',checkoutUrl:null},disclaimer:'Educational practice content. Storefront readiness indicates metadata completeness only; verify clinical accuracy, rights, policies, and commercial terms independently.'};
-}
-function productListingText(draft=activePackDraft()){
-  const ready=productReadiness(draft);if(!ready.ready)return '';
-  const p=normalizeProductMeta(draft.product),modules=[...new Set(draft.cases.map(c=>sectionTitles[c.module]))];
-  return [draft.title,p.headline,'',draft.description,'','Audience: '+p.audience,'Category: '+productCategories[p.category],'Includes: '+draft.cases.length+' structured reasoning case'+(draft.cases.length===1?'':'s')+' across '+modules.join(', '),'','Learning outcomes:',...p.outcomes.map(x=>'• '+x),'','Delivery: MR Command Center Case Lab pack (.json)','Publisher: '+draft.publisher+(draft.edition?' · Edition '+draft.edition:''),'SKU: '+p.sku,'','Educational practice content only. This product does not provide certification, CE credit, competency documentation, patient-specific clearance, or scanner-specific protocol prescriptions.'].join('\n');
-}
-function renderProductKit(){
-  const draft=activePackDraft();if(!draft)return;const readiness=productReadiness(draft),p=normalizeProductMeta(draft.product),status=$('productReadinessStatus'),score=$('productReadinessScore'),list=$('productReadinessList'),preview=$('productCardPreview');
-  if(status){status.textContent=readiness.ready?'Storefront metadata ready':'Needs '+readiness.blockers.length+' required item'+(readiness.blockers.length===1?'':'s');status.classList.toggle('ok',readiness.ready)}
-  if(score)score.textContent=readiness.passed+'/'+readiness.total;
-  if(list)list.innerHTML=readiness.checks.map(x=>'<div class="product-check '+(x.ok?'ok':'')+' '+(x.required?'required':'advisory')+'"><span>'+(x.ok?'✓':'•')+'</span><b>'+escapeHtml(x.label)+'</b><small>'+(x.required?'Required':'Recommended')+'</small></div>').join('');
-  if(preview){const modules=[...new Set(draft.cases.map(c=>sectionTitles[c.module]))];preview.innerHTML='<span class="product-preview-badge">'+escapeHtml(productCategories[p.category])+'</span><small>'+escapeHtml(p.sku||'SKU pending')+'</small><h4>'+escapeHtml(draft.title||'Untitled case pack')+'</h4><p>'+escapeHtml(p.headline||'Add a storefront headline to preview this product.')+'</p><div class="product-preview-meta"><span>'+draft.cases.length+' case'+(draft.cases.length===1?'':'s')+'</span><span>'+modules.length+' module'+(modules.length===1?'':'s')+'</span></div><div class="product-preview-audience">'+escapeHtml(p.audience||'Audience not defined')+'</div><div class="product-preview-delivery">Digital delivery · MRCC Case Lab JSON</div>'}
-  ['copyProductListingBtn','downloadProductListingBtn','downloadProductManifestBtn'].forEach(id=>{const b=$(id);if(b)b.disabled=!readiness.ready});
-}
-async function copyProductListing(){
-  syncPackStudioDraftFromForm();syncPackStudioProductFromForm();const text=productListingText();if(!text){renderProductKit();toast('Complete the required storefront metadata first');return}
-  try{await navigator.clipboard.writeText(text);toast('Product listing copy copied')}catch(e){toast('Clipboard unavailable in this browser')}
-}
-function downloadProductListing(){
-  syncPackStudioDraftFromForm();syncPackStudioProductFromForm();const text=productListingText(),draft=activePackDraft();if(!text){renderProductKit();toast('Complete the required storefront metadata first');return}
-  downloadPayload((draft.packId||'mrcc-pack')+'-listing.txt',text,'text/plain');toast('Product listing downloaded');
-}
-function downloadProductManifest(){
-  syncPackStudioDraftFromForm();syncPackStudioProductFromForm();const draft=activePackDraft(),manifest=productCatalogManifest(draft);if(!manifest){renderProductKit();toast('Complete the required storefront metadata first');return}
-  downloadPayload((draft.packId||'mrcc-pack')+'-product-manifest.json',JSON.stringify(manifest,null,2));toast('Catalog manifest downloaded');
-}
-
-function studySummaryData(){
-  const now=new Date(),recentKeys=new Set(Array.from({length:7},(_,i)=>{const d=new Date(now);d.setDate(now.getDate()-i);return dateKey(d)})),recentActive=engagementDays.filter(x=>recentKeys.has(x)).length,reviewed=moduleSequence.filter(id=>studyState[id]),scores=learningAttempts.map(x=>Number(x.score)).filter(Number.isFinite),uniqueCases=new Set(caseHistory.map(x=>x.packId+'|'+x.caseId)).size;
-  return {app:'MR Command Center',type:'study-activity-summary',version:1,generatedAt:now.toISOString(),note:'Practice/activity summary only — not certification, competency documentation, CE credit, or compliance evidence.',reviewedModules:reviewed.map(id=>sectionTitles[id]),reviewedCount:reviewed.length,totalModules:moduleSequence.length,activeDaysLast7:recentActive,dailyFocusCompletions:dailyFocusHistory.length,studySessions:studySessionHistory.length,microLab:{attempts:learningAttempts.length,best:scores.length?Math.max(...scores):null,latest:scores.length?scores[0]:null,average:scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length*100)/100:null},caseLab:{completions:caseHistory.length,uniqueCases,importedPacks:importedCasePacks.length},parameterWorkspace:{savedPresets:sbPresets.length,savedComparisons:comparisonHistory.length}};
-}
-function studySummaryText(){
-  const s=studySummaryData(),reviewed=s.reviewedModules.length?s.reviewedModules.join(', '):'None marked reviewed';
-  return ['MR Command Center — Study Activity Summary','Generated: '+new Date(s.generatedAt).toLocaleString(),s.note,'','Learning path: '+s.reviewedCount+'/'+s.totalModules+' reviewed','Reviewed modules: '+reviewed,'Active days — last 7: '+s.activeDaysLast7,'Daily focus completions: '+s.dailyFocusCompletions,'Study sessions saved: '+s.studySessions,'Micro-Lab: '+s.microLab.attempts+' attempts · best '+(s.microLab.best===null?'—':s.microLab.best+'/3')+' · latest '+(s.microLab.latest===null?'—':s.microLab.latest+'/3'),'Case Lab: '+s.caseLab.completions+' completions across '+s.caseLab.uniqueCases+' unique cases · '+s.caseLab.importedPacks+' imported packs','Parameter workspace: '+s.parameterWorkspace.savedPresets+' saved presets · '+s.parameterWorkspace.savedComparisons+' saved comparisons'].join('\n');
-}
-function renderStudyReport(){
-  const el=$('studyReportPreview');if(!el)return;const s=studySummaryData();
-  el.innerHTML='<div><small>Reviewed</small><b>'+s.reviewedCount+'/'+s.totalModules+'</b></div><div><small>Active days · 7d</small><b>'+s.activeDaysLast7+'</b></div><div><small>Case completions</small><b>'+s.caseLab.completions+'</b></div><div><small>Micro-Lab attempts</small><b>'+s.microLab.attempts+'</b></div><div><small>Study sessions</small><b>'+s.studySessions+'</b></div><div><small>Imported packs</small><b>'+s.caseLab.importedPacks+'</b></div>';
-}
-async function copyStudyReport(){try{await navigator.clipboard.writeText(studySummaryText());toast('Study summary copied')}catch(e){toast('Clipboard unavailable in this browser')}}
-function downloadStudyReportText(){downloadPayload('mrcc-study-summary.txt',studySummaryText(),'text/plain');toast('Study summary downloaded')}
-function downloadStudyReportJson(){downloadPayload('mrcc-study-summary.json',JSON.stringify(studySummaryData(),null,2));toast('Study data summary downloaded')}
-
-let studyState=readStoredJson(localStorage,'mrcc_study_progress',{});
-if(!studyState||typeof studyState!=='object'||Array.isArray(studyState)){studyState={};dataRepairCount++}
-studyState=Object.fromEntries(Object.keys(studyModules).map(id=>[id,!!studyState[id]]));
-function renderLearningPath(){
-  const wrap=$('learningPath'),count=$('studyProgressCount'),gauge=$('studyGauge'),gaugeValue=$('studyGaugeValue');
-  const doneCount=moduleSequence.filter(id=>studyState[id]).length,pct=Math.round(doneCount/moduleSequence.length*100),current=location.hash.replace(/^#/,'');
-  const nextUnreviewed=moduleSequence.find(id=>!studyState[id])||'';
-  if(count)count.textContent=doneCount+'/'+moduleSequence.length+' reviewed';
-  if(gauge)gauge.style.setProperty('--study-pct',String(pct));
-  if(gaugeValue)gaugeValue.textContent=pct+'%';
-  if(!wrap)return;
-  wrap.innerHTML=moduleSequence.map((id,index)=>{
-    const done=!!studyState[id],isCurrent=current===id,isNext=!done&&id===nextUnreviewed,status=isCurrent?'Current':done?'Reviewed':isNext?'Up next':'Open';
-    return '<button type="button" class="path-node '+(done?'reviewed ':'')+(isCurrent?'current ':'')+(isNext?'next ':'')+'" data-path-module="'+id+'" style="--path-accent:'+moduleAccent[id]+'" onclick="go(\''+id+'\')" '+(isCurrent?'aria-current="page" ':'')+'aria-label="'+escapeHtml(studyModules[id]+': '+status)+'"><span class="path-step">'+String(index+1).padStart(2,'0')+'</span><span class="path-icon">'+moduleArt[id].icon+'</span><span class="path-label"><b>'+escapeHtml(studyModules[id])+'</b><small>'+status+'</small></span></button>';
-  }).join('');
-}
-function syncLearningPathCurrent(id){
-  const nextUnreviewed=moduleSequence.find(key=>!studyState[key])||'';
-  document.querySelectorAll('[data-path-module]').forEach(node=>{
-    const key=node.dataset.pathModule,on=key===id,done=!!studyState[key],small=node.querySelector('.path-label small');
-    node.classList.toggle('current',on);node.classList.toggle('reviewed',done);node.classList.toggle('next',!done&&key===nextUnreviewed);
-    if(on)node.setAttribute('aria-current','page');else node.removeAttribute('aria-current');
-    if(small)small.textContent=on?'Current':done?'Reviewed':key===nextUnreviewed?'Up next':'Open';
-  });
-}
-function renderStudyProgress(){
-  renderLearningPath();
-  document.querySelectorAll('[data-module-card]').forEach(card=>{const id=card.dataset.moduleCard,done=!!studyState[id];card.classList.toggle('reviewed',done);const state=card.querySelector('.module-state');if(state)state.textContent=done?'Reviewed':'Study';card.setAttribute('aria-label',studyModules[id]+(done?' — reviewed':' — not marked reviewed'))});moduleSequence.forEach(id=>$(id)?.classList.toggle('reviewed-module',!!studyState[id]));
-  if(typeof renderContinueLearning==='function')renderContinueLearning();
-}
-function saveStudyProgress(){try{localStorage.setItem('mrcc_study_progress',JSON.stringify(studyState))}catch(e){}renderStudyProgress();renderStudyReport()}
-function toggleStudyModule(id){
-  if(!studyModules[id])return;studyState[id]=!studyState[id];saveStudyProgress();syncFocusStudyButton(id);toast(studyState[id]?'Marked reviewed':'Review marker removed');
-}
-function resetStudyProgress(){if(!confirm('Reset local study-review markers? Quiz history and presets will stay intact.'))return;studyState=Object.fromEntries(Object.keys(studyModules).map(id=>[id,false]));try{localStorage.removeItem('mrcc_study_progress')}catch(e){}renderStudyProgress();syncFocusStudyButton('');toast('Study markers reset')}
-function syncFocusStudyButton(id){
-  const b=$('focusStudyBtn');if(!b)return;if(!studyModules[id]){b.style.display='none';b.dataset.module='';return}
-  b.style.display='inline-flex';b.dataset.module=id;const done=!!studyState[id];b.classList.toggle('reviewed',done);b.textContent=done?'Reviewed ✓':'Mark reviewed';
-}
-
-const studySessionPresets={
-  quick:{label:'Quick review',modules:()=>{const pending=moduleSequence.filter(id=>!studyState[id]);return (pending.length?pending:moduleSequence).slice(0,3)}},
-  troubleshoot:{label:'Troubleshooting route',modules:()=>['sandbox','rescue','artifact']},
-  safety:{label:'Safety + RF route',modules:()=>['safety','burn','learn']},
-  full:{label:'Full learning path',modules:()=>moduleSequence.slice()}
-};
-function normalizeSessionModules(items){return [...new Set((Array.isArray(items)?items:[]).filter(id=>moduleSequence.includes(id)))].slice(0,moduleSequence.length)}
-function normalizeStudySession(raw){
-  if(!raw||typeof raw!=='object'||Array.isArray(raw))return null;
-  const modules=normalizeSessionModules(raw.modules);if(!modules.length)return null;
-  const completed=normalizeSessionModules(raw.completed).filter(id=>modules.includes(id));
-  const index=Math.max(0,Math.min(modules.length-1,Number.isInteger(Number(raw.index))?Number(raw.index):0));
-  return {id:String(raw.id||Date.now().toString(36)).slice(0,40),label:String(raw.label||'Study session').slice(0,60),modules,index,completed,startedAt:validDateString(raw.startedAt)?raw.startedAt:new Date().toISOString(),finished:!!raw.finished,archived:!!raw.archived};
-}
-function normalizeSessionHistoryEntry(raw){
-  const s=normalizeStudySession(raw);if(!s||!validDateString(raw&&raw.endedAt))return null;
-  return {...s,endedAt:raw.endedAt,outcome:raw.outcome==='complete'?'complete':'ended'};
-}
-let studySession=normalizeStudySession(readStoredJson(sessionStorage,'mrcc_study_session',null));
-const rawStudySessionHistory=readStoredJson(localStorage,'mrcc_study_session_history',[]);
-let studySessionHistory=Array.isArray(rawStudySessionHistory)?rawStudySessionHistory.map(normalizeSessionHistoryEntry).filter(Boolean).slice(0,12):[];
-if(!Array.isArray(rawStudySessionHistory)||studySessionHistory.length!==rawStudySessionHistory.slice(0,12).length)dataRepairCount++;
-function saveStudySession(){try{if(studySession)sessionStorage.setItem('mrcc_study_session',JSON.stringify(studySession));else sessionStorage.removeItem('mrcc_study_session')}catch(e){}}
-function saveStudySessionHistory(){try{localStorage.setItem('mrcc_study_session_history',JSON.stringify(studySessionHistory.slice(0,12)))}catch(e){}}
-function currentSessionModule(){return studySession?.modules?.[studySession.index]||''}
-function archiveStudySession(outcome){
-  if(!studySession||studySession.archived)return;
-  if(studySession.completed.length){
-    studySessionHistory.unshift({...studySession,endedAt:new Date().toISOString(),outcome:outcome==='complete'?'complete':'ended'});
-    studySessionHistory=studySessionHistory.slice(0,12);saveStudySessionHistory();
-  }
-  studySession.archived=true;
-}
-function studySessionProgress(){if(!studySession)return {done:0,total:0,pct:0};const done=studySession.completed.length,total=studySession.modules.length;return {done,total,pct:total?Math.round(done/total*100):0}}
-function sessionDurationText(start,end){
-  const a=new Date(start).getTime(),b=new Date(end).getTime();if(!Number.isFinite(a)||!Number.isFinite(b)||b<a)return '';
-  const mins=Math.round((b-a)/60000);return mins<1?'under 1 min':mins+' min';
-}
-function renderSessionBuilder(){
-  const wrap=$('sessionCustomModules');if(!wrap)return;
-  wrap.innerHTML=moduleSequence.map(id=>'<label class="session-module-option" style="--session-accent:'+moduleAccent[id]+'"><input class="session-custom-check" type="checkbox" value="'+id+'"><span class="session-option-icon">'+moduleArt[id].icon+'</span><span><b>'+escapeHtml(sectionTitles[id])+'</b><small>'+escapeHtml(moduleArt[id].caption.toLowerCase())+'</small></span></label>').join('');
-}
-function renderStudySessionHistory(){
-  const count=$('sessionHistoryCount'),list=$('sessionHistoryList');if(count)count.textContent=studySessionHistory.length+' saved';if(!list)return;
-  if(!studySessionHistory.length){list.innerHTML='<div class="session-history-empty">No completed or ended sessions saved yet.</div>';return}
-  list.innerHTML=studySessionHistory.slice(0,6).map(x=>{const when=new Date(x.endedAt).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),duration=sessionDurationText(x.startedAt,x.endedAt),done=x.completed.length+'/'+x.modules.length;return '<div class="session-history-row"><span class="session-history-mark '+(x.outcome==='complete'?'complete':'')+'">'+(x.outcome==='complete'?'✓':'•')+'</span><span><b>'+escapeHtml(x.label)+'</b><small>'+done+' steps · '+escapeHtml(when)+(duration?' · '+escapeHtml(duration):'')+'</small></span></div>'}).join('');
-}
-function clearStudySessionHistory(){if(!studySessionHistory.length){toast('No session history to clear');return}if(!confirm('Clear browser-local study session history? Review markers and quiz history will stay intact.'))return;studySessionHistory=[];try{localStorage.removeItem('mrcc_study_session_history')}catch(e){}renderStudySessionHistory();renderDataHealth();toast('Study session history cleared')}
-function renderStudySession(){
-  const pill=$('sessionStatusPill'),home=$('sessionHomeState'),bar=$('sessionBar'),current=currentSessionModule(),progress=studySessionProgress(),currentHash=location.hash.replace(/^#/,'');
-  if(!studySession){
-    if(pill){pill.textContent='Ready';pill.className='session-status-pill'}
-    if(home)home.innerHTML='<div class="session-home-empty"><b>No active study session</b><span>Pick a route above. Active session progress is stored only for this browser tab.</span></div>';
-    if(bar)bar.classList.remove('show');renderStudySessionHistory();return;
-  }
-  if(pill){pill.textContent=studySession.finished?'Complete':'Active';pill.className='session-status-pill '+(studySession.finished?'complete':'active')}
-  if(home){
-    const moduleName=sectionTitles[current]||studyModules[current]||'Module';
-    home.innerHTML='<div class="session-home-active"><span class="session-home-icon" style="--session-accent:'+moduleAccent[current]+'">'+(moduleArt[current]?.icon||'')+'</span><span class="session-home-copy"><small>'+escapeHtml(studySession.label)+'</small><b>'+(studySession.finished?'Session complete':escapeHtml(moduleName))+'</b><span>'+progress.done+'/'+progress.total+' session steps complete · review markers unchanged</span></span><span class="session-home-meter"><i style="width:'+progress.pct+'%"></i></span><span class="session-home-actions"><button type="button" onclick="resumeStudySession()">'+(studySession.finished?'Review route':'Resume')+'</button><button type="button" onclick="endStudySession()">Close</button></span></div>';
-  }
-  if(bar){
-    bar.classList.toggle('show',document.body.classList.contains('nav-focus'));bar.classList.toggle('finished',!!studySession.finished);bar.classList.toggle('outside',!!currentHash&&!studySession.modules.includes(currentHash));
-    const icon=$('sessionBarIcon'),title=$('sessionBarTitle'),kicker=$('sessionBarKicker'),txt=$('sessionBarProgressText'),fill=$('sessionBarProgressFill'),prev=$('sessionPrevBtn'),next=$('sessionNextBtn'),complete=$('sessionCompleteBtn');
-    const displayId=studySession.modules.includes(currentHash)?currentHash:current;
-    if(icon){icon.innerHTML=moduleArt[displayId]?.icon||'';icon.style.setProperty('--session-accent',moduleAccent[displayId]||'#52d7ff')}
-    if(kicker)kicker.textContent=studySession.finished?'Study session complete':studySession.label;
-    if(title)title.textContent=studySession.finished?'All session steps completed':studySession.modules.includes(currentHash)?sectionTitles[displayId]:'Outside session · '+sectionTitles[current];
-    if(txt)txt.textContent=progress.done+'/'+progress.total+' complete';
-    if(fill)fill.style.width=progress.pct+'%';
-    if(prev)prev.disabled=studySession.finished||studySession.index<=0;
-    if(next)next.disabled=studySession.finished||studySession.index>=studySession.modules.length-1;
-    if(complete){complete.disabled=studySession.finished||!studySession.modules.includes(currentHash);complete.textContent=studySession.finished?'Completed ✓':studySession.completed.includes(currentHash)?'Completed ✓':'Complete & next'}
-  }
-  renderStudySessionHistory();
-}
-function startStudySessionModules(label,modules){
-  const clean=normalizeSessionModules(modules);if(!clean.length){toast('Choose at least one module');return}
-  if(studySession&&!studySession.finished&&!confirm('Replace the active study session with this route?'))return;
-  studySession={id:Date.now().toString(36),label:String(label||'Study session').slice(0,60),modules:clean,index:0,completed:[],startedAt:new Date().toISOString(),finished:false,archived:false};
-  saveStudySession();renderStudySession();go(clean[0]);toast(label+' started');
-}
-function startStudySession(mode){
-  const preset=studySessionPresets[mode];if(!preset)return;startStudySessionModules(preset.label,preset.modules());
-}
-function startCustomSession(){
-  const selected=[...document.querySelectorAll('.session-custom-check:checked')].map(x=>x.value);
-  startStudySessionModules('Custom study session',selected);
-}
-function resumeStudySession(){if(!studySession)return;const id=currentSessionModule()||studySession.modules[0];go(id)}
-function syncStudySessionForModule(id){
-  if(!studySession){renderStudySession();return}
-  const i=studySession.modules.indexOf(id);if(i>=0&&!studySession.finished){studySession.index=i;saveStudySession()}
-  renderStudySession();
-}
-function sessionStep(direction){
-  if(!studySession||studySession.finished)return;
-  const next=Math.max(0,Math.min(studySession.modules.length-1,studySession.index+Number(direction)));
-  if(next===studySession.index)return;studySession.index=next;saveStudySession();renderStudySession();go(studySession.modules[next]);
-}
-function sessionCompleteStep(){
-  if(!studySession||studySession.finished)return;
-  const id=location.hash.replace(/^#/,'');if(!studySession.modules.includes(id)){toast('Return to a session module first');return}
-  if(!studySession.completed.includes(id))studySession.completed.push(id);
-  if(studySession.completed.length>=studySession.modules.length){
-    studySession.finished=true;archiveStudySession('complete');saveStudySession();recordEngagement();renderStudySession();renderStudyReport();renderDataHealth();toast('Study session complete');return;
-  }
-  let nextIndex=studySession.index+1;
-  while(nextIndex<studySession.modules.length&&studySession.completed.includes(studySession.modules[nextIndex]))nextIndex++;
-  if(nextIndex>=studySession.modules.length)nextIndex=studySession.modules.findIndex(key=>!studySession.completed.includes(key));
-  studySession.index=Math.max(0,nextIndex);saveStudySession();renderStudySession();go(studySession.modules[studySession.index]);
-}
-function endStudySession(){
-  if(!studySession)return;
-  if(!studySession.finished&&!confirm('End this study session? Session progress will be saved to recent history if you completed at least one step.'))return;
-  if(!studySession.finished)archiveStudySession('ended');
-  studySession=null;saveStudySession();renderStudySession();renderDataHealth();toast('Study session closed');
-}
 const mobileRouteMap={premium:'premium',safety:'safety',burn:'safety',sandbox:'labs',contrast:'labs',timing:'labs',motion:'labs',kspace:'labs',spatial:'labs',artifact:'labs',math:'reference',rescue:'reference'};
 function syncMobileNav(id='home'){
   const tab=id==='home'?'home':(mobileRouteMap[id]||'reference');
@@ -1812,9 +1270,7 @@ function announceRoute(label){const el=$('routeAnnouncer');if(!el)return;el.text
 function routeHash(id,replace=false){try{const home=!id,target=home?location.pathname+location.search:'#'+id;if((home&&!location.hash)||(!home&&location.hash==='#'+id))return;history[replace?'replaceState':'pushState']({mrccRoute:id||'home'},'',target)}catch(e){}}
 function revealHomeContainer(id){
   const direct=$(id);if(direct&&'open' in direct)direct.open=true;
-  if(['packLibrary','caseLab','studyReport'].includes(id)){const z=$('practiceLibraryZone');if(z)z.open=true}
-  if(['packStudio'].includes(id)){const z=$('creatorZone');if(z)z.open=true}
-  if(['toolDock','studyProgress','personalWorkspace'].includes(id)){const z=$('referenceOnboarding');if(z)z.open=true}
+  if(['toolDock','personalWorkspace'].includes(id)){const z=$('referenceOnboarding');if(z)z.open=true}
 }
 const workspaceViewTargets={compare:'parameterCompareWorkbench',challenges:'labChallengeLauncher',reference:'parameterReference',presets:'presetLibrary'};
 const workspaceViewTitles={compare:'A/B Compare',challenges:'Constraint Challenges',reference:'Parameter Reference',presets:'Parameter Presets'};
@@ -1829,7 +1285,8 @@ function restoreRouteFromHash(){
   if(id==='premium'){openPremiumWorkspace(false,true,false);return}
   const premiumLab=Object.entries(premiumDeepRoutes).find(([,route])=>route===id)?.[0];
   if(premiumLab){openPremiumWorkspace(false,true,false);setTimeout(()=>openPremiumAccess(premiumLab,false),20);return}
-  if(id==='learn'||homeSectionTitles[id]){showHome(false,true);return}
+  if(id==='learn'){openWorkspaceView('challenges',true);return}
+  if(homeSectionTitles[id]){showHome(false,true);return}
   if(workspaceViewTargets[id]){openWorkspaceView(id,false);return}
   if(sectionTitles[id]){if(labRouteInfo[id])rememberLastLabRoute(id);setFocusedSection(id);setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}
   showHome(false,true);
@@ -1974,7 +1431,6 @@ const pinCatalog=[
 {id:'rescue',title:'Sequence Rescue',icon:'↯'},
 {id:'artifact',title:'Artifact Solver',icon:'◫'},
 {id:'burn',title:'Thermal / RF Foundations',icon:'T'},
-{id:'learn',title:'Micro-Lab',icon:'Q'}
 ];
 let pinnedTools=readStoredJson(localStorage,'mrcc_pins',[]);
 if(!Array.isArray(pinnedTools)){pinnedTools=[];dataRepairCount++}
@@ -2000,23 +1456,6 @@ if(!Array.isArray(recentUsage)){recentUsage=[];dataRepairCount++}
 recentUsage=recentUsage.filter(x=>x&&typeof x.id==='string'&&typeof x.title==='string').map(x=>({id:x.id.slice(0,40),title:x.title.slice(0,80)})).slice(0,5);
 function remember(id,title){recentUsage=[{id,title},...recentUsage.filter(x=>x.id!==id)].slice(0,5);try{sessionStorage.setItem('mrcc_recent',JSON.stringify(recentUsage))}catch(e){}}
 let continueModuleId='sandbox';
-function renderContinueLearning(){
-  const recent=recentUsage.find(x=>moduleSequence.includes(x.id)),next=moduleSequence.find(id=>!studyState[id]),unfinishedRecent=recent&&!studyState[recent.id]?recent:null;
-  continueModuleId=unfinishedRecent?.id||next||recent?.id||'sandbox';
-  const title=$('continueTitle'),meta=$('continueMeta'),btn=$('continueBtn'),icon=$('continueIcon'),panel=$('continuePanel'),startTitle=$('startContinueTitle'),startMeta=$('startContinueMeta');
-  if(title)title.textContent=sectionTitles[continueModuleId]||studyModules[continueModuleId];
-  if(meta)meta.textContent=unfinishedRecent?'Continue the unfinished module you last opened.':next?'Next unreviewed module in your local learning path.':'All modules are marked reviewed — revisit any topic whenever useful.';
-  if(startTitle)startTitle.textContent=(unfinishedRecent?'Resume ':next?'Continue with ':'Revisit ')+(sectionTitles[continueModuleId]||studyModules[continueModuleId]);
-  if(startMeta)startMeta.textContent=unfinishedRecent?'Pick up the unfinished module you last opened.':next?'Open the next unreviewed module in your path.':'All review markers are complete; revisit any module.';
-  if(btn)btn.textContent=unfinishedRecent?'Resume module →':next?'Start next →':'Review again →';
-  if(icon)icon.innerHTML=moduleArt[continueModuleId]?.icon||'';
-  if(panel)panel.style.setProperty('--continue-accent',moduleAccent[continueModuleId]||'#52d7ff');
-}
-function openContinueModule(){go(continueModuleId)}
-function stepModule(direction){
-  const current=location.hash.replace(/^#/,'');let i=moduleSequence.indexOf(current);if(i<0)i=0;
-  const next=i+Number(direction);if(next<0||next>=moduleSequence.length)return;go(moduleSequence[next]);
-}
 function ensureModuleFooters(){
   const footerIds=['safety','math','rescue','burn'];
   footerIds.forEach(id=>{
@@ -2038,7 +1477,7 @@ function go(id,skipTrack=false){
 }
 function openRecent(id){const cmd=commands.find(c=>c.id===id);if(cmd){runCommand(id);return}if(sectionTitles[id]){go(id);return}recentUsage=recentUsage.filter(x=>x.id!==id);try{sessionStorage.setItem('mrcc_recent',JSON.stringify(recentUsage))}catch(e){}toast('That older item is no longer part of the MRCC workspace')}
 function resumeLast(){if(recentUsage.length)openRecent(recentUsage[0].id)}
-function renderCockpit(){renderPins();const label=$('recentLabel'),resume=$('resumeBtn'),recent=$('recentTools');if(label)label.textContent=recentUsage.length?'Last: '+recentUsage[0].title:'No module opened yet.';if(resume)resume.disabled=!recentUsage.length;if(recent)recent.innerHTML=recentUsage.slice(0,4).map(x=>`<button class="recent-chip" onclick="openRecent('${x.id}')">${escapeHtml(x.title)}</button>`).join('');renderContinueLearning()}
+function renderCockpit(){renderPins();const label=$('recentLabel'),resume=$('resumeBtn'),recent=$('recentTools');if(label)label.textContent=recentUsage.length?'Last: '+recentUsage[0].title:'No module opened yet.';if(resume)resume.disabled=!recentUsage.length;if(recent)recent.innerHTML=recentUsage.slice(0,4).map(x=>`<button class="recent-chip" onclick="openRecent('${x.id}')">${escapeHtml(x.title)}</button>`).join('')}
 function tick(){const d=new Date();$('clock').textContent=d.toLocaleString([], {weekday:'short',hour:'2-digit',minute:'2-digit'})}setInterval(tick,30000);tick();
 const commands=[
 {id:'home',title:'Labs Home',desc:'Return to the lab library, current local lab states, saved setups, and comparisons.',cat:'Parameters',icon:'⌂',keys:'home labs parameter contrast k-space presets compare'},
@@ -2055,6 +1494,8 @@ const commands=[
 {id:'kspacelab',title:'K-Space Lab',desc:'Mask a synthetic Fourier dataset and inspect center, periphery, truncation, and phase undersampling effects.',cat:'Parameters',icon:'⌁',keys:'k-space kspace Fourier sampling center periphery spatial frequency truncation aliasing undersampling reconstruction'},
 {id:'spatiallab',title:'Spatial Encoding Lab',desc:'Explore encoded FOV, discrete sampling, relative pixel width, and periodic aliasing with a synthetic object-space model.',cat:'Parameters',icon:'▦',keys:'spatial encoding fov aliasing wrap foldover matrix samples pixel resolution phase read'},
 {id:'artifactlab',title:'Artifact Lab',desc:'Apply stylized MRI artifact patterns to a synthetic phantom and connect them to troubleshooting logic.',cat:'Artifact',icon:'◫',keys:'artifact lab motion wrap susceptibility chemical shift zipper gibbs truncation flow dielectric visual'},
+{id:'about',title:'About MR Command Center',desc:'Read the public product scope, audience, creator credit, and educational boundaries.',cat:'Reference',icon:'i',keys:'about scope creator Edon Kukaj public educational'},
+{id:'privacy',title:'Privacy & local data',desc:'Read how MRCC uses browser-local storage and what is not sent to an MRCC application backend.',cat:'Reference',icon:'◌',keys:'privacy data local storage browser analytics tracking'},
 {id:'premium',title:'Premium Labs',desc:'Open the Premium Labs catalog and compare subscription versus one-time unlock access.',cat:'Premium',icon:'◆',keys:'premium paid subscription one time purchase advanced labs membership'},
 {id:'premium-diffusion',title:'Premium: Diffusion & b-Value Lab',desc:'Preview the planned advanced diffusion signal teaching lab.',cat:'Premium',icon:'D',keys:'premium diffusion b value adc attenuation signal advanced'},
 {id:'premium-parallel',title:'Premium: Parallel Imaging Lab',desc:'Preview the planned acceleration and noise-amplification teaching lab.',cat:'Premium',icon:'PI',keys:'premium parallel imaging acceleration g factor coil k-space'},
@@ -2081,22 +1522,13 @@ const commands=[
 {id:'flow',title:'Flow / pulsation ghosting',desc:'Load flow and pulsation troubleshooting.',cat:'Artifact',icon:'↝',keys:'flow pulsation csf vessel ghost'},
 {id:'dielectric',title:'Dielectric shading / standing wave',desc:'Load B1 / dielectric shading troubleshooting.',cat:'Artifact',icon:'◐',keys:'dielectric shading standing wave b1 3t'},
 {id:'burn',title:'Thermal / RF Foundations',desc:'Study body-loop, cable, bore-spacing, and patient-feedback concepts.',cat:'Safety',icon:'T',keys:'burn thermal RF heating cable padding body loop'},
-{id:'learn',title:'Micro-Lab safety drill',desc:'Open the compact practice refresher.',cat:'Learning',icon:'Q',keys:'quiz learning safety drill education'},
-{id:'learningprogress',title:'Micro-Lab progress',desc:'View local practice history and recent drill scores.',cat:'Learning',icon:'L',keys:'learning progress practice quiz history score drill'},
-{id:'studyprogress',title:'Study progress',desc:'View locally marked learning modules.',cat:'Learning',icon:'✓',keys:'study progress reviewed modules learning'},
-{id:'caselab',title:'Case Lab',desc:'Open structured reasoning cases from the selected installed pack.',cat:'Learning',icon:'◇',keys:'case lab case pack reasoning scenario imported practice'},
-{id:'packlibrary',title:'Pack Library',desc:'Browse installed case packs, completion progress, updates, and resume points.',cat:'Learning',icon:'▤',keys:'pack library installed purchased delivered content progress update resume'},
-{id:'studyreport',title:'Study Report',desc:'Build a portable browser-local learning activity summary.',cat:'Learning',icon:'R',keys:'study report summary export json text activity progress'},
-{id:'packstudio',title:'Publisher Studio',desc:'Author, validate, preview, and export MRCC case packs.',cat:'Learning',icon:'◆',keys:'publisher studio create author pack case product export sell'},
-{id:'productkit',title:'Product Kit',desc:'Prepare storefront metadata, listing copy, and a catalog manifest for a case pack.',cat:'Learning',icon:'$',keys:'product storefront listing sales catalog manifest sku sell commerce'}
 ];
 let paletteIndex=0,paletteCategory='all',filteredCommands=commands.slice();
 function setPaletteCategory(cat){paletteCategory=cat||'all';paletteIndex=0;document.querySelectorAll('[data-palcat]').forEach(b=>{const on=b.dataset.palcat===paletteCategory;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});renderPalette()}
 function openPalette(){const b=$('paletteBack');paletteReturnFocus=document.activeElement;b.classList.add('open');b.setAttribute('aria-hidden','false');syncModalScrollLock();$('paletteSearch').value='';paletteCategory='all';paletteIndex=0;document.querySelectorAll('[data-palcat]').forEach(b=>{const on=b.dataset.palcat==='all';b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});renderPalette();setTimeout(()=>$('paletteSearch').focus(),20)}
 function closePalette(){const b=$('paletteBack');b.classList.remove('open');b.setAttribute('aria-hidden','true');syncModalScrollLock();const target=paletteReturnFocus;paletteReturnFocus=null;if(target&&typeof target.focus==='function')setTimeout(()=>target.focus(),0)}
 function paletteBackdrop(e){if(e.target===$('paletteBack'))closePalette()}
-const retiredV7Commands=new Set(['learn','learningprogress','studyprogress','caselab','packlibrary','studyreport','packstudio','productkit']);
-function renderPalette(){const q=$('paletteSearch').value.trim().toLowerCase();filteredCommands=commands.filter(c=>!retiredV7Commands.has(c.id)&&(paletteCategory==='all'||c.cat===paletteCategory)&&(c.title+' '+c.desc+' '+c.cat+' '+c.keys).toLowerCase().includes(q));if(paletteIndex>=filteredCommands.length)paletteIndex=0;$('paletteResults').innerHTML=filteredCommands.length?filteredCommands.map((c,i)=>`<button class="palitem ${i===paletteIndex?'active':''}" onclick="runCommand('${c.id}')"><span class="palico">${c.icon}</span><span class="palcopy"><b>${c.title}</b><small>${c.desc}</small></span><span class="palcat">${c.cat}</span></button>`).join(''):'<div class="palempty">No matching tool in this category. Try All or another search.</div>';const active=document.querySelector('.palitem.active');if(active)active.scrollIntoView({block:'nearest'})}
+function renderPalette(){const q=$('paletteSearch').value.trim().toLowerCase();filteredCommands=commands.filter(c=>(paletteCategory==='all'||c.cat===paletteCategory)&&(c.title+' '+c.desc+' '+c.cat+' '+c.keys).toLowerCase().includes(q));if(paletteIndex>=filteredCommands.length)paletteIndex=0;$('paletteResults').innerHTML=filteredCommands.length?filteredCommands.map((c,i)=>`<button class="palitem ${i===paletteIndex?'active':''}" onclick="runCommand('${c.id}')"><span class="palico">${c.icon}</span><span class="palcopy"><b>${c.title}</b><small>${c.desc}</small></span><span class="palcat">${c.cat}</span></button>`).join(''):'<div class="palempty">No matching tool in this category. Try All or another search.</div>';const active=document.querySelector('.palitem.active');if(active)active.scrollIntoView({block:'nearest'})}
 const PREMIUM_BILLING_ENABLED=false;
 const PREMIUM_ACCESS_MODE='preview-only';
 const PREMIUM_PRODUCT_KEYS={membership:'premium_membership',diffusion:'premium_diffusion',parallel:'premium_parallel',rfpower:'premium_rfpower',gradient:'premium_gradient',offresonance:'premium_offresonance'};
@@ -2285,6 +1717,8 @@ function runCommand(id){
   if(id==='kspacelab'){openLab('kspace');return}
   if(id==='spatiallab'){openLab('spatial');return}
   if(id==='artifactlab'){openLab('artifact');return}
+  if(id==='about'){location.href='/about.html';return}
+  if(id==='privacy'){location.href='/privacy.html';return}
   if(id==='premium'){openPremiumCatalog();return}
   if(id==='premium-diffusion'){openPremiumWorkspace(false);setTimeout(()=>openPremiumAccess('diffusion'),40);return}
   if(id==='premium-parallel'){openPremiumWorkspace(false);setTimeout(()=>openPremiumAccess('parallel'),40);return}
@@ -2302,16 +1736,8 @@ function runCommand(id){
   if(id==='rescue'){go('rescue',true);return}
   if(artifactIds.includes(id)){openLab('artifact');$('artifactSelect').value=id;artifactLabUpdate();solveArtifact();setTimeout(()=>$('artifactOut').scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),250);return}
   if(id==='burn'){go('burn',true);return}
-  if(id==='learn'){go('learn',true);return}
   if(id==='presets'){go('sandbox',true);setTimeout(()=>{$('presetLibrary').open=true;$('presetName')?.focus()},300);return}
   if(id==='parameterref'){go('sandbox',true);setTimeout(()=>$('parameterReference')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),250);return}
-  if(id==='learningprogress'){go('learn',true);setTimeout(()=>$('learningProgress')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),250);return}
-  if(id==='studyprogress'){showHome(false);const z=$('referenceOnboarding');if(z)z.open=true;setTimeout(()=>$('studyProgress')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),100);return}
-  if(id==='caselab'){showHome(false);const z=$('practiceLibraryZone');if(z)z.open=true;setTimeout(()=>$('caseLab')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),100);return}
-  if(id==='packlibrary'){showHome(false);const z=$('practiceLibraryZone');if(z)z.open=true;setTimeout(()=>$('packLibrary')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),100);return}
-  if(id==='studyreport'){showHome(false);const z=$('practiceLibraryZone');if(z)z.open=true;setTimeout(()=>$('studyReport')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),100);return}
-  if(id==='packstudio'){showHome(false);const z=$('creatorZone');if(z)z.open=true;const d=$('packStudio');if(d)d.open=true;setTimeout(()=>$('packStudio')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),100);return}
-  if(id==='productkit'){showHome(false);const z=$('creatorZone');if(z)z.open=true;const d=$('packStudio');if(d)d.open=true;setTimeout(()=>$('packProductKit')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),120);return}
 }
 document.addEventListener('keydown',e=>{const tag=(e.target.tagName||'').toLowerCase(),typing=['input','textarea','select'].includes(tag);if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPalette();return}if(e.key==='?'&&!typing&&!$('paletteBack').classList.contains('open')){e.preventDefault();openPreferences();return}if(e.key==='Escape'&&$('prefsBack')?.classList.contains('open')){closePreferences();return}if(e.key==='/'&&!typing&&!$('paletteBack').classList.contains('open')&&!$('prefsBack')?.classList.contains('open')){e.preventDefault();openPalette();return}if(!$('paletteBack').classList.contains('open'))return;if(e.key==='Escape'){closePalette();return}if(e.key==='ArrowDown'){e.preventDefault();if(filteredCommands.length){paletteIndex=(paletteIndex+1)%filteredCommands.length;renderPalette()}return}if(e.key==='ArrowUp'){e.preventDefault();if(filteredCommands.length){paletteIndex=(paletteIndex-1+filteredCommands.length)%filteredCommands.length;renderPalette()}return}if(e.key==='Enter'&&filteredCommands.length){e.preventDefault();runCommand(filteredCommands[paletteIndex].id)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('premiumBack')?.classList.contains('open')){closePremiumAccess();return}if(e.key!=='Tab')return;const premium=$('premiumBack'),prefs=$('prefsBack'),palette=$('paletteBack');if(premium?.classList.contains('open')){trapDialogFocus(premium,e);return}if(prefs?.classList.contains('open')){trapDialogFocus(prefs,e);return}if(palette?.classList.contains('open'))trapDialogFocus(palette,e)});
@@ -2994,49 +2420,6 @@ function runSelfCheck(){
   else if(window.__mrccRuntimeErrors){if(chip)chip.classList.add('issue');if(txt)txt.textContent='Engine: '+window.__mrccRuntimeErrors+' runtime issue'+(window.__mrccRuntimeErrors===1?'':'s');toast('Self-check: runtime issue recorded')}
   else{if(chip)chip.classList.remove('issue');if(txt)txt.textContent='Engine: Labs checks passed';toast('Self-check passed')}
 }
-const rawLearning=readStoredJson(localStorage,'mrcc_learning_attempts',[]);
-let learningAttempts=Array.isArray(rawLearning)?rawLearning.map(x=>({score:Number(x&&x.score),total:3,at:x&&x.at})).filter(x=>Number.isInteger(x.score)&&x.score>=0&&x.score<=3&&validDateString(x.at)).slice(0,30):[];
-if(!Array.isArray(rawLearning)||learningAttempts.length!==rawLearning.slice(0,30).length)dataRepairCount++;
-let lastRecordedQuizSignature='';
-function localDayKey(at){const d=new Date(at);if(Number.isNaN(d.getTime()))return '';return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function renderLearningProgress(){
-  const count=$('learnAttempts'),best=$('learnBest'),latest=$('learnLatest'),days=$('learnDays'),history=$('learnHistory');
-  const total=learningAttempts.length,max=total?Math.max(...learningAttempts.map(x=>Number(x.score)||0)):null,last=total?Number(learningAttempts[0].score)||0:null,practiceDays=new Set(learningAttempts.map(x=>localDayKey(x.at)).filter(Boolean)).size;
-  if(count)count.textContent=total;
-  if(best)best.textContent=max===null?'—':max+'/3';
-  if(latest)latest.textContent=last===null?'—':last+'/3';
-  if(days)days.textContent=practiceDays;
-  if(!history)return;
-  if(!total){history.innerHTML='<div class="learn-empty">Complete the 3-question drill to start local practice history.</div>';return}
-  history.innerHTML=learningAttempts.slice(0,5).map(x=>'<div class="learn-attempt"><b>'+escapeHtml(String(x.score))+'/3</b><small>'+escapeHtml(new Date(x.at).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}))+'</small></div>').join('');
-}
-function saveLearningAttempt(score){
-  learningAttempts.unshift({score:Number(score),total:3,at:new Date().toISOString()});
-  learningAttempts=learningAttempts.slice(0,30);
-  try{localStorage.setItem('mrcc_learning_attempts',JSON.stringify(learningAttempts))}catch(e){}
-  recordEngagement();renderLearningProgress();renderReturnLoop();renderStudyReport();
-}
-function exportLearningProgress(){
-  if(!learningAttempts.length){toast('No practice history to export');return}
-  const payload={app:'MR Command Center',type:'micro-lab-practice',version:1,exportedAt:new Date().toISOString(),note:'Practice history only — not certification or competency documentation.',attempts:learningAttempts};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mrcc-learning-progress.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Practice history exported');
-}
-function resetLearningProgress(){
-  if(!confirm('Reset local Micro-Lab practice history?'))return;
-  learningAttempts=[];lastRecordedQuizSignature='';
-  try{localStorage.removeItem('mrcc_learning_attempts')}catch(e){}
-  renderLearningProgress();toast('Practice history reset');
-}
-document.querySelectorAll('.quizq input[type="radio"]').forEach(x=>x.addEventListener('change',()=>{lastRecordedQuizSignature=''}));
-function scoreQuiz(){
-  const key={q1:'b',q2:'b',q3:'a'};let s=0,answered=0;const answers=[];
-  for(const q in key){const v=document.querySelector(`input[name="${q}"]:checked`);if(v){answered++;answers.push(q+':'+v.value);if(v.value===key[q])s++}else answers.push(q+':_')}
-  if(answered<3){$('score').textContent=`Answered ${answered}/3. Complete all three for a score.`;return}
-  $('score').textContent=`${s}/3 correct${s===3?' — all answers correct.':' — review the Reference Desk and try again.'}`;
-  const signature=answers.join('|');
-  if(signature!==lastRecordedQuizSignature){lastRecordedQuizSignature=signature;saveLearningAttempt(s)}
-}
 const contrastMaterialsModel=[
   {name:'Material A',t1:450,t2:70,pd:.80},
   {name:'Material B',t1:900,t2:100,pd:.90},
@@ -3439,6 +2822,6 @@ function spatialReset(notify=true){if($('spPhaseFov'))$('spPhaseFov').value=100;
 
 window.addEventListener('pagehide',()=>{if(sandboxAutosaveTimer){clearTimeout(sandboxAutosaveTimer);sandboxAutosaveTimer=null}try{persistSandboxCurrentState()}catch(e){}});
 restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();renderLabsHome();
-applyModuleArt();ensureModuleFooters();renderParameterGoal();renderParameterChallenge();renderWorkbenchHome();renderDataHealth();restoreRouteFromHash();
+applyModuleArt();ensureModuleFooters();renderParameterGoal();renderParameterChallenge();renderWorkbenchHome();renderDataHealth();renderRetiredDataSummary();restoreRouteFromHash();
 </script>
 </body></html>

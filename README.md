@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v14.0 — Spatial Encoding & Aliasing Lab
+v15.0 — Public Launch & Runtime Hygiene
 
 ## Production
 - Entry point: `index.html`
@@ -24,7 +24,7 @@ The primary interface has six top-level workspace destinations:
 
 Constraint challenges live inside Parameter Lab rather than occupying a global navigation slot. Premium Concept Challenge is scoped to the Premium workspace and does not change entitlement state.
 
-The legacy course-style homepage, learning-path/review UI, Pack Library, Case Lab, Study Report, Publisher Studio, creator/commercial surfaces, and Micro-Lab are retired from the normal user interface. Existing browser-local data structures may remain for backward compatibility until a later cleanup release.
+The legacy course-style homepage, learning-path/review UI, Pack Library, Case Lab, Study Report, Publisher Studio, creator/commercial surfaces, and Micro-Lab have been removed from the active production runtime. Older browser-local keys can remain after an upgrade, but v15.0 no longer parses or initializes those retired systems; Settings can detect and clear the legacy data explicitly.
 
 ## Product principles
 - Interactive MRI reasoning labs are the product; reference material supports the labs rather than competing with them.
@@ -38,7 +38,7 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - A/B comparison, presets, local continuity, and constraint challenges are designed for repeat use.
 - Home previews the current browser-local state of all seven active free Labs so users can resume without rebuilding experiments.
 - Lab restoration is ordered after each lab engine initializes; mobile active states and the built-in self-check use the current Home/Labs navigation contract.
-- Retired course, study-session, pack, creator, engagement, and dashboard renderers remain available only for backward compatibility; they are no longer executed by the normal boot or navigation path.
+- Retired course, study-session, pack, creator, engagement, and Micro-Lab renderers are no longer part of the active production runtime. The old `#learn` route remains only as a compatibility redirect to current Constraint Challenges.
 - Goal tracking reports relative model movement and tradeoffs, not protocol recommendations or diagnostic adequacy.
 - Constraint challenges use generic starting stacks and relative model guardrails; satisfying a challenge is not protocol validation.
 - Parameter Reference is indexed and contextual; Scan Math, Rescue, Artifact, and Safety are supporting tools.
@@ -49,13 +49,26 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - Premium entitlement decisions are never browser-local. A production billing release must use authenticated server-side entitlement checks confirmed from trusted payment events.
 
 ## Architecture
-The current free application remains intentionally dependency-light: static HTML/CSS/JavaScript with browser-local workspace storage and no patient-data backend. v11.0 adds the Premium Labs product surface but deliberately does not activate billing until authenticated server-side entitlements are available. See `PREMIUM_LABS.md` for the planned Stripe / identity / entitlement architecture.
+The current free application remains intentionally dependency-light: static HTML/CSS/JavaScript with browser-local workspace storage and no patient-data backend. Public launch surfaces include `about.html`, `privacy.html`, `robots.txt`, and `sitemap.xml`. v11.0 adds the Premium Labs product surface but deliberately does not activate billing until authenticated server-side entitlements are available. See `PREMIUM_LABS.md` for the planned Stripe / identity / entitlement architecture.
 
 ## Release workflow
 Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, the Labs-only runtime path, retired-surface guards, and the release cache marker.
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v15.0 release notes
+- Added a public **About & Scope** page with creator credit, product architecture, intended audience, and explicit educational/clinical boundaries.
+- Added a public **Privacy & Data** page describing browser-local Lab state, workspace exports, offline caching, hosting metadata, and future account/payment expectations.
+- Added `robots.txt`, `sitemap.xml`, root robots metadata, canonical public links, and Schema.org `WebApplication` structured metadata.
+- Added About / Privacy links to the production footer and Quick Console.
+- Removed the retired course/return-loop, case-pack, publisher, study-session, study-report, and Micro-Lab runtime from `index.html`.
+- Removed retired Learning commands and the retired Micro-Lab pin from the active navigation/search model.
+- Preserved the old `#learn` route as a compatibility redirect to current Constraint Challenges.
+- Reduced `index.html` by **76,938 source characters** (about 12.4%) before adding the small public-launch surfaces.
+- Added Settings visibility for retired browser-local keys plus an explicit **Clear retired data** action that leaves current Lab state, presets, comparisons, preferences, and workspace backups intact.
+- Added About and Privacy pages to the PWA core cache and bumped the offline cache marker to v15.0.0.
+- Current seven-Lab MRI models, safety boundaries, Premium preview behavior, and workspace schema 4 are unchanged.
 
 ### v14.0 release notes
 - Added **Spatial Encoding Lab** as the seventh free MRI reasoning Lab.
