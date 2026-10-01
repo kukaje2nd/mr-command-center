@@ -34,7 +34,7 @@ const requiredFunctions=[
   'normalizeSpatialState','spatialState','spatialMetrics','spatialTeachingCopy','drawSpatialWorld','drawSpatialRecon','spatialUpdate','persistSpatialState','applySpatialPreset','restoreSpatialState','spatialReset',
   'openPalette','setPaletteCategory','openPreferences','runSelfCheck','openSequenceFamiliesLab','openProtocolWorkspace','renderSequenceFamilyGrid','renderSequenceFamilyDetail','selectSequenceFamily','setSequenceFamilyFilter','sequenceTranslateAlias','populateSequenceCompare','renderSequenceCompare','restoreSequenceFamiliesLab','bindSequenceFamiliesLab','clearRetiredProtocolWorkspace',
   'routeHash','restoreRouteFromHash','syncMobileNav',
-  'sandboxUpdate','renderParameterLens','jumpParameterLab',
+  'sandboxUpdate','renderParameterLens','renderParameterDeepDive','renderParameterEquations','setParameterInspector','parameterIsolatedState','jumpParameterLab',
   'openParameterGoal','renderParameterGoalFeedback',
   'openParameterChallenge','renderParameterChallenge',
   'restoreSandboxCurrentState','quickSaveSandboxPreset',
@@ -78,7 +78,7 @@ const requiredIds=[
   'ksMode','ksAmount','ksAmountRow','ksAmountLabel','ksAmountHint','ksAmountOut','ksExplain','ksKspaceCanvas','ksImageCanvas','ksRetainedBadge','ksEffectBadge','ksRetained','ksEffect','ksEffectDetail','ksKeyIdea','ksKeyDetail',
   'spPhaseFov','spReadFov','spPhaseSamples','spReadSamples','spPhaseFovOut','spReadFovOut','spPhaseSamplesOut','spReadSamplesOut','spWorldCanvas','spReconCanvas','spatialCoverageBadge','spatialWrapBadge','spatialWrapCue','spatialWrapDetail','spatialPixelProxy','spatialSampleBurden','spatialExplain',
   'labContinuity','labContinuityTitle','labContinuityMeta','labChallengeLauncher',
-  'paramControlsCard','paramModelCard','parameterLens','parameterReference','workspaceReferenceHub',
+  'paramControlsCard','paramModelCard','parameterLens','parameterDeepCockpit','parameterInspectorSelect','parameterInspectorName','parameterInspectorBase','parameterInspectorCurrent','parameterIsolatedMetrics','parameterFullMetrics','parameterCauseNode','parameterMechanismNode','parameterEffectNode','parameterEquationLab','parameterSpatialEquation','parameterSpatialFactors','parameterSnrFactors','parameterTimeFactors','parameterReference','workspaceReferenceHub',
   'clMode','clTr','clTe','clTi','clTiRow','clTrOut','clTeOut','clTiOut','contrastMaterials','clModeBadge','clSpread','clBrightest','clCue','clCueDetail','contrastEquation',
   'timingTr','timingFirstEcho','timingSpacing','timingEtl','timingCenter','timingPhase','timingNex','timingCueTitle','timingCueDetail','timingFitBadge','timingTrMarker','timingTrainBand','timingEchoRow','timingEffectiveTe','timingTrainSpan','timingTrainCount','timingTimeProxy',
   'motionMode','motionDirection','motionOrder','motionAmplitude','motionOnset','motionCycles','motionCueTitle','motionCueDetail','motionEffectBadge','motionHistoryCanvas','motionReferenceCanvas','motionResultCanvas','motionAffected','motionPeak','motionCenterShift','motionDominant',
@@ -121,7 +121,7 @@ const requiredCopy=[
   'Current workspace','Problem mode','Start from a constraint',
   'A/B Parameter Compare','Parameter Reference','Related tools',
   'MR Safety Reference','RF / thermal details',
-  'Premium Labs · access preview','Advanced labs with a real entitlement model.','MR Command Center · Premium workspace','Premium concept challenge','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','Gradient Encoding Concepts Lab','Off-Resonance & Phase Lab','No charges are active in v18.1.',
+  'Premium Labs · access preview','Advanced labs with a real entitlement model.','MR Command Center · Premium workspace','Premium concept challenge','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','Gradient Encoding Concepts Lab','Off-Resonance & Phase Lab','No charges are active in v19.0.',
   'Learning-use boundary','Settings & shortcuts'
 ]
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required v7 workspace copy is missing: '+text);}
@@ -134,7 +134,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact')) fail.push('Manifest description is not the seven-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v18.1.0")) fail.push('Service worker cache marker is not v18.1.0.');
+if(!sw.includes("mrcc-v19.0.0")) fail.push('Service worker cache marker is not v19.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the MRI Labs title.');
 if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
@@ -143,7 +143,7 @@ if(!html.includes('<meta name="author" content="Edon Kukaj" />')) fail.push('Edo
 if(!html.includes('<span class="brandcredit">Edon Kukaj</span>')||!html.includes('aria-label="MR Command Center by Edon Kukaj"')) fail.push('Edon Kukaj brand credit is missing from the header.');
 if(!html.includes('class="top-actions"')||!html.includes('class="top-status"')) fail.push('v10.1 header action/status grouping is missing.');
 if(!html.includes('/* v10.1 Interface refinement */')||!html.includes('scroll-snap-type:x proximity')||!html.includes('.workspace-rail button.active:before')||!html.includes('.lab-home-card:hover,.lab-home-card:focus-within')) fail.push('v10.1 interface refinement styles are incomplete.');
-if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v18.1</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v18.1</span>')) fail.push('Current live release identity is incomplete.');
+if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v19.0</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v19.0</span>')) fail.push('Current live release identity is incomplete.');
 if(!script.includes("function setRouteContext(label='Home')")||!script.includes('function keepActiveLabVisible(target)')||!script.includes("setRouteContext(sectionTitles[id])")) fail.push('v10.2 route context or active-Lab mobile navigation is incomplete.');
 if(!html.includes('env(safe-area-inset-bottom)')) fail.push('v10.2 mobile safe-area handling is missing.');
 if(!html.includes('active v15 workspace keys')) fail.push('Workspace restore copy still references an outdated workspace generation.');
@@ -204,7 +204,7 @@ if(!premiumDoc.includes('v13.0 Premium workspace routing')||!premiumDoc.includes
 if(!html.includes('/* v14.0 Spatial Encoding Lab */')||!html.includes('id="spatial" class="section spatial-lab"')||!script.includes('function spatialMetrics')||!script.includes("localStorage.setItem('mrcc_spatial_current'")||!html.includes('id="homeSpatialState"')) fail.push('v14.0 Spatial Encoding Lab is incomplete.');
 if(!html.includes('/* v15.0 Public launch + runtime hygiene */')||!documentHtml.includes('href="/about.html"')||!documentHtml.includes('href="/privacy.html"')||!documentHtml.includes('application/ld+json')||!documentHtml.includes('"@type":"WebApplication"')) fail.push('v15.0 public-launch shell is incomplete.');
 if(!appCss.includes('/* v16.0 Runtime modularization')||!script.includes('/* v16.0 Runtime modularization')||!documentHtml.includes('/app.css')||!documentHtml.includes('/app.js')) fail.push('v16.0 runtime modularization markers are incomplete.');
-if(!script.includes("build:'18.1'")) fail.push('Current workspace export build marker is not v18.1.');
+if(!script.includes("build:'19.0'")) fail.push('Current workspace export build marker is not v19.0.');
 if(documentHtml.length>180000) fail.push('v16.0 HTML shell regression: index.html is unexpectedly large.');
 if(appCss.length<150000||script.length<150000) fail.push('v16.0 extracted runtime assets look incomplete.');
 if(!sw.includes("'/app.css'")||!sw.includes("'/app.js'")) fail.push('v16.0 runtime assets are missing from the offline core cache.');
@@ -331,7 +331,7 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v18.1 — Sequence Anatomy + Recognition Challenge')||!readme.includes('v18.1 release notes')||!readme.includes('v18.0 release notes')||!readme.includes('v17.2 release notes')||!readme.includes('v17.1 release notes')||!readme.includes('v17.0 release notes')||!readme.includes('v16.1 release notes')||!readme.includes('v16.0 release notes')||!readme.includes('v15.0 release notes')||!readme.includes('v14.0 release notes')||!readme.includes('v13.0 release notes')||!readme.includes('v12.0 release notes')||!readme.includes('v11.5 release notes')||!readme.includes('v11.4 release notes')||!readme.includes('v11.3 release notes')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('premium-products.json')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!readme.includes('v19.0 — Parameter Lab Deep Dive')||!readme.includes('v19.0 release notes')||!readme.includes('v18.1 release notes')||!readme.includes('v18.0 release notes')||!readme.includes('v17.2 release notes')||!readme.includes('v17.1 release notes')||!readme.includes('v17.0 release notes')||!readme.includes('v16.1 release notes')||!readme.includes('v16.0 release notes')||!readme.includes('v15.0 release notes')||!readme.includes('v14.0 release notes')||!readme.includes('v13.0 release notes')||!readme.includes('v12.0 release notes')||!readme.includes('v11.5 release notes')||!readme.includes('v11.4 release notes')||!readme.includes('v11.3 release notes')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('premium-products.json')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
 if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#sequences')||!manifest.includes('/#timing')||!manifest.includes('/#motion')||!manifest.includes('/#spatial')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or workspace shortcuts.');
 if(!sw.includes('navigationPreload.enable()')) fail.push('Service worker navigation preload is missing.');
 if(!sw.includes("'/about.html'")||!sw.includes("'/privacy.html'")) fail.push('v15 public pages are not in the core offline cache.');
@@ -339,14 +339,19 @@ if(!fs.existsSync('app.css')||!fs.existsSync('app.js')||!fs.existsSync('vercel.j
 if(!fs.existsSync('PREMIUM_LABS.md')) fail.push('PREMIUM_LABS.md is missing.');
 if(!fs.existsSync('premium-products.json')) fail.push('premium-products.json is missing.');
 
+if((script.match(/prompt:/g)||[]).length<12||!script.includes("answer:'fse'")||!script.includes("answer:'gre'")||!script.includes("answer:'bssfp'")||!script.includes("answer:'epi'")) fail.push('v18.1 Sequence Recognition Challenge question bank is incomplete.');
+if(!script.includes("id==='sequences'||id==='protocol'")||!script.includes("routeHash('sequences')")||!manifest.includes('/#sequences')) fail.push('v18.1 canonical #sequences route or legacy #protocol redirect is incomplete.');
+if(!html.includes('Interactive anatomy')||!html.includes('Recognition challenge')||!html.includes('family-level · not scanner limits')) fail.push('v18.1 anatomy/challenge educational framing is incomplete.');
+if(!html.includes('id="parameterDeepCockpit"')||!html.includes('id="parameterEquationLab"')||!html.includes('Causal Explorer')||!html.includes('Model anatomy')) fail.push('v19.0 Parameter Lab deep-dive UI is incomplete.');
+if(!script.includes('const parameterInspectorMeta=')||!script.includes('function parameterIsolatedState')||!script.includes('function renderParameterDeepDive')||!script.includes('function renderParameterEquations')||!script.includes('function setParameterInspector')) fail.push('v19.0 Parameter Lab deep-dive runtime is incomplete.');
+if(!appCss.includes('/* v19.0 Parameter Lab Deep Dive */')||!appCss.includes('.parameter-causal-grid')||!appCss.includes('.parameter-equation-grid')||!appCss.includes('.parameter-factor-list')) fail.push('v19.0 Parameter Lab deep-dive responsive styling is incomplete.');
+if(!html.includes('Every factor below is part of MRCC’s teaching model—not a scanner prediction.')||!html.includes('What stays outside this model')) fail.push('v19.0 Parameter Lab model-boundary copy is incomplete.');
+if(!script.includes("voxel × √NEX")&&!html.includes('voxel × √NEX')) fail.push('v19.0 SNR model anatomy is missing.');
+
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
   for(const item of fail) console.error('- '+item);
   process.exit(1);
 }
 
-console.log('MR Command Center v18.1 Sequence Anatomy + Recognition Challenge validation passed.');
-
-if((script.match(/prompt:/g)||[]).length<12||!script.includes("answer:'fse'")||!script.includes("answer:'gre'")||!script.includes("answer:'bssfp'")||!script.includes("answer:'epi'")) fail.push('v18.1 Sequence Recognition Challenge question bank is incomplete.');
-if(!script.includes("id==='sequences'||id==='protocol'")||!script.includes("routeHash('sequences')")||!manifest.includes('/#sequences')) fail.push('v18.1 canonical #sequences route or legacy #protocol redirect is incomplete.');
-if(!html.includes('Interactive anatomy')||!html.includes('Recognition challenge')||!html.includes('family-level · not scanner limits')) fail.push('v18.1 anatomy/challenge educational framing is incomplete.');
+console.log('MR Command Center v19.0 Parameter Lab Deep Dive validation passed.');
