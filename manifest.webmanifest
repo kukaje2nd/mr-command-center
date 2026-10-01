@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs with Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, plus a simple browser-local Protocol Scan Assist for patient/scanner context, protocol images or sequence lists, and source-tracked scanner-side guidance.",
+  "description": "Interactive MRI reasoning labs with Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, plus an interactive Sequence Families Lab for MRI sequence physics, tradeoffs, artifacts, and vendor terminology.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -120,9 +120,9 @@
       ]
     },
     {
-      "name": "Protocol Workspace",
-      "short_name": "Protocol",
-      "description": "Enter patient/scanner context, paste a protocol image or sequence list, and get an immediate source-tracked Scan Assist.",
+      "name": "Sequence Families Lab",
+      "short_name": "Sequences",
+      "description": "Explore MRI sequence families, tradeoffs, artifacts, and common vendor terminology.",
       "url": "/#protocol",
       "icons": [
         {
