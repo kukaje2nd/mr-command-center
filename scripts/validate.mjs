@@ -32,7 +32,7 @@ const requiredFunctions=[
   'artifactLabUpdate','artifactLabRender','artifactTeachingCue','applyArtifactLabPreset','restoreArtifactLabState','artifactLabReset',
   'kspaceUpdate','kspaceDft1D','kspaceDft2D','kspaceApplyMask','kspaceModeChanged','applyKspacePreset','restoreKspaceState','kspaceReset',
   'normalizeSpatialState','spatialState','spatialMetrics','spatialTeachingCopy','drawSpatialWorld','drawSpatialRecon','spatialUpdate','persistSpatialState','applySpatialPreset','restoreSpatialState','spatialReset',
-  'openPalette','setPaletteCategory','openPreferences','runSelfCheck',
+  'openPalette','setPaletteCategory','openPreferences','runSelfCheck','openProtocolWorkspace','protocolImportSequences','protocolParseSequenceText','protocolRenderTable','restoreProtocolWorkspace','protocolPrint',
   'routeHash','restoreRouteFromHash','syncMobileNav',
   'sandboxUpdate','renderParameterLens','jumpParameterLab',
   'openParameterGoal','renderParameterGoalFeedback',
@@ -73,7 +73,7 @@ for(const name of referenced){
 }
 
 const requiredIds=[
-  'workspaceRail','cockpit','cockpitTitle','homeParameterState','homeParameterMeta','homeContrastState','homeContrastMeta','homeTimingState','homeTimingMeta','homeMotionState','homeMotionMeta','homeKspaceState','homeKspaceMeta','homeSpatialState','homeSpatialMeta','homeArtifactState','homeArtifactMeta','homePresetResumeCount','homeCompareResumeCount','sandbox','contrast','timing','motion','kspace','spatial','artifact','mobileNav',
+  'workspaceRail','protocol','protocolTitle','protocolManufacturer','protocolModel','protocolTesla','protocolSequenceInput','protocolParseBtn','protocolTableBody','protocolAxialCoverage','protocolCoronalCoverage','protocolSagittalCoverage','protocolDynamicNotes','protocolContextSummary','cockpit','cockpitTitle','homeParameterState','homeParameterMeta','homeContrastState','homeContrastMeta','homeTimingState','homeTimingMeta','homeMotionState','homeMotionMeta','homeKspaceState','homeKspaceMeta','homeSpatialState','homeSpatialMeta','homeArtifactState','homeArtifactMeta','homePresetResumeCount','homeCompareResumeCount','sandbox','contrast','timing','motion','kspace','spatial','artifact','mobileNav',
   'artifactCanvas','artifactStrength','artifactStrengthOut','artifactDirection','artifactVisualCue','artifactVisualDetail','artifactVisualBadge','artifactPhaseLabel',
   'ksMode','ksAmount','ksAmountRow','ksAmountLabel','ksAmountHint','ksAmountOut','ksExplain','ksKspaceCanvas','ksImageCanvas','ksRetainedBadge','ksEffectBadge','ksRetained','ksEffect','ksEffectDetail','ksKeyIdea','ksKeyDetail',
   'spPhaseFov','spReadFov','spPhaseSamples','spReadSamples','spPhaseFovOut','spReadFovOut','spPhaseSamplesOut','spReadSamplesOut','spWorldCanvas','spReconCanvas','spatialCoverageBadge','spatialWrapBadge','spatialWrapCue','spatialWrapDetail','spatialPixelProxy','spatialSampleBurden','spatialExplain',
@@ -121,7 +121,7 @@ const requiredCopy=[
   'Current workspace','Problem mode','Start from a constraint',
   'A/B Parameter Compare','Parameter Reference','Related tools',
   'MR Safety Reference','RF / thermal details',
-  'Premium Labs · access preview','Advanced labs with a real entitlement model.','MR Command Center · Premium workspace','Premium concept challenge','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','Gradient Encoding Concepts Lab','Off-Resonance & Phase Lab','No charges are active in v16.1.',
+  'Premium Labs · access preview','Advanced labs with a real entitlement model.','MR Command Center · Premium workspace','Premium concept challenge','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','Gradient Encoding Concepts Lab','Off-Resonance & Phase Lab','No charges are active in v17.0.',
   'Learning-use boundary','Settings & shortcuts'
 ]
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required v7 workspace copy is missing: '+text);}
@@ -134,7 +134,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact')) fail.push('Manifest description is not the seven-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v16.1.0")) fail.push('Service worker cache marker is not v16.1.0.');
+if(!sw.includes("mrcc-v17.0.0")) fail.push('Service worker cache marker is not v17.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the MRI Labs title.');
 if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
@@ -143,7 +143,7 @@ if(!html.includes('<meta name="author" content="Edon Kukaj" />')) fail.push('Edo
 if(!html.includes('<span class="brandcredit">Edon Kukaj</span>')||!html.includes('aria-label="MR Command Center by Edon Kukaj"')) fail.push('Edon Kukaj brand credit is missing from the header.');
 if(!html.includes('class="top-actions"')||!html.includes('class="top-status"')) fail.push('v10.1 header action/status grouping is missing.');
 if(!html.includes('/* v10.1 Interface refinement */')||!html.includes('scroll-snap-type:x proximity')||!html.includes('.workspace-rail button.active:before')||!html.includes('.lab-home-card:hover,.lab-home-card:focus-within')) fail.push('v10.1 interface refinement styles are incomplete.');
-if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v16.1</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v16.1</span>')) fail.push('Current live release identity is incomplete.');
+if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v17.0</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v17.0</span>')) fail.push('Current live release identity is incomplete.');
 if(!script.includes("function setRouteContext(label='Home')")||!script.includes('function keepActiveLabVisible(target)')||!script.includes("setRouteContext(sectionTitles[id])")) fail.push('v10.2 route context or active-Lab mobile navigation is incomplete.');
 if(!html.includes('env(safe-area-inset-bottom)')) fail.push('v10.2 mobile safe-area handling is missing.');
 if(!html.includes('active v15 workspace keys')) fail.push('Workspace restore copy still references an outdated workspace generation.');
@@ -204,7 +204,7 @@ if(!premiumDoc.includes('v13.0 Premium workspace routing')||!premiumDoc.includes
 if(!html.includes('/* v14.0 Spatial Encoding Lab */')||!html.includes('id="spatial" class="section spatial-lab"')||!script.includes('function spatialMetrics')||!script.includes("localStorage.setItem('mrcc_spatial_current'")||!html.includes('id="homeSpatialState"')) fail.push('v14.0 Spatial Encoding Lab is incomplete.');
 if(!html.includes('/* v15.0 Public launch + runtime hygiene */')||!documentHtml.includes('href="/about.html"')||!documentHtml.includes('href="/privacy.html"')||!documentHtml.includes('application/ld+json')||!documentHtml.includes('"@type":"WebApplication"')) fail.push('v15.0 public-launch shell is incomplete.');
 if(!appCss.includes('/* v16.0 Runtime modularization')||!script.includes('/* v16.0 Runtime modularization')||!documentHtml.includes('/app.css')||!documentHtml.includes('/app.js')) fail.push('v16.0 runtime modularization markers are incomplete.');
-if(!script.includes("build:'16.1'")) fail.push('Current workspace export build marker is not v16.1.');
+if(!script.includes("build:'17.0'")) fail.push('Current workspace export build marker is not v17.0.');
 if(documentHtml.length>180000) fail.push('v16.0 HTML shell regression: index.html is unexpectedly large.');
 if(appCss.length<150000||script.length<150000) fail.push('v16.0 extracted runtime assets look incomplete.');
 if(!sw.includes("'/app.css'")||!sw.includes("'/app.js'")) fail.push('v16.0 runtime assets are missing from the offline core cache.');
@@ -232,6 +232,14 @@ for(const [index,switcher] of labSwitchers.entries()){
 }
 if(appCss.includes('.lab-switcher button:nth-child(3){display:none}')) fail.push('Legacy mobile Lab-switcher rule still hides the third destination.');
 if(!appCss.includes('/* v16.1 Mobile Lab Navigation Integrity */')||!appCss.includes('@media(max-width:680px){.lab-switcher button{display:grid}}')) fail.push('v16.1 mobile Lab navigation visibility guard is missing.');
+if(!html.includes('id="protocol" class="section protocol-workspace"')||!html.includes('data-workspace-tab="protocol"')||!html.includes('id="protocolTableBody"')||!html.includes('Source-first rule')) fail.push('v17.0 Protocol Workspace UI is incomplete.');
+if((documentHtml.match(/data-workspace-tab="protocol"/g)||[]).length!==2) fail.push('Desktop and mobile navigation must both expose Protocol Workspace.');
+if(!script.includes("const MRCC_PROTOCOL_STORAGE_KEY='mrcc_protocol_workspace_v1'")||!script.includes('function protocolParseSequenceText')||!script.includes('function protocolVendorHint')||!script.includes('function restoreProtocolWorkspace')) fail.push('v17.0 Protocol Workspace runtime is incomplete.');
+if(!script.includes("sectionTitles={protocol:'Protocol Workspace'")||!script.includes("protocol:'protocol'")) fail.push('Protocol Workspace routing is incomplete.');
+if(!appCss.includes('/* v17.0 Protocol Workspace foundation */')||!appCss.includes('.protocol-table-wrap')||!appCss.includes('@media print')) fail.push('v17.0 Protocol Workspace responsive/print styling is incomplete.');
+if(!html.includes('does not generate patient-specific FOV, matrix, slice, NEX, acceleration, contrast dose, or timing')||!html.includes('Do not enter name, MRN, DOB')) fail.push('Protocol Workspace source/privacy boundaries are incomplete.');
+if(script.includes('protocolSuggestedFov')||script.includes('protocolSuggestedNex')||script.includes('protocolSuggestedMatrix')) fail.push('Protocol Workspace must not contain unsourced patient-specific numeric recommendation helpers.');
+
 if((html.match(/data-workspace-tab="labs" onclick="resumeLastLab\(\)"/g)||[]).length!==2) fail.push('Desktop and mobile Labs navigation must resume the last Lab.');
 if(!html.includes('id="workspaceImportFile"')||!html.includes('id="workspaceExportBtn"')||!html.includes('id="workspaceDiagnosticsBtn"')) fail.push('Workspace portability controls are missing from Settings.');
 if(!script.includes("const MRCC_WORKSPACE_BACKUP_FORMAT='mrcc-workspace'")||!script.includes('MRCC_WORKSPACE_BACKUP_SCHEMA=4')) fail.push('Workspace backup format/schema markers are missing.');
@@ -248,7 +256,7 @@ if(!script.includes("id:'workspace-export'")||!script.includes("id:'workspace-im
 if(!script.includes("['Workspace portability'")||!script.includes('MRCC_WORKSPACE_ACTIVE_KEYS.length===13')) fail.push('Workspace portability is missing from self-check coverage.');
 if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
 if(!html.includes('class="system-panel" id="offlineBar"')) fail.push('Compact system-status drawer is missing.');
-if(!script.includes("document.querySelectorAll('[data-workspace-tab]').length===12")||!script.includes("document.querySelectorAll('#mobileNav [data-workspace-tab]').length===6")) fail.push('Workspace self-check navigation counts are stale.');
+if(!script.includes("document.querySelectorAll('[data-workspace-tab]').length===14")||!script.includes("document.querySelectorAll('#mobileNav [data-workspace-tab]').length===7")) fail.push('Workspace self-check navigation counts are stale.');
 if(!html.includes('id="routeAnnouncer"')||!script.includes('function announceRoute')||!script.includes("history[replace?'replaceState':'pushState']")) fail.push('Accessible route announcements or browser history navigation are missing.');
 if(!html.includes('id="workspaceRail"')||!html.includes('id="labChallengeLauncher"')||!html.includes('id="workspaceReferenceHub"')) fail.push('V7 workspace navigation / contextual surfaces are missing.');
 if(!html.includes('/* v7.1 Labs + Contrast Lab */')||!script.includes('const contrastMaterialsModel=')||!script.includes('mrcc_contrast_current')) fail.push('v7.1 Contrast Lab implementation is missing.');
@@ -297,7 +305,7 @@ if(!script.includes("document.title='MR Command Center — MRI Labs'")||!html.in
 if(!html.includes('body.nav-home #cockpit{display:block!important}')||!html.includes('.creator-zone,.practice-zone,.reference-onboarding{display:none!important}')) fail.push('Labs home visibility or retired secondary surfaces are incorrect.');
 if(script.includes('retiredV7Commands')) fail.push('Obsolete retired-command search filter should not remain after v15 cleanup.');
 if(!script.includes("if(id==='learn'){openWorkspaceView('challenges',true);return}")) fail.push('Retired Micro-Lab route does not redirect to current Challenges.');
-if(!html.includes('data-workspace-tab="home"')||!html.includes('data-workspace-tab="labs"')||!html.includes('data-workspace-tab="compare"')||!html.includes('data-workspace-tab="reference"')||!html.includes('data-workspace-tab="safety"')) fail.push('Five-destination Home/Labs navigation is incomplete.');
+if(!html.includes('data-workspace-tab="home"')||!html.includes('data-workspace-tab="labs"')||!html.includes('data-workspace-tab="protocol"')||!html.includes('data-workspace-tab="compare"')||!html.includes('data-workspace-tab="reference"')||!html.includes('data-workspace-tab="safety"')) fail.push('Workspace navigation is incomplete.');
 if((html.match(/onclick="openLab\('kspace'\)"/g)||[]).length<4||html.includes('title="Planned lab"')) fail.push('K-Space Lab is not fully activated across Labs navigation and home.');
 const contrastModelPos=script.indexOf('const contrastMaterialsModel='),contrastRestorePos=script.lastIndexOf('restoreContrastState();');
 const kspaceModelPos=script.indexOf('const KS_N=32'),kspaceRestorePos=script.lastIndexOf('restoreKspaceState();');
@@ -320,8 +328,8 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v16.1 — Mobile Lab Navigation Integrity')||!readme.includes('v16.1 release notes')||!readme.includes('v16.0 release notes')||!readme.includes('v15.0 release notes')||!readme.includes('v14.0 release notes')||!readme.includes('v13.0 release notes')||!readme.includes('v12.0 release notes')||!readme.includes('v11.5 release notes')||!readme.includes('v11.4 release notes')||!readme.includes('v11.3 release notes')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('premium-products.json')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
-if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#timing')||!manifest.includes('/#motion')||!manifest.includes('/#spatial')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or Lab shortcuts.');
+if(!readme.includes('v17.0 — Protocol Workspace Foundation')||!readme.includes('v17.0 release notes')||!readme.includes('v16.1 release notes')||!readme.includes('v16.0 release notes')||!readme.includes('v15.0 release notes')||!readme.includes('v14.0 release notes')||!readme.includes('v13.0 release notes')||!readme.includes('v12.0 release notes')||!readme.includes('v11.5 release notes')||!readme.includes('v11.4 release notes')||!readme.includes('v11.3 release notes')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('premium-products.json')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#protocol')||!manifest.includes('/#timing')||!manifest.includes('/#motion')||!manifest.includes('/#spatial')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or workspace shortcuts.');
 if(!sw.includes('navigationPreload.enable()')) fail.push('Service worker navigation preload is missing.');
 if(!sw.includes("'/about.html'")||!sw.includes("'/privacy.html'")) fail.push('v15 public pages are not in the core offline cache.');
 if(!fs.existsSync('app.css')||!fs.existsSync('app.js')||!fs.existsSync('vercel.json')) fail.push('v16 runtime/public-hardening files are missing.');
@@ -334,4 +342,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v16.1 Mobile Lab Navigation Integrity validation passed.');
+console.log('MR Command Center v17.0 Protocol Workspace Foundation validation passed.');
