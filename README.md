@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v23.0 — K-Space Lab Deep Dive
+v24.0 — Spatial Encoding Lab Deep Dive
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,16 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v24.0 release notes
+- Continued the lab-by-lab deepening program with a major **Spatial Encoding Lab Deep Dive**.
+- Added **Wrap Provenance** for five synthetic feature landmarks. The Lab now shows each feature center’s object-space coordinate, periodically remapped displayed coordinate, and whether the remap occurred in read, phase, or both axes.
+- Added **Encoding Anatomy** for read and phase separately: live FOV ÷ sample-count equations, relative pixel-width readouts, coverage/sample bars, and a causal diagnosis that explicitly separates coverage problems from grid-density problems.
+- Added a practical **Match samples to FOV** solver. It estimates the discrete 16-sample grid needed to preserve the baseline pixel-width relationship as FOV changes.
+- Added four live **Encoding Challenges**: create phase-only wrap, make sampling coarse without wrap, expand coverage without coarsening relative pixel width, and repair a two-axis wrapped field while controlling pixel cost.
+- Challenge thresholds are evaluated from the same FOV/sample equations used by the main Lab.
+- Kept the model boundary explicit: feature-center provenance is a landmark aid, not a complete object-support or scanner anti-aliasing model.
+- Extended built-in self-check and release validation to require the new provenance, encoding-anatomy, solver, and challenge runtime.
 
 ### v23.0 release notes
 - Continued the lab-by-lab deepening program with a major **K-Space Lab Deep Dive**.
