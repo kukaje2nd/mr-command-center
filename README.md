@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v19.0 — Parameter Lab Deep Dive
+v20.0 — Contrast Lab Deep Dive
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,18 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v20.0 release notes
+- Continued the lab-by-lab deepening program with a major **Contrast Lab Deep Dive**.
+- Added live **longitudinal recovery** and **transverse decay** canvases for all three synthetic materials. TR, TE, and TI markers move with the existing controls so relaxation timing is visible instead of hidden behind final signal bars.
+- In inversion-recovery mode, the longitudinal plot preserves the signed model term and displays the zero crossing used for synthetic nulling.
+- Added **Signal Anatomy** for every synthetic material: longitudinal/T1 contribution, transverse/T2 factor, PD-like factor, combined raw signal, and current normalized brightness.
+- Added a **Largest Factor Spread** cue that identifies which raw model factor currently differs most across the synthetic materials while explicitly avoiding a claim of formal causal attribution.
+- Added an **IR synthetic null finder**. For the current TR, MRCC solves the finite-TR teaching equation for each material’s approximate zero-crossing TI and can load that TI directly.
+- Added six interactive **Target Challenges**: T1 emphasis, T2 emphasis, PD emphasis, and nulling synthetic Material A, B, or C. The challenge evaluates sequence model, weighting/null condition, and visible separation/order live as the sliders move.
+- Added responsive/mobile layouts and accessible text summaries for the new curve visualizations.
+- Extended the built-in self-check and release validator to require the new Contrast Lab curves, signal anatomy, null finder, and challenge runtime.
+- The synthetic-material and educational model boundaries remain explicit; the new visualizations do not use human tissue values or make protocol/diagnostic predictions.
 
 ### v19.0 release notes
 - Began the lab-by-lab deepening program with a major **Parameter Lab Deep Dive**.
