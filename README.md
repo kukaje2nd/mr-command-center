@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v25.0 — Artifact Lab Deep Dive
+v26.0 — Sequence DNA Builder
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,16 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v26.0 release notes
+- Deepened **Sequence Families Lab** with a new **Sequence DNA Builder** that matches acquisition mechanisms instead of relying on vendor-name memorization.
+- The builder separates four clue layers: preparation / contrast mechanism, echo / refocusing engine, readout / k-space pattern, and output / console clue.
+- Added family-level DNA profiles for all 13 sequence families. Each profile can contain multiple compatible mechanisms where the family is genuinely layered—for example inversion recovery may use spin-echo/FSE readouts, Dixon can sit on GRE or FSE, and diffusion preparation can feed an EPI readout.
+- Matching is ranked rather than falsely definitive. A single broad clue can intentionally return several compatible families; adding physics clues narrows the set.
+- When multiple families fit, MRCC surfaces the first simplified mechanism dimension that separates the top candidates.
+- Added “Load selected family DNA,” quick DNA examples, ranked top-three compatibility cards, and one-click jump to the strongest match.
+- Verified that every one of the 13 families’ canonical DNA states resolves uniquely back to itself.
+- Kept the boundary explicit: the matcher is family-level education, not patient-specific protocol selection or scanner feasibility.
 
 ### v25.0 release notes
 - Completed the core lab-by-lab deepening pass with a major **Artifact Lab Deep Dive**.

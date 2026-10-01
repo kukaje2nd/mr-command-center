@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'25.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'26.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v25.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v26.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1522,7 +1522,7 @@ function runSelfCheck(){
     ['Supporting tools',typeof calcVoxel==='function'&&typeof calcTime==='function'&&typeof solveArtifact==='function'&&typeof renderRescue==='function'],
     ['Safety reference',typeof updateSafety==='function'&&typeof burnUpdate==='function'&&!!$('safety')&&!!$('burn')],
     ['Search + settings',typeof runCommand==='function'&&typeof openPalette==='function'&&typeof openPreferences==='function'&&!!$('paletteBack')&&!!$('prefsBack')],
-    ['Sequence Families Lab',typeof openSequenceFamiliesLab==='function'&&typeof renderSequenceFamilyGrid==='function'&&typeof renderSequenceAnatomy==='function'&&typeof sequenceTranslateAlias==='function'&&typeof renderSequenceCompare==='function'&&typeof renderSequenceChallenge==='function'&&typeof restoreSequenceFamiliesLab==='function'&&!!$('protocol')&&!!$('sequenceFamilyGrid')&&!!$('sequenceFamilyDetail')&&!!$('seqAnatomyTimeline')&&!!$('seqChallengeChoices')],
+    ['Sequence Families Lab',typeof openSequenceFamiliesLab==='function'&&typeof renderSequenceFamilyGrid==='function'&&typeof renderSequenceAnatomy==='function'&&typeof renderSequenceDna==='function'&&typeof scoreSequenceDna==='function'&&typeof sequenceTranslateAlias==='function'&&typeof renderSequenceCompare==='function'&&typeof renderSequenceChallenge==='function'&&typeof restoreSequenceFamiliesLab==='function'&&!!$('protocol')&&!!$('sequenceFamilyGrid')&&!!$('sequenceFamilyDetail')&&!!$('seqAnatomyTimeline')&&!!$('seqDnaResult')&&!!$('seqChallengeChoices')],
     ['Home/Labs navigation',typeof openLab==='function'&&typeof setWorkspaceTabActive==='function'&&document.querySelectorAll('[data-workspace-tab]').length===14],
     ['Mobile navigation',typeof syncMobileNav==='function'&&document.querySelectorAll('#mobileNav [data-workspace-tab]').length===7],
     ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'&&sectionTitles.protocol==='Sequence Families Lab'&&sectionTitles.contrast==='Contrast Lab'&&sectionTitles.kspace==='K-Space Lab'&&sectionTitles.spatial==='Spatial Encoding Lab'&&sectionTitles.artifact==='Artifact Lab'],
@@ -2366,6 +2366,80 @@ swi:{prep:['phase preserved'],rf:['low-flip GRE train'],echo:['longer-TE gradien
 mra:{prep:['flow mechanism'],rf:['repeated GRE-like excitation'],echo:['flow-dependent signal / phase'],read:['2D/3D vascular k-space'],key:'TOF and phase-contrast angiography derive contrast from inflow or velocity encoding rather than ordinary T1/T2 weighting alone.',finger:{speed:2,sus:2,motion:1,rf:1}},
 radial:{prep:['optional prep'],rf:['FSE/TSE excitation + refocus'],echo:['spin echoes in rotating blades'],read:['overlapping radial/blade strips'],key:'Radial/blade FSE repeatedly samples central k-space while rotating strips, creating redundancy that can improve robustness to selected motion.',finger:{speed:1,sus:1,motion:3,rf:3}}
 };
+const sequenceDnaDimensions={
+  prep:{label:'Preparation',values:{none:'none / optional',inversion:'inversion + TI',diffusion:'diffusion sensitization',waterfat:'water–fat phase sampling',flow:'flow / velocity mechanism',susceptibility:'susceptibility phase/magnitude',steady:'steady-state setup'}},
+  echo:{label:'Echo engine',values:{spin:'single spin echo',refocusTrain:'RF refocusing train',gradient:'gradient echo',balanced:'balanced coherent steady state'}},
+  readout:{label:'Readout',values:{cartesian:'conventional Cartesian',singleShot:'single-shot long FSE/TSE train',epi:'EPI rapid train',volume3d:'3D volume / partitions',blade:'rotating blades / radial-like strips'}},
+  output:{label:'Output clue',values:{anatomic:'routine anatomic weighting',nulling:'tissue nulling / TI',t1dynamic:'fast 3D T1 / dynamic volume',fluidbright:'bright fluid/blood steady state',diffusion:'DWI / ADC',waterfat:'water-only / fat-only outputs',magnitudePhase:'magnitude + phase susceptibility output',vascular:'TOF / PC vascular output',motionRobust:'motion-robust blade acquisition'}}
+};
+const sequenceDnaProfiles={
+  se:{prep:['none'],echo:['spin'],readout:['cartesian'],output:['anatomic']},
+  fse:{prep:['none'],echo:['refocusTrain'],readout:['cartesian'],output:['anatomic']},
+  ir:{prep:['inversion'],echo:['spin','refocusTrain'],readout:['cartesian','volume3d'],output:['nulling']},
+  ssfse:{prep:['none'],echo:['refocusTrain'],readout:['singleShot'],output:['anatomic']},
+  gre:{prep:['none'],echo:['gradient'],readout:['cartesian'],output:['anatomic']},
+  spgr3d:{prep:['none','waterfat'],echo:['gradient'],readout:['volume3d'],output:['t1dynamic']},
+  bssfp:{prep:['steady'],echo:['balanced'],readout:['cartesian','volume3d'],output:['fluidbright']},
+  epi:{prep:['diffusion','none'],echo:['gradient','spin'],readout:['epi'],output:['diffusion']},
+  vfa3dfse:{prep:['none'],echo:['refocusTrain'],readout:['volume3d'],output:['anatomic']},
+  dixon:{prep:['waterfat'],echo:['gradient','refocusTrain'],readout:['cartesian','volume3d'],output:['waterfat']},
+  swi:{prep:['susceptibility'],echo:['gradient'],readout:['volume3d'],output:['magnitudePhase']},
+  mra:{prep:['flow'],echo:['gradient'],readout:['cartesian','volume3d'],output:['vascular']},
+  radial:{prep:['none'],echo:['refocusTrain'],readout:['blade'],output:['motionRobust']}
+};
+const sequenceDnaWeights={prep:1.15,echo:1,readout:1.25,output:1.35};
+let sequenceDnaBestId='';
+function sequenceDnaState(){
+  return {prep:$('seqDnaPrep')?.value||'any',echo:$('seqDnaEcho')?.value||'any',readout:$('seqDnaReadout')?.value||'any',output:$('seqDnaOutput')?.value||'any'};
+}
+function sequenceDnaActive(state=sequenceDnaState()){return Object.entries(state).filter(([,v])=>v!=='any')}
+function sequenceDnaLabel(dim,value){return sequenceDnaDimensions[dim]?.values?.[value]||value}
+function scoreSequenceDna(id,state=sequenceDnaState()){
+  const profile=sequenceDnaProfiles[id],active=sequenceDnaActive(state);if(!profile||!active.length)return {id,score:0,matched:[],missed:[],active:active.length};
+  let earned=0,total=0;const matched=[],missed=[];
+  for(const [dim,value] of active){const weight=sequenceDnaWeights[dim]||1,totalValues=profile[dim]||[];total+=weight;if(totalValues.includes(value)){earned+=weight;matched.push([dim,value])}else missed.push([dim,value])}
+  return {id,score:total?earned/total:0,matched,missed,active:active.length};
+}
+function sequenceDnaRank(state=sequenceDnaState()){
+  return sequenceFamilies.map(f=>({...scoreSequenceDna(f.id,state),family:f})).sort((a,b)=>b.score-a.score||b.matched.length-a.matched.length||a.family.title.localeCompare(b.family.title));
+}
+function sequenceDnaMatchCopy(row){
+  if(!row.active)return 'Add clues to begin.';
+  if(row.score===1)return row.active===1?'Compatible with the single active clue. Add another clue to narrow the family.':'All active clues are compatible with this family-level model.';
+  if(row.score>=.65)return 'Most clues fit, but '+row.missed.map(([d,v])=>sequenceDnaDimensions[d].label.toLowerCase()+' ≠ '+sequenceDnaLabel(d,v)).join('; ')+'.';
+  return 'Partial match only; '+row.missed.length+' active clue'+(row.missed.length===1?'':'s')+' conflict with this family model.';
+}
+function sequenceDnaDifferentiator(a,b){
+  if(!a||!b)return 'Add another clue to narrow the match.';
+  const pa=sequenceDnaProfiles[a.id],pb=sequenceDnaProfiles[b.id],diff=[];
+  for(const dim of ['prep','echo','readout','output']){
+    const av=(pa[dim]||[]).map(v=>sequenceDnaLabel(dim,v)).join(' / '),bv=(pb[dim]||[]).map(v=>sequenceDnaLabel(dim,v)).join(' / ');
+    if(av!==bv)diff.push(sequenceDnaDimensions[dim].label+': '+a.family.code+' → '+av+' · '+b.family.code+' → '+bv);
+  }
+  return diff.length?'Best separating clue: '+diff[0]+'.':'These entries overlap strongly in the simplified DNA model; use the full family descriptions and console context.';
+}
+function renderSequenceDna(){
+  const state=sequenceDnaState(),active=sequenceDnaActive(state),box=$('seqDnaResult'),ambiguity=$('seqDnaAmbiguity'),rank=sequenceDnaRank(state),top=rank.slice(0,3);
+  if($('seqDnaClueCount'))$('seqDnaClueCount').textContent=active.length+' clue'+(active.length===1?'':'s')+' active';
+  if(!active.length){sequenceDnaBestId='';if(box)box.innerHTML='<div class="seqfam-dna-empty">Choose one or more clues to rank compatible families.</div>';if(ambiguity)ambiguity.innerHTML='<b>Why ambiguity is useful</b><span>One console label can describe a preparation, a readout, or a reconstruction layer. Add another physics clue instead of forcing a premature family match.</span>';if($('seqDnaOpenBest'))$('seqDnaOpenBest').disabled=true;return}
+  sequenceDnaBestId=top[0]?.family.id||'';
+  if(box)box.innerHTML=top.map((row,i)=>{const pct=Math.round(row.score*100),matched=row.matched.map(([d,v])=>'<span>'+escapeHtml(sequenceDnaDimensions[d].label)+': '+escapeHtml(sequenceDnaLabel(d,v))+'</span>').join('');return '<button type="button" class="seqfam-dna-match '+(i===0?'best':'')+'" data-seq-dna-family="'+row.family.id+'"><div class="seqfam-dna-match-head"><div><small>'+(i===0?'Top compatibility':'Alternate')+'</small><b>'+escapeHtml(row.family.title)+'</b></div><strong>'+pct+'%</strong></div><div class="seqfam-dna-score"><i style="width:'+pct+'%"></i></div><p>'+escapeHtml(sequenceDnaMatchCopy(row))+'</p><div class="seqfam-dna-match-tags">'+(matched||'<span>No active clue matched</span>')+'</div></button>'}).join('');
+  if(ambiguity){const exact=rank.filter(r=>r.score===1);ambiguity.innerHTML=exact.length>1?'<b>'+exact.length+' families satisfy every active clue</b><span>'+escapeHtml(sequenceDnaDifferentiator(exact[0],exact[1]))+'</span>':'<b>'+escapeHtml(top[0].family.title)+' is the strongest simplified match</b><span>'+escapeHtml(sequenceDnaDifferentiator(top[0],top[1]))+'</span>'}
+  if($('seqDnaOpenBest'))$('seqDnaOpenBest').disabled=!sequenceDnaBestId;
+}
+function applySequenceDnaProfile(id){
+  const p=sequenceDnaProfiles[id];if(!p)return;const canonical={prep:p.prep[0]||'any',echo:p.echo[0]||'any',readout:p.readout[0]||'any',output:p.output[0]||'any'};
+  for(const [dim,value] of Object.entries(canonical)){const el=$('seqDna'+dim.charAt(0).toUpperCase()+dim.slice(1));if(el)el.value=value}
+  renderSequenceDna();
+}
+function loadSelectedSequenceDna(){applySequenceDnaProfile(sequenceFamilyState.selected);toast('Selected family DNA loaded')}
+function resetSequenceDna(){for(const id of ['seqDnaPrep','seqDnaEcho','seqDnaReadout','seqDnaOutput'])if($(id))$(id).value='any';renderSequenceDna()}
+function openBestSequenceDna(){if(!sequenceDnaBestId)return;selectSequenceFamily(sequenceDnaBestId);$('sequenceFamilyDetail')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'})}
+function bindSequenceDna(){
+  $('seqDnaResult')?.addEventListener('click',e=>{const b=e.target.closest('[data-seq-dna-family]');if(b){selectSequenceFamily(b.dataset.seqDnaFamily);sequenceDnaBestId=b.dataset.seqDnaFamily}});
+  document.querySelectorAll('[data-seq-dna-preset]').forEach(b=>b.addEventListener('click',()=>applySequenceDnaProfile(b.dataset.seqDnaPreset)));
+}
+
 const sequenceChallengeQuestions=[
 {prompt:'Multiple RF refocusing pulses form an echo train so several k-space lines can be acquired during one TR. Which family?',answer:'fse',choices:['fse','gre','bssfp','epi'],why:'That is the defining Fast/Turbo Spin Echo idea: one excitation followed by a refocusing echo train.'},
 {prompt:'No 180° spin-echo refocusing pulse, fast gradient refocusing, and strong T2* / susceptibility sensitivity. Which family?',answer:'gre',choices:['se','gre','ir','radial'],why:'Gradient Echo forms the echo with gradients rather than a 180° RF refocusing pulse.'},
@@ -2481,7 +2555,7 @@ function restoreSequenceFamiliesLab(){
  if(!['generic','ge','siemens','philips'].includes(sequenceFamilyState.vendor))sequenceFamilyState.vendor='generic';
  if($('seqFamilyVendor'))$('seqFamilyVendor').value=sequenceFamilyState.vendor;
  document.querySelectorAll('[data-seqfam-filter]').forEach(b=>b.classList.toggle('active',b.dataset.seqfamFilter===sequenceFamilyState.filter));
- renderSequenceFamilyGrid();populateSequenceCompare();renderSequenceAnatomy();renderSequenceChallenge();
+ renderSequenceFamilyGrid();populateSequenceCompare();renderSequenceAnatomy();renderSequenceChallenge();renderSequenceDna();
 }
 function bindSequenceFamiliesLab(){
  $('sequenceFamilyGrid')?.addEventListener('click',e=>{const b=e.target.closest('[data-seq-family]');if(b)selectSequenceFamily(b.dataset.seqFamily)});
@@ -2494,6 +2568,7 @@ function bindSequenceFamiliesLab(){
  $('seqChallengeChoices')?.addEventListener('click',e=>{const b=e.target.closest('[data-seq-challenge-choice]');if(b)answerSequenceChallenge(b.dataset.seqChallengeChoice)});
  $('seqChallengeNextBtn')?.addEventListener('click',nextSequenceChallenge);$('seqChallengeResetBtn')?.addEventListener('click',resetSequenceChallenge);$('seqChallengeOpenBtn')?.addEventListener('click',openChallengeFamily);
 }
+bindSequenceDna();
 function openSequenceFamiliesLab(){setFocusedSection('protocol');routeHash('sequences');$('protocol')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'});remember('protocol','Sequence Families Lab');setWorkspaceTabActive('protocol')}
 function openProtocolWorkspace(){openSequenceFamiliesLab()}
 bindSequenceFamiliesLab();
