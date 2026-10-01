@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'18.1',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'19.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v18.1 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v19.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1136,10 +1136,84 @@ function renderParameterLens(key){
   if($('sbParamLensModel'))$('sbParamLensModel').textContent=p.model;
   if($('sbParamLensCaution'))$('sbParamLensCaution').textContent=p.caution;
 }
+
+const parameterInspectorMeta={
+fov:{label:'Field of view',short:'FOV',unit:' mm',mechanism:'Changes both in-plane pixel dimensions when matrix is held constant.'},
+mx:{label:'Frequency matrix',short:'Freq matrix',unit:'',mechanism:'Changes readout-direction pixel size at fixed FOV.'},
+phase:{label:'Phase matrix',short:'Phase matrix',unit:'',mechanism:'Changes phase-direction pixel size and modeled phase-encode burden.'},
+phaseFov:{label:'Phase field of view',short:'Phase FOV',unit:'%',mechanism:'Changes phase-direction coverage and pixel size at fixed phase matrix.'},
+slice:{label:'Slice thickness',short:'Slice',unit:' mm',mechanism:'Changes through-plane voxel dimension.'},
+nex:{label:'NEX / averages',short:'NEX',unit:'×',mechanism:'Changes averaging contribution and modeled acquisition burden.'},
+bw:{label:'Receiver bandwidth',short:'Bandwidth',unit:'×',mechanism:'Changes modeled SNR efficiency and qualitative off-resonance direction.'},
+etl:{label:'Echo train length',short:'ETL',unit:'',mechanism:'Changes the simplified FSE/TSE sampling burden.'},
+accel:{label:'Parallel acceleration',short:'Acceleration',unit:'×',mechanism:'Changes modeled phase-encoding burden and idealized acceleration SNR penalty.'},
+pf:{label:'Partial Fourier',short:'Fourier fraction',unit:'%',mechanism:'Changes the fraction of modeled phase sampling acquired.'}
+};
+let activeParameterInspector='fov';
+function parameterFormatValue(key,value){
+ if(key==='phaseFov'||key==='pf')return Math.round(Number(value)*100)+'%';
+ if(key==='slice')return Number(value).toFixed(1)+' mm';
+ if(key==='nex'||key==='bw'||key==='accel')return Number(value).toFixed(1)+'×';
+ if(key==='fov')return Math.round(Number(value))+' mm';
+ return String(Math.round(Number(value)*1000)/1000);
+}
+function parameterRatioChip(label,ratio){
+ const delta=Math.round((ratio-1)*100),cls=delta>1?'up':delta<-1?'down':'';
+ return '<span class="parameter-metric-chip '+cls+'"><b>'+escapeHtml(label)+'</b> '+(delta>0?'+':'')+delta+'%</span>';
+}
+function parameterFactorRow(label,ratio){
+ const delta=Math.round((ratio-1)*100),cls=delta>1?'up':delta<-1?'down':'',copy=pct(ratio)+' · '+(delta>0?'+':'')+delta+'%';
+ return '<div class="parameter-factor"><span>'+escapeHtml(label)+'</span><b class="'+cls+'">'+escapeHtml(copy)+'</b></div>';
+}
+function parameterIsolatedState(key,state=sandboxState()){
+ const isolated={...sbBase};if(Object.prototype.hasOwnProperty.call(isolated,key))isolated[key]=state[key];return isolated;
+}
+function parameterInteractionCopy(key,isolatedMetrics,fullMetrics){
+ const iso={detail:isolatedMetrics.detail,snr:isolatedMetrics.snr,time:isolatedMetrics.time},full={detail:fullMetrics.detail,snr:fullMetrics.snr,time:fullMetrics.time};
+ const parts=[];
+ for(const [metric,label] of [['detail','detail'],['snr','SNR'],['time','time']]){
+   const i=Math.abs(Math.log(Math.max(.001,iso[metric]))),f=Math.abs(Math.log(Math.max(.001,full[metric])));
+   if(f>i+.06)parts.push('other controls reinforce the '+label+' departure');
+   else if(f+.06<i)parts.push('other controls offset part of the '+label+' departure');
+ }
+ return parts.length?[...new Set(parts)].slice(0,2).join('; ')+'.':'The other current controls do not strongly reinforce or offset this lever in the displayed detail/SNR/time proxies.';
+}
+function renderParameterDeepDive(changed){
+ if(changed&&parameterInspectorMeta[changed])activeParameterInspector=changed;
+ const key=activeParameterInspector,meta=parameterInspectorMeta[key],s=sandboxState(),isolated=parameterIsolatedState(key,s),mi=sandboxMetrics(isolated),mf=sandboxMetrics(s),base=sandboxMetrics(sbBase);
+ if($('parameterInspectorSelect'))$('parameterInspectorSelect').value=key;
+ if($('parameterInspectorName'))$('parameterInspectorName').textContent=meta.label;
+ if($('parameterInspectorBase'))$('parameterInspectorBase').textContent=parameterFormatValue(key,sbBase[key]);
+ if($('parameterInspectorCurrent'))$('parameterInspectorCurrent').textContent=parameterFormatValue(key,s[key]);
+ if($('parameterInspectorPrimary'))$('parameterInspectorPrimary').textContent=(parameterLens[key]||parameterLens.fov).primary;
+ if($('parameterIsolatedMetrics'))$('parameterIsolatedMetrics').innerHTML=parameterRatioChip('Detail',mi.detail/base.detail)+parameterRatioChip('SNR',mi.snr/base.snr)+parameterRatioChip('Time',mi.time/base.time);
+ if($('parameterFullMetrics'))$('parameterFullMetrics').innerHTML=parameterRatioChip('Detail',mf.detail/base.detail)+parameterRatioChip('SNR',mf.snr/base.snr)+parameterRatioChip('Time',mf.time/base.time);
+ const unchanged=Math.abs(Number(s[key])-Number(sbBase[key]))<.001;
+ if($('parameterIsolatedCopy'))$('parameterIsolatedCopy').textContent=unchanged?'This selected control is at baseline, so its isolated effect is neutral.':'This view resets every other control to baseline so you can see what this lever contributes by itself.';
+ if($('parameterStackInteraction'))$('parameterStackInteraction').textContent=parameterInteractionCopy(key,mi,mf);
+ if($('parameterCauseNode'))$('parameterCauseNode').textContent=meta.short+' '+(unchanged?'at baseline':parameterFormatValue(key,sbBase[key])+' → '+parameterFormatValue(key,s[key]));
+ if($('parameterMechanismNode'))$('parameterMechanismNode').textContent=meta.mechanism;
+ const effects=[['detail',mi.detail],['SNR',mi.snr],['time',mi.time]].map(([n,r])=>[n,Math.round((r-1)*100)]).filter(x=>Math.abs(x[1])>=1);
+ if($('parameterEffectNode'))$('parameterEffectNode').textContent=effects.length?effects.map(([n,d])=>n+' '+(d>0?'↑ ':'↓ ')+Math.abs(d)+'%').join(' · ')+' in isolation':'Detail, SNR, and time remain effectively at baseline in isolation';
+ renderParameterEquations(s,mf);
+}
+function setParameterInspector(key){if(!parameterInspectorMeta[key])return;activeParameterInspector=key;renderParameterDeepDive()}
+function renderParameterEquations(state=sandboxState(),metrics=sandboxMetrics(state)){
+ const s=state,m=metrics,base=sandboxMetrics(sbBase),voxelRatio=m.voxel/base.voxel,nexFactor=Math.sqrt(s.nex/sbBase.nex),bwFactor=Math.sqrt(sbBase.bw/s.bw),accelSnr=Math.sqrt(sbBase.accel/s.accel);
+ const phaseFactor=s.phase/sbBase.phase,nexTime=s.nex/sbBase.nex,etlFactor=sbBase.etl/s.etl,accelTime=sbBase.accel/s.accel,pfFactor=s.pf/sbBase.pf;
+ if($('parameterSpatialEquation'))$('parameterSpatialEquation').textContent=s.fov+' ÷ '+s.mx+' = '+m.px.toFixed(2)+' mm · '+Math.round(s.fov*s.phaseFov)+' ÷ '+s.phase+' = '+m.py.toFixed(2)+' mm';
+ if($('parameterSpatialFactors'))$('parameterSpatialFactors').innerHTML=parameterFactorRow('Frequency pixel vs baseline',m.px/(sbBase.fov/sbBase.mx))+parameterFactorRow('Phase pixel vs baseline',m.py/((sbBase.fov*sbBase.phaseFov)/sbBase.phase))+parameterFactorRow('Voxel volume vs baseline',voxelRatio)+parameterFactorRow('Spatial-detail index',m.detail/base.detail);
+ if($('parameterSpatialResult'))$('parameterSpatialResult').textContent='Live voxel = '+m.px.toFixed(2)+' × '+m.py.toFixed(2)+' × '+s.slice.toFixed(1)+' mm = '+m.voxel.toFixed(2)+' mm³.';
+ if($('parameterSnrFactors'))$('parameterSnrFactors').innerHTML=parameterFactorRow('Voxel-volume factor',voxelRatio)+parameterFactorRow('√NEX factor',nexFactor)+parameterFactorRow('1/√bandwidth factor',bwFactor)+parameterFactorRow('Idealized 1/√R factor',accelSnr);
+ if($('parameterSnrResult'))$('parameterSnrResult').textContent='Product of displayed factors → SNR proxy '+pct(m.snr)+' of baseline.';
+ if($('parameterTimeFactors'))$('parameterTimeFactors').innerHTML=parameterFactorRow('Phase-matrix factor',phaseFactor)+parameterFactorRow('NEX factor',nexTime)+parameterFactorRow('1/ETL factor',etlFactor)+parameterFactorRow('1/R factor',accelTime)+parameterFactorRow('Partial-Fourier factor',pfFactor);
+ if($('parameterTimeResult'))$('parameterTimeResult').textContent='Product of displayed factors → sampling-time proxy '+pct(m.time)+' of baseline.';
+}
+
 function sandboxUpdate(changed){
   const s=sandboxState(),{fov,mx,phase,phaseFov,slice,nex,bw,etl,accel,pf}=s;queueSandboxAutosave(s);
   $('sbFovOut').textContent=fov;$('sbFreqOut').textContent=mx;$('sbPhaseOut').textContent=phase;$('sbPhaseFovOut').textContent=Math.round(phaseFov*100)+'%';$('sbSliceOut').textContent=slice.toFixed(1);$('sbNexOut').textContent=nex.toFixed(1);$('sbBwOut').textContent=bw.toFixed(1)+'×';$('sbEtlOut').textContent=etl;$('sbAccelOut').textContent=accel.toFixed(1)+'×';$('sbPfOut').textContent=Math.round(pf*100)+'%';
-  const m=sandboxMetrics(s),base=sandboxMetrics(sbBase),{px,py,voxel,snr,time,detail:detailIndex}=m,detailRatio=1/detailIndex;renderParameterGoalFeedback(s,m);renderParameterChallenge(s);
+  const m=sandboxMetrics(s),base=sandboxMetrics(sbBase),{px,py,voxel,snr,time,detail:detailIndex}=m,detailRatio=1/detailIndex;renderParameterGoalFeedback(s,m);renderParameterChallenge(s);renderParameterDeepDive(changed);
   $('sbRes').textContent=px.toFixed(2)+' × '+py.toFixed(2);$('sbVoxel').textContent=voxel.toFixed(2);$('sbSnr').textContent=pct(snr);$('sbTime').textContent=pct(time);
   $('mapDetail').textContent=pct(detailIndex);$('mapSnr').textContent=pct(snr);$('mapTime').textContent=pct(time);$('mapBw').textContent=pct(bw/sbBase.bw);$('mapEtl').textContent=pct(etl/sbBase.etl);$('mapAccel').textContent=pct(accel/sbBase.accel);$('mapPf').textContent=pct(pf/sbBase.pf);
   setBalanceBar('barDetail',detailIndex);setBalanceBar('barSnr',snr);setBalanceBar('barTime',time);setBalanceBar('barBw',bw/sbBase.bw);setBalanceBar('barEtl',etl/sbBase.etl);setBalanceBar('barAccel',accel/sbBase.accel);setBalanceBar('barPf',pf/sbBase.pf);
