@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v18.0 — Sequence Families Lab
+v18.1 — Sequence Anatomy + Recognition Challenge
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,15 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v18.1 release notes
+- Added **Interactive Sequence Anatomy** to the Sequence Families Lab. Selecting any family now updates a simplified preparation → RF/refocusing → echo/signal → readout flow so learners can see the acquisition structure instead of only reading about it.
+- Added qualitative family fingerprints for speed tendency, susceptibility sensitivity, motion robustness, and RF pulse burden. These are deliberately coarse family-level tendencies, not scanner limits or protocol recommendations.
+- Added a 12-question **Sequence Recognition Challenge** covering FSE/TSE, GRE, inversion recovery, bSSFP, 3D variable-flip FSE/TSE, EPI/DWI, radial/blade FSE, Dixon, SWI, spoiled 3D T1 GRE, SSFSE/HASTE, and flow-sensitive MRA.
+- Challenge feedback explains the defining clue and can jump directly to the related family entry.
+- Extended the built-in self-check and release guards so Sequence Anatomy and the Recognition Challenge cannot silently disappear.
+- Canonicalized the public deep link to **/#sequences** while retaining **/#protocol** as a backward-compatible redirect.
+- Kept the visualizer DOM/CSS-based rather than canvas-heavy for faster load, responsive behavior, keyboard accessibility, and readable reduced-motion behavior.
 
 ### v18.0 release notes
 - Replaced the patient/protocol/OCR workflow with a dedicated **Sequence Families Lab**.
