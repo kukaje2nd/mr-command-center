@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v17.0 — Protocol Workspace Foundation
+v17.1 — Protocol Tech Workflow
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,19 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v17.1 release notes
+- Reworked Protocol Workspace around a scanner-side **Context → Protocol image → Review → Run Exam** workflow instead of a giant parameter table.
+- Added image paste, drag/drop, and upload with a local image preview that is not persisted to localStorage.
+- Added optional pinned **Tesseract.js 5.1.1** browser OCR. Images are processed in-browser; OCR engine/language assets are fetched from jsDelivr only when the user requests OCR.
+- Added conservative MRI sequence-line detection, obvious plane recognition, vendor-option recognition, and extraction of explicitly labeled FOV, matrix, slice, NEX, direction, acceleration, and breathing text when present.
+- Added an extraction confirmation step so OCR never silently replaces the protocol sequence list.
+- Replaced the wide table as the primary interface with compact editable sequence cards, quick core fields, expandable advanced fields, source/review badges, reorder, duplicate, delete, batch breathing labels, and a retained advanced table.
+- Added browser-local scanner profiles for manufacturer/model/field strength to reduce repeated setup.
+- Added patient-context workflow checks for breath-hold conflicts, sedation/anesthesia, pediatric context, contrast-phase review, and unreviewed extracted values without generating replacement clinical parameters.
+- Added **Run Exam mode** with one sequence at a time, large essential readouts, source/review status, Previous/Next, Done tracking, keyboard arrows, and the final exam checklist.
+- Improved responsive and print layouts for phone/tablet use and a cleaner printed cheat sheet.
+- Updated privacy disclosure for protocol images and optional third-party OCR asset loading.
 
 ### v17.0 release notes
 - Added a first-class **Protocol Workspace** for converting an approved sequence list into a tech-facing protocol sheet while preserving original sequence order.
