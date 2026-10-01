@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'18.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'18.1',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v18.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v18.1 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1825,6 +1825,38 @@ const sequenceFamilies=[
 {id:'radial',code:'Blade FSE',group:'fast',title:'Radial / Blade FSE Variants',short:'Rotated strips or radial-like k-space coverage trade efficiency for motion robustness.',tags:['PROPELLER','BLADE','MultiVane'],mechanism:'Rather than conventional line-by-line Cartesian phase encoding, overlapping rotating blades/strips repeatedly sample central k-space. Motion correction/averaging can use the redundant center data.',contrast:'Usually built on an FSE/TSE-style contrast engine, so T1/T2/PD weighting still comes from the underlying spin-echo timing.',console:'Common names include PROPELLER, BLADE, MultiVane. The exact implementation and available contrasts vary by vendor and scanner.',strengths:['Improved robustness to some in-plane motion','Central k-space oversampling can support motion correction'],tradeoffs:['May be slower than a comparable Cartesian acquisition','Not all motion types are corrected equally'],artifacts:['Residual motion','Radial/blade streaking','Longer scan time can invite additional motion'],uses:['Motion-challenged neuro/MSK/body applications where locally approved','Reducing repeat risk in selected exams'],vendor:{generic:'radial/blade FSE',ge:'PROPELLER',siemens:'BLADE',philips:'MultiVane'},aliases:['propeller','blade','multivane','multi vane','radial fse','blade tse'],traits:{'Refocusing':'FSE/TSE-based blades','Speed':'Moderate-slower','Susceptibility sensitivity':'Spin-echo-like','Motion behavior':'Motion-robust for selected motion','Typical dimensionality':'2D commonly','Key control':'Blade coverage + FSE timing'}}
 ];
 let sequenceFamilyState={selected:'fse',filter:'all',vendor:'generic',query:''};
+
+const sequenceAnatomyModels={
+se:{prep:['none'],rf:['90° excitation','180° refocus'],echo:['single spin echo'],read:['one/few phase lines per TR'],key:'Classic spin-echo anatomy: an RF refocusing pulse forms the echo and reduces static-field dephasing compared with GRE.',finger:{speed:1,sus:1,motion:1,rf:2}},
+fse:{prep:['optional prep'],rf:['90° excitation','180°-like refocusing train'],echo:['multiple spin echoes'],read:['many k-space lines per TR'],key:'The defining move is the refocusing echo train: speed rises because several phase-encode lines are collected after one excitation.',finger:{speed:2,sus:1,motion:2,rf:3}},
+ir:{prep:['180° inversion','wait TI'],rf:['excitation','spin-echo/FSE readout often'],echo:['null / reshape signal'],read:['readout family-dependent'],key:'Inversion recovery is a preparation strategy: TI is used to null or reshape tissue signal before the readout.',finger:{speed:1,sus:1,motion:1,rf:3}},
+ssfse:{prep:['optional prep'],rf:['90° excitation','very long refocusing train'],echo:['long train of spin echoes'],read:['most/all k-space in one shot'],key:'Single-shot FSE compresses acquisition into one very long echo train, trading sharpness for extreme speed and motion tolerance.',finger:{speed:3,sus:1,motion:3,rf:3}},
+gre:{prep:['optional prep'],rf:['low/variable flip excitation','no 180° refocus'],echo:['gradient echo'],read:['gradient-refocused k-space'],key:'GRE has no 180° spin-echo refocusing pulse; that makes it fast and flexible but more exposed to T2* and off-resonance effects.',finger:{speed:3,sus:3,motion:2,rf:1}},
+spgr3d:{prep:['fat sat / Dixon optional'],rf:['spoiled low-flip RF train'],echo:['gradient echoes'],read:['3D partitions / volume'],key:'Spoiled 3D GRE maintains a T1-oriented spoiled steady state and collects a volume suited to thin reformats and dynamic phases.',finger:{speed:3,sus:2,motion:2,rf:1}},
+bssfp:{prep:['steady-state setup'],rf:['rapid repeating RF'],echo:['coherent balanced steady state'],read:['balanced gradients every TR'],key:'Balanced SSFP preserves transverse coherence with balanced gradients, producing high signal efficiency but strong off-resonance banding sensitivity.',finger:{speed:3,sus:3,motion:3,rf:2}},
+epi:{prep:['diffusion gradients when DWI'],rf:['excitation ± spin-echo refocus'],echo:['single rapid echo train'],read:['oscillating EPI zig-zag readout'],key:'EPI races through k-space after one excitation. That speed is powerful, but long readout trains magnify susceptibility distortion and ghosting.',finger:{speed:3,sus:3,motion:3,rf:1}},
+vfa3dfse:{prep:['optional prep'],rf:['excitation','variable-angle refocusing train'],echo:['long controlled spin-echo train'],read:['3D volume / partitions'],key:'Variable refocusing angles make long 3D FSE/TSE echo trains practical by managing signal evolution and RF burden.',finger:{speed:2,sus:1,motion:1,rf:2}},
+dixon:{prep:['water-fat phase sampling'],rf:['underlying GRE/FSE RF'],echo:['multiple echo times'],read:['water / fat reconstruction'],key:'Dixon is a water-fat separation layer: multiple echo times sample changing water-fat phase, then reconstruction separates components.',finger:{speed:2,sus:2,motion:2,rf:1}},
+swi:{prep:['phase preserved'],rf:['low-flip GRE train'],echo:['longer-TE gradient echoes'],read:['3D magnitude + phase'],key:'Susceptibility-sensitive GRE deliberately preserves phase/magnitude effects from local field changes, making blooming and veins conspicuous.',finger:{speed:2,sus:3,motion:1,rf:1}},
+mra:{prep:['flow mechanism'],rf:['repeated GRE-like excitation'],echo:['flow-dependent signal / phase'],read:['2D/3D vascular k-space'],key:'TOF and phase-contrast angiography derive contrast from inflow or velocity encoding rather than ordinary T1/T2 weighting alone.',finger:{speed:2,sus:2,motion:1,rf:1}},
+radial:{prep:['optional prep'],rf:['FSE/TSE excitation + refocus'],echo:['spin echoes in rotating blades'],read:['overlapping radial/blade strips'],key:'Radial/blade FSE repeatedly samples central k-space while rotating strips, creating redundancy that can improve robustness to selected motion.',finger:{speed:1,sus:1,motion:3,rf:3}}
+};
+const sequenceChallengeQuestions=[
+{prompt:'Multiple RF refocusing pulses form an echo train so several k-space lines can be acquired during one TR. Which family?',answer:'fse',choices:['fse','gre','bssfp','epi'],why:'That is the defining Fast/Turbo Spin Echo idea: one excitation followed by a refocusing echo train.'},
+{prompt:'No 180° spin-echo refocusing pulse, fast gradient refocusing, and strong T2* / susceptibility sensitivity. Which family?',answer:'gre',choices:['se','gre','ir','radial'],why:'Gradient Echo forms the echo with gradients rather than a 180° RF refocusing pulse.'},
+{prompt:'A 180° inversion pulse is followed by a delay TI so a tissue can be nulled before the readout. Which family?',answer:'ir',choices:['ir','ssfse','spgr3d','mra'],why:'Inversion Recovery uses an inversion pulse and TI; STIR and FLAIR are common examples.'},
+{prompt:'Balanced gradients every TR maintain a coherent steady state; fluid and blood can be very bright, while off-resonance banding is a classic problem.',answer:'bssfp',choices:['bssfp','swi','fse','dixon'],why:'Balanced SSFP is the FIESTA / TrueFISP / bTFE family.'},
+{prompt:'CUBE, SPACE, and VISTA are vendor examples of which broad family?',answer:'vfa3dfse',choices:['vfa3dfse','spgr3d','epi','mra'],why:'They are 3D variable-flip FSE/TSE families designed for volumetric spin-echo-like imaging.'},
+{prompt:'A very rapid oscillating readout traverses many k-space lines after one excitation; geometric distortion and N/2 ghosting are major concerns.',answer:'epi',choices:['epi','radial','se','spgr3d'],why:'Echo Planar Imaging uses an extremely rapid gradient readout train and is the common platform for DWI.'},
+{prompt:'PROPELLER, BLADE, and MultiVane rotate overlapping strips/blades through k-space to improve robustness to selected motion.',answer:'radial',choices:['radial','ssfse','gre','swi'],why:'Those are radial/blade FSE/TSE variants with redundant central k-space sampling.'},
+{prompt:'Multiple echo times exploit changing water-fat phase, then reconstruction produces water-only and fat-only images.',answer:'dixon',choices:['dixon','ir','bssfp','mra'],why:'That is the Dixon / IDEAL / mDIXON water-fat separation concept.'},
+{prompt:'SWAN, SWI, and SWIp intentionally emphasize local susceptibility effects using GRE magnitude and/or phase information.',answer:'swi',choices:['swi','gre','fse','ssfse'],why:'Susceptibility-weighted GRE preserves sensitivity to local field perturbations and blooming.'},
+{prompt:'LAVA, VIBE, and THRIVE are examples of a fast 3D T1-weighted spoiled GRE family often used for dynamic or post-contrast volumes.',answer:'spgr3d',choices:['spgr3d','vfa3dfse','bssfp','epi'],why:'These are spoiled 3D T1 GRE families; Dixon variants may add water-fat separation.'},
+{prompt:'Most or all k-space is acquired after one excitation using a very long FSE/TSE echo train. HASTE is a classic vendor label.',answer:'ssfse',choices:['ssfse','fse','radial','gre'],why:'Single-shot FSE/TSE trades some sharpness for very rapid, motion-tolerant T2-weighted acquisition.'},
+{prompt:'TOF emphasizes inflowing unsaturated spins, while phase-contrast encodes velocity into phase. Which family?',answer:'mra',choices:['mra','dixon','swi','ir'],why:'These are flow-sensitive angiography mechanisms rather than ordinary tissue-weighting methods.'}
+];
+let sequenceChallengeState={index:0,correct:0,answered:0,choice:null};
+
 const sequenceAliasRules=[
 {re:/\b(propeller|blade|multivane|multi vane)\b/i,ids:['radial'],note:'Motion-robust radial/blade FSE/TSE variant.'},
 {re:/\b(cube|space|vista)\b/i,ids:['vfa3dfse'],note:'3D variable-flip FSE/TSE family.'},
@@ -1841,6 +1873,43 @@ const sequenceAliasRules=[
 {re:/\b(spgr|flash|\bffe\b|gradient echo|\bgre\b)\b/i,ids:['gre'],note:'Gradient-echo family; check whether the sequence is a specialized 3D/steady-state variant.'}
 ];
 function sequenceFamilyById(id){return sequenceFamilies.find(f=>f.id===id)||sequenceFamilies[0]}
+
+function sequenceAnatomyLabel(value){
+  const labels={speed:['','slow','moderate','fast'],sus:['','lower','moderate','high'],motion:['','limited','moderate','strong'],rf:['','lower','moderate','higher']};
+  return labels[value.type]?.[value.level]||'varies';
+}
+function sequenceAnatomyNodes(items,type){return items.map((x,i)=>'<span class="seqfam-anatomy-node '+type+'">'+escapeHtml(x)+'</span>'+(i<items.length-1?'<span class="seqfam-anatomy-arrow">→</span>':'')).join('')}
+function renderSequenceAnatomy(){
+ const f=sequenceFamilyById(sequenceFamilyState.selected),m=sequenceAnatomyModels[f.id]||sequenceAnatomyModels.fse,timeline=$('seqAnatomyTimeline'),finger=$('seqAnatomyFingerprint');
+ if($('seqAnatomyFamilyBadge'))$('seqAnatomyFamilyBadge').textContent=f.code;
+ if($('seqAnatomyTitle'))$('seqAnatomyTitle').textContent=f.title+' · simplified acquisition anatomy';
+ if(timeline)timeline.innerHTML=[
+  ['Preparation',m.prep,'prep'],['RF / refocus',m.rf,'rf'],['Echo / signal',m.echo,'echo'],['Readout',m.read,'read']
+ ].map(([label,items,type])=>'<div class="seqfam-anatomy-lane"><span>'+escapeHtml(label)+'</span><div class="seqfam-anatomy-flow">'+sequenceAnatomyNodes(items,type)+'</div></div>').join('');
+ if($('seqAnatomyKey'))$('seqAnatomyKey').textContent=m.key;
+ const defs=[['Speed tendency','speed'],['Susceptibility sensitivity','sus'],['Motion robustness','motion'],['RF pulse burden','rf']];
+ if(finger)finger.innerHTML=defs.map(([label,key])=>{const level=m.finger[key]||2,word=sequenceAnatomyLabel({type:key,level});return '<div class="seqfam-fingerprint-row"><span>'+escapeHtml(label)+'</span><div class="seqfam-fingerprint-track" aria-label="'+escapeHtml(label)+' '+escapeHtml(word)+'">'+[1,2,3].map(n=>'<i class="'+(n<=level?'on':'')+'"></i>').join('')+'</div><b>'+escapeHtml(word)+'</b></div>'}).join('');
+}
+function renderSequenceChallenge(){
+ const q=sequenceChallengeQuestions[sequenceChallengeState.index%sequenceChallengeQuestions.length],choices=$('seqChallengeChoices'),feedback=$('seqChallengeFeedback');
+ if($('seqChallengeProgress'))$('seqChallengeProgress').textContent='Question '+(sequenceChallengeState.index+1)+' of '+sequenceChallengeQuestions.length;
+ if($('seqChallengeScore'))$('seqChallengeScore').textContent=sequenceChallengeState.correct+' / '+sequenceChallengeState.answered;
+ if($('seqChallengePrompt'))$('seqChallengePrompt').textContent=q.prompt;
+ if(choices)choices.innerHTML=q.choices.map(id=>{const f=sequenceFamilyById(id),answered=sequenceChallengeState.choice!==null,cls=answered?(id===q.answer?'correct':id===sequenceChallengeState.choice?'wrong':''):'';return '<button type="button" data-seq-challenge-choice="'+id+'" class="'+cls+'" '+(answered?'disabled':'')+'>'+escapeHtml(f.title)+'</button>'}).join('');
+ if(feedback){feedback.className='seqfam-challenge-feedback';if(sequenceChallengeState.choice===null)feedback.innerHTML='<span>Choose the family that best matches the acquisition clues.</span>';else{const ok=sequenceChallengeState.choice===q.answer;feedback.classList.add(ok?'good':'bad');feedback.innerHTML='<b>'+(ok?'Correct.':'Not quite.')+'</b><span>'+escapeHtml(q.why)+'</span>';}}
+ if($('seqChallengeNextBtn'))$('seqChallengeNextBtn').disabled=sequenceChallengeState.choice===null;
+ if($('seqChallengeOpenBtn'))$('seqChallengeOpenBtn').hidden=sequenceChallengeState.choice===null;
+}
+function answerSequenceChallenge(id){
+ if(sequenceChallengeState.choice!==null)return;const q=sequenceChallengeQuestions[sequenceChallengeState.index%sequenceChallengeQuestions.length];
+ sequenceChallengeState.choice=id;sequenceChallengeState.answered++;if(id===q.answer)sequenceChallengeState.correct++;renderSequenceChallenge();
+}
+function nextSequenceChallenge(){
+ if(sequenceChallengeState.choice===null)return;sequenceChallengeState.index=(sequenceChallengeState.index+1)%sequenceChallengeQuestions.length;sequenceChallengeState.choice=null;renderSequenceChallenge();
+}
+function resetSequenceChallenge(){sequenceChallengeState={index:0,correct:0,answered:0,choice:null};renderSequenceChallenge();toast('Sequence recognition challenge restarted')}
+function openChallengeFamily(){const q=sequenceChallengeQuestions[sequenceChallengeState.index%sequenceChallengeQuestions.length];selectSequenceFamily(q.answer);$('sequenceFamilyDetail')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'})}
+
 function sequenceFamilyVendorText(f){const v=sequenceFamilyState.vendor;return f.vendor[v]||f.vendor.generic}
 function sequenceFamilyPersist(){try{localStorage.setItem(MRCC_SEQUENCE_FAMILY_KEY,JSON.stringify(sequenceFamilyState))}catch(e){}}
 function clearRetiredProtocolWorkspace(){try{localStorage.removeItem('mrcc_protocol_workspace_v1');localStorage.removeItem('mrcc_protocol_scanner_profiles_v1')}catch(e){}}
@@ -1857,6 +1926,7 @@ function renderSequenceFamilyDetail(){
  const box=$('sequenceFamilyDetail');if(!box)return;const f=sequenceFamilyById(sequenceFamilyState.selected),vendors=[['Generic',f.vendor.generic],['GE',f.vendor.ge],['Siemens',f.vendor.siemens],['Philips',f.vendor.philips]];
  box.innerHTML='<div class="seqfam-detail-hero"><small>'+escapeHtml(f.code)+' · '+escapeHtml(f.group==='spin'?'spin-echo lineage':f.group==='gre'?'gradient-echo lineage':f.group==='fast'?'fast / motion family':'specialty family')+'</small><h3>'+escapeHtml(f.title)+'</h3><p>'+escapeHtml(f.short)+'</p><div class="seqfam-dna">'+f.tags.map(t=>'<span>'+escapeHtml(t)+'</span>').join('')+'<span>'+escapeHtml(sequenceFamilyVendorText(f))+'</span></div></div><div class="seqfam-detail-grid"><div class="seqfam-detail-block wide"><small>How it works</small><p>'+escapeHtml(f.mechanism)+'</p></div><div class="seqfam-detail-block wide"><small>Contrast behavior</small><p>'+escapeHtml(f.contrast)+'</p></div><div class="seqfam-detail-block"><small>Console clues</small><p>'+escapeHtml(f.console)+'</p></div><div class="seqfam-detail-block"><small>Common roles</small>'+sequenceList(f.uses)+'</div><div class="seqfam-detail-block"><small>Strengths</small>'+sequenceList(f.strengths)+'</div><div class="seqfam-detail-block"><small>Tradeoffs / failure modes</small>'+sequenceList([...f.tradeoffs,...f.artifacts])+'</div><div class="seqfam-detail-block wide"><small>Vendor-name examples</small><div class="seqfam-vendor-list">'+vendors.map(([k,v])=>'<div class="seqfam-vendor-row"><span>'+escapeHtml(k)+'</span><span>'+escapeHtml(v)+'</span></div>').join('')+'</div></div></div>';
  document.querySelectorAll('[data-seq-family]').forEach(b=>b.classList.toggle('active',b.dataset.seqFamily===f.id));
+ renderSequenceAnatomy();
 }
 function selectSequenceFamily(id){if(!sequenceFamilies.some(f=>f.id===id))return;sequenceFamilyState.selected=id;sequenceFamilyPersist();renderSequenceFamilyDetail()}
 function setSequenceFamilyFilter(filter){sequenceFamilyState.filter=['all','spin','gre','fast','special'].includes(filter)?filter:'all';sequenceFamilyPersist();document.querySelectorAll('[data-seqfam-filter]').forEach(b=>b.classList.toggle('active',b.dataset.seqfamFilter===sequenceFamilyState.filter));renderSequenceFamilyGrid()}
@@ -1886,7 +1956,7 @@ function restoreSequenceFamiliesLab(){
  if(!['generic','ge','siemens','philips'].includes(sequenceFamilyState.vendor))sequenceFamilyState.vendor='generic';
  if($('seqFamilyVendor'))$('seqFamilyVendor').value=sequenceFamilyState.vendor;
  document.querySelectorAll('[data-seqfam-filter]').forEach(b=>b.classList.toggle('active',b.dataset.seqfamFilter===sequenceFamilyState.filter));
- renderSequenceFamilyGrid();populateSequenceCompare();
+ renderSequenceFamilyGrid();populateSequenceCompare();renderSequenceAnatomy();renderSequenceChallenge();
 }
 function bindSequenceFamiliesLab(){
  $('sequenceFamilyGrid')?.addEventListener('click',e=>{const b=e.target.closest('[data-seq-family]');if(b)selectSequenceFamily(b.dataset.seqFamily)});
@@ -1896,6 +1966,8 @@ function bindSequenceFamiliesLab(){
  $('seqAliasBtn')?.addEventListener('click',sequenceTranslateAlias);$('seqAliasInput')?.addEventListener('keydown',e=>{if(e.key==='Enter')sequenceTranslateAlias()});
  document.querySelectorAll('[data-seq-alias]').forEach(b=>b.addEventListener('click',()=>{if($('seqAliasInput'))$('seqAliasInput').value=b.dataset.seqAlias;sequenceTranslateAlias()}));
  $('seqCompareA')?.addEventListener('change',renderSequenceCompare);$('seqCompareB')?.addEventListener('change',renderSequenceCompare);
+ $('seqChallengeChoices')?.addEventListener('click',e=>{const b=e.target.closest('[data-seq-challenge-choice]');if(b)answerSequenceChallenge(b.dataset.seqChallengeChoice)});
+ $('seqChallengeNextBtn')?.addEventListener('click',nextSequenceChallenge);$('seqChallengeResetBtn')?.addEventListener('click',resetSequenceChallenge);$('seqChallengeOpenBtn')?.addEventListener('click',openChallengeFamily);
 }
 function openSequenceFamiliesLab(){go('protocol');setWorkspaceTabActive('protocol')}
 function openProtocolWorkspace(){openSequenceFamiliesLab()}
