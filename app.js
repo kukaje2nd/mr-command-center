@@ -1905,7 +1905,7 @@ function renderMotionChallenge(state,acq,stats){
 function applyMotionState(state){for(const [key,id] of [['mode','motionMode'],['direction','motionDirection'],['order','motionOrder'],['amplitude','motionAmplitude'],['onset','motionOnset'],['cycles','motionCycles']])if($(id))$(id).value=state[key]}
 function startMotionChallenge(id){const def=motionChallengeDefs[id];if(!def)return;activeMotionChallenge=id;applyMotionState(def.start);motionUpdate();toast('Motion challenge started')}
 function restartMotionChallenge(){const def=motionChallengeDefs[activeMotionChallenge];if(!def){toast('Choose a motion challenge first');return}applyMotionState(def.start);motionUpdate();toast('Motion challenge restarted')}
-function clearMotionChallenge(){activeMotionChallenge='';renderMotionChallenge(motionState(),motionAcquire(motionState()),motionLineStats(motionAcquire(motionState())));toast('Motion challenge closed')}
+function clearMotionChallenge(){activeMotionChallenge='';const state=motionState(),acq=motionAcquire(state);renderMotionChallenge(state,acq,motionLineStats(acq));toast('Motion challenge closed')}
 function renderMotionDeep(state,acq){const stats=motionRenderLineMap(state,acq),comparison=motionOrderComparison(state);renderMotionOrderCompare(state,comparison);renderMotionChallenge(state,acq,stats)}
 function bindMotionDeepDive(){$('motionChallengeTargets')?.addEventListener('click',e=>{const b=e.target.closest('[data-motion-challenge]');if(b)startMotionChallenge(b.dataset.motionChallenge)})}
 
