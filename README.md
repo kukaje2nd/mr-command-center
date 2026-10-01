@@ -3,12 +3,15 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v15.0 — Public Launch & Runtime Hygiene
+v16.0 — Runtime Modularization & Public Hardening
 
 ## Production
 - Entry point: `index.html`
+- Application stylesheet: `app.css`
+- Application runtime: `app.js`
 - Static PWA manifest: `manifest.webmanifest`
 - Offline worker: `sw.js`
+- Vercel response headers: `vercel.json`
 - Production deploy: Vercel from `main`
 - Release guard: `node scripts/validate.mjs`
 
@@ -49,13 +52,24 @@ The legacy course-style homepage, learning-path/review UI, Pack Library, Case La
 - Premium entitlement decisions are never browser-local. A production billing release must use authenticated server-side entitlement checks confirmed from trusted payment events.
 
 ## Architecture
-The current free application remains intentionally dependency-light: static HTML/CSS/JavaScript with browser-local workspace storage and no patient-data backend. Public launch surfaces include `about.html`, `privacy.html`, `robots.txt`, and `sitemap.xml`. v11.0 adds the Premium Labs product surface but deliberately does not activate billing until authenticated server-side entitlements are available. See `PREMIUM_LABS.md` for the planned Stripe / identity / entitlement architecture.
+The current free application remains intentionally dependency-light: a static HTML shell plus first-class `app.css` and `app.js` assets, browser-local workspace storage, and no patient-data backend. The runtime still requires no framework, bundler, package install, or server-side application process. Public launch surfaces include `about.html`, `privacy.html`, `robots.txt`, and `sitemap.xml`. v11.0 adds the Premium Labs product surface but deliberately does not activate billing until authenticated server-side entitlements are available. See `PREMIUM_LABS.md` for the planned Stripe / identity / entitlement architecture.
 
 ## Release workflow
 Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, the Labs-only runtime path, retired-surface guards, and the release cache marker.
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v16.0 release notes
+- Split the production runtime out of the monolithic `index.html` into first-class `app.css` and `app.js` assets.
+- Reduced the HTML shell from roughly **544 KB to 124 KB** while preserving the same static, zero-build deployment model.
+- Preserved classic-script global function behavior so the existing Lab controls and inline UI handler contract continue to work unchanged.
+- Added `app.css` and `app.js` to the service-worker core precache and bumped the offline cache marker to **v16.0.0**.
+- Added Vercel response headers for MIME sniffing protection, frame denial, strict-origin referrer behavior, and disabled camera/microphone/geolocation permissions by default.
+- Added an explicit no-cache/revalidation policy for `sw.js` so release discovery is not delayed by a stale service-worker response.
+- Updated release validation to parse `app.js` directly, inspect `app.css` directly, require external runtime references, and reject accidental return of the monolithic inline application blocks.
+- The 281 existing inline UI event attributes remain for compatibility in this release; eliminating them is the next prerequisite for a materially stricter Content Security Policy.
+- MRI models, Lab calculations, persistence semantics, Premium preview boundaries, and MR safety boundaries are unchanged.
 
 ### v15.0 release notes
 - Added a public **About & Scope** page with creator credit, product architecture, intended audience, and explicit educational/clinical boundaries.
