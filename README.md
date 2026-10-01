@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v17.1 — Protocol Tech Workflow
+v17.2 — Immediate Scan Assist
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,15 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v17.2 release notes
+- Simplified Protocol Workspace to the three actions a tech actually needs: **Patient + scanner → Protocol image or typed sequences → Scan Assist**.
+- OCR now produces a source-tagged, unreviewed Scan Assist immediately instead of requiring an extra “use extraction” step.
+- Typed/pasted sequence lists generate Scan Assist in one action.
+- Added a concise scanner-side output with ordered sequences, source-backed parameters found in the protocol, practical per-sequence checks, patient-context conflicts, requested coverage, contrast/dynamic reminders, and a must-not-miss end-of-exam checklist.
+- Kept scanner profiles, detailed sequence editing, three-plane coverage notes, dynamic notes, and the full parameter table behind an **Advanced edit** disclosure.
+- Retained Run Exam mode for one-sequence-at-a-time use, but made Scan Assist the primary output.
+- Continued the source-first rule: workflow guidance may adapt to breathing ability, sedation/anesthesia, pediatric context, contrast selection, and detected sequence type; numeric clinical settings are never invented.
 
 ### v17.1 release notes
 - Reworked Protocol Workspace around a scanner-side **Context → Protocol image → Review → Run Exam** workflow instead of a giant parameter table.
