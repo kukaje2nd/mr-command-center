@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v17.2 — Immediate Scan Assist
+v18.0 — Sequence Families Lab
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,16 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v18.0 release notes
+- Replaced the patient/protocol/OCR workflow with a dedicated **Sequence Families Lab**.
+- Added an interactive library covering conventional spin echo, FSE/TSE, inversion recovery, single-shot FSE/TSE, GRE, spoiled 3D T1 GRE, balanced SSFP, EPI/diffusion, 3D variable-flip FSE/TSE, Dixon water-fat separation, susceptibility-weighted GRE, flow-sensitive angiography, and radial/blade FSE variants.
+- Each family now explains mechanism, contrast behavior, console clues, common roles, strengths, tradeoffs/failure modes, artifacts, and vendor-name examples.
+- Added a **Console Translator** for common labels such as PROPELLER, BLADE, MultiVane, SPACE, CUBE, VISTA, FIESTA, TrueFISP, bTFE, LAVA Flex, VIBE, SWAN, HASTE, STIR, FLAIR, DWI, TOF, and Dixon terms.
+- Added a side-by-side **Compare Lab** for conceptual differences such as refocusing strategy, speed tendency, susceptibility sensitivity, motion behavior, dimensionality, and key controls.
+- Added search, family filters, vendor-example selection, persistent family selection, and a concise mental model connecting spin-echo, gradient-echo, and preparation/readout layers.
+- Removed Protocol Workspace OCR, patient-context entry, image upload, scanner profiles, and Scan Assist runtime. Legacy browser-local Protocol Workspace keys are cleared when the Sequence Families Lab initializes.
+- Sequence Families Lab is educational and does not prescribe patient-specific protocols, parameters, contrast dosing, device conditions, or clinical decisions.
 
 ### v17.2 release notes
 - Simplified Protocol Workspace to the three actions a tech actually needs: **Patient + scanner → Protocol image or typed sequences → Scan Assist**.
