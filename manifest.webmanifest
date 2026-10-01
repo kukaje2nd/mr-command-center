@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs plus a browser-local Protocol Workspace for organizing approved sequence lists, scanner context, coverage, and source-tracked parameters.",
+  "description": "Interactive MRI reasoning labs with Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, plus a browser-local Protocol Workspace for approved sequence lists, scanner context, coverage, and source-tracked parameters.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
