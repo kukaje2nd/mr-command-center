@@ -1170,6 +1170,9 @@ function parameterIsolatedState(key,state=sandboxState()){
 }
 function parameterInteractionCopy(key,isolatedMetrics,fullMetrics){
  const iso={detail:isolatedMetrics.detail,snr:isolatedMetrics.snr,time:isolatedMetrics.time},full={detail:fullMetrics.detail,snr:fullMetrics.snr,time:fullMetrics.time};
+ const isoNeutral=Object.values(iso).every(v=>Math.abs(v-1)<.015),fullNeutral=Object.values(full).every(v=>Math.abs(v-1)<.015);
+ if(isoNeutral&&!fullNeutral)return 'This selected lever is neutral; other changed controls are driving the displayed stack departures.';
+ if(isoNeutral&&fullNeutral)return 'The selected lever and the full stack are effectively at baseline in the displayed proxies.';
  const parts=[];
  for(const [metric,label] of [['detail','detail'],['snr','SNR'],['time','time']]){
    const i=Math.abs(Math.log(Math.max(.001,iso[metric]))),f=Math.abs(Math.log(Math.max(.001,full[metric])));
