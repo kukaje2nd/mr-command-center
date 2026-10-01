@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v20.0 — Contrast Lab Deep Dive
+v21.0 — Timing Lab Deep Dive
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,16 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v21.0 release notes
+- Continued the lab-by-lab deepening program with a major **Sequence Timing Lab Deep Dive**.
+- Added **Timing Anatomy** that substitutes live values into the simplified effective-TE, train-end, trains-needed, and total-time equations.
+- Added an **abstract k-space center map** that shows which echo is assigned to the center-like position and labels each represented echo with its echo time.
+- Added first / center / last echo landmarks so echo spacing, train length, and center position are visually linked.
+- Added four interactive **Constraint Challenges**: cut toy time while protecting effective TE, move the center later without changing total toy time, increase phase encodes without increasing toy time, and build a long echo train inside span/center guardrails.
+- Challenge mode resets to a defined starting stack and evaluates the live sliders against explicit constraints.
+- Kept the center-of-k-space map explicitly abstract; real FSE/TSE view ordering, refocusing-flip schedules, acceleration overhead, scanner minimums, and vendor timing remain outside the model.
+- Extended self-check and release validation to require the Timing Lab equation, k-space map, and challenge runtime.
 
 ### v20.0 release notes
 - Continued the lab-by-lab deepening program with a major **Contrast Lab Deep Dive**.

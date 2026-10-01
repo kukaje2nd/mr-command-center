@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'20.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'21.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v20.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v21.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1454,7 +1454,7 @@ function runSelfCheck(){
     ['Parameter Lab',typeof sandboxUpdate==='function'&&typeof sandboxMetrics==='function'&&typeof renderParameterDeepDive==='function'&&typeof renderParameterEquations==='function'&&!!$('sbFreq')&&!!$('sbAccel')&&!!$('parameterReference')&&!!$('parameterDeepCockpit')&&!!$('parameterEquationLab')],
     ['Parameter continuity',typeof restoreSandboxCurrentState==='function'&&typeof quickSaveSandboxPreset==='function'&&!!$('labContinuity')],
     ['Contrast Lab',typeof contrastUpdate==='function'&&typeof contrastSignal==='function'&&typeof renderContrastDeep==='function'&&typeof contrastDrawRecovery==='function'&&typeof renderContrastChallenge==='function'&&Array.isArray(contrastMaterialsModel)&&contrastMaterialsModel.length===3&&!!$('clTr')&&!!$('clTe')&&!!$('contrastRecoveryCanvas')&&!!$('contrastDecayCanvas')&&!!$('contrastDecomposition')&&!!$('contrastChallengeTargets')],
-    ['Sequence Timing Lab',typeof timingUpdate==='function'&&typeof timingMetrics==='function'&&typeof restoreTimingState==='function'&&!!$('timingTr')&&!!$('timingEtl')&&!!$('timingEchoRow')],
+    ['Sequence Timing Lab',typeof timingUpdate==='function'&&typeof timingMetrics==='function'&&typeof renderTimingDeep==='function'&&typeof renderTimingChallenge==='function'&&typeof restoreTimingState==='function'&&!!$('timingTr')&&!!$('timingEtl')&&!!$('timingEchoRow')&&!!$('timingEquationBreakdown')&&!!$('timingKspaceStrip')&&!!$('timingChallengeTargets')],
     ['Motion Lab',typeof motionUpdate==='function'&&typeof motionAcquire==='function'&&typeof restoreMotionState==='function'&&!!$('motionMode')&&!!$('motionHistoryCanvas')&&!!$('motionResultCanvas')],
     ['K-Space Lab',typeof kspaceUpdate==='function'&&typeof kspaceDft2D==='function'&&typeof kspaceApplyMask==='function'&&KS_N===32&&!!$('ksKspaceCanvas')&&!!$('ksImageCanvas')],
     ['Spatial Encoding Lab',typeof spatialUpdate==='function'&&typeof spatialMetrics==='function'&&typeof restoreSpatialState==='function'&&!!$('spWorldCanvas')&&!!$('spReconCanvas')],
@@ -1703,6 +1703,72 @@ function timingMetrics(state){
   const trainSpan=s.firstEcho+(s.etl-1)*s.spacing,effectiveTe=s.firstEcho+(s.center-1)*s.spacing,trains=Math.ceil(s.phase/s.etl),timeSec=(s.tr/1000)*trains*s.nex,fit=trainSpan<s.tr,idle=Math.max(0,s.tr-trainSpan);
   return {trainSpan,effectiveTe,trains,timeSec,fit,idle};
 }
+
+const timingChallengeDefs={
+  faster:{title:'Cut toy time, protect center timing',hint:'Reduce total toy time while keeping effective-TE-like timing near the starting stack.',start:{tr:3000,firstEcho:14,spacing:9,etl:8,center:4,phase:256,nex:1}},
+  later:{title:'Move the center later without paying time',hint:'Shift the center-echo timing later while keeping toy total time close to the start.',start:{tr:3000,firstEcho:14,spacing:9,etl:8,center:4,phase:256,nex:1}},
+  moreLines:{title:'Encode more phase lines without more toy time',hint:'Increase simplified phase-encode burden but offset it with train efficiency.',start:{tr:3000,firstEcho:14,spacing:9,etl:8,center:4,phase:256,nex:1}},
+  longTrain:{title:'Build a long train with bounded timing',hint:'Use a long train while keeping the represented train span and center time inside the challenge guardrails.',start:{tr:3000,firstEcho:14,spacing:9,etl:8,center:4,phase:256,nex:1}}
+};
+let activeTimingChallenge='';
+function timingEquationRows(state,metrics){
+  const rows=[
+    ['Effective-TE-like','first echo + (center − 1) × spacing',state.firstEcho+' + ('+state.center+' − 1) × '+state.spacing+' = '+Math.round(metrics.effectiveTe)+' ms'],
+    ['Train end','first echo + (ETL − 1) × spacing',state.firstEcho+' + ('+state.etl+' − 1) × '+state.spacing+' = '+Math.round(metrics.trainSpan)+' ms'],
+    ['Trains needed','ceil(phase encodes ÷ ETL)','ceil('+state.phase+' ÷ '+state.etl+') = '+metrics.trains],
+    ['Toy time','TR × trains × NEX',(state.tr/1000).toFixed(1)+' s × '+metrics.trains+' × '+state.nex+' = '+formatTimingDuration(metrics.timeSec)]
+  ];return rows;
+}
+function renderTimingDeep(state=timingState(),metrics=timingMetrics(state)){
+  if($('timingEquationBreakdown'))$('timingEquationBreakdown').innerHTML=timingEquationRows(state,metrics).map(r=>'<div class="timing-equation-row"><div><small>'+escapeHtml(r[0])+'</small><b>'+escapeHtml(r[1])+'</b></div><span>'+escapeHtml(r[2])+'</span><strong>'+escapeHtml(r[0]==='Toy time'?formatTimingDuration(metrics.timeSec):r[0]==='Trains needed'?String(metrics.trains):r[0]==='Effective-TE-like'?Math.round(metrics.effectiveTe)+' ms':Math.round(metrics.trainSpan)+' ms')+'</strong></div>').join('');
+  if($('timingKspaceStrip')){
+    $('timingKspaceStrip').style.setProperty('--timing-cells',Math.max(1,state.etl));
+    $('timingKspaceStrip').innerHTML=Array.from({length:state.etl},(_,i)=>{const n=i+1,time=state.firstEcho+i*state.spacing,center=n===state.center,pos=n-state.center,label=center?'center':pos<0?'−ky-like':'+ky-like';return '<div class="timing-kspace-cell '+(center?'center':'')+'"><small>'+escapeHtml(label)+'</small><b>E'+n+'</b><span>'+Math.round(time)+' ms</span></div>'}).join('');
+  }
+  if($('timingKspaceBadge'))$('timingKspaceBadge').textContent='echo '+state.center+' → center';
+  if($('timingKspaceCopy'))$('timingKspaceCopy').textContent='In this abstract linear map, echo '+state.center+' carries the center-like assignment at '+Math.round(metrics.effectiveTe)+' ms. Earlier and later echoes are displayed on opposite sides only to make center timing visible; real FSE/TSE view ordering is implementation dependent.';
+  if($('timingFirstLandmark'))$('timingFirstLandmark').textContent=Math.round(state.firstEcho)+' ms';
+  if($('timingCenterLandmark'))$('timingCenterLandmark').textContent=Math.round(metrics.effectiveTe)+' ms';
+  if($('timingLastLandmark'))$('timingLastLandmark').textContent=Math.round(metrics.trainSpan)+' ms';
+  renderTimingChallenge(state,metrics);
+}
+function timingChallengeRows(id,state,metrics){
+  const def=timingChallengeDefs[id];if(!def)return[];const sm=timingMetrics(def.start);
+  if(id==='faster')return[
+    {label:'Toy time',met:metrics.timeSec<=sm.timeSec*.65,goal:'≤ 65% of start',now:Math.round(metrics.timeSec/sm.timeSec*100)+'%'},
+    {label:'Effective TE',met:Math.abs(metrics.effectiveTe-sm.effectiveTe)<=10,goal:'within ±10 ms',now:Math.round(metrics.effectiveTe)+' ms'},
+    {label:'Train fits',met:metrics.fit,goal:'train < TR',now:metrics.fit?'fits':'exceeds'}
+  ];
+  if(id==='later')return[
+    {label:'Center timing',met:metrics.effectiveTe>=90,goal:'≥ 90 ms',now:Math.round(metrics.effectiveTe)+' ms'},
+    {label:'Toy time',met:Math.abs(metrics.timeSec-sm.timeSec)<=sm.timeSec*.05,goal:'within ±5% start',now:Math.round(metrics.timeSec/sm.timeSec*100)+'%'},
+    {label:'Train fits',met:metrics.fit,goal:'train < TR',now:metrics.fit?'fits':'exceeds'}
+  ];
+  if(id==='moreLines')return[
+    {label:'Phase encodes',met:state.phase>=384,goal:'≥ 384',now:String(state.phase)},
+    {label:'Toy time',met:metrics.timeSec<=sm.timeSec,goal:'≤ start time',now:Math.round(metrics.timeSec/sm.timeSec*100)+'%'},
+    {label:'Train fits',met:metrics.fit,goal:'train < TR',now:metrics.fit?'fits':'exceeds'}
+  ];
+  return[
+    {label:'Echo train',met:state.etl>=24,goal:'ETL ≥ 24',now:'ETL '+state.etl},
+    {label:'Train span',met:metrics.trainSpan<=250,goal:'≤ 250 ms',now:Math.round(metrics.trainSpan)+' ms'},
+    {label:'Center timing',met:metrics.effectiveTe>=60&&metrics.effectiveTe<=120,goal:'60–120 ms',now:Math.round(metrics.effectiveTe)+' ms'}
+  ];
+}
+function renderTimingChallenge(state=timingState(),metrics=timingMetrics(state)){
+  const def=timingChallengeDefs[activeTimingChallenge],wrap=$('timingChallengeConstraints'),pill=$('timingChallengeState');
+  document.querySelectorAll('[data-timing-challenge]').forEach(b=>b.classList.toggle('active',b.dataset.timingChallenge===activeTimingChallenge));
+  if(!def){if($('timingChallengeTarget'))$('timingChallengeTarget').textContent='Choose a challenge.';if($('timingChallengeHint'))$('timingChallengeHint').textContent='MRCC will reset to the challenge start stack, then evaluate the live sliders.';if(wrap)wrap.innerHTML='';if(pill)pill.textContent='free explore';return}
+  if($('timingChallengeTarget'))$('timingChallengeTarget').textContent=def.title;if($('timingChallengeHint'))$('timingChallengeHint').textContent=def.hint;
+  const rows=timingChallengeRows(activeTimingChallenge,state,metrics),met=rows.filter(x=>x.met).length;if(pill)pill.textContent=met+'/'+rows.length+' constraints'+(met===rows.length?' met':'');
+  if(wrap)wrap.innerHTML=rows.map(x=>'<div class="timing-challenge-constraint '+(x.met?'met':'miss')+'"><small>'+escapeHtml(x.label)+'</small><b>'+(x.met?'Met':'Adjust')+'</b><span>'+escapeHtml(x.goal)+' · now '+escapeHtml(x.now)+'</span></div>').join('');
+}
+function applyTimingState(state){for(const [key,id] of [['tr','timingTr'],['firstEcho','timingFirstEcho'],['spacing','timingSpacing'],['etl','timingEtl'],['center','timingCenter'],['phase','timingPhase'],['nex','timingNex']])if($(id))$(id).value=state[key]}
+function startTimingChallenge(id){const def=timingChallengeDefs[id];if(!def)return;activeTimingChallenge=id;applyTimingState(def.start);timingUpdate();toast('Timing challenge started')}
+function restartTimingChallenge(){const def=timingChallengeDefs[activeTimingChallenge];if(!def){toast('Choose a timing challenge first');return}applyTimingState(def.start);timingUpdate();toast('Timing challenge restarted')}
+function clearTimingChallenge(){activeTimingChallenge='';renderTimingChallenge();toast('Timing challenge closed')}
+function bindTimingDeepDive(){$('timingChallengeTargets')?.addEventListener('click',e=>{const b=e.target.closest('[data-timing-challenge]');if(b)startTimingChallenge(b.dataset.timingChallenge)})}
+
 function timingCue(state,metrics=timingMetrics(state)){
   if(!metrics.fit)return {title:'Toy timing conflict',detail:'The represented echo train extends beyond the selected TR. Treat this only as a relationship cue; real scanners enforce many timing constraints that are not modeled here.'};
   if(state.etl===1)return {title:'Single-echo reference',detail:'One represented echo fills one simplified phase line per repetition window in this model.'};
@@ -1728,6 +1794,7 @@ function timingUpdate(save=true){
   $('timingTrMarker').style.left=trPct+'%';$('timingTrainBand').style.left=firstPct+'%';$('timingTrainBand').style.width=Math.max(.8,lastPct-firstPct)+'%';
   $('timingEchoRow').innerHTML=Array.from({length:state.etl},(_,i)=>{const echoTime=state.firstEcho+i*state.spacing,pct=Math.min(99,(echoTime/scaleMax)*100),center=i+1===state.center;return '<span class="timing-echo '+(center?'center':'')+'" style="left:'+pct+'%" title="Echo '+(i+1)+' · '+Math.round(echoTime)+' ms"><i></i><small>'+(i+1)+'</small></span>'}).join('');
   $('timingScaleSummary').textContent='TR '+Math.round(state.tr)+' ms · train ends '+Math.round(m.trainSpan)+' ms · idle-like remainder '+Math.round(m.idle)+' ms';
+  renderTimingDeep(state,m);
   if(save)persistTimingState(state);if(typeof renderLabsHome==='function')renderLabsHome();
 }
 function applyTimingPreset(id){
@@ -1742,6 +1809,7 @@ function restoreTimingState(){
   timingUpdate(false);
 }
 function timingReset(){const p={tr:3000,firstEcho:14,spacing:9,etl:8,center:4,phase:256,nex:1};for(const [key,id] of [['tr','timingTr'],['firstEcho','timingFirstEcho'],['spacing','timingSpacing'],['etl','timingEtl'],['center','timingCenter'],['phase','timingPhase'],['nex','timingNex']])if($(id))$(id).value=p[key];timingUpdate();toast('Sequence Timing Lab reset')}
+bindTimingDeepDive();
 
 
 function normalizeMotionState(raw){
