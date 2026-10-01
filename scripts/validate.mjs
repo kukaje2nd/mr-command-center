@@ -359,10 +359,10 @@ if(!script.includes('const timingChallengeDefs=')||!script.includes('function ti
 if(!appCss.includes('/* v21.0 Timing Lab Deep Dive */')||!appCss.includes('.timing-equation-breakdown')||!appCss.includes('.timing-kspace-strip')||!appCss.includes('.timing-challenge-targets')) fail.push('v21.0 Timing Lab deep-dive styling is incomplete.');
 if(!html.includes('abstract linear k-space train')||!html.includes('real FSE/TSE view ordering is implementation dependent')) fail.push('v21.0 Timing Lab view-ordering boundary is incomplete.');
 
-if(!html.includes('id="motionLineMap"')||!html.includes('id="motionLinearCanvas"')||!html.includes('id="motionCentricCanvas"')||!html.includes('id="motionChallengeTargets"')||!html.includes('Phase-Line Influence Map')||!html.includes('Ordering A/B')) fail.push('v22.0 Motion Lab deep-dive UI is incomplete.');
+if(!html.includes('id="motionLineMap"')||!html.includes('id="motionLinearCanvas"')||!html.includes('id="motionCentricCanvas"')||!html.includes('id="motionChallengeTargets"')||!html.includes('Phase-line influence map')||!html.includes('Ordering A/B')) fail.push('v22.0 Motion Lab deep-dive UI is incomplete.');
 if(!script.includes('function motionLineStats')||!script.includes('function motionOrderComparison')||!script.includes('function renderMotionOrderCompare')||!script.includes('const motionChallengeDefs=')||!script.includes('function motionChallengeRows')||!script.includes('function renderMotionChallenge')||!script.includes('function renderMotionDeep')) fail.push('v22.0 Motion Lab deep-dive runtime is incomplete.');
 if(!appCss.includes('/* v22.0 Motion Lab Deep Dive */')||!appCss.includes('.motion-line-map')||!appCss.includes('.motion-order-images')||!appCss.includes('.motion-challenge-targets')) fail.push('v22.0 Motion Lab deep-dive styling is incomplete.');
-if(!html.includes('It does not guarantee that one reconstruction is globally “better.”')||!html.includes('center-band mean |translation|')) fail.push('v22.0 Motion Lab comparison boundary is incomplete.');
+if(!html.includes('It does not guarantee that one reconstruction is globally “better.”')||!html.includes('mean |translation| for |ky| ≤ 4')) fail.push('v22.0 Motion Lab comparison boundary is incomplete.');
 
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
