@@ -720,8 +720,6 @@ body.nav-premium .premium-zone{border-color:rgba(184,156,255,.42);box-shadow:0 2
 </section>
 <details class="system-panel" id="offlineBar"><summary><span class="system-title"><span class="mini-dot"></span><b>System & offline status</b></span><span class="system-summary-meta">Build v15.0 <span aria-hidden="true">·</span> details</span></summary><div class="system-panel-body"><div class="systemstrip"><span class="syschip"><span class="mini-dot" id="sysNetDot"></span><span id="sysNetwork">Online</span></span><span class="syschip" id="cacheChip">Offline cache: checking</span><span class="syschip engine-chip" id="engineChip"><span class="mini-dot"></span><span id="engineText">Engine: ready</span></span><button class="selfcheck" onclick="runSelfCheck()">Run self-check</button></div><span id="offlineCopy">Core labs cache locally after the first successful load. Lab states, presets, and comparison history remain browser-local.</span></div></details>
 <div class="focusbar" id="focusBar" aria-live="polite"><button type="button" class="focus-home" onclick="showHome()">⌂ Home</button><span class="focus-module-icon" id="focusModuleIcon" aria-hidden="true"></span><div class="focus-copy"><small><span id="focusGroup">Reference tool</span><span class="focus-position" id="focusPosition"></span></small><b id="focusTitle">Current tool</b></div><div class="focus-related" id="focusRelated"></div><button type="button" class="focus-primary" id="focusPrimaryBtn" onclick="runFocusPrimary()">Parameter Lab →</button><button type="button" class="focus-search" id="focusSearchBtn" onclick="openPalette()" aria-label="Search workspace">⌕</button></div>
-<div class="sessionbar" id="sessionBar" aria-live="polite"><span class="sessionbar-icon" id="sessionBarIcon" aria-hidden="true"></span><div class="sessionbar-copy"><small id="sessionBarKicker">Study session</small><b id="sessionBarTitle">Current route</b></div><div class="sessionbar-progress"><span id="sessionBarProgressText">0/0 complete</span><i><em id="sessionBarProgressFill"></em></i></div><button type="button" class="sessionbar-step" id="sessionPrevBtn" onclick="sessionStep(-1)" aria-label="Previous session module">←</button><button type="button" class="sessionbar-complete" id="sessionCompleteBtn" onclick="sessionCompleteStep()">Complete & next</button><button type="button" class="sessionbar-step" id="sessionNextBtn" onclick="sessionStep(1)" aria-label="Next session module">→</button><button type="button" class="sessionbar-end" onclick="endStudySession()">End</button></div>
-
 <section id="safety" class="section reference-tool-section"><div class="section-head"><div><div class="eyebrow">MR Safety Reference</div><h2>Device / implant evidence chain</h2></div><p>Teaching checklist only. Completion ≠ clearance; use it to review the evidence chain that precedes local review.</p><button class="safety-rf-link" type="button" onclick="go('burn')">RF / thermal details →</button></div><div class="grid2"><div class="card"><h3>Device / implant evidence chain</h3><p class="sub">Use exact source documentation—not memory, appearance, or patient recollection alone.</p><div class="checks" id="safetyChecks">
 <label class="check"><input type="checkbox"><span>Exact device / implant identity is positively established (make, model, component set as applicable).</span></label>
 <label class="check"><input type="checkbox"><span>Current manufacturer MR labeling / approved safety source has been located.</span></label>
@@ -1287,6 +1285,7 @@ function restoreRouteFromHash(){
   if(id==='premium'){openPremiumWorkspace(false,true,false);return}
   const premiumLab=Object.entries(premiumDeepRoutes).find(([,route])=>route===id)?.[0];
   if(premiumLab){openPremiumWorkspace(false,true,false);setTimeout(()=>openPremiumAccess(premiumLab,false),20);return}
+  if(id==='learn'){openWorkspaceView('challenges',true);return}
   if(homeSectionTitles[id]){showHome(false,true);return}
   if(workspaceViewTargets[id]){openWorkspaceView(id,false);return}
   if(sectionTitles[id]){if(labRouteInfo[id])rememberLastLabRoute(id);setFocusedSection(id);setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}
@@ -1737,7 +1736,6 @@ function runCommand(id){
   if(id==='rescue'){go('rescue',true);return}
   if(artifactIds.includes(id)){openLab('artifact');$('artifactSelect').value=id;artifactLabUpdate();solveArtifact();setTimeout(()=>$('artifactOut').scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),250);return}
   if(id==='burn'){go('burn',true);return}
-  if(id==='learn'){go('learn',true);return}
   if(id==='presets'){go('sandbox',true);setTimeout(()=>{$('presetLibrary').open=true;$('presetName')?.focus()},300);return}
   if(id==='parameterref'){go('sandbox',true);setTimeout(()=>$('parameterReference')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),250);return}
 }
