@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 
-const html=fs.readFileSync('index.html','utf8');
+const documentHtml=fs.readFileSync('index.html','utf8');
+const appCss=fs.existsSync('app.css')?fs.readFileSync('app.css','utf8'):'';
+const script=fs.existsSync('app.js')?fs.readFileSync('app.js','utf8'):'';
+const html=documentHtml+'\n'+appCss;
 const manifest=fs.readFileSync('manifest.webmanifest','utf8');
 const brand=fs.readFileSync('brand-mark.svg','utf8');
 const sw=fs.readFileSync('sw.js','utf8');
@@ -11,15 +14,18 @@ const about=fs.existsSync('about.html')?fs.readFileSync('about.html','utf8'):'';
 const privacy=fs.existsSync('privacy.html')?fs.readFileSync('privacy.html','utf8'):'';
 const robots=fs.existsSync('robots.txt')?fs.readFileSync('robots.txt','utf8'):'';
 const sitemap=fs.existsSync('sitemap.xml')?fs.readFileSync('sitemap.xml','utf8'):'';
+const vercelConfig=fs.existsSync('vercel.json')?fs.readFileSync('vercel.json','utf8'):'';
 const fail=[];
 
-if((html.match(/<\/html>/g)||[]).length!==1||!html.trim().endsWith('</html>')) fail.push('HTML must end cleanly with exactly one </html>.');
-
-const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
-if(scripts.length!==1) fail.push('Expected exactly one inline <script> block.');
-
-const script=scripts[0]?.[1]||'';
-if(script){try{new Function(script)}catch(e){fail.push('Inline JavaScript does not parse: '+e.message)}}
+if((documentHtml.match(/<\/html>/g)||[]).length!==1||!documentHtml.trim().endsWith('</html>')) fail.push('HTML must end cleanly with exactly one </html>.');
+if(!appCss) fail.push('app.css is missing or empty.');
+if(!script) fail.push('app.js is missing or empty.');
+if(documentHtml.includes('<style>')) fail.push('Production HTML must not contain the monolithic application <style> block.');
+const inlineAppScripts=[...documentHtml.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+if(inlineAppScripts.length) fail.push('Production HTML must not contain the monolithic inline application <script> block.');
+if(!documentHtml.includes('<link rel="stylesheet" href="/app.css" />')) fail.push('index.html does not load app.css.');
+if(!documentHtml.includes('<script src="/app.js"></script>')) fail.push('index.html does not load app.js.');
+if(script){try{new Function(script)}catch(e){fail.push('app.js does not parse: '+e.message)}}
 
 const requiredFunctions=[
   'go','showHome','setFocusedSection','openWorkspaceView','setWorkspaceTabActive','openLab','renderLabsHome',
@@ -55,7 +61,7 @@ for(const name of requiredFunctions){
   if(!declaration.test(script)&&!assignment.test(script)) fail.push('Required function is missing: '+name);
 }
 
-const handlerAttrs=[...html.matchAll(/on(?:click|change|input|keydown)="([^"]+)"/g)];
+const handlerAttrs=[...documentHtml.matchAll(/on(?:click|change|input|keydown)="([^"]+)"/g)];
 const referenced=new Set();
 for(const attr of handlerAttrs){for(const call of attr[1].matchAll(/\b([A-Za-z_$][\w$]*)\s*\(/g)) referenced.add(call[1]);}
 const ignored=new Set(['if','confirm','prompt']);
@@ -115,7 +121,7 @@ const requiredCopy=[
   'Current workspace','Problem mode','Start from a constraint',
   'A/B Parameter Compare','Parameter Reference','Related tools',
   'MR Safety Reference','RF / thermal details',
-  'Premium Labs · access preview','Advanced labs with a real entitlement model.','MR Command Center · Premium workspace','Premium concept challenge','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','Gradient Encoding Concepts Lab','Off-Resonance & Phase Lab','No charges are active in v15.0.',
+  'Premium Labs · access preview','Advanced labs with a real entitlement model.','MR Command Center · Premium workspace','Premium concept challenge','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','Gradient Encoding Concepts Lab','Off-Resonance & Phase Lab','No charges are active in v16.0.',
   'Learning-use boundary','Settings & shortcuts'
 ]
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required v7 workspace copy is missing: '+text);}
@@ -128,7 +134,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact')) fail.push('Manifest description is not the seven-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v15.0.0")) fail.push('Service worker cache marker is not v15.0.0.');
+if(!sw.includes("mrcc-v16.0.0")) fail.push('Service worker cache marker is not v16.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the MRI Labs title.');
 if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
@@ -137,7 +143,7 @@ if(!html.includes('<meta name="author" content="Edon Kukaj" />')) fail.push('Edo
 if(!html.includes('<span class="brandcredit">Edon Kukaj</span>')||!html.includes('aria-label="MR Command Center by Edon Kukaj"')) fail.push('Edon Kukaj brand credit is missing from the header.');
 if(!html.includes('class="top-actions"')||!html.includes('class="top-status"')) fail.push('v10.1 header action/status grouping is missing.');
 if(!html.includes('/* v10.1 Interface refinement */')||!html.includes('scroll-snap-type:x proximity')||!html.includes('.workspace-rail button.active:before')||!html.includes('.lab-home-card:hover,.lab-home-card:focus-within')) fail.push('v10.1 interface refinement styles are incomplete.');
-if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v15.0</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v15.0</span>')) fail.push('Current live release identity is incomplete.');
+if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v16.0</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v16.0</span>')) fail.push('Current live release identity is incomplete.');
 if(!script.includes("function setRouteContext(label='Home')")||!script.includes('function keepActiveLabVisible(target)')||!script.includes("setRouteContext(sectionTitles[id])")) fail.push('v10.2 route context or active-Lab mobile navigation is incomplete.');
 if(!html.includes('env(safe-area-inset-bottom)')) fail.push('v10.2 mobile safe-area handling is missing.');
 if(!html.includes('active v15 workspace keys')) fail.push('Workspace restore copy still references an outdated workspace generation.');
@@ -196,7 +202,12 @@ if(!premiumDoc.includes('v13.0 Premium workspace routing')||!premiumDoc.includes
 
 
 if(!html.includes('/* v14.0 Spatial Encoding Lab */')||!html.includes('id="spatial" class="section spatial-lab"')||!script.includes('function spatialMetrics')||!script.includes("localStorage.setItem('mrcc_spatial_current'")||!html.includes('id="homeSpatialState"')) fail.push('v14.0 Spatial Encoding Lab is incomplete.');
-if(!html.includes('/* v15.0 Public launch + runtime hygiene */')||!html.includes('href="/about.html"')||!html.includes('href="/privacy.html"')||!html.includes('application/ld+json')||!html.includes('"@type":"WebApplication"')) fail.push('v15.0 public-launch shell is incomplete.');
+if(!html.includes('/* v15.0 Public launch + runtime hygiene */')||!documentHtml.includes('href="/about.html"')||!documentHtml.includes('href="/privacy.html"')||!documentHtml.includes('application/ld+json')||!documentHtml.includes('"@type":"WebApplication"')) fail.push('v15.0 public-launch shell is incomplete.');
+if(!appCss.includes('/* v16.0 Runtime modularization')||!script.includes('/* v16.0 Runtime modularization')||!documentHtml.includes('/app.css')||!documentHtml.includes('/app.js')) fail.push('v16.0 runtime modularization markers are incomplete.');
+if(documentHtml.length>180000) fail.push('v16.0 HTML shell regression: index.html is unexpectedly large.');
+if(appCss.length<150000||script.length<150000) fail.push('v16.0 extracted runtime assets look incomplete.');
+if(!sw.includes("'/app.css'")||!sw.includes("'/app.js'")) fail.push('v16.0 runtime assets are missing from the offline core cache.');
+if(!vercelConfig.includes('X-Content-Type-Options')||!vercelConfig.includes('X-Frame-Options')||!vercelConfig.includes('Referrer-Policy')||!vercelConfig.includes('Permissions-Policy')||!vercelConfig.includes('must-revalidate')) fail.push('v16.0 Vercel public hardening headers are incomplete.');
 if(!script.includes('const MRCC_RETIRED_DATA_KEYS=')||!script.includes('function clearRetiredLegacyData')||!html.includes('id="retiredDataSummary"')||!html.includes('id="clearRetiredDataBtn"')) fail.push('v15.0 retired-data controls are incomplete.');
 for(const retiredFn of ['renderPackLibrary','renderCaseLab','renderPackStudio','renderStudyReport','renderStudySession','renderContinueLearning','renderLearningProgress','scoreQuiz']){if(script.includes('function '+retiredFn+'(')) fail.push('Retired runtime function returned: '+retiredFn);}
 if(html.includes('<section id="learn"')||html.includes('data-palcat="Learning"')) fail.push('Retired Micro-Lab / Learning UI returned to production.');
@@ -301,10 +312,11 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v15.0 — Public Launch & Runtime Hygiene')||!readme.includes('v15.0 release notes')||!readme.includes('v14.0 release notes')||!readme.includes('v13.0 release notes')||!readme.includes('v12.0 release notes')||!readme.includes('v11.5 release notes')||!readme.includes('v11.4 release notes')||!readme.includes('v11.3 release notes')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('premium-products.json')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!readme.includes('v16.0 — Runtime Modularization & Public Hardening')||!readme.includes('v16.0 release notes')||!readme.includes('v15.0 release notes')||!readme.includes('v14.0 release notes')||!readme.includes('v13.0 release notes')||!readme.includes('v12.0 release notes')||!readme.includes('v11.5 release notes')||!readme.includes('v11.4 release notes')||!readme.includes('v11.3 release notes')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('premium-products.json')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
 if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#timing')||!manifest.includes('/#motion')||!manifest.includes('/#spatial')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or Lab shortcuts.');
 if(!sw.includes('navigationPreload.enable()')) fail.push('Service worker navigation preload is missing.');
 if(!sw.includes("'/about.html'")||!sw.includes("'/privacy.html'")) fail.push('v15 public pages are not in the core offline cache.');
+if(!fs.existsSync('app.css')||!fs.existsSync('app.js')||!fs.existsSync('vercel.json')) fail.push('v16 runtime/public-hardening files are missing.');
 if(!fs.existsSync('PREMIUM_LABS.md')) fail.push('PREMIUM_LABS.md is missing.');
 if(!fs.existsSync('premium-products.json')) fail.push('premium-products.json is missing.');
 
@@ -314,4 +326,4 @@ if(fail.length){
   process.exit(1);
 }
 
-console.log('MR Command Center v15.0 Public Launch & Runtime Hygiene validation passed.');
+console.log('MR Command Center v16.0 Runtime Modularization & Public Hardening validation passed.');
