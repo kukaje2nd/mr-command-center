@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs with Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, plus an interactive Sequence Families Lab for MRI sequence physics, tradeoffs, artifacts, and vendor terminology.",
+  "description": "Interactive MRI reasoning labs with Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, plus a Sequence Families Lab with interactive acquisition anatomy, vendor terminology, comparison, and recognition challenges.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -122,8 +122,8 @@
     {
       "name": "Sequence Families Lab",
       "short_name": "Sequences",
-      "description": "Explore MRI sequence families, tradeoffs, artifacts, and common vendor terminology.",
-      "url": "/#protocol",
+      "description": "Explore MRI sequence families with interactive acquisition anatomy, vendor terminology, comparison, and recognition challenges.",
+      "url": "/#sequences",
       "icons": [
         {
           "src": "/icon.svg",
