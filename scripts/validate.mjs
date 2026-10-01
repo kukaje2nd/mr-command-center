@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const documentHtml=fs.readFileSync('index.html','utf8');
 const appCss=fs.existsSync('app.css')?fs.readFileSync('app.css','utf8'):'';
 const script=fs.existsSync('app.js')?fs.readFileSync('app.js','utf8'):'';
-const html=documentHtml+'\n'+appCss;
+const html=documentHtml+'\n'+appCss+'\n'+script;
 const manifest=fs.readFileSync('manifest.webmanifest','utf8');
 const brand=fs.readFileSync('brand-mark.svg','utf8');
 const sw=fs.readFileSync('sw.js','utf8');
