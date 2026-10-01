@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v16.1 — Mobile Lab Navigation Integrity
+v17.0 — Protocol Workspace Foundation
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,16 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v17.0 release notes
+- Added a first-class **Protocol Workspace** for converting an approved sequence list into a tech-facing protocol sheet while preserving original sequence order.
+- Added patient/scanner context fields for manufacturer/model, field strength, age/weight, sedation/anesthesia, breathing ability, exam/indication, contrast, protocol source, and special coverage.
+- Added explicit axial, coronal, and sagittal coverage boxes plus a wide editable sequence table for FOV, slice/gap, matrix, frequency/phase direction, NEX, acceleration, breathing/motion strategy, vendor options, notes, and provenance.
+- Added browser-local persistence, text/CSV loading, obvious plane/vendor-option recognition, per-row tech verification, print styling, troubleshooting prompts, contrast/dynamic documentation, and a must-not-miss final checklist.
+- Added manufacturer vocabulary hints without assuming scanner capabilities; exact options still depend on model, software, coil, licensing, and local configuration.
+- Added a source-first safety boundary: v17.0 does **not** generate patient-specific numeric protocol settings from age/weight alone and does not generate contrast dose/timing.
+- Added Protocol to desktop/mobile navigation, deep links, Quick Console, PWA shortcuts, built-in self-checks, and release validation.
+- Image/PDF sequence extraction is intentionally deferred to the next Protocol Workspace increment after the core provenance/editing workflow is validated.
 
 ### v16.1 release notes
 - Restored all seven Lab destinations in every mobile Lab switcher; a legacy small-screen selector was hiding the third destination below 680 px.
