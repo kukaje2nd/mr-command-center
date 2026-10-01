@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v18.1 — Sequence Anatomy + Recognition Challenge
+v19.0 — Parameter Lab Deep Dive
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,19 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v19.0 release notes
+- Began the lab-by-lab deepening program with a major **Parameter Lab Deep Dive**.
+- Added a **Causal Explorer** that isolates any one of the ten modeled controls against baseline while keeping every other control fixed. It shows the selected lever’s isolated effects on spatial-detail, SNR, and sampling-time proxies beside the full stacked result.
+- Added a cause → mechanism → modeled-consequence chain that updates automatically to the most recently moved control.
+- Added stack-interaction language that identifies when the rest of the current parameter stack materially reinforces or offsets the selected control’s modeled departure.
+- Added **Model Anatomy** panels that expose the live simplified equations instead of hiding the model behind gauges.
+- Spatial sampling now shows substituted frequency/phase pixel calculations, voxel-volume factor, and detail-index factor.
+- SNR anatomy shows the separate voxel-volume, √NEX, 1/√bandwidth, and idealized 1/√R contributions.
+- Sampling-time anatomy shows the separate phase-matrix, NEX, 1/ETL, 1/R, and partial-Fourier contributions.
+- Added explicit model-boundary copy beside the live equations so sequence timing, coil g-factor, calibration lines, slice architecture, gradients, reconstruction, gating, RF limits, and diagnostic adequacy cannot be mistaken for modeled outputs.
+- Extended the built-in self-check and release validator to require the new causal/equation surfaces and runtime.
+- Fixed release-validation technical debt: Sequence Families v18.1 regression checks now execute **before** the validator’s failure gate instead of after it.
 
 ### v18.1 release notes
 - Added **Interactive Sequence Anatomy** to the Sequence Families Lab. Selecting any family now updates a simplified preparation → RF/refocusing → echo/signal → readout flow so learners can see the acquisition structure instead of only reading about it.
