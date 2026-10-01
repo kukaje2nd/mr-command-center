@@ -1,7 +1,7 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs with Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, plus an image-first browser-local Protocol Workspace for approved screenshots, source-tracked parameters, and Run Exam workflow.",
+  "description": "Interactive MRI reasoning labs plus a simple browser-local Protocol Scan Assist: enter patient/scanner context, paste a protocol image or sequence list, and get an ordered source-tracked scanner-side plan.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -122,7 +122,7 @@
     {
       "name": "Protocol Workspace",
       "short_name": "Protocol",
-      "description": "Paste or upload a protocol screenshot, review extracted sequence text, and run a source-tracked scanner-side cheat sheet.",
+      "description": "Enter patient/scanner context, paste a protocol image or sequence list, and get an immediate source-tracked Scan Assist.",
       "url": "/#protocol",
       "icons": [
         {
