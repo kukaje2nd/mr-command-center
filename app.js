@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'19.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'20.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v19.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v20.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1453,7 +1453,7 @@ function runSelfCheck(){
     ['Labs home',typeof renderLabsHome==='function'&&!!$('homeParameterState')&&!!$('homeContrastState')&&!!$('homeKspaceState')&&!!$('homeSpatialState')&&!!$('homeArtifactState')],
     ['Parameter Lab',typeof sandboxUpdate==='function'&&typeof sandboxMetrics==='function'&&typeof renderParameterDeepDive==='function'&&typeof renderParameterEquations==='function'&&!!$('sbFreq')&&!!$('sbAccel')&&!!$('parameterReference')&&!!$('parameterDeepCockpit')&&!!$('parameterEquationLab')],
     ['Parameter continuity',typeof restoreSandboxCurrentState==='function'&&typeof quickSaveSandboxPreset==='function'&&!!$('labContinuity')],
-    ['Contrast Lab',typeof contrastUpdate==='function'&&typeof contrastSignal==='function'&&Array.isArray(contrastMaterialsModel)&&contrastMaterialsModel.length===3&&!!$('clTr')&&!!$('clTe')],
+    ['Contrast Lab',typeof contrastUpdate==='function'&&typeof contrastSignal==='function'&&typeof renderContrastDeep==='function'&&typeof contrastDrawRecovery==='function'&&typeof renderContrastChallenge==='function'&&Array.isArray(contrastMaterialsModel)&&contrastMaterialsModel.length===3&&!!$('clTr')&&!!$('clTe')&&!!$('contrastRecoveryCanvas')&&!!$('contrastDecayCanvas')&&!!$('contrastDecomposition')&&!!$('contrastChallengeTargets')],
     ['Sequence Timing Lab',typeof timingUpdate==='function'&&typeof timingMetrics==='function'&&typeof restoreTimingState==='function'&&!!$('timingTr')&&!!$('timingEtl')&&!!$('timingEchoRow')],
     ['Motion Lab',typeof motionUpdate==='function'&&typeof motionAcquire==='function'&&typeof restoreMotionState==='function'&&!!$('motionMode')&&!!$('motionHistoryCanvas')&&!!$('motionResultCanvas')],
     ['K-Space Lab',typeof kspaceUpdate==='function'&&typeof kspaceDft2D==='function'&&typeof kspaceApplyMask==='function'&&KS_N===32&&!!$('ksKspaceCanvas')&&!!$('ksImageCanvas')],
@@ -1490,6 +1490,107 @@ const contrastMaterialsModel=[
 function contrastState(){
   return {mode:$('clMode')?.value==='ir'?'ir':'se',tr:+($('clTr')?.value||800),te:+($('clTe')?.value||20),ti:+($('clTi')?.value||600)};
 }
+
+function contrastLongitudinalTerm(material,state,time){
+  const t1=Math.max(1,material.t1),t=Math.max(0,time),tr=Math.max(1,state.tr);
+  if(state.mode==='ir')return 1-2*Math.exp(-t/t1)+Math.exp(-tr/t1);
+  return 1-Math.exp(-t/t1);
+}
+function contrastTransverseTerm(material,time){return Math.exp(-Math.max(0,time)/Math.max(1,material.t2))}
+function contrastSignalParts(material,state){
+  const longitudinal=contrastLongitudinalTerm(material,state,state.mode==='ir'?state.ti:state.tr),transverse=contrastTransverseTerm(material,state.te);
+  return {longitudinal,transverse,pd:material.pd,signal:Math.max(0,Math.abs(longitudinal)*transverse*material.pd)};
+}
+function contrastNullTi(material,tr){
+  const t1=Math.max(1,material.t1),ratio=(1+Math.exp(-Math.max(1,tr)/t1))/2;
+  return Math.max(0,-t1*Math.log(Math.max(.000001,ratio)));
+}
+const contrastPalette=['#48f0b2','#52d7ff','#b89cff'];
+function contrastCanvasSetup(canvas){
+  if(!canvas)return null;const rect=canvas.getBoundingClientRect(),dpr=Math.max(1,Math.min(2,window.devicePixelRatio||1)),w=Math.max(320,Math.round(rect.width||760)),h=Math.max(180,Math.round((canvas.height/canvas.width)*w));
+  if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
+  const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w,h};
+}
+function contrastDrawAxes(ctx,w,h,yMin,yMax,xLabel){
+  const l=42,r=12,t=12,b=27,pw=w-l-r,ph=h-t-b;ctx.clearRect(0,0,w,h);ctx.strokeStyle='rgba(86,125,114,.38)';ctx.lineWidth=1;ctx.fillStyle='rgba(155,184,175,.72)';ctx.font='11px system-ui';
+  for(let i=0;i<=4;i++){const y=t+ph*i/4;ctx.beginPath();ctx.moveTo(l,y);ctx.lineTo(w-r,y);ctx.stroke();const val=(yMax-(yMax-yMin)*i/4).toFixed(1);ctx.fillText(val,5,y+4)}
+  ctx.beginPath();ctx.moveTo(l,t);ctx.lineTo(l,h-b);ctx.lineTo(w-r,h-b);ctx.stroke();ctx.fillText('0',l-3,h-8);ctx.fillText(xLabel,w-r-45,h-8);return {l,r,t,b,pw,ph,yMin,yMax};
+}
+function contrastDrawRecovery(state){
+  const canvas=$('contrastRecoveryCanvas'),setup=contrastCanvasSetup(canvas);if(!setup)return;const {ctx,w,h}=setup,yMin=state.mode==='ir'?-1:0,yMax=1,ax=contrastDrawAxes(ctx,w,h,yMin,yMax,'time');
+  const maxT=Math.max(300,state.tr);
+  contrastMaterialsModel.forEach((m,idx)=>{ctx.strokeStyle=contrastPalette[idx];ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<=160;i++){const time=maxT*i/160,val=contrastLongitudinalTerm(m,state,time),x=ax.l+ax.pw*i/160,y=ax.t+(yMax-val)/(yMax-yMin)*ax.ph;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke()});
+  const markerT=state.mode==='ir'?state.ti:state.tr,x=ax.l+ax.pw*Math.min(1,markerT/maxT);ctx.strokeStyle=state.mode==='ir'?'rgba(184,156,255,.9)':'rgba(255,226,154,.85)';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x,ax.t);ctx.lineTo(x,h-ax.b);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(225,240,235,.82)';ctx.font='11px system-ui';ctx.fillText(state.mode==='ir'?'TI':'TR',Math.min(w-28,x+4),ax.t+12);
+  if(state.mode==='ir'){const zeroY=ax.t+(yMax-0)/(yMax-yMin)*ax.ph;ctx.strokeStyle='rgba(255,255,255,.25)';ctx.beginPath();ctx.moveTo(ax.l,zeroY);ctx.lineTo(w-ax.r,zeroY);ctx.stroke()}
+}
+function contrastDrawDecay(state){
+  const canvas=$('contrastDecayCanvas'),setup=contrastCanvasSetup(canvas);if(!setup)return;const {ctx,w,h}=setup,ax=contrastDrawAxes(ctx,w,h,0,1,'TE');
+  const maxT=180;contrastMaterialsModel.forEach((m,idx)=>{ctx.strokeStyle=contrastPalette[idx];ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<=160;i++){const time=maxT*i/160,val=contrastTransverseTerm(m,time),x=ax.l+ax.pw*i/160,y=ax.t+(1-val)*ax.ph;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke()});
+  const x=ax.l+ax.pw*Math.min(1,state.te/maxT);ctx.strokeStyle='rgba(82,215,255,.85)';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x,ax.t);ctx.lineTo(x,h-ax.b);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(225,240,235,.82)';ctx.font='11px system-ui';ctx.fillText('TE',Math.min(w-28,x+4),ax.t+12);
+}
+function contrastFactorSpread(parts,key){const vals=parts.map(x=>key==='longitudinal'?Math.abs(x[key]):x[key]),mx=Math.max(...vals),mn=Math.min(...vals);return mx-mn}
+function renderContrastDeep(state,signals){
+  const parts=contrastMaterialsModel.map(m=>contrastSignalParts(m,state)),max=Math.max(...parts.map(x=>x.signal),.000001);
+  if($('contrastCurveMode'))$('contrastCurveMode').textContent=state.mode==='ir'?'IR-like':'SE-like';
+  if($('contrastRecoveryAxis'))$('contrastRecoveryAxis').textContent=state.mode==='ir'?'inverted Mz → TR window':'excited Mz → TR recovery';
+  if($('contrastRecoveryMarker'))$('contrastRecoveryMarker').textContent=(state.mode==='ir'?'TI '+Math.round(state.ti)+' ms':'TR '+Math.round(state.tr)+' ms');
+  if($('contrastDecayMarker'))$('contrastDecayMarker').textContent='TE '+Math.round(state.te)+' ms';
+  contrastDrawRecovery(state);contrastDrawDecay(state);
+  const recoveryAt=state.mode==='ir'?state.ti:state.tr,rec=contrastMaterialsModel.map(m=>contrastLongitudinalTerm(m,state,recoveryAt)),dec=contrastMaterialsModel.map(m=>contrastTransverseTerm(m,state.te));
+  if($('contrastRecoverySummary'))$('contrastRecoverySummary').textContent=state.mode==='ir'?'At TI '+Math.round(state.ti)+' ms, signed longitudinal terms are '+rec.map((v,i)=>contrastMaterialsModel[i].name.replace('Material ','')+' '+(v>=0?'+':'')+v.toFixed(2)).join(' · ')+'. Zero crossing is the synthetic null condition.':'At TR '+Math.round(state.tr)+' ms, longitudinal recovery terms are '+rec.map((v,i)=>contrastMaterialsModel[i].name.replace('Material ','')+' '+v.toFixed(2)).join(' · ')+'.';
+  if($('contrastDecaySummary'))$('contrastDecaySummary').textContent='At TE '+Math.round(state.te)+' ms, transverse factors are '+dec.map((v,i)=>contrastMaterialsModel[i].name.replace('Material ','')+' '+v.toFixed(2)).join(' · ')+'.';
+  if($('contrastDecomposition'))$('contrastDecomposition').innerHTML=contrastMaterialsModel.map((m,i)=>{const p=parts[i],near=Math.abs(p.longitudinal)<.08;return '<div class="contrast-decomp-row"><div class="contrast-decomp-head"><b>'+m.name+'</b><strong>'+Math.round((p.signal/max)*100)+'% normalized</strong></div><div class="contrast-factor-grid"><div class="contrast-factor '+(near?'near-zero':'')+'"><small>'+(state.mode==='ir'?'signed Mz':'T1 term')+'</small><b>'+(p.longitudinal>=0?'+':'')+p.longitudinal.toFixed(2)+'</b></div><div class="contrast-factor"><small>T2 factor</small><b>'+p.transverse.toFixed(2)+'</b></div><div class="contrast-factor"><small>PD-like</small><b>'+p.pd.toFixed(2)+'</b></div><div class="contrast-factor"><small>combined</small><b>'+p.signal.toFixed(3)+'</b></div></div></div>'}).join('');
+  const spreads=[['Longitudinal / T1 term',contrastFactorSpread(parts,'longitudinal'),'TR/TI is creating the largest raw factor spread across the synthetic materials.'],['Transverse / T2 term',contrastFactorSpread(parts,'transverse'),'TE is creating the largest raw factor spread across the synthetic materials.'],['PD-like term',contrastFactorSpread(parts,'pd'),'The fixed PD-like values are currently the largest raw factor spread.']].sort((a,b)=>b[1]-a[1]);
+  if($('contrastDriver'))$('contrastDriver').innerHTML='<small>Largest factor spread</small><b>'+escapeHtml(spreads[0][0])+'</b><span>'+escapeHtml(spreads[0][2])+' This is a factor-range cue, not a formal attribution of all final contrast.</span>';
+  if($('contrastNullButtons'))$('contrastNullButtons').innerHTML=contrastMaterialsModel.map((m,i)=>'<button type="button" onclick="setContrastSyntheticNull('+i+')">'+m.name.replace('Material ','')+' ≈ '+Math.round(contrastNullTi(m,state.tr))+' ms</button>').join('');
+  if($('contrastNullBox'))$('contrastNullBox').classList.toggle('active',state.mode==='ir');
+  renderContrastChallenge(state,parts);
+}
+function setContrastSyntheticNull(index){
+  const m=contrastMaterialsModel[index];if(!m)return;if($('clMode'))$('clMode').value='ir';if($('clTi'))$('clTi').value=Math.round(contrastNullTi(m,+($('clTr')?.value||3000))/25)*25;contrastUpdate();toast('Synthetic '+m.name+' null estimate loaded');
+}
+const contrastChallengeDefs={
+  t1:{title:'Create T1 emphasis',hint:'Use SE-like timing so longitudinal recovery differences dominate while transverse decay stays limited.'},
+  t2:{title:'Create T2 emphasis',hint:'Use SE-like timing so recovery differences shrink and transverse decay differences become prominent.'},
+  pd:{title:'Create PD emphasis',hint:'Use long TR and short TE so both relaxation effects are reduced relative to the fixed PD-like differences.'},
+  nullA:{title:'Null Material A',hint:'Use IR-like timing and move TI until Material A approaches its synthetic zero crossing.',material:0},
+  nullB:{title:'Null Material B',hint:'Use IR-like timing and move TI until Material B approaches its synthetic zero crossing.',material:1},
+  nullC:{title:'Null Material C',hint:'Use IR-like timing and move TI until Material C approaches its synthetic zero crossing.',material:2}
+};
+let activeContrastChallenge='';
+function contrastChallengeStatus(state,parts){
+  const id=activeContrastChallenge,def=contrastChallengeDefs[id];if(!def)return [];
+  const cue=contrastTeachingCue(state),signals=parts.map(x=>x.signal),mx=Math.max(...signals,.000001),mn=Math.min(...signals),spread=(mx-mn)/mx;
+  if(id==='t1'||id==='t2'||id==='pd'){
+    const targetLabel=id==='t1'?'T1-emphasis':id==='t2'?'T2-emphasis':'PD-emphasis';
+    return [
+      {label:'Sequence model',met:state.mode==='se',goal:'SE-like',now:state.mode==='se'?'SE-like':'IR-like'},
+      {label:'Weighting region',met:cue.label===targetLabel,goal:targetLabel,now:cue.label},
+      {label:'Visible separation',met:spread>=.10,goal:'≥ 10% spread',now:Math.round(spread*100)+'% spread'}
+    ];
+  }
+  const target=def.material,ratio=signals[target]/mx,isDimmest=signals[target]===mn;
+  return [
+    {label:'Sequence model',met:state.mode==='ir',goal:'IR-like',now:state.mode==='ir'?'IR-like':'SE-like'},
+    {label:'Target signal',met:ratio<=.08,goal:'≤ 8% of brightest',now:Math.round(ratio*100)+'%'},
+    {label:'Relative order',met:isDimmest,goal:'target is dimmest',now:isDimmest?'dimmest':'not dimmest'}
+  ];
+}
+function renderContrastChallenge(state=contrastState(),parts=contrastMaterialsModel.map(m=>contrastSignalParts(m,state))){
+  const def=contrastChallengeDefs[activeContrastChallenge],wrap=$('contrastChallengeConstraints'),pill=$('contrastChallengeState');
+  document.querySelectorAll('[data-contrast-target]').forEach(b=>b.classList.toggle('active',b.dataset.contrastTarget===activeContrastChallenge));
+  if(!def){if($('contrastChallengeTarget'))$('contrastChallengeTarget').textContent='Choose a target above.';if($('contrastChallengeHint'))$('contrastChallengeHint').textContent='Then use the existing TR / TE / TI controls to satisfy the teaching constraints.';if(wrap)wrap.innerHTML='';if(pill)pill.textContent='free explore';return}
+  if($('contrastChallengeTarget'))$('contrastChallengeTarget').textContent=def.title;if($('contrastChallengeHint'))$('contrastChallengeHint').textContent=def.hint;
+  const rows=contrastChallengeStatus(state,parts),met=rows.filter(x=>x.met).length;if(pill)pill.textContent=met+'/'+rows.length+' constraints'+(met===rows.length?' met':'');
+  if(wrap)wrap.innerHTML=rows.map(x=>'<div class="contrast-challenge-constraint '+(x.met?'met':'miss')+'"><small>'+escapeHtml(x.label)+'</small><b>'+(x.met?'Met':'Adjust')+'</b><span>'+escapeHtml(x.goal)+' · now '+escapeHtml(x.now)+'</span></div>').join('');
+}
+function setContrastChallenge(id){if(!contrastChallengeDefs[id])return;activeContrastChallenge=id;renderContrastChallenge();toast('Contrast target selected')}
+function clearContrastChallenge(){activeContrastChallenge='';renderContrastChallenge();toast('Contrast challenge cleared')}
+function bindContrastDeepDive(){
+  $('contrastChallengeTargets')?.addEventListener('click',e=>{const b=e.target.closest('[data-contrast-target]');if(b)setContrastChallenge(b.dataset.contrastTarget)});
+  window.addEventListener('resize',()=>{if(!$('contrast')||$('contrast').hidden)return;const s=contrastState();contrastDrawRecovery(s);contrastDrawDecay(s)},{passive:true});
+}
+
 function contrastSignal(material,state){
   const t1=Math.max(1,material.t1),t2=Math.max(1,material.t2),tr=Math.max(1,state.tr),te=Math.max(0,state.te);
   const transverse=Math.exp(-te/t2);
@@ -1529,6 +1630,7 @@ function contrastUpdate(save=true){
   $('clTimelineTe').textContent='TE '+Math.round(state.te)+' ms';$('clTimelineTr').textContent='TR '+Math.round(state.tr)+' ms';$('clTimelineTi').textContent=state.mode==='ir'?'TI '+Math.round(state.ti)+' ms':'';
   $('clEchoEvent').style.left=Math.min(82,Math.max(12,(state.te/180)*75+8))+'%';$('clTrMarker').style.left=Math.min(96,Math.max(65,(state.tr/5000)*31+65))+'%';
   if(state.mode==='ir')$('clInvEvent').style.left=Math.min(58,Math.max(10,(state.ti/2500)*48+8))+'%';
+  renderContrastDeep(state,signals);
   if(save)persistContrastState(state);
   if(typeof renderLabsHome==='function')renderLabsHome();
 }
@@ -1536,7 +1638,8 @@ function applyContrastPreset(id){
   const presets={t1:{mode:'se',tr:500,te:15,ti:600},t2:{mode:'se',tr:3000,te:100,ti:600},pd:{mode:'se',tr:3000,te:15,ti:600},ir:{mode:'ir',tr:3000,te:20,ti:600}};
   const p=presets[id]||presets.t1;$('clMode').value=p.mode;$('clTr').value=p.tr;$('clTe').value=p.te;$('clTi').value=p.ti;contrastUpdate();toast('Contrast teaching preset loaded');
 }
-function contrastReset(){if($('clMode'))$('clMode').value='se';if($('clTr'))$('clTr').value=800;if($('clTe'))$('clTe').value=20;if($('clTi'))$('clTi').value=600;contrastUpdate();toast('Contrast Lab reset')}
+function contrastReset(){if($('clMode'))$('clMode').value='se';if($('clTr'))$('clTr').value=800;if($('clTe'))$('clTe').value=20;if($('clTi'))$('clTi').value=600;activeContrastChallenge='';contrastUpdate();toast('Contrast Lab reset')}
+bindContrastDeepDive();
 const KS_N=32;
 let ksBaseImage=null,ksBaseFourier=null;
 function kspaceBuildPhantom(){
