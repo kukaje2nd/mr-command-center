@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'23.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'24.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v23.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v24.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1457,7 +1457,7 @@ function runSelfCheck(){
     ['Sequence Timing Lab',typeof timingUpdate==='function'&&typeof timingMetrics==='function'&&typeof renderTimingDeep==='function'&&typeof renderTimingChallenge==='function'&&typeof restoreTimingState==='function'&&!!$('timingTr')&&!!$('timingEtl')&&!!$('timingEchoRow')&&!!$('timingEquationBreakdown')&&!!$('timingKspaceStrip')&&!!$('timingChallengeTargets')],
     ['Motion Lab',typeof motionUpdate==='function'&&typeof motionAcquire==='function'&&typeof motionLineStats==='function'&&typeof renderMotionOrderCompare==='function'&&typeof renderMotionChallenge==='function'&&typeof restoreMotionState==='function'&&!!$('motionMode')&&!!$('motionHistoryCanvas')&&!!$('motionResultCanvas')&&!!$('motionLineMap')&&!!$('motionLinearCanvas')&&!!$('motionCentricCanvas')&&!!$('motionChallengeTargets')],
     ['K-Space Lab',typeof kspaceUpdate==='function'&&typeof kspaceDft2D==='function'&&typeof kspaceApplyMask==='function'&&typeof kspaceEnergyStats==='function'&&typeof drawKspacePsf==='function'&&typeof renderKspaceChallenge==='function'&&KS_N===32&&!!$('ksKspaceCanvas')&&!!$('ksImageCanvas')&&!!$('ksPsfCanvas')&&!!$('ksEnergyBands')&&!!$('ksChallengeTargets')],
-    ['Spatial Encoding Lab',typeof spatialUpdate==='function'&&typeof spatialMetrics==='function'&&typeof restoreSpatialState==='function'&&!!$('spWorldCanvas')&&!!$('spReconCanvas')],
+    ['Spatial Encoding Lab',typeof spatialUpdate==='function'&&typeof spatialMetrics==='function'&&typeof spatialFeatureProvenance==='function'&&typeof renderSpatialChallenge==='function'&&typeof restoreSpatialState==='function'&&!!$('spWorldCanvas')&&!!$('spReconCanvas')&&!!$('spatialProvenanceList')&&!!$('spatialChallengeTargets')&&!!$('spatialGridDiagnosis')],
     ['Artifact Lab',typeof artifactLabUpdate==='function'&&typeof artifactLabRender==='function'&&!!$('artifactCanvas')&&!!$('artifactStrength')],
     ['Lab persistence',typeof restoreContrastState==='function'&&typeof restoreTimingState==='function'&&typeof restoreMotionState==='function'&&typeof restoreKspaceState==='function'&&typeof restoreSpatialState==='function'&&typeof restoreArtifactLabState==='function'&&typeof persistContrastState==='function'&&typeof persistTimingState==='function'&&typeof persistMotionState==='function'&&typeof persistKspaceState==='function'&&typeof persistSpatialState==='function'&&typeof persistArtifactLabState==='function'],
     ['A/B Compare',typeof swapSandboxComparison==='function'&&typeof renderSandboxCompare==='function'&&!!$('parameterCompareWorkbench')],
@@ -2122,6 +2122,78 @@ function normalizeSpatialState(raw){
 }
 function spatialState(){return normalizeSpatialState({phaseFov:+($('spPhaseFov')?.value||100),readFov:+($('spReadFov')?.value||100),phaseSamples:+($('spPhaseSamples')?.value||128),readSamples:+($('spReadSamples')?.value||128)})}
 const spatialFeatures=[[-.23,-.10,.105,.78],[.20,.12,.085,.96],[-.08,.25,.065,.62],[.28,-.24,.055,.72],[-.34,.25,.045,.55]];
+
+const spatialFeatureNames=['A','B','C','D','E'];
+function spatialWrapCoord(value,fov){
+  const half=fov/2;let out=((value+half)%fov+fov)%fov-half;if(Math.abs(out-half)<1e-9)out=-half;return out;
+}
+function spatialFeatureProvenance(state){
+  const rf=state.readFov/100,pf=state.phaseFov/100;
+  return spatialFeatures.map((f,i)=>{const x=f[0],y=f[1],dx=spatialWrapCoord(x,rf),dy=spatialWrapCoord(y,pf),wrapX=Math.abs(dx-x)>.0001,wrapY=Math.abs(dy-y)>.0001;return {name:spatialFeatureNames[i],x,y,dx,dy,wrapX,wrapY,wrapped:wrapX||wrapY}});
+}
+function spatialCoord(v){return (v>=0?'+':'')+v.toFixed(2)}
+function renderSpatialProvenance(state,metrics){
+  const rows=spatialFeatureProvenance(state),wrapped=rows.filter(x=>x.wrapped),box=$('spatialProvenanceList');
+  if($('spatialProvenanceBadge'))$('spatialProvenanceBadge').textContent=wrapped.length?wrapped.length+' feature center'+(wrapped.length===1?'':'s')+' wrapped':'no feature-center wrap';
+  if(box)box.innerHTML=rows.map(r=>{const why=!r.wrapped?'inside encoded interval':r.wrapX&&r.wrapY?'read + phase periodic remap':r.wrapX?'read periodic remap':'phase periodic remap';return '<div class="spatial-provenance-row '+(r.wrapped?'wrap':'')+'"><b>Feature '+r.name+'</b><span>read '+spatialCoord(r.x)+' · phase '+spatialCoord(r.y)+'</span><span class="spatial-provenance-arrow">read '+spatialCoord(r.dx)+' · phase '+spatialCoord(r.dy)+'</span><span>'+why+'</span></div>'}).join('');
+}
+function spatialAxisAnatomy(state,metrics){
+  const readCoverage=Math.min(100,state.readFov/140*100),phaseCoverage=Math.min(100,state.phaseFov/140*100),readPixel=Math.min(100,metrics.readPixel/1.5*100),phasePixel=Math.min(100,metrics.phasePixel/1.5*100);
+  if($('spatialReadEquation'))$('spatialReadEquation').textContent=Math.round(state.readFov)+'% ÷ '+state.readSamples+' = '+metrics.readPixel.toFixed(2)+'× baseline pixel width';
+  if($('spatialPhaseEquation'))$('spatialPhaseEquation').textContent=Math.round(state.phaseFov)+'% ÷ '+state.phaseSamples+' = '+metrics.phasePixel.toFixed(2)+'× baseline pixel width';
+  if($('spatialReadCoverageBar'))$('spatialReadCoverageBar').style.setProperty('--coverage',readCoverage+'%');if($('spatialReadPixelBar'))$('spatialReadPixelBar').style.setProperty('--pixel',readPixel+'%');
+  if($('spatialPhaseCoverageBar'))$('spatialPhaseCoverageBar').style.setProperty('--coverage',phaseCoverage+'%');if($('spatialPhasePixelBar'))$('spatialPhasePixelBar').style.setProperty('--pixel',phasePixel+'%');
+  if($('spatialReadAnatomy'))$('spatialReadAnatomy').textContent=Math.round(state.readFov)+'% coverage · '+metrics.readPixel.toFixed(2)+'× relative pixel width · '+state.readSamples+' samples';
+  if($('spatialPhaseAnatomy'))$('spatialPhaseAnatomy').textContent=Math.round(state.phaseFov)+'% coverage · '+metrics.phasePixel.toFixed(2)+'× relative pixel width · '+state.phaseSamples+' samples';
+  const wrap=metrics.phaseWrap||metrics.readWrap,coarse=metrics.phasePixel>1.08||metrics.readPixel>1.08,fine=metrics.phasePixel<.92||metrics.readPixel<.92;
+  let diagnosis='Both axes are close to the 100% FOV / 128-sample reference.';
+  if(wrap)diagnosis='Coverage is the active problem: '+(metrics.phaseWrap&&metrics.readWrap?'both encoded axes are undersized.':metrics.phaseWrap?'phase FOV is undersized while read coverage remains contained.':'read FOV is undersized while phase coverage remains contained.')+' Sample count changes pixel width but does not repair periodic wrap by itself.';
+  else if(coarse)diagnosis='Coverage is contained, but at least one axis has a larger-than-baseline pixel width because FOV is large relative to its sample count.';
+  else if(fine)diagnosis='Coverage is contained and at least one axis has a smaller-than-baseline pixel width because sample density is higher relative to its FOV.';
+  if($('spatialGridDiagnosis'))$('spatialGridDiagnosis').textContent=diagnosis;
+}
+const spatialChallengeDefs={
+  phaseOnly:{title:'Create phase-only wrap',hint:'Undersize phase coverage while keeping read coverage contained.',start:{phaseFov:100,readFov:100,phaseSamples:128,readSamples:128}},
+  coarse:{title:'Keep coverage contained but make the grid coarse',hint:'Change sample density rather than FOV wrap.',start:{phaseFov:100,readFov:100,phaseSamples:128,readSamples:128}},
+  expand:{title:'Expand coverage without substantially coarsening pixels',hint:'Increase FOV and raise sample count with it.',start:{phaseFov:100,readFov:100,phaseSamples:128,readSamples:128}},
+  repair:{title:'Repair a two-axis wrapped field',hint:'Start undersized, remove wrap, and keep both relative pixel widths at or below 1.10×.',start:{phaseFov:65,readFov:65,phaseSamples:96,readSamples:96}}
+};
+let activeSpatialChallenge='';
+function spatialChallengeRows(id,state,m){
+  if(id==='phaseOnly')return[
+    {label:'Phase coverage',met:m.phaseWrap,goal:'phase wrap active',now:state.phaseFov+'%'},
+    {label:'Read coverage',met:!m.readWrap,goal:'read contained',now:state.readFov+'%'},
+    {label:'Phase pixel',met:m.phasePixel<=1,goal:'≤ 1.00×',now:m.phasePixel.toFixed(2)+'×'}
+  ];
+  if(id==='coarse')return[
+    {label:'Coverage',met:!m.phaseWrap&&!m.readWrap,goal:'no wrap',now:(m.phaseWrap||m.readWrap)?'wrapped':'contained'},
+    {label:'Read pixel',met:m.readPixel>=1.5,goal:'≥ 1.50×',now:m.readPixel.toFixed(2)+'×'},
+    {label:'Phase pixel',met:m.phasePixel>=1.5,goal:'≥ 1.50×',now:m.phasePixel.toFixed(2)+'×'}
+  ];
+  if(id==='expand')return[
+    {label:'Coverage',met:state.phaseFov>=120&&state.readFov>=120,goal:'both FOV ≥ 120%',now:state.readFov+'% / '+state.phaseFov+'%'},
+    {label:'Read pixel',met:m.readPixel<=1.05,goal:'≤ 1.05×',now:m.readPixel.toFixed(2)+'×'},
+    {label:'Phase pixel',met:m.phasePixel<=1.05,goal:'≤ 1.05×',now:m.phasePixel.toFixed(2)+'×'}
+  ];
+  return[
+    {label:'Wrap repaired',met:!m.phaseWrap&&!m.readWrap,goal:'both axes contained',now:(m.phaseWrap||m.readWrap)?'still wrapped':'contained'},
+    {label:'Read pixel',met:m.readPixel<=1.10,goal:'≤ 1.10×',now:m.readPixel.toFixed(2)+'×'},
+    {label:'Phase pixel',met:m.phasePixel<=1.10,goal:'≤ 1.10×',now:m.phasePixel.toFixed(2)+'×'}
+  ];
+}
+function renderSpatialChallenge(state,m){
+  const def=spatialChallengeDefs[activeSpatialChallenge],wrap=$('spatialChallengeConstraints'),pill=$('spatialChallengeState');document.querySelectorAll('[data-spatial-challenge]').forEach(b=>b.classList.toggle('active',b.dataset.spatialChallenge===activeSpatialChallenge));
+  if(!def){if($('spatialChallengeTarget'))$('spatialChallengeTarget').textContent='Choose a challenge.';if($('spatialChallengeHint'))$('spatialChallengeHint').textContent='MRCC will load a teaching start state, then evaluate the live FOV and sample controls.';if(wrap)wrap.innerHTML='';if(pill)pill.textContent='free explore';return}
+  if($('spatialChallengeTarget'))$('spatialChallengeTarget').textContent=def.title;if($('spatialChallengeHint'))$('spatialChallengeHint').textContent=def.hint;const rows=spatialChallengeRows(activeSpatialChallenge,state,m),met=rows.filter(x=>x.met).length;if(pill)pill.textContent=met+'/'+rows.length+' constraints'+(met===rows.length?' met':'');
+  if(wrap)wrap.innerHTML=rows.map(x=>'<div class="spatial-challenge-constraint '+(x.met?'met':'miss')+'"><small>'+escapeHtml(x.label)+'</small><b>'+(x.met?'Met':'Adjust')+'</b><span>'+escapeHtml(x.goal)+' · now '+escapeHtml(x.now)+'</span></div>').join('');
+}
+function applySpatialState(state){if($('spPhaseFov'))$('spPhaseFov').value=state.phaseFov;if($('spReadFov'))$('spReadFov').value=state.readFov;if($('spPhaseSamples'))$('spPhaseSamples').value=state.phaseSamples;if($('spReadSamples'))$('spReadSamples').value=state.readSamples}
+function startSpatialChallenge(id){const def=spatialChallengeDefs[id];if(!def)return;activeSpatialChallenge=id;applySpatialState(def.start);spatialUpdate();toast('Spatial challenge started')}
+function restartSpatialChallenge(){const def=spatialChallengeDefs[activeSpatialChallenge];if(!def){toast('Choose a spatial challenge first');return}applySpatialState(def.start);spatialUpdate();toast('Spatial challenge restarted')}
+function clearSpatialChallenge(){activeSpatialChallenge='';const state=spatialState(),m=spatialMetrics(state);renderSpatialChallenge(state,m);toast('Spatial challenge closed')}
+function renderSpatialDeep(state,m){renderSpatialProvenance(state,m);spatialAxisAnatomy(state,m);renderSpatialChallenge(state,m)}
+function bindSpatialDeepDive(){$('spatialChallengeTargets')?.addEventListener('click',e=>{const b=e.target.closest('[data-spatial-challenge]');if(b)startSpatialChallenge(b.dataset.spatialChallenge)})}
+
 let spatialWorldBase=null;
 function spatialObject(x,y){
   let v=0;
@@ -2180,7 +2252,7 @@ function spatialUpdate(save=true){
   if(!$('spPhaseFov'))return;const state=spatialState(),m=spatialMetrics(state),copy=spatialTeachingCopy(state,m);
   $('spPhaseFovOut').textContent=Math.round(state.phaseFov)+'%';$('spReadFovOut').textContent=Math.round(state.readFov)+'%';$('spPhaseSamplesOut').textContent=Math.round(state.phaseSamples);$('spReadSamplesOut').textContent=Math.round(state.readSamples);
   $('spatialCoverageBadge').textContent=m.phaseWrap||m.readWrap?'cropped':'contained';$('spatialWrapBadge').textContent=copy.short.toLowerCase();$('spatialWrapCue').textContent=copy.short;$('spatialWrapDetail').textContent=copy.detail;$('spatialPixelProxy').textContent=m.readPixel.toFixed(2)+'× · '+m.phasePixel.toFixed(2)+'×';$('spatialSampleBurden').textContent=Math.round(m.sampleBurden*100)+'%';$('spatialExplain').innerHTML='<b>'+copy.title+'</b><span>'+copy.detail+'</span>';
-  drawSpatialWorld(state);drawSpatialRecon(state);if(save)persistSpatialState(state);if(typeof renderLabsHome==='function')renderLabsHome();
+  drawSpatialWorld(state);drawSpatialRecon(state);renderSpatialDeep(state,m);if(save)persistSpatialState(state);if(typeof renderLabsHome==='function')renderLabsHome();
 }
 function applySpatialPreset(id){
   const p={phasewrap:{phaseFov:65,readFov:100,phaseSamples:128,readSamples:128},readwrap:{phaseFov:100,readFov:65,phaseSamples:128,readSamples:128},coarse:{phaseFov:100,readFov:100,phaseSamples:64,readSamples:64},compensate:{phaseFov:125,readFov:125,phaseSamples:160,readSamples:160}}[id]||{phaseFov:100,readFov:100,phaseSamples:128,readSamples:128};
@@ -2190,7 +2262,8 @@ function restoreSpatialState(){
   let raw=null;try{raw=JSON.parse(localStorage.getItem('mrcc_spatial_current')||'null')}catch(e){}
   const v=normalizeSpatialState(raw||{});if($('spPhaseFov'))$('spPhaseFov').value=v.phaseFov;if($('spReadFov'))$('spReadFov').value=v.readFov;if($('spPhaseSamples'))$('spPhaseSamples').value=v.phaseSamples;if($('spReadSamples'))$('spReadSamples').value=v.readSamples;spatialUpdate(false);
 }
-function spatialReset(notify=true){if($('spPhaseFov'))$('spPhaseFov').value=100;if($('spReadFov'))$('spReadFov').value=100;if($('spPhaseSamples'))$('spPhaseSamples').value=128;if($('spReadSamples'))$('spReadSamples').value=128;spatialUpdate();if(notify)toast('Spatial Encoding Lab reset')}
+function spatialReset(notify=true){activeSpatialChallenge='';if($('spPhaseFov'))$('spPhaseFov').value=100;if($('spReadFov'))$('spReadFov').value=100;if($('spPhaseSamples'))$('spPhaseSamples').value=128;if($('spReadSamples'))$('spReadSamples').value=128;spatialUpdate();if(notify)toast('Spatial Encoding Lab reset')}
+bindSpatialDeepDive();
 
 
 
