@@ -42,7 +42,7 @@ const requiredFunctions=[
   'swapSandboxComparison','saveComparisonHistory','renderComparisonHistory',
   'openParameterReferenceGroup',
   'contrastUpdate','contrastSignal','contrastTeachingCue','contrastLongitudinalTerm','contrastTransverseTerm','contrastSignalParts','contrastNullTi','contrastDrawRecovery','contrastDrawDecay','renderContrastDeep','setContrastSyntheticNull','renderContrastChallenge','setContrastChallenge','clearContrastChallenge','bindContrastDeepDive','applyContrastPreset','contrastReset','restoreContrastState',
-  'normalizeTimingState','timingState','timingMetrics','timingUpdate','persistTimingState','applyTimingPreset','restoreTimingState','timingReset',
+  'normalizeTimingState','timingState','timingMetrics','timingEquationRows','renderTimingDeep','timingChallengeRows','renderTimingChallenge','startTimingChallenge','restartTimingChallenge','clearTimingChallenge','bindTimingDeepDive','timingUpdate','persistTimingState','applyTimingPreset','restoreTimingState','timingReset',
   'normalizeMotionState','motionState','motionPhaseOrder','motionDisplacementAt','motionAcquire','motionTeachingCopy','drawMotionImage','drawMotionHistory','motionConfigure','motionUpdate','persistMotionState','applyMotionPreset','restoreMotionState','motionReset',
   'calcVoxel','calcTime','solveArtifact','updateSafety','burnUpdate',
   'readStoredJson','trapDialogFocus','localDataHealthy','renderDataHealth','retiredLegacyDataStats','renderRetiredDataSummary','clearRetiredLegacyData',
@@ -80,7 +80,7 @@ const requiredIds=[
   'labContinuity','labContinuityTitle','labContinuityMeta','labChallengeLauncher',
   'paramControlsCard','paramModelCard','parameterLens','parameterDeepCockpit','parameterInspectorSelect','parameterInspectorName','parameterInspectorBase','parameterInspectorCurrent','parameterIsolatedMetrics','parameterFullMetrics','parameterCauseNode','parameterMechanismNode','parameterEffectNode','parameterEquationLab','parameterSpatialEquation','parameterSpatialFactors','parameterSnrFactors','parameterTimeFactors','parameterReference','workspaceReferenceHub',
   'clMode','clTr','clTe','clTi','clTiRow','clTrOut','clTeOut','clTiOut','contrastMaterials','clModeBadge','clSpread','clBrightest','clCue','clCueDetail','contrastEquation','contrastRecoveryCanvas','contrastDecayCanvas','contrastRecoverySummary','contrastDecaySummary','contrastDecomposition','contrastDriver','contrastNullButtons','contrastChallengeTargets','contrastChallengeTarget','contrastChallengeHint','contrastChallengeConstraints','contrastChallengeState',
-  'timingTr','timingFirstEcho','timingSpacing','timingEtl','timingCenter','timingPhase','timingNex','timingCueTitle','timingCueDetail','timingFitBadge','timingTrMarker','timingTrainBand','timingEchoRow','timingEffectiveTe','timingTrainSpan','timingTrainCount','timingTimeProxy',
+  'timingTr','timingFirstEcho','timingSpacing','timingEtl','timingCenter','timingPhase','timingNex','timingCueTitle','timingCueDetail','timingFitBadge','timingTrMarker','timingTrainBand','timingEchoRow','timingEffectiveTe','timingTrainSpan','timingTrainCount','timingTimeProxy','timingEquationBreakdown','timingKspaceStrip','timingKspaceBadge','timingKspaceCopy','timingFirstLandmark','timingCenterLandmark','timingLastLandmark','timingChallengeTargets','timingChallengeTarget','timingChallengeHint','timingChallengeConstraints','timingChallengeState',
   'motionMode','motionDirection','motionOrder','motionAmplitude','motionOnset','motionCycles','motionCueTitle','motionCueDetail','motionEffectBadge','motionHistoryCanvas','motionReferenceCanvas','motionResultCanvas','motionAffected','motionPeak','motionCenterShift','motionDominant',
   'presetLibrary','presetList','presetSearch',
   'parameterChallengePanel','parameterChallengeTitle','parameterChallengeCopy','parameterChallengeState','parameterChallengeReference','parameterChallengeConstraints',
@@ -121,7 +121,7 @@ const requiredCopy=[
   'Current workspace','Problem mode','Start from a constraint',
   'A/B Parameter Compare','Parameter Reference','Related tools',
   'MR Safety Reference','RF / thermal details',
-  'Premium Labs · access preview','Advanced labs with a real entitlement model.','MR Command Center · Premium workspace','Premium concept challenge','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','Gradient Encoding Concepts Lab','Off-Resonance & Phase Lab','No charges are active in v20.0.',
+  'Premium Labs · access preview','Advanced labs with a real entitlement model.','MR Command Center · Premium workspace','Premium concept challenge','Diffusion & b-Value Lab','Parallel Imaging Lab','RF Power Concepts Lab','Gradient Encoding Concepts Lab','Off-Resonance & Phase Lab','No charges are active in v21.0.',
   'Learning-use boundary','Settings & shortcuts'
 ]
 for(const text of requiredCopy){if(!html.includes(text)) fail.push('Required v7 workspace copy is missing: '+text);}
@@ -134,7 +134,7 @@ if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not 
 if(!brand.includes('MR Command Center mark')||!brand.includes('#48f0b2')||!brand.includes('#b89cff')) fail.push('Brand mark does not contain the approved MRCC identity markers.');
 if(!manifest.includes('Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact')) fail.push('Manifest description is not the seven-Lab description.');
 if(!manifest.includes('/brand-mark.svg')) fail.push('Manifest does not include the SVG brand mark.');
-if(!sw.includes("mrcc-v20.0.0")) fail.push('Service worker cache marker is not v20.0.0.');
+if(!sw.includes("mrcc-v21.0.0")) fail.push('Service worker cache marker is not v21.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
 if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('Page title is not the MRI Labs title.');
 if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
@@ -143,7 +143,7 @@ if(!html.includes('<meta name="author" content="Edon Kukaj" />')) fail.push('Edo
 if(!html.includes('<span class="brandcredit">Edon Kukaj</span>')||!html.includes('aria-label="MR Command Center by Edon Kukaj"')) fail.push('Edon Kukaj brand credit is missing from the header.');
 if(!html.includes('class="top-actions"')||!html.includes('class="top-status"')) fail.push('v10.1 header action/status grouping is missing.');
 if(!html.includes('/* v10.1 Interface refinement */')||!html.includes('scroll-snap-type:x proximity')||!html.includes('.workspace-rail button.active:before')||!html.includes('.lab-home-card:hover,.lab-home-card:focus-within')) fail.push('v10.1 interface refinement styles are incomplete.');
-if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v20.0</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v20.0</span>')) fail.push('Current live release identity is incomplete.');
+if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v21.0</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v21.0</span>')) fail.push('Current live release identity is incomplete.');
 if(!script.includes("function setRouteContext(label='Home')")||!script.includes('function keepActiveLabVisible(target)')||!script.includes("setRouteContext(sectionTitles[id])")) fail.push('v10.2 route context or active-Lab mobile navigation is incomplete.');
 if(!html.includes('env(safe-area-inset-bottom)')) fail.push('v10.2 mobile safe-area handling is missing.');
 if(!html.includes('active v15 workspace keys')) fail.push('Workspace restore copy still references an outdated workspace generation.');
@@ -204,7 +204,7 @@ if(!premiumDoc.includes('v13.0 Premium workspace routing')||!premiumDoc.includes
 if(!html.includes('/* v14.0 Spatial Encoding Lab */')||!html.includes('id="spatial" class="section spatial-lab"')||!script.includes('function spatialMetrics')||!script.includes("localStorage.setItem('mrcc_spatial_current'")||!html.includes('id="homeSpatialState"')) fail.push('v14.0 Spatial Encoding Lab is incomplete.');
 if(!html.includes('/* v15.0 Public launch + runtime hygiene */')||!documentHtml.includes('href="/about.html"')||!documentHtml.includes('href="/privacy.html"')||!documentHtml.includes('application/ld+json')||!documentHtml.includes('"@type":"WebApplication"')) fail.push('v15.0 public-launch shell is incomplete.');
 if(!appCss.includes('/* v16.0 Runtime modularization')||!script.includes('/* v16.0 Runtime modularization')||!documentHtml.includes('/app.css')||!documentHtml.includes('/app.js')) fail.push('v16.0 runtime modularization markers are incomplete.');
-if(!script.includes("build:'20.0'")) fail.push('Current workspace export build marker is not v20.0.');
+if(!script.includes("build:'21.0'")) fail.push('Current workspace export build marker is not v21.0.');
 if(documentHtml.length>180000) fail.push('v16.0 HTML shell regression: index.html is unexpectedly large.');
 if(appCss.length<150000||script.length<150000) fail.push('v16.0 extracted runtime assets look incomplete.');
 if(!sw.includes("'/app.css'")||!sw.includes("'/app.js'")) fail.push('v16.0 runtime assets are missing from the offline core cache.');
@@ -331,7 +331,7 @@ if(script.includes("updateSafety();renderCockpit()")||script.includes("burnUpdat
 
 
 
-if(!readme.includes('v20.0 — Contrast Lab Deep Dive')||!readme.includes('v20.0 release notes')||!readme.includes('v19.0 release notes')||!readme.includes('v18.1 release notes')||!readme.includes('v18.0 release notes')||!readme.includes('v17.2 release notes')||!readme.includes('v17.1 release notes')||!readme.includes('v17.0 release notes')||!readme.includes('v16.1 release notes')||!readme.includes('v16.0 release notes')||!readme.includes('v15.0 release notes')||!readme.includes('v14.0 release notes')||!readme.includes('v13.0 release notes')||!readme.includes('v12.0 release notes')||!readme.includes('v11.5 release notes')||!readme.includes('v11.4 release notes')||!readme.includes('v11.3 release notes')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('premium-products.json')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
+if(!readme.includes('v21.0 — Timing Lab Deep Dive')||!readme.includes('v21.0 release notes')||!readme.includes('v20.0 release notes')||!readme.includes('v19.0 release notes')||!readme.includes('v18.1 release notes')||!readme.includes('v18.0 release notes')||!readme.includes('v17.2 release notes')||!readme.includes('v17.1 release notes')||!readme.includes('v17.0 release notes')||!readme.includes('v16.1 release notes')||!readme.includes('v16.0 release notes')||!readme.includes('v15.0 release notes')||!readme.includes('v14.0 release notes')||!readme.includes('v13.0 release notes')||!readme.includes('v12.0 release notes')||!readme.includes('v11.5 release notes')||!readme.includes('v11.4 release notes')||!readme.includes('v11.3 release notes')||!readme.includes('v11.2 release notes')||!readme.includes('v11.1 release notes')||!readme.includes('v11.0 release notes')||!readme.includes('PREMIUM_LABS.md')||!readme.includes('premium-products.json')||!readme.includes('v10.2 release notes')||!readme.includes('v10.1 release notes')||!readme.includes('v10.0 release notes')||!readme.includes('v9.0 release notes')||!readme.includes('v8.0 release notes')||!readme.includes('v7.8 release notes')||!readme.includes('v7.7 release notes')||!readme.includes('stylized artifact patterns')) fail.push('README is stale.');
 if(!manifest.includes('"id": "/"')||!manifest.includes('"shortcuts"')||!manifest.includes('/#sequences')||!manifest.includes('/#timing')||!manifest.includes('/#motion')||!manifest.includes('/#spatial')||!manifest.includes('/#artifact')) fail.push('Manifest is missing app identity or workspace shortcuts.');
 if(!sw.includes('navigationPreload.enable()')) fail.push('Service worker navigation preload is missing.');
 if(!sw.includes("'/about.html'")||!sw.includes("'/privacy.html'")) fail.push('v15 public pages are not in the core offline cache.');
@@ -354,10 +354,15 @@ if(!appCss.includes('/* v20.0 Contrast Lab Deep Dive */')||!appCss.includes('.co
 if(!script.includes("t1:{title:'Create T1 emphasis'")||!script.includes("t2:{title:'Create T2 emphasis'")||!script.includes("nullB:{title:'Null Material B'")) fail.push('v20.0 Contrast target challenge definitions are incomplete.');
 if(!html.includes('arbitrary teaching values')||!html.includes('not human tissue values')||!html.includes('Success only means this simplified synthetic model met the displayed target.')) fail.push('v20.0 Contrast Lab educational boundary is incomplete.');
 
+if(!html.includes('id="timingEquationBreakdown"')||!html.includes('id="timingKspaceStrip"')||!html.includes('id="timingChallengeTargets"')||!html.includes('Timing anatomy')||!html.includes('Center-of-k-space logic')||!html.includes('Constraint challenges')) fail.push('v21.0 Timing Lab deep-dive UI is incomplete.');
+if(!script.includes('const timingChallengeDefs=')||!script.includes('function timingEquationRows')||!script.includes('function renderTimingDeep')||!script.includes('function timingChallengeRows')||!script.includes('function renderTimingChallenge')||!script.includes('function startTimingChallenge')) fail.push('v21.0 Timing Lab deep-dive runtime is incomplete.');
+if(!appCss.includes('/* v21.0 Timing Lab Deep Dive */')||!appCss.includes('.timing-equation-breakdown')||!appCss.includes('.timing-kspace-strip')||!appCss.includes('.timing-challenge-targets')) fail.push('v21.0 Timing Lab deep-dive styling is incomplete.');
+if(!html.includes('abstract linear k-space train')||!html.includes('real FSE/TSE view ordering is implementation dependent')) fail.push('v21.0 Timing Lab view-ordering boundary is incomplete.');
+
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
   for(const item of fail) console.error('- '+item);
   process.exit(1);
 }
 
-console.log('MR Command Center v20.0 Contrast Lab Deep Dive validation passed.');
+console.log('MR Command Center v21.0 Timing Lab Deep Dive validation passed.');
