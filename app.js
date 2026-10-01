@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'16.1',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'17.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v16.1 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v17.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -234,15 +234,16 @@ if('serviceWorker' in navigator){
 }
 updateNetworkState();
 
-const sectionTitles={safety:'MR Safety Foundations',math:'Scan Math',sandbox:'Parameter Lab',contrast:'Contrast Lab',timing:'Sequence Timing Lab',motion:'Motion Lab',kspace:'K-Space Lab',spatial:'Spatial Encoding Lab',rescue:'Sequence Rescue',artifact:'Artifact Lab',burn:'Thermal / RF Foundations'};
+const sectionTitles={protocol:'Protocol Workspace',safety:'MR Safety Foundations',math:'Scan Math',sandbox:'Parameter Lab',contrast:'Contrast Lab',timing:'Sequence Timing Lab',motion:'Motion Lab',kspace:'K-Space Lab',spatial:'Spatial Encoding Lab',rescue:'Sequence Rescue',artifact:'Artifact Lab',burn:'Thermal / RF Foundations'};
 const homeSectionTitles={premiumLabs:'Premium Labs',referenceOnboarding:'Reference & onboarding'};
 const navGroups={
+  protocol:{label:'Protocol workspace',ids:['protocol']},
   safety:{label:'Safety reference',ids:['safety','burn']},
   workspace:{label:'MRI Labs',ids:['sandbox','contrast','timing','motion','kspace','spatial','artifact']},
   reference:{label:'Supporting reference',ids:['math','rescue']}
 };
-const moduleAccent={safety:'#48f0b2',math:'#72b7ff',sandbox:'#52d7ff',contrast:'#b89cff',timing:'#52d7ff',motion:'#ff9c7c',kspace:'#ffd166',spatial:'#68e1b8',rescue:'#b89cff',artifact:'#ffd166',burn:'#ff9c7c',learn:'#68e1b8'};
-const mobileRouteMap={premium:'premium',safety:'safety',burn:'safety',sandbox:'labs',contrast:'labs',timing:'labs',motion:'labs',kspace:'labs',spatial:'labs',artifact:'labs',math:'reference',rescue:'reference'};
+const moduleAccent={protocol:'#68e1b8',safety:'#48f0b2',math:'#72b7ff',sandbox:'#52d7ff',contrast:'#b89cff',timing:'#52d7ff',motion:'#ff9c7c',kspace:'#ffd166',spatial:'#68e1b8',rescue:'#b89cff',artifact:'#ffd166',burn:'#ff9c7c',learn:'#68e1b8'};
+const mobileRouteMap={protocol:'protocol',premium:'premium',safety:'safety',burn:'safety',sandbox:'labs',contrast:'labs',timing:'labs',motion:'labs',kspace:'labs',spatial:'labs',artifact:'labs',math:'reference',rescue:'reference'};
 function syncMobileNav(id='home'){
   const tab=id==='home'?'home':(mobileRouteMap[id]||'reference');
   document.querySelectorAll('#mobileNav [data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===tab;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
@@ -374,8 +375,8 @@ function setFocusedSection(id){
   document.querySelectorAll('main>.section').forEach(s=>s.classList.toggle('active-section',s.id===id));
   document.querySelectorAll('[data-module-card]').forEach(b=>{const on=b.dataset.moduleCard===id;if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   document.title=sectionTitles[id]+' — MR Command Center';announceRoute(sectionTitles[id]+' workspace tool');setRouteContext(sectionTitles[id]);
-  if(['sandbox','contrast','timing','motion','kspace','spatial','artifact'].includes(id))$('focusBar')?.classList.remove('show');else renderFocusBar(id);
-  setWorkspaceTabActive(['sandbox','contrast','timing','motion','kspace','spatial','artifact'].includes(id)?'labs':(['safety','burn'].includes(id)?'safety':'reference'));
+  if(['sandbox','contrast','timing','motion','kspace','spatial','artifact'].includes(id)||id==='protocol')$('focusBar')?.classList.remove('show');else renderFocusBar(id);
+  setWorkspaceTabActive(['sandbox','contrast','timing','motion','kspace','spatial','artifact'].includes(id)?'labs':id==='protocol'?'protocol':(['safety','burn'].includes(id)?'safety':'reference'));
   return true;
 }
 function showHome(scroll=true,replaceRoute=false,updateRoute=true){
@@ -462,6 +463,7 @@ function renderCockpit(){renderPins();const label=$('recentLabel'),resume=$('res
 function tick(){const d=new Date();$('clock').textContent=d.toLocaleString([], {weekday:'short',hour:'2-digit',minute:'2-digit'})}setInterval(tick,30000);tick();
 const commands=[
 {id:'home',title:'Labs Home',desc:'Return to the lab library, current local lab states, saved setups, and comparisons.',cat:'Parameters',icon:'⌂',keys:'home labs parameter contrast k-space presets compare'},
+{id:'protocol',title:'Protocol Workspace',desc:'Build a source-tracked tech protocol sheet from an approved sequence list.',cat:'Parameters',icon:'Rx',keys:'protocol scanner sequence list cheat sheet workflow coverage fov matrix nex acceleration'},
 {id:'unknown',title:'Unknown / unidentified device',desc:'Study the unresolved-device evidence and escalation route.',cat:'Safety',icon:'?',keys:'unknown implant device accessory safety'},
 {id:'conditional',title:'MR Conditional device',desc:'Study conditions-of-use verification.',cat:'Safety',icon:'C',keys:'conditional implant device conditions SAR B1 rms'},
 {id:'heating',title:'Heating / burning scenario',desc:'Study the stop / assess thermal safety route.',cat:'Safety',icon:'!',keys:'burn heating hot pain discomfort patient'},
@@ -1387,9 +1389,10 @@ function runSelfCheck(){
     ['Supporting tools',typeof calcVoxel==='function'&&typeof calcTime==='function'&&typeof solveArtifact==='function'&&typeof renderRescue==='function'],
     ['Safety reference',typeof updateSafety==='function'&&typeof burnUpdate==='function'&&!!$('safety')&&!!$('burn')],
     ['Search + settings',typeof runCommand==='function'&&typeof openPalette==='function'&&typeof openPreferences==='function'&&!!$('paletteBack')&&!!$('prefsBack')],
-    ['Home/Labs navigation',typeof openLab==='function'&&typeof setWorkspaceTabActive==='function'&&document.querySelectorAll('[data-workspace-tab]').length===12],
-    ['Mobile navigation',typeof syncMobileNav==='function'&&document.querySelectorAll('#mobileNav [data-workspace-tab]').length===6],
-    ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'&&sectionTitles.contrast==='Contrast Lab'&&sectionTitles.kspace==='K-Space Lab'&&sectionTitles.spatial==='Spatial Encoding Lab'&&sectionTitles.artifact==='Artifact Lab'],
+    ['Protocol Workspace',typeof openProtocolWorkspace==='function'&&typeof protocolImportSequences==='function'&&typeof restoreProtocolWorkspace==='function'&&!!$('protocol')&&!!$('protocolTableBody')],
+    ['Home/Labs navigation',typeof openLab==='function'&&typeof setWorkspaceTabActive==='function'&&document.querySelectorAll('[data-workspace-tab]').length===14],
+    ['Mobile navigation',typeof syncMobileNav==='function'&&document.querySelectorAll('#mobileNav [data-workspace-tab]').length===7],
+    ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'&&sectionTitles.protocol==='Protocol Workspace'&&sectionTitles.contrast==='Contrast Lab'&&sectionTitles.kspace==='K-Space Lab'&&sectionTitles.spatial==='Spatial Encoding Lab'&&sectionTitles.artifact==='Artifact Lab'],
     ['Local data layer',typeof readStoredJson==='function'&&typeof localDataHealthy==='function'&&localDataHealthy()],
     ['Workspace portability',typeof exportWorkspaceBackup==='function'&&typeof sanitizeWorkspaceBackup==='function'&&typeof applyWorkspaceImport==='function'&&typeof copyWorkspaceDiagnostics==='function'&&MRCC_WORKSPACE_ACTIVE_KEYS.length===13&&!!$('workspaceImportFile')],
     ['Offline update flow',typeof applyAppUpdate==='function'],
@@ -1801,6 +1804,38 @@ function restoreSpatialState(){
 }
 function spatialReset(notify=true){if($('spPhaseFov'))$('spPhaseFov').value=100;if($('spReadFov'))$('spReadFov').value=100;if($('spPhaseSamples'))$('spPhaseSamples').value=128;if($('spReadSamples'))$('spReadSamples').value=128;spatialUpdate();if(notify)toast('Spatial Encoding Lab reset')}
 
+
+/* v17.0 Protocol Workspace foundation */
+const MRCC_PROTOCOL_STORAGE_KEY='mrcc_protocol_workspace_v1';
+const MRCC_PROTOCOL_META_KEYS=['age','weight','manufacturer','model','tesla','sedation','breath','exam','indication','contrast','source','coverage','axialCoverage','coronalCoverage','sagittalCoverage','dynamicNotes','injectionNotes','postContrastNotes'];
+let protocolRows=[];let protocolEventsBound=false;
+function protocolDefaultMeta(){const meta={};for(const key of MRCC_PROTOCOL_META_KEYS)meta[key]='';meta.contrast='None';return meta}
+function protocolBlankRow(sequence='',plane='',options=''){return {sequence,plane,coverage:'',fov:'',sliceGap:'',matrix:'',freqDir:'',phaseDir:'',nex:'',accel:'',motion:'',options,notes:'',source:sequence?'Imported sequence list':'Tech entry',verified:false};}
+function protocolGuessPlane(text=''){const s=String(text);if(/\b(3[- ]?plane|localizer|locator|scout)\b/i.test(s))return '3-plane / localizer';if(/\b(axial|ax|tra|transverse)\b/i.test(s))return 'Axial';if(/\b(coronal|cor)\b/i.test(s))return 'Coronal';if(/\b(sagittal|sag)\b/i.test(s))return 'Sagittal';return '';}
+function protocolRecognizeOptions(text=''){const terms=['LAVA Flex','DISCO STAR','Compressed SENSE','PROPELLER','ASSET','ARC','LAVA','CUBE','SWAN','IDEAL','Dixon','GRAPPA','CAIPIRINHA','BLADE','VIBE','SPACE','SWI','SENSE','MultiVane','mDIXON','VISTA','SWIp'],found=[];const hay=' '+String(text).toLowerCase().replace(/[^a-z0-9]+/g,' ')+' ';for(const term of terms){const needle=' '+term.toLowerCase().replace(/[^a-z0-9]+/g,' ')+' ';if(hay.includes(needle))found.push(term)}return [...new Set(found)].join(', ');}
+function protocolNormalizeSequenceLine(line=''){return String(line).trim().replace(/^\s*(?:\d+\s*[.)-]\s*|[-*•]\s*)/,'').trim();}
+function protocolParseSequenceText(text=''){return String(text).split(/\r?\n/).map(protocolNormalizeSequenceLine).filter(Boolean).map(line=>protocolBlankRow(line,protocolGuessPlane(line),protocolRecognizeOptions(line)));}
+function protocolMetaSnapshot(){const meta={};for(const key of MRCC_PROTOCOL_META_KEYS){const el=document.querySelector('[data-protocol-meta="'+key+'"]');meta[key]=el?.value||''}return meta;}
+function protocolChecklistSnapshot(){const checks={};document.querySelectorAll('[data-protocol-check]').forEach(el=>{checks[el.dataset.protocolCheck]=!!el.checked});return checks;}
+function protocolSave(){try{localStorage.setItem(MRCC_PROTOCOL_STORAGE_KEY,JSON.stringify({schema:1,meta:protocolMetaSnapshot(),sequenceInput:$('protocolSequenceInput')?.value||'',rows:protocolRows,checks:protocolChecklistSnapshot(),savedAt:new Date().toISOString()}))}catch(e){}}
+function protocolSetMeta(meta={}){for(const key of MRCC_PROTOCOL_META_KEYS){const el=document.querySelector('[data-protocol-meta="'+key+'"]');if(el&&Object.prototype.hasOwnProperty.call(meta,key))el.value=String(meta[key]??'')}}
+function protocolSetChecks(checks={}){document.querySelectorAll('[data-protocol-check]').forEach(el=>{el.checked=!!checks[el.dataset.protocolCheck]});}
+function protocolVendorHint(){const maker=$('protocolManufacturer')?.value||'',box=$('protocolVendorHint');if(!box)return;const map={'GE HealthCare':'Common GE labels can include ASSET / ARC, PROPELLER, LAVA / LAVA Flex, CUBE, SWAN, and IDEAL/Dixon.','Siemens Healthineers':'Common Siemens labels can include GRAPPA, CAIPIRINHA, BLADE, VIBE Dixon, SPACE, and SWI.','Philips':'Common Philips labels can include SENSE / Compressed SENSE, MultiVane, mDIXON, VISTA, and SWIp.'};const copy=map[maker]||'Use the exact terminology shown on the scanner and in the approved local protocol.';box.innerHTML='<b>Vendor vocabulary'+(maker?' · '+escapeHtml(maker):'')+'</b><span>'+escapeHtml(copy)+' Availability varies by model, software, coil, licensing, and local configuration; these are naming hints, not capability claims.</span>';}
+function protocolContextSummary(){const box=$('protocolContextSummary');if(!box)return;const m=protocolMetaSnapshot(),items=[];if(m.manufacturer||m.model||m.tesla)items.push([m.manufacturer,m.model,m.tesla].filter(Boolean).join(' · '));if(m.sedation)items.push('State: '+m.sedation);if(m.breath)items.push('Breathing: '+m.breath);if(m.exam)items.push('Exam: '+m.exam);if(m.age||m.weight)items.push('Patient size recorded — no automatic numeric parameter changes');if(/cannot|free-breathing/i.test(m.breath))items.push('Breath-hold constrained: use approved free-breathing / trigger alternatives');if(/sedated|anesthesia/i.test(m.sedation))items.push('Sedation/anesthesia: verify MR-safe monitoring/line workflow and local policy');if(m.tesla)items.push('Field strength recorded — scanner-specific limits still require source verification');box.innerHTML=items.map(x=>'<span>'+escapeHtml(x)+'</span>').join('');}
+function protocolUpdateSummary(){const total=protocolRows.length,verified=protocolRows.filter(r=>r.verified).length;if($('protocolSequenceCount'))$('protocolSequenceCount').textContent=total+' sequence'+(total===1?'':'s');if($('protocolVerificationSummary'))$('protocolVerificationSummary').textContent=verified+' / '+total+' verified';}
+function protocolInputCell(index,key,value,placeholder=''){return '<input type="text" data-protocol-row="'+index+'" data-protocol-field="'+key+'" value="'+escapeHtml(value||'')+'" placeholder="'+escapeHtml(placeholder)+'" autocomplete="off">';}
+function protocolRenderTable(){const body=$('protocolTableBody'),empty=$('protocolTableEmpty');if(!body)return;body.innerHTML=protocolRows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+protocolInputCell(i,'sequence',r.sequence,'Sequence')+'</td><td>'+protocolInputCell(i,'plane',r.plane,'Plane')+'</td><td>'+protocolInputCell(i,'coverage',r.coverage,'Landmarks')+'</td><td>'+protocolInputCell(i,'fov',r.fov,'Source value')+'</td><td>'+protocolInputCell(i,'sliceGap',r.sliceGap,'Source value')+'</td><td>'+protocolInputCell(i,'matrix',r.matrix,'Freq × phase')+'</td><td>'+protocolInputCell(i,'freqDir',r.freqDir,'Direction')+'</td><td>'+protocolInputCell(i,'phaseDir',r.phaseDir,'Direction')+'</td><td>'+protocolInputCell(i,'nex',r.nex,'Source value')+'</td><td>'+protocolInputCell(i,'accel',r.accel,'ASSET / ARC / etc.')+'</td><td>'+protocolInputCell(i,'motion',r.motion,'BH / FB / trigger')+'</td><td>'+protocolInputCell(i,'options',r.options,'Vendor option')+'</td><td>'+protocolInputCell(i,'notes',r.notes,'Tech notes')+'</td><td>'+protocolInputCell(i,'source',r.source,'Source / revision')+'</td><td class="protocol-verify"><label><input type="checkbox" data-protocol-row="'+i+'" data-protocol-verify '+(r.verified?'checked':'')+'><span>Tech verified</span></label></td><td><button type="button" class="protocol-row-remove" data-protocol-remove="'+i+'" aria-label="Remove sequence '+(i+1)+'">×</button></td></tr>').join('');if(empty)empty.hidden=protocolRows.length>0;protocolUpdateSummary();}
+function protocolImportSequences(){const input=$('protocolSequenceInput'),parsed=protocolParseSequenceText(input?.value||'');if(!parsed.length){toast('Paste at least one sequence line first');return}if(protocolRows.length&&!confirm('Replace the current sequence table with this pasted list?'))return;protocolRows=parsed;protocolRenderTable();protocolSave();toast('Sequence order preserved · '+parsed.length+' rows created');}
+function protocolAddRow(){protocolRows.push(protocolBlankRow());protocolRenderTable();protocolSave();setTimeout(()=>$('protocolTableBody')?.querySelector('tr:last-child input')?.focus(),0)}
+function protocolRemoveRow(index){if(index<0||index>=protocolRows.length)return;protocolRows.splice(index,1);protocolRenderTable();protocolSave()}
+function protocolHandleTableEvent(event){const t=event.target;if(!(t instanceof HTMLElement))return;const remove=t.closest('[data-protocol-remove]');if(remove&&event.type==='click'){protocolRemoveRow(Number(remove.dataset.protocolRemove));return}if(t.dataset.protocolRow!==undefined){const i=Number(t.dataset.protocolRow);if(!protocolRows[i])return;if(t.dataset.protocolVerify!==undefined)protocolRows[i].verified=!!t.checked;else if(t.dataset.protocolField)protocolRows[i][t.dataset.protocolField]=t.value;protocolSave();protocolUpdateSummary();}}
+function protocolLoadTextFile(file){if(!file)return;if(file.size>1000000){toast('Protocol text file is too large');return}const reader=new FileReader();reader.onload=()=>{if($('protocolSequenceInput'))$('protocolSequenceInput').value=String(reader.result||'');protocolSave();toast('Sequence text loaded · review before building the table')};reader.onerror=()=>toast('Could not read that text file');reader.readAsText(file);}
+function protocolPrint(){window.print()}
+function protocolReset(){if(!confirm('Clear this browser-local Protocol Workspace sheet?'))return;try{localStorage.removeItem(MRCC_PROTOCOL_STORAGE_KEY)}catch(e){}protocolRows=[];protocolSetMeta(protocolDefaultMeta());protocolSetChecks({});if($('protocolSequenceInput'))$('protocolSequenceInput').value='';protocolRenderTable();protocolVendorHint();protocolContextSummary();toast('Protocol sheet cleared');}
+function protocolBindEvents(){if(protocolEventsBound)return;protocolEventsBound=true;document.querySelectorAll('[data-protocol-meta]').forEach(el=>{el.addEventListener('input',()=>{protocolSave();protocolContextSummary();if(el.id==='protocolManufacturer')protocolVendorHint()});el.addEventListener('change',()=>{protocolSave();protocolContextSummary();if(el.id==='protocolManufacturer')protocolVendorHint()})});document.querySelectorAll('[data-protocol-check]').forEach(el=>el.addEventListener('change',protocolSave));$('protocolSequenceInput')?.addEventListener('input',protocolSave);$('protocolTableBody')?.addEventListener('input',protocolHandleTableEvent);$('protocolTableBody')?.addEventListener('change',protocolHandleTableEvent);$('protocolTableBody')?.addEventListener('click',protocolHandleTableEvent);$('protocolParseBtn')?.addEventListener('click',protocolImportSequences);$('protocolAddRowBtn')?.addEventListener('click',protocolAddRow);$('protocolPrintBtn')?.addEventListener('click',protocolPrint);$('protocolResetBtn')?.addEventListener('click',protocolReset);$('protocolTextFile')?.addEventListener('change',e=>{protocolLoadTextFile(e.target.files?.[0]);e.target.value=''});}
+function restoreProtocolWorkspace(){protocolBindEvents();let raw=null;try{raw=JSON.parse(localStorage.getItem(MRCC_PROTOCOL_STORAGE_KEY)||'null')}catch(e){}if(raw&&raw.schema===1){protocolSetMeta({...protocolDefaultMeta(),...(raw.meta||{})});if($('protocolSequenceInput'))$('protocolSequenceInput').value=String(raw.sequenceInput||'');protocolRows=Array.isArray(raw.rows)?raw.rows.map(r=>({...protocolBlankRow(),...r,verified:!!r.verified})):[];protocolSetChecks(raw.checks||{})}else{protocolSetMeta(protocolDefaultMeta());if($('protocolSequenceInput'))$('protocolSequenceInput').value='';protocolRows=[]}protocolRenderTable();protocolVendorHint();protocolContextSummary();}
+function openProtocolWorkspace(){go('protocol');setWorkspaceTabActive('protocol')}
+
 window.addEventListener('pagehide',()=>{if(sandboxAutosaveTimer){clearTimeout(sandboxAutosaveTimer);sandboxAutosaveTimer=null}try{persistSandboxCurrentState()}catch(e){}});
-restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();renderLabsHome();
+restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();restoreProtocolWorkspace();renderLabsHome();
 applyModuleArt();ensureModuleFooters();renderParameterGoal();renderParameterChallenge();renderWorkbenchHome();renderDataHealth();renderRetiredDataSummary();restoreRouteFromHash();
