@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v24.0 — Spatial Encoding Lab Deep Dive
+v25.0 — Artifact Lab Deep Dive
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,17 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v25.0 release notes
+- Completed the core lab-by-lab deepening pass with a major **Artifact Lab Deep Dive**.
+- Replaced the old universal “phase-like direction” framing with artifact-specific direction logic. Motion and flow emphasize phase encoding; chemical shift emphasizes frequency encoding; wrap follows the undersized encoded axis; zipper/truncation use pattern-specific orientation language; metal and dielectric shading explicitly de-emphasize simple encoding-direction explanations.
+- Added **Pattern DNA** for all eight artifact families: morphology, footprint, encoding relationship, and the strongest discriminator.
+- Added a **Look-alike Differential** pairing each selected artifact with its closest teaching mimic and explaining the clue that separates them.
+- Added a one-click display-direction flip while clearly distinguishing “moves when direction changes” from “source corrected.”
+- Added an eight-question **Artifact Recognition Challenge** covering motion, wrap, chemical shift, metal/susceptibility, zipper/RF interference, Gibbs/truncation, flow/pulsation, and dielectric/B1 shading.
+- Challenge feedback explains the discriminating clue and can load the correct pattern directly into the Lab for visual review.
+- Kept troubleshooting guidance separate from identification: pattern recognition first, then cause / first move / tradeoff / context.
+- Extended built-in self-check and release validation to require the new artifact profiles, dynamic direction labels, differential, and challenge runtime.
 
 ### v24.0 release notes
 - Continued the lab-by-lab deepening program with a major **Spatial Encoding Lab Deep Dive**.
