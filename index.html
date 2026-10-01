@@ -221,7 +221,7 @@
           <label class="protocol-span-2"><span>Protocol source / revision</span><input id="protocolSource" data-protocol-meta="source" autocomplete="off" placeholder="Optional local protocol name / revision"></label>
         </div>
         <details class="protocol-scanner-memory"><summary>Remember this scanner</summary><div class="protocol-profile-bar"><select id="protocolProfileSelect" aria-label="Saved scanner profile"><option value="">Saved scanner profile…</option></select><button type="button" id="protocolProfileSaveBtn">Save</button><button type="button" id="protocolProfileDeleteBtn">Delete</button></div></details>
-        <p class="protocol-privacy"><strong>No PHI:</strong> do not enter name, MRN, DOB, accession number, or other direct identifiers. Protocol images are not saved to localStorage.</p>
+        <p class="protocol-privacy"><strong>Do not enter name, MRN, DOB, accession number, or other direct identifiers.</strong> Protocol images are not saved to localStorage.</p>
         <div id="protocolContextSummary" class="protocol-context-summary" aria-live="polite"></div>
         <div id="protocolVendorHint" class="protocol-vendor-hint"><b>Vendor vocabulary</b><span>Select a manufacturer to show terminology hints.</span></div>
       </article>
@@ -238,7 +238,7 @@
         <label class="protocol-sequence-label" for="protocolSequenceInput">Type / paste the sequence list</label>
         <textarea id="protocolSequenceInput" class="protocol-sequence-input protocol-sequence-simple" rows="8" placeholder="3-plane localizer&#10;AX T2 FSE FS&#10;COR PD FS&#10;SAG T1"></textarea>
         <div class="protocol-import-actions"><button type="button" class="btn protocol-primary-action" id="protocolParseBtn">Generate Scan Assist</button><label class="protocol-file-btn">Load .txt / .csv<input id="protocolTextFile" type="file" accept=".txt,.csv,text/plain,text/csv"></label></div>
-        <div id="protocolExtractionReview" class="protocol-extraction-review" hidden><div class="protocol-extraction-head"><div><b id="protocolExtractionTitle">Image read</b><span id="protocolExtractionMeta"></span></div><span class="protocol-review-badge">OCR draft · verify</span></div><div id="protocolExtractionList" class="protocol-extraction-list"></div><button type="button" id="protocolUseExtractionBtn" hidden>Use detected sequences</button><button type="button" id="protocolToggleTextBtn" class="protocol-text-review-btn">Review OCR text</button></div>
+        <div id="protocolExtractionReview" class="protocol-extraction-review" hidden><div class="protocol-extraction-head"><div><b id="protocolExtractionTitle">Image read</b><span id="protocolExtractionMeta"></span></div><span class="protocol-review-badge">review source</span></div><div id="protocolExtractionList" class="protocol-extraction-list"></div><button type="button" id="protocolUseExtractionBtn" hidden>Use detected sequences</button><button type="button" id="protocolToggleTextBtn" class="protocol-text-review-btn">Review OCR text</button></div>
         <details id="protocolTextFallback" class="protocol-text-fallback"><summary>OCR text / manual correction</summary><p class="protocol-table-help">Edit the sequence text above, then choose Generate Scan Assist again.</p></details>
         <div class="protocol-ocr-note"><b>Local OCR</b><span>When requested, OCR runs in your browser using pinned Tesseract.js assets fetched from jsDelivr. The image is not uploaded to an MRCC backend.</span></div>
       </article>
