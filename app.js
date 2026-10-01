@@ -2007,7 +2007,7 @@ function kspaceChallengeRows(id,state,masked,stats){
   if(id==='efficient')return[
     {label:'Mask type',met:state.mode==='center',goal:'central retention',now:state.mode},
     {label:'Samples',met:retained<=.35,goal:'≤ 35%',now:Math.round(retained*100)+'%'},
-    {label:'Energy',met:stats.energyRetained>=.80,goal:'≥ 80%',now:Math.round(stats.energyRetained*100)+'%'}
+    {label:'Energy',met:stats.energyRetained>=.95,goal:'≥ 95%',now:Math.round(stats.energyRetained*100)+'%'}
   ];
   if(id==='alias')return[
     {label:'Mask type',met:state.mode==='undersample',goal:'uniform undersampling',now:state.mode},
