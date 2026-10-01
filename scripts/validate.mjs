@@ -267,10 +267,10 @@ if(!html.includes('/* v9.0 Sequence Timing Lab */')||!script.includes('function 
 if(!html.includes('/* v10.0 Motion Lab */')||!script.includes('function motionAcquire')||!script.includes('function motionUpdate')||!script.includes('mrcc_motion_current')||!html.includes('id="motionHistoryCanvas"')||!html.includes('id="motionResultCanvas"')) fail.push('v10.0 Motion Lab implementation is missing.');
 if(!html.includes('applies idealized rigid translation to individual synthetic phase-encoding lines using the Fourier shift theorem')||!html.includes('This is not correction modeling')) fail.push('Motion Lab model-boundary or correction-boundary copy is missing.');
 if(!script.includes("const target=id==='contrast'?'contrast':id==='timing'?'timing':id==='motion'?'motion'")||!script.includes("motion:{id:'motion',label:'Motion Lab'}")) fail.push('Motion Lab routing / resume integration is missing.');
-if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Motion or Spatial Lab.');
+if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();restoreProtocolWorkspace();renderLabsHome();")) fail.push('Lab restoration order is missing Motion or Spatial Lab.');
 
 if(!script.includes("const target=id==='contrast'?'contrast':id==='timing'?'timing'")||!script.includes("timing:{id:'timing',label:'Sequence Timing Lab'}")) fail.push('Sequence Timing Lab routing / resume integration is missing.');
-if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();renderLabsHome();")) fail.push('Lab restoration order is missing Sequence Timing, Motion, or Spatial Lab.');
+if(!script.includes("restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();restoreProtocolWorkspace();renderLabsHome();")) fail.push('Lab restoration order is missing Sequence Timing, Motion, or Spatial Lab.');
 
 if(!html.includes('not scanner data, patient anatomy, or a physical MRI artifact simulator')||!html.includes('Look for structure, not realism.')) fail.push('Artifact Lab visualization boundary is missing.');
 if(!script.includes("timing:'labs'")||!script.includes("motion:'labs'")||!script.includes("spatial:'labs'")||!script.includes("artifact:'labs'")||!script.includes("ids:['sandbox','contrast','timing','motion','kspace','spatial','artifact']")) fail.push('Active Labs are not fully represented in Labs routing.');
@@ -313,7 +313,7 @@ if(contrastModelPos<0||contrastRestorePos<=contrastModelPos||kspaceModelPos<0||k
 if(script.includes('restoreSandboxCurrentState();restoreContrastState()')||script.includes('restoreContrastState();restoreKspaceState();renderPresetLibrary')) fail.push('Early lab restore ordering regression detected.');
 if(!script.includes("#mobileNav [data-workspace-tab]")||script.includes("document.querySelectorAll('[data-mobile-route]')")) fail.push('Mobile active-state sync is using the retired navigation contract.');
 if(!script.includes("Engine: Labs checks passed")||!script.includes("['K-Space Lab',typeof kspaceUpdate==='function'")) fail.push('Built-in self-check is not aligned with the current Labs product.');
-const bootMarker="restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();renderLabsHome();";
+const bootMarker="restoreContrastState();restoreTimingState();restoreMotionState();restoreKspaceState();restoreSpatialState();restoreArtifactLabState();restoreProtocolWorkspace();renderLabsHome();";
 const bootPos=script.lastIndexOf(bootMarker);
 if(bootPos<0) fail.push('Current seven-Lab boot restore chain is missing.');
 for(const retired of ['renderLearningProgress();','renderCaseLab();','renderPackLibrary();','renderPackStudio();','renderStudyReport();','renderSessionBuilder();','renderStudyProgress();','renderContinueLearning();','renderStudySession();','renderStudySessionHistory();','recordEngagement();','renderReturnLoop();']){if(script.includes(retired)) fail.push('Retired runtime call returned: '+retired);}
