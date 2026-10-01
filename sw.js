@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mrcc-v15.0.0';
-const CORE_ASSETS = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg', '/brand-mark.svg', '/premium-products.json', '/about.html', '/privacy.html'];
+const CACHE_NAME = 'mrcc-v16.0.0';
+const CORE_ASSETS = ['/', '/index.html', '/app.css', '/app.js', '/manifest.webmanifest', '/icon.svg', '/brand-mark.svg', '/premium-products.json', '/about.html', '/privacy.html'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
