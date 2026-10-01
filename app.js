@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'22.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'23.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v22.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v23.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1456,7 +1456,7 @@ function runSelfCheck(){
     ['Contrast Lab',typeof contrastUpdate==='function'&&typeof contrastSignal==='function'&&typeof renderContrastDeep==='function'&&typeof contrastDrawRecovery==='function'&&typeof renderContrastChallenge==='function'&&Array.isArray(contrastMaterialsModel)&&contrastMaterialsModel.length===3&&!!$('clTr')&&!!$('clTe')&&!!$('contrastRecoveryCanvas')&&!!$('contrastDecayCanvas')&&!!$('contrastDecomposition')&&!!$('contrastChallengeTargets')],
     ['Sequence Timing Lab',typeof timingUpdate==='function'&&typeof timingMetrics==='function'&&typeof renderTimingDeep==='function'&&typeof renderTimingChallenge==='function'&&typeof restoreTimingState==='function'&&!!$('timingTr')&&!!$('timingEtl')&&!!$('timingEchoRow')&&!!$('timingEquationBreakdown')&&!!$('timingKspaceStrip')&&!!$('timingChallengeTargets')],
     ['Motion Lab',typeof motionUpdate==='function'&&typeof motionAcquire==='function'&&typeof motionLineStats==='function'&&typeof renderMotionOrderCompare==='function'&&typeof renderMotionChallenge==='function'&&typeof restoreMotionState==='function'&&!!$('motionMode')&&!!$('motionHistoryCanvas')&&!!$('motionResultCanvas')&&!!$('motionLineMap')&&!!$('motionLinearCanvas')&&!!$('motionCentricCanvas')&&!!$('motionChallengeTargets')],
-    ['K-Space Lab',typeof kspaceUpdate==='function'&&typeof kspaceDft2D==='function'&&typeof kspaceApplyMask==='function'&&KS_N===32&&!!$('ksKspaceCanvas')&&!!$('ksImageCanvas')],
+    ['K-Space Lab',typeof kspaceUpdate==='function'&&typeof kspaceDft2D==='function'&&typeof kspaceApplyMask==='function'&&typeof kspaceEnergyStats==='function'&&typeof drawKspacePsf==='function'&&typeof renderKspaceChallenge==='function'&&KS_N===32&&!!$('ksKspaceCanvas')&&!!$('ksImageCanvas')&&!!$('ksPsfCanvas')&&!!$('ksEnergyBands')&&!!$('ksChallengeTargets')],
     ['Spatial Encoding Lab',typeof spatialUpdate==='function'&&typeof spatialMetrics==='function'&&typeof restoreSpatialState==='function'&&!!$('spWorldCanvas')&&!!$('spReconCanvas')],
     ['Artifact Lab',typeof artifactLabUpdate==='function'&&typeof artifactLabRender==='function'&&!!$('artifactCanvas')&&!!$('artifactStrength')],
     ['Lab persistence',typeof restoreContrastState==='function'&&typeof restoreTimingState==='function'&&typeof restoreMotionState==='function'&&typeof restoreKspaceState==='function'&&typeof restoreSpatialState==='function'&&typeof restoreArtifactLabState==='function'&&typeof persistContrastState==='function'&&typeof persistTimingState==='function'&&typeof persistMotionState==='function'&&typeof persistKspaceState==='function'&&typeof persistSpatialState==='function'&&typeof persistArtifactLabState==='function'],
@@ -1971,6 +1971,79 @@ function kspaceApplyMask(state){
   for(let y=0;y<n;y++)for(let x=0;x<n;x++){const i=y*n+x,m=kspaceMaskValue(x,y,state);mask[i]=m;if(m){re[i]=ksBaseFourier.re[i];im[i]=ksBaseFourier.im[i];kept++}}
   return {re,im,mask,retained:kept/(n*n)};
 }
+
+function kspaceEnergyStats(masked){
+  ensureKspaceBase();let total=0,kept=0,centerTotal=0,centerKept=0,outerTotal=0,outerKept=0;
+  const bands=Array.from({length:5},()=>({total:0,kept:0,samples:0,keptSamples:0}));
+  const maxR=Math.hypot(KS_N/2,KS_N/2);
+  for(let y=0;y<KS_N;y++)for(let x=0;x<KS_N;x++){
+    const i=y*KS_N+x,kx=kspaceSignedIndex(x),ky=kspaceSignedIndex(y),e=ksBaseFourier.re[i]*ksBaseFourier.re[i]+ksBaseFourier.im[i]*ksBaseFourier.im[i],on=!!masked.mask[i],edge=Math.max(Math.abs(kx),Math.abs(ky)),r=Math.hypot(kx,ky),bin=Math.min(4,Math.floor((r/maxR)*5));
+    total+=e;if(on)kept+=e;if(edge<=4){centerTotal+=e;if(on)centerKept+=e}else{outerTotal+=e;if(on)outerKept+=e}
+    bands[bin].total+=e;bands[bin].samples++;if(on){bands[bin].kept+=e;bands[bin].keptSamples++}
+  }
+  return {energyRetained:total?kept/total:0,centerRetained:centerTotal?centerKept/centerTotal:0,outerRetained:outerTotal?outerKept/outerTotal:0,efficiency:masked.retained?((total?kept/total:0)/masked.retained):0,bands};
+}
+function kspaceMaskPsf(masked){
+  const re=new Float64Array(KS_N*KS_N),im=new Float64Array(KS_N*KS_N);for(let i=0;i<re.length;i++)re[i]=masked.mask[i]?1:0;
+  const inv=kspaceDft2D(re,true,im),mag=new Float64Array(re.length);let peak=0,side=0;for(let i=0;i<mag.length;i++){mag[i]=Math.hypot(inv.re[i],inv.im[i]);peak=Math.max(peak,mag[i])}
+  const c=0; // unshifted impulse peak lives at index 0,0
+  let halfCount=0;for(let y=0;y<KS_N;y++)for(let x=0;x<KS_N;x++){const i=y*KS_N+x;if(mag[i]>=peak*.5)halfCount++;const dx=Math.min(x,KS_N-x),dy=Math.min(y,KS_N-y);if(dx>1||dy>1)side=Math.max(side,mag[i])}
+  return {mag,peak,sideRatio:peak?side/peak:0,halfCount};
+}
+function drawKspacePsf(masked){
+  const c=$('ksPsfCanvas');if(!c)return null;const psf=kspaceMaskPsf(masked),ctx=c.getContext('2d'),n=KS_N,cell=c.width/n;ctx.fillStyle='#030706';ctx.fillRect(0,0,c.width,c.height);
+  for(let vy=0;vy<n;vy++)for(let vx=0;vx<n;vx++){const x=(vx+n/2)%n,y=(vy+n/2)%n,i=y*n+x,q=psf.peak?psf.mag[i]/psf.peak:0,g=Math.round(Math.pow(q,.45)*255);ctx.fillStyle='rgb('+Math.round(g*.78)+','+Math.round(g*.72)+','+Math.round(g*.38)+')';ctx.fillRect(vx*cell,vy*cell,Math.ceil(cell),Math.ceil(cell))}
+  return psf;
+}
+const kspaceChallengeDefs={
+  efficient:{title:'Retain concentrated center energy with fewer samples',hint:'Use a central mask so sample count falls while the synthetic phantom’s Fourier-energy retention stays high.',start:{mode:'full',amount:100}},
+  alias:{title:'Create uniform phase aliasing',hint:'Use regular phase undersampling rather than cropping the center or periphery.',start:{mode:'full',amount:100}},
+  truncate:{title:'Create directional truncation',hint:'Use a hard ky cutoff with a moderate retained fraction.',start:{mode:'full',amount:100}},
+  edges:{title:'Suppress broad low-frequency structure',hint:'Remove the center so the retained dataset emphasizes peripheral spatial-frequency content.',start:{mode:'full',amount:100}}
+};
+let activeKspaceChallenge='';
+function kspaceChallengeRows(id,state,masked,stats){
+  const retained=masked.retained;
+  if(id==='efficient')return[
+    {label:'Mask type',met:state.mode==='center',goal:'central retention',now:state.mode},
+    {label:'Samples',met:retained<=.35,goal:'≤ 35%',now:Math.round(retained*100)+'%'},
+    {label:'Energy',met:stats.energyRetained>=.80,goal:'≥ 80%',now:Math.round(stats.energyRetained*100)+'%'}
+  ];
+  if(id==='alias')return[
+    {label:'Mask type',met:state.mode==='undersample',goal:'uniform undersampling',now:state.mode},
+    {label:'Acceleration',met:state.mode==='undersample'&&state.amount>=2,goal:'R ≥ 2',now:state.mode==='undersample'?'R'+Math.round(state.amount):'—'},
+    {label:'Samples',met:retained<=.55,goal:'≤ 55%',now:Math.round(retained*100)+'%'}
+  ];
+  if(id==='truncate')return[
+    {label:'Mask type',met:state.mode==='truncate',goal:'hard ky cutoff',now:state.mode},
+    {label:'Samples',met:retained>=.40&&retained<=.70,goal:'40–70%',now:Math.round(retained*100)+'%'},
+    {label:'Off-center PSF',met:true,goal:'inspect ringing response',now:'see mask response'}
+  ];
+  return[
+    {label:'Mask type',met:state.mode==='outer',goal:'center removed',now:state.mode},
+    {label:'Center energy',met:stats.centerRetained<=.10,goal:'≤ 10% retained',now:Math.round(stats.centerRetained*100)+'%'},
+    {label:'Outer energy',met:stats.outerRetained>=.35,goal:'≥ 35% retained',now:Math.round(stats.outerRetained*100)+'%'}
+  ];
+}
+function renderKspaceChallenge(state,masked,stats){
+  const def=kspaceChallengeDefs[activeKspaceChallenge],wrap=$('ksChallengeConstraints'),pill=$('ksChallengeState');document.querySelectorAll('[data-kspace-challenge]').forEach(b=>b.classList.toggle('active',b.dataset.kspaceChallenge===activeKspaceChallenge));
+  if(!def){if($('ksChallengeTarget'))$('ksChallengeTarget').textContent='Choose a challenge.';if($('ksChallengeHint'))$('ksChallengeHint').textContent='MRCC will load a teaching start state, then evaluate the current mask.';if(wrap)wrap.innerHTML='';if(pill)pill.textContent='free explore';return}
+  if($('ksChallengeTarget'))$('ksChallengeTarget').textContent=def.title;if($('ksChallengeHint'))$('ksChallengeHint').textContent=def.hint;const rows=kspaceChallengeRows(activeKspaceChallenge,state,masked,stats),met=rows.filter(x=>x.met).length;if(pill)pill.textContent=met+'/'+rows.length+' constraints'+(met===rows.length?' met':'');
+  if(wrap)wrap.innerHTML=rows.map(x=>'<div class="kspace-challenge-constraint '+(x.met?'met':'miss')+'"><small>'+escapeHtml(x.label)+'</small><b>'+(x.met?'Met':'Adjust')+'</b><span>'+escapeHtml(x.goal)+' · now '+escapeHtml(x.now)+'</span></div>').join('');
+}
+function renderKspaceDeep(state,masked){
+  const stats=kspaceEnergyStats(masked),psf=drawKspacePsf(masked),ret=Math.round(masked.retained*100),energy=Math.round(stats.energyRetained*100);
+  if($('ksEnergyBadge'))$('ksEnergyBadge').textContent=energy+'% energy';if($('ksDeepSamples'))$('ksDeepSamples').textContent=ret+'%';if($('ksEnergyRetained'))$('ksEnergyRetained').textContent=energy+'%';if($('ksEnergyEfficiency'))$('ksEnergyEfficiency').textContent=stats.efficiency.toFixed(2)+'×';
+  if($('ksEnergyBands'))$('ksEnergyBands').innerHTML=stats.bands.map((b,i)=>{const frac=b.total?b.kept/b.total:0,names=['center','low-mid','mid','high-mid','outer'];return '<div class="kspace-energy-band"><span>'+names[i]+'</span><div class="kspace-energy-track"><i style="--energy-level:'+Math.round(frac*100)+'%"></i></div><strong>'+Math.round(frac*100)+'%</strong><small>'+Math.round((b.total/(stats.bands.reduce((s,x)=>s+x.total,0)||1))*100)+'% of original energy lives in this band</small></div>'}).join('');
+  if(psf){if($('ksPsfMain'))$('ksPsfMain').textContent=psf.halfCount+' px';if($('ksPsfSide'))$('ksPsfSide').textContent=Math.round(psf.sideRatio*100)+'%';if($('ksPsfBadge'))$('ksPsfBadge').textContent=state.mode==='full'?'reference impulse':state.mode+' mask';if($('ksPsfCopy'))$('ksPsfCopy').textContent=state.mode==='full'?'Full sampling produces the discrete reference impulse in this mask-only model.':'The current binary mask produces a half-peak support of '+psf.halfCount+' pixels and a largest off-center response of '+Math.round(psf.sideRatio*100)+'% of the peak. Compare pattern shape rather than treating these as scanner specifications.'}
+  renderKspaceChallenge(state,masked,stats);
+}
+function applyKspaceState(state){if($('ksMode'))$('ksMode').value=state.mode;if($('ksAmount'))$('ksAmount').value=state.amount}
+function startKspaceChallenge(id){const def=kspaceChallengeDefs[id];if(!def)return;activeKspaceChallenge=id;applyKspaceState(def.start);kspaceUpdate();toast('K-space challenge started')}
+function restartKspaceChallenge(){const def=kspaceChallengeDefs[activeKspaceChallenge];if(!def){toast('Choose a k-space challenge first');return}applyKspaceState(def.start);kspaceUpdate();toast('K-space challenge restarted')}
+function clearKspaceChallenge(){activeKspaceChallenge='';const state=kspaceState(),masked=kspaceApplyMask(state),stats=kspaceEnergyStats(masked);renderKspaceChallenge(state,masked,stats);toast('K-space challenge closed')}
+function bindKspaceDeepDive(){$('ksChallengeTargets')?.addEventListener('click',e=>{const b=e.target.closest('[data-kspace-challenge]');if(b)startKspaceChallenge(b.dataset.kspaceChallenge)})}
+
 function kspaceModeSummary(state){
   if(state.mode==='center')return {title:'Center only · '+Math.round(state.amount)+'% radius',meta:'Low spatial frequencies emphasized'};
   if(state.mode==='outer')return {title:'Center removed · '+Math.round(state.amount)+'% radius',meta:'High spatial frequencies emphasized'};
@@ -2017,6 +2090,7 @@ function kspaceUpdate(save=true){
   drawKspaceMagnitude(masked);drawKspaceImage(masked);
   $('ksAmountOut').textContent=state.mode==='undersample'?'R'+Math.round(state.amount):Math.round(state.amount)+'%';
   $('ksRetainedBadge').textContent=ret+'% retained';$('ksRetained').textContent=ret+'%';$('ksEffectBadge').textContent=copy.effect.toLowerCase();$('ksEffect').textContent=copy.effect;$('ksEffectDetail').textContent=copy.detail;$('ksKeyIdea').textContent=copy.key;$('ksKeyDetail').textContent=copy.keyDetail;$('ksExplain').innerHTML='<b>'+summary.title+'</b><span>'+summary.meta+'</span>';
+  renderKspaceDeep(state,masked);
   if(save)persistKspaceState(state);if(typeof renderLabsHome==='function')renderLabsHome();
 }
 function kspaceModeChanged(){
@@ -2034,7 +2108,8 @@ function restoreKspaceState(){
   const modes=['full','center','outer','truncate','undersample'],mode=modes.includes(raw.mode)?raw.mode:'full',amount=mode==='undersample'?Math.min(4,Math.max(1,Math.round(+raw.amount||2))):Math.min(100,Math.max(20,+raw.amount||100));
   $('ksMode').value=mode;$('ksAmount').value=amount;kspaceUpdate(false);
 }
-function kspaceReset(notify=true){if($('ksMode'))$('ksMode').value='full';if($('ksAmount'))$('ksAmount').value=100;kspaceUpdate();if(notify)toast('K-Space Lab reset')}
+function kspaceReset(notify=true){activeKspaceChallenge='';if($('ksMode'))$('ksMode').value='full';if($('ksAmount'))$('ksAmount').value=100;kspaceUpdate();if(notify)toast('K-Space Lab reset')}
+bindKspaceDeepDive();
 
 function normalizeSpatialState(raw){
   const x=raw&&typeof raw==='object'?raw:{};
