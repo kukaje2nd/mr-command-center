@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'21.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'22.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v21.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v22.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1455,7 +1455,7 @@ function runSelfCheck(){
     ['Parameter continuity',typeof restoreSandboxCurrentState==='function'&&typeof quickSaveSandboxPreset==='function'&&!!$('labContinuity')],
     ['Contrast Lab',typeof contrastUpdate==='function'&&typeof contrastSignal==='function'&&typeof renderContrastDeep==='function'&&typeof contrastDrawRecovery==='function'&&typeof renderContrastChallenge==='function'&&Array.isArray(contrastMaterialsModel)&&contrastMaterialsModel.length===3&&!!$('clTr')&&!!$('clTe')&&!!$('contrastRecoveryCanvas')&&!!$('contrastDecayCanvas')&&!!$('contrastDecomposition')&&!!$('contrastChallengeTargets')],
     ['Sequence Timing Lab',typeof timingUpdate==='function'&&typeof timingMetrics==='function'&&typeof renderTimingDeep==='function'&&typeof renderTimingChallenge==='function'&&typeof restoreTimingState==='function'&&!!$('timingTr')&&!!$('timingEtl')&&!!$('timingEchoRow')&&!!$('timingEquationBreakdown')&&!!$('timingKspaceStrip')&&!!$('timingChallengeTargets')],
-    ['Motion Lab',typeof motionUpdate==='function'&&typeof motionAcquire==='function'&&typeof restoreMotionState==='function'&&!!$('motionMode')&&!!$('motionHistoryCanvas')&&!!$('motionResultCanvas')],
+    ['Motion Lab',typeof motionUpdate==='function'&&typeof motionAcquire==='function'&&typeof motionLineStats==='function'&&typeof renderMotionOrderCompare==='function'&&typeof renderMotionChallenge==='function'&&typeof restoreMotionState==='function'&&!!$('motionMode')&&!!$('motionHistoryCanvas')&&!!$('motionResultCanvas')&&!!$('motionLineMap')&&!!$('motionLinearCanvas')&&!!$('motionCentricCanvas')&&!!$('motionChallengeTargets')],
     ['K-Space Lab',typeof kspaceUpdate==='function'&&typeof kspaceDft2D==='function'&&typeof kspaceApplyMask==='function'&&KS_N===32&&!!$('ksKspaceCanvas')&&!!$('ksImageCanvas')],
     ['Spatial Encoding Lab',typeof spatialUpdate==='function'&&typeof spatialMetrics==='function'&&typeof restoreSpatialState==='function'&&!!$('spWorldCanvas')&&!!$('spReconCanvas')],
     ['Artifact Lab',typeof artifactLabUpdate==='function'&&typeof artifactLabRender==='function'&&!!$('artifactCanvas')&&!!$('artifactStrength')],
@@ -1847,6 +1847,68 @@ function motionAcquire(state){
   const inv=kspaceDft2D(re,true,im),centerRank=rankByY[0],centerShift=dispByY[0];
   return {re,im,inv,order,rankByY,dispByRank,affected,peak,centerRank,centerShift};
 }
+
+function motionLineStats(acq){
+  let centerSum=0,centerN=0,centerAffected=0,outerSum=0,outerN=0;
+  for(let y=0;y<KS_N;y++){const ky=Math.abs(motionSignedIndex(y)),d=Math.abs(acq.dispByRank[acq.rankByY[y]]);if(ky<=4){centerSum+=d;centerN++;if(d>.05)centerAffected++}else{outerSum+=d;outerN++}}
+  return {centerMean:centerN?centerSum/centerN:0,outerMean:outerN?outerSum/outerN:0,centerAffected,centerN};
+}
+function motionRenderLineMap(state,acq){
+  const map=$('motionLineMap'),stats=motionLineStats(acq);if(map){const ys=motionPhaseOrder('linear');map.innerHTML=ys.map(y=>{const ky=motionSignedIndex(y),rank=acq.rankByY[y],d=acq.dispByRank[rank],level=state.amplitude?Math.min(100,Math.round(Math.abs(d)/state.amplitude*100)):0,center=Math.abs(ky)<=4,centerLine=ky===0;return '<div class="motion-line-cell '+(center?'center-band ':'')+(centerLine?'center-line ':'')+(Math.abs(d)>.05?'affected':'')+'" style="--motion-level:'+level+'%"><small>ky '+(ky>0?'+':'')+ky+'</small><b>rank '+(rank+1)+'</b><span>'+(d>=0?'+':'')+d.toFixed(2)+' px</span><i></i></div>'}).join('')}
+  if($('motionCenterBandMean'))$('motionCenterBandMean').textContent=stats.centerMean.toFixed(2)+' px';if($('motionOuterMean'))$('motionOuterMean').textContent=stats.outerMean.toFixed(2)+' px';if($('motionCenterBandAffected'))$('motionCenterBandAffected').textContent=stats.centerAffected+' / '+stats.centerN;
+  if($('motionLineCopy'))$('motionLineCopy').textContent='The current '+(state.order==='centric'?'centric':'linear')+' order acquires the synthetic center line at rank '+(acq.centerRank+1)+' of '+KS_N+'. Center-band mean shift is '+stats.centerMean.toFixed(2)+' px versus '+stats.outerMean.toFixed(2)+' px for outer lines.';
+  return stats;
+}
+function motionOrderComparison(state){
+  const linear=motionAcquire({...state,order:'linear'}),centric=motionAcquire({...state,order:'centric'}),ls=motionLineStats(linear),cs=motionLineStats(centric);
+  return {linear,centric,linearStats:ls,centricStats:cs};
+}
+function renderMotionOrderCompare(state,comparison){
+  drawMotionImage('motionLinearCanvas',comparison.linear.inv.re,comparison.linear.inv.im);drawMotionImage('motionCentricCanvas',comparison.centric.inv.re,comparison.centric.inv.im);
+  const lp=Math.round(comparison.linear.centerRank/Math.max(1,KS_N-1)*100),cp=Math.round(comparison.centric.centerRank/Math.max(1,KS_N-1)*100);
+  if($('motionLinearMeta'))$('motionLinearMeta').textContent='center line at '+lp+'% of run';if($('motionCentricMeta'))$('motionCentricMeta').textContent='center line at '+cp+'% of run';
+  if($('motionLinearStats'))$('motionLinearStats').textContent='center-band mean '+comparison.linearStats.centerMean.toFixed(2)+' px · center shift '+Math.abs(comparison.linear.centerShift).toFixed(2)+' px';
+  if($('motionCentricStats'))$('motionCentricStats').textContent='center-band mean '+comparison.centricStats.centerMean.toFixed(2)+' px · center shift '+Math.abs(comparison.centric.centerShift).toFixed(2)+' px';
+  const diff=comparison.linearStats.centerMean-comparison.centricStats.centerMean;let copy='The two orderings expose the synthetic center band similarly for this motion pattern.';
+  if(Math.abs(diff)>=.15){const lower=diff>0?'centric':'linear',higher=diff>0?'linear':'centric';copy=lower.charAt(0).toUpperCase()+lower.slice(1)+' ordering gives the center band less modeled translation here than '+higher+' ordering ('+Math.abs(diff).toFixed(2)+' px mean difference). This only describes center-band exposure in the toy model—not overall image quality.'}
+  if($('motionOrderCompareCopy'))$('motionOrderCompareCopy').textContent=copy;
+}
+const motionChallengeDefs={
+  protect:{title:'Protect the center band while motion still occurs',hint:'Keep meaningful motion in the run, but arrange timing/order so low-|ky| lines see little translation.',start:{mode:'step',direction:'x',order:'linear',amplitude:3,onset:50,cycles:2}},
+  hitCenter:{title:'Make the center line see the shift',hint:'Arrange the motion so the synthetic k-space center is acquired after a substantial translation.',start:{mode:'step',direction:'x',order:'centric',amplitude:3,onset:50,cycles:2}},
+  periodic:{title:'Create broad periodic inconsistency',hint:'Use periodic translation so many phase lines sample different object positions.',start:{mode:'step',direction:'x',order:'linear',amplitude:2.5,onset:20,cycles:2.5}}
+};
+let activeMotionChallenge='';
+function motionChallengeRows(id,state,acq,stats){
+  if(id==='protect')return[
+    {label:'Motion remains',met:acq.affected>=8,goal:'≥ 8 lines affected',now:acq.affected+' lines'},
+    {label:'Center shift',met:Math.abs(acq.centerShift)<=.25,goal:'≤ 0.25 px',now:Math.abs(acq.centerShift).toFixed(2)+' px'},
+    {label:'Center-band mean',met:stats.centerMean<=.50,goal:'≤ 0.50 px',now:stats.centerMean.toFixed(2)+' px'}
+  ];
+  if(id==='hitCenter')return[
+    {label:'Motion remains',met:acq.affected>=8,goal:'≥ 8 lines affected',now:acq.affected+' lines'},
+    {label:'Center shift',met:Math.abs(acq.centerShift)>=2,goal:'≥ 2.0 px',now:Math.abs(acq.centerShift).toFixed(2)+' px'},
+    {label:'Peak shift',met:acq.peak>=2,goal:'≥ 2.0 px',now:acq.peak.toFixed(2)+' px'}
+  ];
+  return[
+    {label:'Pattern',met:state.mode==='periodic',goal:'periodic mode',now:state.mode},
+    {label:'Line exposure',met:acq.affected>=24,goal:'≥ 24 lines affected',now:acq.affected+' lines'},
+    {label:'Cycles',met:state.cycles>=2,goal:'≥ 2 cycles',now:state.cycles+' cycles'}
+  ];
+}
+function renderMotionChallenge(state,acq,stats){
+  const def=motionChallengeDefs[activeMotionChallenge],wrap=$('motionChallengeConstraints'),pill=$('motionChallengeState');document.querySelectorAll('[data-motion-challenge]').forEach(b=>b.classList.toggle('active',b.dataset.motionChallenge===activeMotionChallenge));
+  if(!def){if($('motionChallengeTarget'))$('motionChallengeTarget').textContent='Choose a challenge.';if($('motionChallengeHint'))$('motionChallengeHint').textContent='MRCC will load a toy starting state, then score the live motion controls.';if(wrap)wrap.innerHTML='';if(pill)pill.textContent='free explore';return}
+  if($('motionChallengeTarget'))$('motionChallengeTarget').textContent=def.title;if($('motionChallengeHint'))$('motionChallengeHint').textContent=def.hint;const rows=motionChallengeRows(activeMotionChallenge,state,acq,stats),met=rows.filter(x=>x.met).length;if(pill)pill.textContent=met+'/'+rows.length+' constraints'+(met===rows.length?' met':'');
+  if(wrap)wrap.innerHTML=rows.map(x=>'<div class="motion-challenge-constraint '+(x.met?'met':'miss')+'"><small>'+escapeHtml(x.label)+'</small><b>'+(x.met?'Met':'Adjust')+'</b><span>'+escapeHtml(x.goal)+' · now '+escapeHtml(x.now)+'</span></div>').join('');
+}
+function applyMotionState(state){for(const [key,id] of [['mode','motionMode'],['direction','motionDirection'],['order','motionOrder'],['amplitude','motionAmplitude'],['onset','motionOnset'],['cycles','motionCycles']])if($(id))$(id).value=state[key]}
+function startMotionChallenge(id){const def=motionChallengeDefs[id];if(!def)return;activeMotionChallenge=id;applyMotionState(def.start);motionUpdate();toast('Motion challenge started')}
+function restartMotionChallenge(){const def=motionChallengeDefs[activeMotionChallenge];if(!def){toast('Choose a motion challenge first');return}applyMotionState(def.start);motionUpdate();toast('Motion challenge restarted')}
+function clearMotionChallenge(){activeMotionChallenge='';const state=motionState(),acq=motionAcquire(state);renderMotionChallenge(state,acq,motionLineStats(acq));toast('Motion challenge closed')}
+function renderMotionDeep(state,acq){const stats=motionRenderLineMap(state,acq),comparison=motionOrderComparison(state);renderMotionOrderCompare(state,comparison);renderMotionChallenge(state,acq,stats)}
+function bindMotionDeepDive(){$('motionChallengeTargets')?.addEventListener('click',e=>{const b=e.target.closest('[data-motion-challenge]');if(b)startMotionChallenge(b.dataset.motionChallenge)})}
+
 function motionTeachingCopy(state,acq=null){
   if(state.mode==='none')return {short:'No motion',title:'Stationary reference',detail:'Every synthetic Fourier line comes from the same phantom position.',dominant:'Reference',dominantDetail:'Use this as the stationary comparison.'};
   if(state.mode==='periodic')return {short:'Periodic',title:'Repeated phase inconsistency',detail:'Periodic translation changes line phase repeatedly across the synthetic acquisition.',dominant:'Ghost-like repetition',dominantDetail:'Periodic line inconsistency can produce repeated structure in this toy reconstruction.'};
@@ -1877,6 +1939,7 @@ function motionUpdate(save=true){
   $('motionAmplitudeOut').textContent=Number(state.amplitude).toFixed(state.amplitude%1?1:0)+' px';$('motionOnsetOut').textContent=Math.round(state.onset)+'%';$('motionCyclesOut').textContent=Number(state.cycles).toFixed(state.cycles%1?1:0);
   $('motionCueTitle').textContent=copy.title;$('motionCueDetail').textContent=copy.detail;$('motionEffectBadge').textContent=copy.short.toLowerCase();$('motionOrderSummary').textContent=(state.order==='centric'?'Centric':'Linear')+' phase ordering';$('motionCenterSummary').textContent='center line acquired '+centerPct+'% through run';
   $('motionAffected').textContent=acq.affected+' / '+KS_N;$('motionPeak').textContent=acq.peak.toFixed(acq.peak%1?1:0)+' px';$('motionCenterShift').textContent=Math.abs(acq.centerShift).toFixed(Math.abs(acq.centerShift)%1?1:0)+' px';$('motionDominant').textContent=copy.dominant;$('motionDominantDetail').textContent=copy.dominantDetail;
+  renderMotionDeep(state,acq);
   if(save)persistMotionState(state);if(typeof renderLabsHome==='function')renderLabsHome();
 }
 function applyMotionPreset(id){
@@ -1890,7 +1953,8 @@ function restoreMotionState(){
   for(const [key,id] of [['mode','motionMode'],['direction','motionDirection'],['order','motionOrder'],['amplitude','motionAmplitude'],['onset','motionOnset'],['cycles','motionCycles']])if($(id))$(id).value=state[key];
   motionUpdate(false);
 }
-function motionReset(){const p={mode:'step',direction:'x',order:'linear',amplitude:3,onset:50,cycles:2};for(const [key,id] of [['mode','motionMode'],['direction','motionDirection'],['order','motionOrder'],['amplitude','motionAmplitude'],['onset','motionOnset'],['cycles','motionCycles']])if($(id))$(id).value=p[key];motionUpdate();toast('Motion Lab reset')}
+function motionReset(){const p={mode:'step',direction:'x',order:'linear',amplitude:3,onset:50,cycles:2};activeMotionChallenge='';for(const [key,id] of [['mode','motionMode'],['direction','motionDirection'],['order','motionOrder'],['amplitude','motionAmplitude'],['onset','motionOnset'],['cycles','motionCycles']])if($(id))$(id).value=p[key];motionUpdate();toast('Motion Lab reset')}
+bindMotionDeepDive();
 
 function kspaceState(){return {mode:$('ksMode')?.value||'full',amount:+($('ksAmount')?.value||100)}}
 function kspaceSignedIndex(i){return i<=KS_N/2?i:i-KS_N}

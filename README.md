@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v21.0 — Timing Lab Deep Dive
+v22.0 — Motion Lab Deep Dive
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,17 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v22.0 release notes
+- Continued the lab-by-lab deepening program with a major **Motion Lab Deep Dive**.
+- Added a **Phase-Line Influence Map** for all 32 synthetic ky lines, including acquisition rank, modeled translation, center-band highlighting, and per-line motion magnitude.
+- Added center-band and outer-line mean-shift readouts plus center-band affected-line counts so acquisition timing is tied directly to the low-spatial-frequency region.
+- Added a live **Ordering A/B** experiment: the exact same motion pattern is reconstructed with linear and centric phase ordering side by side.
+- The A/B view reports center-line timing, center-band mean shift, and center-line shift for each ordering and explains when one ordering exposes the synthetic center band to less modeled translation.
+- Added three interactive **Motion Timing Challenges**: keep meaningful motion while protecting the center band, deliberately move through the synthetic center line, and create broad periodic inconsistency.
+- Challenge states are evaluated against explicit line-exposure and center-shift constraints.
+- Kept the boundary explicit: center-band exposure is not a global image-quality score, and the model still omits correction methods, coil sensitivity, rotations, deformation, through-plane motion, noise, and vendor reconstruction.
+- Extended self-check and release validation to require the new Motion Lab line map, ordering comparison, and challenge runtime.
 
 ### v21.0 release notes
 - Continued the lab-by-lab deepening program with a major **Sequence Timing Lab Deep Dive**.
