@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v16.0 — Runtime Modularization & Public Hardening
+v16.1 — Mobile Lab Navigation Integrity
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,14 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v16.1 release notes
+- Restored all seven Lab destinations in every mobile Lab switcher; a legacy small-screen selector was hiding the third destination below 680 px.
+- Normalized every Lab switcher to the same order: Parameter, Contrast, Timing, Motion, K-Space, Spatial, Artifact.
+- Added an explicit small-screen override so Lab buttons cannot be silently hidden by the retired selector.
+- Extended release validation to enforce seven visible Lab destinations in the canonical order and reject the legacy hide rule.
+- Corrected workspace diagnostics to report seven active Lab states.
+- Bumped the offline cache marker and visible build identity to **v16.1**.
 
 ### v16.0 release notes
 - Split the production runtime out of the monolithic `index.html` into first-class `app.css` and `app.js` assets.
