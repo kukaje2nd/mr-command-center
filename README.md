@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v22.0 — Motion Lab Deep Dive
+v23.0 — K-Space Lab Deep Dive
 
 ## Production
 - Entry point: `index.html`
@@ -59,6 +59,17 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+
+### v23.0 release notes
+- Continued the lab-by-lab deepening program with a major **K-Space Lab Deep Dive**.
+- Added **Frequency-Energy Anatomy** that distinguishes coefficient count from retained Fourier energy for the actual 32 × 32 teaching phantom.
+- Added five radial frequency-band readouts showing how much of each band’s original Fourier energy survives the current mask.
+- Added an **energy-per-sample concentration** metric while explicitly warning that Fourier energy concentration is not diagnostic importance.
+- Added a mask-only **point-spread response**: MRCC inverse-transforms the binary sampling mask itself so center cropping, truncation, and regular undersampling can be connected to blur/ringing/replication patterns.
+- Added half-peak support and largest off-center response readouts for the mask response; these are mathematical mask properties, not scanner MTF or measured MRI PSF.
+- Added four interactive **Sampling Challenges**: retain ≥95% of this phantom’s Fourier energy with ≤35% of coefficients, create regular phase aliasing, create directional truncation, and isolate edge-rich peripheral content.
+- Calibrated challenge thresholds against the actual teaching phantom instead of arbitrary percentages.
+- Extended self-check and release validation to require K-Space energy analysis, mask response, and challenge runtime.
 
 ### v22.0 release notes
 - Continued the lab-by-lab deepening program with a major **Motion Lab Deep Dive**.
