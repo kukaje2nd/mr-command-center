@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'15.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'16.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
