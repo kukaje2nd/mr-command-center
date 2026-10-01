@@ -1457,7 +1457,7 @@ function runSelfCheck(){
     ['Sequence Timing Lab',typeof timingUpdate==='function'&&typeof timingMetrics==='function'&&typeof renderTimingDeep==='function'&&typeof renderTimingChallenge==='function'&&typeof restoreTimingState==='function'&&!!$('timingTr')&&!!$('timingEtl')&&!!$('timingEchoRow')&&!!$('timingEquationBreakdown')&&!!$('timingKspaceStrip')&&!!$('timingChallengeTargets')],
     ['Motion Lab',typeof motionUpdate==='function'&&typeof motionAcquire==='function'&&typeof motionLineStats==='function'&&typeof renderMotionOrderCompare==='function'&&typeof renderMotionChallenge==='function'&&typeof restoreMotionState==='function'&&!!$('motionMode')&&!!$('motionHistoryCanvas')&&!!$('motionResultCanvas')&&!!$('motionLineMap')&&!!$('motionLinearCanvas')&&!!$('motionCentricCanvas')&&!!$('motionChallengeTargets')],
     ['K-Space Lab',typeof kspaceUpdate==='function'&&typeof kspaceDft2D==='function'&&typeof kspaceApplyMask==='function'&&typeof kspaceEnergyStats==='function'&&typeof drawKspacePsf==='function'&&typeof renderKspaceChallenge==='function'&&KS_N===32&&!!$('ksKspaceCanvas')&&!!$('ksImageCanvas')&&!!$('ksPsfCanvas')&&!!$('ksEnergyBands')&&!!$('ksChallengeTargets')],
-    ['Spatial Encoding Lab',typeof spatialUpdate==='function'&&typeof spatialMetrics==='function'&&typeof spatialFeatureProvenance==='function'&&typeof renderSpatialChallenge==='function'&&typeof restoreSpatialState==='function'&&!!$('spWorldCanvas')&&!!$('spReconCanvas')&&!!$('spatialProvenanceList')&&!!$('spatialChallengeTargets')&&!!$('spatialGridDiagnosis')],
+    ['Spatial Encoding Lab',typeof spatialUpdate==='function'&&typeof spatialMetrics==='function'&&typeof spatialFeatureProvenance==='function'&&typeof spatialMatchedSamples==='function'&&typeof spatialMatchSamples==='function'&&typeof renderSpatialChallenge==='function'&&typeof restoreSpatialState==='function'&&!!$('spWorldCanvas')&&!!$('spReconCanvas')&&!!$('spatialProvenanceList')&&!!$('spatialChallengeTargets')&&!!$('spatialGridDiagnosis')],
     ['Artifact Lab',typeof artifactLabUpdate==='function'&&typeof artifactLabRender==='function'&&!!$('artifactCanvas')&&!!$('artifactStrength')],
     ['Lab persistence',typeof restoreContrastState==='function'&&typeof restoreTimingState==='function'&&typeof restoreMotionState==='function'&&typeof restoreKspaceState==='function'&&typeof restoreSpatialState==='function'&&typeof restoreArtifactLabState==='function'&&typeof persistContrastState==='function'&&typeof persistTimingState==='function'&&typeof persistMotionState==='function'&&typeof persistKspaceState==='function'&&typeof persistSpatialState==='function'&&typeof persistArtifactLabState==='function'],
     ['A/B Compare',typeof swapSandboxComparison==='function'&&typeof renderSandboxCompare==='function'&&!!$('parameterCompareWorkbench')],
@@ -2191,6 +2191,15 @@ function applySpatialState(state){if($('spPhaseFov'))$('spPhaseFov').value=state
 function startSpatialChallenge(id){const def=spatialChallengeDefs[id];if(!def)return;activeSpatialChallenge=id;applySpatialState(def.start);spatialUpdate();toast('Spatial challenge started')}
 function restartSpatialChallenge(){const def=spatialChallengeDefs[activeSpatialChallenge];if(!def){toast('Choose a spatial challenge first');return}applySpatialState(def.start);spatialUpdate();toast('Spatial challenge restarted')}
 function clearSpatialChallenge(){activeSpatialChallenge='';const state=spatialState(),m=spatialMetrics(state);renderSpatialChallenge(state,m);toast('Spatial challenge closed')}
+function spatialMatchedSamples(fov){
+  return Math.min(192,Math.max(48,Math.round((128*(Number(fov)||100)/100)/16)*16));
+}
+function spatialMatchSamples(axis='both'){
+  const state=spatialState();
+  if((axis==='read'||axis==='both')&&$('spReadSamples'))$('spReadSamples').value=spatialMatchedSamples(state.readFov);
+  if((axis==='phase'||axis==='both')&&$('spPhaseSamples'))$('spPhaseSamples').value=spatialMatchedSamples(state.phaseFov);
+  spatialUpdate();toast(axis==='both'?'Read + phase samples matched to FOV':'Samples matched to '+axis+' FOV');
+}
 function renderSpatialDeep(state,m){renderSpatialProvenance(state,m);spatialAxisAnatomy(state,m);renderSpatialChallenge(state,m)}
 function bindSpatialDeepDive(){$('spatialChallengeTargets')?.addEventListener('click',e=>{const b=e.target.closest('[data-spatial-challenge]');if(b)startSpatialChallenge(b.dataset.spatialChallenge)})}
 
