@@ -264,6 +264,7 @@ function resumeLastLab(){openLab((labRouteInfo[lastLabRoute]||labRouteInfo.sandb
 function browseLabs(){document.querySelector('.labs-library-head')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'})}
 function restoreRouteFromHash(){
   const id=location.hash.replace(/^#/,'');
+  if(id==='sequences'||id==='protocol'){setFocusedSection('protocol');if(id==='protocol')routeHash('sequences',true);setTimeout(()=>$('protocol')?.scrollIntoView({behavior:'auto',block:'start'}),0);return}
   if(id==='premium'){openPremiumWorkspace(false,true,false);return}
   const premiumLab=Object.entries(premiumDeepRoutes).find(([,route])=>route===id)?.[0];
   if(premiumLab){openPremiumWorkspace(false,true,false);setTimeout(()=>openPremiumAccess(premiumLab,false),20);return}
@@ -1389,7 +1390,7 @@ function runSelfCheck(){
     ['Supporting tools',typeof calcVoxel==='function'&&typeof calcTime==='function'&&typeof solveArtifact==='function'&&typeof renderRescue==='function'],
     ['Safety reference',typeof updateSafety==='function'&&typeof burnUpdate==='function'&&!!$('safety')&&!!$('burn')],
     ['Search + settings',typeof runCommand==='function'&&typeof openPalette==='function'&&typeof openPreferences==='function'&&!!$('paletteBack')&&!!$('prefsBack')],
-    ['Sequence Families Lab',typeof openSequenceFamiliesLab==='function'&&typeof renderSequenceFamilyGrid==='function'&&typeof sequenceTranslateAlias==='function'&&typeof renderSequenceCompare==='function'&&typeof restoreSequenceFamiliesLab==='function'&&!!$('protocol')&&!!$('sequenceFamilyGrid')&&!!$('sequenceFamilyDetail')],
+    ['Sequence Families Lab',typeof openSequenceFamiliesLab==='function'&&typeof renderSequenceFamilyGrid==='function'&&typeof renderSequenceAnatomy==='function'&&typeof sequenceTranslateAlias==='function'&&typeof renderSequenceCompare==='function'&&typeof renderSequenceChallenge==='function'&&typeof restoreSequenceFamiliesLab==='function'&&!!$('protocol')&&!!$('sequenceFamilyGrid')&&!!$('sequenceFamilyDetail')&&!!$('seqAnatomyTimeline')&&!!$('seqChallengeChoices')],
     ['Home/Labs navigation',typeof openLab==='function'&&typeof setWorkspaceTabActive==='function'&&document.querySelectorAll('[data-workspace-tab]').length===14],
     ['Mobile navigation',typeof syncMobileNav==='function'&&document.querySelectorAll('#mobileNav [data-workspace-tab]').length===7],
     ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'&&sectionTitles.protocol==='Sequence Families Lab'&&sectionTitles.contrast==='Contrast Lab'&&sectionTitles.kspace==='K-Space Lab'&&sectionTitles.spatial==='Spatial Encoding Lab'&&sectionTitles.artifact==='Artifact Lab'],
@@ -1969,7 +1970,7 @@ function bindSequenceFamiliesLab(){
  $('seqChallengeChoices')?.addEventListener('click',e=>{const b=e.target.closest('[data-seq-challenge-choice]');if(b)answerSequenceChallenge(b.dataset.seqChallengeChoice)});
  $('seqChallengeNextBtn')?.addEventListener('click',nextSequenceChallenge);$('seqChallengeResetBtn')?.addEventListener('click',resetSequenceChallenge);$('seqChallengeOpenBtn')?.addEventListener('click',openChallengeFamily);
 }
-function openSequenceFamiliesLab(){go('protocol');setWorkspaceTabActive('protocol')}
+function openSequenceFamiliesLab(){setFocusedSection('protocol');routeHash('sequences');$('protocol')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'});remember('protocol','Sequence Families Lab');setWorkspaceTabActive('protocol')}
 function openProtocolWorkspace(){openSequenceFamiliesLab()}
 bindSequenceFamiliesLab();
 
