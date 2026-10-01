@@ -1448,7 +1448,7 @@ function runSelfCheck(){
   const checks=[
     ['Brand + shell',!!$('brandMark')&&!!$('workspaceRail')&&!!$('cockpit')&&!!$('mobileNav')],
     ['Labs home',typeof renderLabsHome==='function'&&!!$('homeParameterState')&&!!$('homeContrastState')&&!!$('homeKspaceState')&&!!$('homeSpatialState')&&!!$('homeArtifactState')],
-    ['Parameter Lab',typeof sandboxUpdate==='function'&&typeof sandboxMetrics==='function'&&!!$('sbFreq')&&!!$('sbAccel')&&!!$('parameterReference')],
+    ['Parameter Lab',typeof sandboxUpdate==='function'&&typeof sandboxMetrics==='function'&&typeof renderParameterDeepDive==='function'&&typeof renderParameterEquations==='function'&&!!$('sbFreq')&&!!$('sbAccel')&&!!$('parameterReference')&&!!$('parameterDeepCockpit')&&!!$('parameterEquationLab')],
     ['Parameter continuity',typeof restoreSandboxCurrentState==='function'&&typeof quickSaveSandboxPreset==='function'&&!!$('labContinuity')],
     ['Contrast Lab',typeof contrastUpdate==='function'&&typeof contrastSignal==='function'&&Array.isArray(contrastMaterialsModel)&&contrastMaterialsModel.length===3&&!!$('clTr')&&!!$('clTe')],
     ['Sequence Timing Lab',typeof timingUpdate==='function'&&typeof timingMetrics==='function'&&typeof restoreTimingState==='function'&&!!$('timingTr')&&!!$('timingEtl')&&!!$('timingEchoRow')],
