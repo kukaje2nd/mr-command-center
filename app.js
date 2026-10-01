@@ -1887,7 +1887,7 @@ function protocolRenderScanAssist(){
   const context=[m.exam,[m.manufacturer,m.model,m.tesla].filter(Boolean).join(' · '),m.age?'Age '+m.age:'',m.weight||'',m.sedation,m.breath,m.contrast&&m.contrast!=='None'?m.contrast:''].filter(Boolean);
   if($('protocolScanContext'))$('protocolScanContext').innerHTML=context.map(x=>'<span>'+escapeHtml(x)+'</span>').join('');
   if($('protocolScanAssistTitle'))$('protocolScanAssistTitle').textContent=(m.exam||'MRI exam')+' · Scan Assist';
-  if($('protocolScanAssistSubtitle'))$('protocolScanAssistSubtitle').textContent=protocolRows.length+' ordered sequence'+(protocolRows.length===1?'':'s')+' · '+protocolRows.filter(r=>r.verified).length+' reviewed against source';
+  if($('protocolScanAssistSubtitle'))$('protocolScanAssistSubtitle').textContent=protocolRows.length+' ordered sequence'+(protocolRows.length===1?'':'s')+' · '+protocolRows.filter(r=>r.verified).length+' reviewed against the source';
   plan.innerHTML=protocolRows.map((r,i)=>{
     const check=protocolSequencePracticalCheck(r),warn=/conflicts|approved alternative|correct contrast phase/i.test(check);
     return '<div class="protocol-scan-row"><div class="protocol-scan-order">'+String(i+1).padStart(2,'0')+'</div><div class="protocol-scan-name"><b>'+escapeHtml(r.sequence||'Unnamed sequence')+'</b><span>'+escapeHtml([r.plane,r.coverage].filter(Boolean).join(' · ')||'Plane / coverage: verify source')+'</span><span class="protocol-scan-source">'+escapeHtml(r.source||'Tech entry')+(r.verified?' · reviewed':' · verify')+'</span></div><div class="protocol-scan-params">'+(protocolScanParameterChips(r)||'<span>Parameters: verify source</span>')+'</div><div class="protocol-scan-check '+(warn?'warn':'')+'">'+escapeHtml(check)+'</div></div>';
