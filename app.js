@@ -261,7 +261,7 @@ const workspaceViewTitles={compare:'A/B Compare',challenges:'Constraint Challeng
 const labRouteInfo={sandbox:{id:'parameter',label:'Parameter Lab'},contrast:{id:'contrast',label:'Contrast Lab'},timing:{id:'timing',label:'Sequence Timing Lab'},motion:{id:'motion',label:'Motion Lab'},kspace:{id:'kspace',label:'K-Space Lab'},spatial:{id:'spatial',label:'Spatial Encoding Lab'},artifact:{id:'artifact',label:'Artifact Lab'}};
 let lastLabRoute='sandbox',hasSavedLastLab=false;
 let labStageMode=false;
-function setLabStageMode(on=false){labStageMode=!!on;document.body.classList.toggle('lab-stage-mode',labStageMode)}
+function setLabStageMode(on=false){labStageMode=!!on;document.body.classList.toggle('lab-stage-mode',labStageMode);if(!labStageMode)delete document.body.dataset.labStage}
 
 try{const saved=localStorage.getItem('mrcc_last_lab');if(labRouteInfo[saved]){lastLabRoute=saved;hasSavedLastLab=true}}catch(e){}
 function rememberLastLabRoute(route){if(!labRouteInfo[route])return;lastLabRoute=route;hasSavedLastLab=true;try{localStorage.setItem('mrcc_last_lab',route)}catch(e){}}
@@ -363,7 +363,7 @@ function openWorkspaceView(mode='labs',updateRoute=true){
   setTimeout(()=>jumpParameterLab(target,mode==='presets'),40);
 }
 let focusPrimaryRoute='sandbox';
-function runFocusPrimary(){if(focusPrimaryRoute==='compare'){openParameterWorkspace('compare');return}go(focusPrimaryRoute)}
+function runFocusPrimary(){if(focusPrimaryRoute==='compare'){openParameterWorkspace('compare');return}if(focusPrimaryRoute==='sandbox'){openLab('parameter');return}go(focusPrimaryRoute)}
 function renderFocusBar(id){
   const bar=$('focusBar'),title=$('focusTitle'),groupEl=$('focusGroup'),position=$('focusPosition'),icon=$('focusModuleIcon'),related=$('focusRelated'),primary=$('focusPrimaryBtn'),group=navGroupFor(id);
   if(!bar)return;bar.classList.add('show');
@@ -381,6 +381,7 @@ function setFocusedSection(id){
   const el=$(id);if(!el||!sectionTitles[id])return false;
   const interactiveLab=['sandbox','contrast','timing','motion','kspace','spatial','artifact'].includes(id);
   if(!interactiveLab)labStageMode=false;
+  if(interactiveLab&&labStageMode)document.body.dataset.labStage=id;else delete document.body.dataset.labStage;
   document.body.classList.toggle('lab-stage-mode',interactiveLab&&labStageMode);
   document.body.classList.remove('nav-home','nav-premium');document.body.classList.add('nav-focus');
   document.querySelectorAll('main>.section').forEach(s=>s.classList.toggle('active-section',s.id===id));
@@ -423,7 +424,7 @@ function ensureModuleFooters(){
     const section=$(id);if(!section||section.querySelector('.module-footer-nav'))return;
     const group=navGroupFor(id),related=group.ids.find(tool=>tool!==id),nav=document.createElement('nav');
     nav.className='module-footer-nav';nav.setAttribute('aria-label','Workspace navigation');
-    const primary=id==='sandbox'?'<button type="button" onclick="openParameterWorkspace(\'compare\')"><small>Reusable workflow</small><b>Open A/B Compare</b></button>':'<button type="button" onclick="go(\'sandbox\')"><small>Primary workspace</small><b>Parameter Lab</b></button>';
+    const primary=id==='sandbox'?'<button type="button" onclick="openParameterWorkspace(\'compare\')"><small>Reusable workflow</small><b>Open A/B Compare</b></button>':'<button type="button" onclick="openLab(\'parameter\')"><small>Primary workspace</small><b>Parameter Lab</b></button>';
     const relatedButton=related?'<button type="button" onclick="go(\''+related+'\')"><small>Related '+escapeHtml(group.label)+'</small><b>'+escapeHtml(sectionTitles[related])+'</b></button>':'<button type="button" onclick="jumpHomeSection(\'referenceOnboarding\')"><small>Reference desk</small><b>Browse references</b></button>';
     nav.innerHTML='<button type="button" class="module-footer-home" onclick="showHome()"><small>Return</small><b>Labs Home</b></button>'+primary+relatedButton;
     section.appendChild(nav);
@@ -692,10 +693,10 @@ function runCommand(id){
   if(id==='workspace-import'){openPreferences();chooseWorkspaceBackup();return}
   if(id==='workspace-diagnostics'){copyWorkspaceDiagnostics();return}
   if(id==='rescue'){go('rescue',true);return}
-  if(artifactIds.includes(id)){openLab('artifact');$('artifactSelect').value=id;artifactLabUpdate();solveArtifact();setTimeout(()=>$('artifactOut').scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),250);return}
+  if(artifactIds.includes(id)){setLabStageMode(false);go('artifact',true);$('artifactSelect').value=id;artifactLabUpdate();solveArtifact();setTimeout(()=>$('artifactOut').scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'center'}),250);return}
   if(id==='burn'){go('burn',true);return}
-  if(id==='presets'){go('sandbox',true);setTimeout(()=>{$('presetLibrary').open=true;$('presetName')?.focus()},300);return}
-  if(id==='parameterref'){go('sandbox',true);setTimeout(()=>$('parameterReference')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'}),250);return}
+  if(id==='presets'){openWorkspaceView('presets');return}
+  if(id==='parameterref'){openWorkspaceView('reference');return}
 }
 document.addEventListener('keydown',e=>{const tag=(e.target.tagName||'').toLowerCase(),typing=['input','textarea','select'].includes(tag);if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPalette();return}if(e.key==='?'&&!typing&&!$('paletteBack').classList.contains('open')){e.preventDefault();openPreferences();return}if(e.key==='Escape'&&$('prefsBack')?.classList.contains('open')){closePreferences();return}if(e.key==='/'&&!typing&&!$('paletteBack').classList.contains('open')&&!$('prefsBack')?.classList.contains('open')){e.preventDefault();openPalette();return}if(!$('paletteBack').classList.contains('open'))return;if(e.key==='Escape'){closePalette();return}if(e.key==='ArrowDown'){e.preventDefault();if(filteredCommands.length){paletteIndex=(paletteIndex+1)%filteredCommands.length;renderPalette()}return}if(e.key==='ArrowUp'){e.preventDefault();if(filteredCommands.length){paletteIndex=(paletteIndex-1+filteredCommands.length)%filteredCommands.length;renderPalette()}return}if(e.key==='Enter'&&filteredCommands.length){e.preventDefault();runCommand(filteredCommands[paletteIndex].id)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('premiumBack')?.classList.contains('open')){closePremiumAccess();return}if(e.key!=='Tab')return;const premium=$('premiumBack'),prefs=$('prefsBack'),palette=$('paletteBack');if(premium?.classList.contains('open')){trapDialogFocus(premium,e);return}if(prefs?.classList.contains('open')){trapDialogFocus(prefs,e);return}if(palette?.classList.contains('open'))trapDialogFocus(palette,e)});
@@ -1062,7 +1063,7 @@ function setParameterGoalTarget(value){const n=Number(value);parameterGoalTarget
 function selectParameterGoal(id){activeParameterGoal=parameterGoals[id]?id:'';activeParameterChallenge='';renderParameterGoal();persistSandboxCurrentState()}
 function clearParameterGoal(){activeParameterGoal='';activeParameterChallenge='';renderParameterGoal();renderParameterChallenge();persistSandboxCurrentState()}
 function openParameterGoal(id){
-  go('sandbox');setTimeout(()=>{selectParameterGoal(id);$('parameterGoalPanel')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'})},40);
+  setLabStageMode(false);go('sandbox',true);setTimeout(()=>{selectParameterGoal(id);$('parameterGoalPanel')?.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'})},40);
 }
 function openParameterWorkspace(mode='lab'){
   if(['presets','compare','reference'].includes(mode)){openWorkspaceView(mode);return}
@@ -1071,7 +1072,7 @@ function openParameterWorkspace(mode='lab'){
     else jumpParameterLab('parameterGoalPanel');
   },40);
 }
-function openSavedPreset(i){if(!sbPresets[i])return;applySandboxState(sbPresets[i].state);go('sandbox');setTimeout(()=>jumpParameterLab('paramModelCard'),40)}
+function openSavedPreset(i){if(!sbPresets[i])return;applySandboxState(sbPresets[i].state);openLab('parameter')}
 function renderWorkbenchHome(state){
   if(!$('workbenchLaunch'))return;
   const current=state||sandboxState(),m=sandboxMetrics(current);

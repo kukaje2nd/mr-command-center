@@ -1738,3 +1738,111 @@ body.ui-reduce-motion .card{transition:none!important}
 
 /* Spectral surface anchoring */
 .pref-card{position:relative!important;overflow:hidden!important}
+
+
+/* Focused Lab QA — edge-case routing, viewport fit, and active-Lab ambient color */
+body.lab-stage-mode[data-lab-stage="sandbox"]{--lab-accent:#55e8ff;--lab-accent-2:#6d9cff}
+body.lab-stage-mode[data-lab-stage="contrast"]{--lab-accent:#a58cff;--lab-accent-2:#d28cff}
+body.lab-stage-mode[data-lab-stage="timing"]{--lab-accent:#54d9ff;--lab-accent-2:#55e8ff}
+body.lab-stage-mode[data-lab-stage="motion"]{--lab-accent:#ff907f;--lab-accent-2:#ffb16f}
+body.lab-stage-mode[data-lab-stage="kspace"]{--lab-accent:#ffd166;--lab-accent-2:#ff9f6d}
+body.lab-stage-mode[data-lab-stage="spatial"]{--lab-accent:#67e4c0;--lab-accent-2:#55e8ff}
+body.lab-stage-mode[data-lab-stage="artifact"]{--lab-accent:#d98cff;--lab-accent-2:#9a83ff}
+
+/* Explanatory prose belongs outside the instrument stage. */
+body.lab-stage-mode .timing-relationship-grid{display:none!important}
+
+/* Motion must keep the reference/result comparison visible side-by-side even on narrow screens. */
+body.lab-stage-mode .motion-output-card{
+  display:grid!important;
+  grid-template-rows:auto auto minmax(0,1fr) auto!important
+}
+body.lab-stage-mode .motion-history{
+  padding:7px!important
+}
+body.lab-stage-mode .motion-history canvas{
+  height:clamp(72px,15dvh,118px)!important
+}
+body.lab-stage-mode .motion-history-copy{
+  margin-top:4px!important
+}
+body.lab-stage-mode .motion-images{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:6px!important;
+  min-height:0!important;
+  margin-top:6px!important
+}
+body.lab-stage-mode .motion-image-panel{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:7px!important
+}
+body.lab-stage-mode .motion-image-panel small{display:none!important}
+body.lab-stage-mode .motion-image-shell{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  margin-top:5px!important
+}
+body.lab-stage-mode .motion-image-shell canvas{
+  width:100%!important;
+  height:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important
+}
+body.lab-stage-mode .motion-summary{
+  margin-top:6px!important
+}
+
+/* Short laptop / landscape screens: compact vertically before anything can clip. */
+@media (max-height:680px){
+  body.lab-stage-mode main.shell{padding:6px 8px!important}
+  body.lab-stage-mode main>.section.active-section{gap:5px!important}
+  body.lab-stage-mode .v27-lab-switcher{min-height:42px!important;padding:3px!important}
+  body.lab-stage-mode .v27-lab-switcher button{min-height:34px!important;padding-block:2px!important}
+  body.lab-stage-mode :is(
+    #paramControlsCard,#paramModelCard,
+    .contrast-controls-card,.contrast-output-card,
+    .timing-controls-card,.timing-output-card,
+    .motion-controls-card,.motion-output-card,
+    .kspace-controls-card,.kspace-output-card,
+    .spatial-controls-card,.spatial-output-card,
+    .artifact-lab-controls,.artifact-lab-canvas-card
+  ){padding:8px!important;border-radius:11px!important}
+  body.lab-stage-mode :is(
+    .contrast-card-head,.timing-card-head,.motion-card-head,
+    .kspace-card-head,.spatial-card-head,.artifact-lab-card-head
+  ){margin-bottom:3px!important}
+  body.lab-stage-mode :is(
+    .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+  ){padding:2px 0!important}
+  body.lab-stage-mode :is(
+    .contrast-slider small,.timing-slider small,.motion-slider small,
+    .kspace-slider small,.spatial-slider small,.artifact-lab-slider small
+  ){display:none!important}
+  body.lab-stage-mode #paramControlsCard .sliderline{padding:2px 0!important}
+  body.lab-stage-mode #paramControlsCard .param-group{padding:5px!important}
+  body.lab-stage-mode #paramModelCard>.comparegrid .comparecard{padding:5px!important}
+  body.lab-stage-mode .contrast-summary>div,
+  body.lab-stage-mode .timing-summary>div,
+  body.lab-stage-mode .motion-summary>div{padding:4px 6px!important}
+  body.lab-stage-mode .motion-history canvas{height:72px!important}
+}
+@media (max-height:520px){
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-label{display:none!important}
+  body.lab-stage-mode .v27-lab-switcher button{
+    flex:1 1 0!important;
+    min-width:0!important;
+    justify-content:center!important
+  }
+  body.lab-stage-mode .v27-lab-switcher svg{margin:0!important}
+  body.lab-stage-mode #paramControlsCard .param-group-title span{display:none!important}
+  body.lab-stage-mode .contrast-summary>div:nth-child(3),
+  body.lab-stage-mode .timing-summary>div:nth-child(n+3),
+  body.lab-stage-mode .motion-summary>div:nth-child(n+3){display:none!important}
+  body.lab-stage-mode .motion-history{display:none!important}
+  body.lab-stage-mode .motion-output-card{
+    grid-template-rows:auto minmax(0,1fr) auto!important
+  }
+}
