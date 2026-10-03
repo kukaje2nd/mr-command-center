@@ -377,6 +377,21 @@ function renderFocusBar(id){
   focusPrimaryRoute=id==='sandbox'?'compare':'sandbox';
   if(primary)primary.textContent=id==='sandbox'?'Open A/B Compare →':'Parameter Lab →';
 }
+
+function refreshFocusedLabVisual(id){
+  if(!labStageMode)return;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    try{
+      if(id==='sandbox'){renderParameterScientificVisual();return}
+      if(id==='contrast'){contrastUpdate(false);return}
+      if(id==='timing'){timingUpdate(false);return}
+      if(id==='motion'){motionUpdate(false);return}
+      if(id==='kspace'){kspaceUpdate(false);return}
+      if(id==='spatial'){spatialUpdate(false);return}
+      if(id==='artifact'){artifactLabUpdate(false)}
+    }catch(e){}
+  }))
+}
 function setFocusedSection(id){
   const el=$(id);if(!el||!sectionTitles[id])return false;
   const interactiveLab=['sandbox','contrast','timing','motion','kspace','spatial','artifact'].includes(id);
@@ -389,6 +404,7 @@ function setFocusedSection(id){
   document.title=sectionTitles[id]+' — MR Command Center';announceRoute(sectionTitles[id]+' workspace tool');setRouteContext(sectionTitles[id]);
   if(['sandbox','contrast','timing','motion','kspace','spatial','artifact'].includes(id)||id==='protocol')$('focusBar')?.classList.remove('show');else renderFocusBar(id);
   setWorkspaceTabActive(['sandbox','contrast','timing','motion','kspace','spatial','artifact'].includes(id)?'labs':id==='protocol'?'protocol':(['safety','burn'].includes(id)?'safety':'reference'));
+  if(interactiveLab&&labStageMode)refreshFocusedLabVisual(id);
   return true;
 }
 function showHome(scroll=true,replaceRoute=false,updateRoute=true){
