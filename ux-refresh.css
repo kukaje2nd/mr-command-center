@@ -5222,3 +5222,188 @@ body.lab-stage-mode :is(
     min-height:220px!important
   }
 }
+
+
+/* Focused Lab mode rail — compact MRI console navigation, never stretched browser tabs */
+body.lab-stage-mode .v27-lab-switcher{
+  display:grid!important;
+  grid-template-columns:46px repeat(7,minmax(0,1fr))!important;
+  width:min(100%,980px)!important;
+  min-height:50px!important;
+  justify-self:center!important;
+  align-self:start!important;
+  gap:4px!important;
+  margin:0 auto!important;
+  padding:4px!important;
+  overflow:visible!important;
+  border:1px solid rgba(111,184,232,.14)!important;
+  border-radius:14px!important;
+  background:
+    linear-gradient(180deg,rgba(7,16,29,.96),rgba(4,10,19,.985))!important;
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.22),
+    inset 0 1px rgba(255,255,255,.018)!important
+}
+body.lab-stage-mode .v27-lab-switcher button{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  flex:none!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:40px!important;
+  height:40px!important;
+  padding:0 9px!important;
+  overflow:hidden!important;
+  border:1px solid transparent!important;
+  border-radius:9px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#71889a!important;
+  font-size:.68rem!important;
+  line-height:1!important;
+  white-space:nowrap!important
+}
+body.lab-stage-mode .v27-lab-switcher button svg{
+  flex:0 0 16px!important;
+  width:16px!important;
+  height:16px!important;
+  margin:0!important;
+  opacity:.58!important;
+  filter:none!important
+}
+body.lab-stage-mode .v27-lab-switcher .v27-lab-label{
+  display:inline!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  color:inherit!important;
+  font-size:.64rem!important;
+  font-weight:780!important;
+  line-height:1!important;
+  letter-spacing:.005em!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important
+}
+body.lab-stage-mode .v27-lab-switcher button:hover{
+  border-color:color-mix(in srgb,var(--switch-lab,var(--lab-accent,#55e8ff)) 16%,transparent)!important;
+  background:rgba(255,255,255,.014)!important;
+  color:#b7c9d5!important
+}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active{
+  flex:none!important;
+  border-color:color-mix(in srgb,var(--switch-lab,var(--lab-accent,#55e8ff)) 34%,transparent)!important;
+  background:
+    radial-gradient(120px circle at 50% 120%,color-mix(in srgb,var(--switch-lab,var(--lab-accent,#55e8ff)) 11%,transparent),transparent 72%),
+    rgba(255,255,255,.018)!important;
+  color:#eff8ff!important;
+  box-shadow:inset 0 1px color-mix(in srgb,var(--switch-lab,var(--lab-accent,#55e8ff)) 9%,transparent)!important
+}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active:after{
+  content:"";
+  position:absolute;
+  left:18%;
+  right:18%;
+  bottom:0;
+  height:2px;
+  border-radius:999px 999px 0 0;
+  background:var(--switch-lab,var(--lab-accent,#55e8ff));
+  box-shadow:0 0 12px color-mix(in srgb,var(--switch-lab,var(--lab-accent,#55e8ff)) 34%,transparent)
+}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active svg{
+  opacity:1!important;
+  color:var(--switch-lab,var(--lab-accent,#55e8ff))!important;
+  filter:drop-shadow(0 0 7px color-mix(in srgb,var(--switch-lab,var(--lab-accent,#55e8ff)) 20%,transparent))!important
+}
+
+/* Home is an exit station, not another full Lab tab. */
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit{
+  width:46px!important;
+  min-width:46px!important;
+  padding:0!important;
+  margin:0!important;
+  gap:0!important;
+  border-color:rgba(111,184,232,.10)!important;
+  background:rgba(255,255,255,.006)!important;
+  color:#7e9aaa!important
+}
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit:hover{
+  border-color:rgba(85,232,255,.22)!important;
+  background:rgba(85,232,255,.025)!important;
+  color:#cff7ff!important
+}
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit .v27-lab-label{
+  display:none!important
+}
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit span:first-child{
+  display:grid!important;
+  place-items:center!important;
+  width:20px!important;
+  height:20px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  color:inherit!important;
+  font-size:.95rem!important;
+  line-height:1!important
+}
+
+/* Intermediate screens become a clean icon rail instead of squeezing/truncating names. */
+@media (min-width:761px) and (max-width:1059px){
+  body.lab-stage-mode .v27-lab-switcher{
+    width:min(100%,620px)!important;
+    grid-template-columns:44px repeat(7,minmax(0,1fr))!important
+  }
+  body.lab-stage-mode .v27-lab-switcher button{
+    min-height:38px!important;
+    height:38px!important;
+    padding:0!important;
+    gap:0!important
+  }
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-label{
+    display:none!important
+  }
+}
+
+/* Phones use horizontal icon stations; no wrapping and no distorted active tab. */
+@media (max-width:760px){
+  body.lab-stage-mode .v27-lab-switcher{
+    display:flex!important;
+    width:100%!important;
+    min-height:46px!important;
+    gap:4px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    justify-content:flex-start!important;
+    scrollbar-width:none
+  }
+  body.lab-stage-mode .v27-lab-switcher::-webkit-scrollbar{display:none}
+  body.lab-stage-mode .v27-lab-switcher button,
+  body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active{
+    flex:0 0 42px!important;
+    width:42px!important;
+    min-width:42px!important;
+    height:36px!important;
+    min-height:36px!important;
+    padding:0!important;
+    gap:0!important
+  }
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-label{
+    display:none!important
+  }
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-exit{
+    flex-basis:42px!important;
+    width:42px!important;
+    min-width:42px!important
+  }
+}
