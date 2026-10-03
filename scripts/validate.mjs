@@ -251,7 +251,7 @@ if(!script.includes('file.size>1000000')||!script.includes("scope:'active-worksp
 if(!script.includes("Number(payload.schema)<1||Number(payload.schema)>MRCC_WORKSPACE_BACKUP_SCHEMA")) fail.push('v10 workspace import must remain backward-compatible with schema-1 and schema-2 backups.');
 if(!script.includes("id:'workspace-export'")||!script.includes("id:'workspace-import'")||!script.includes("id:'workspace-diagnostics'")) fail.push('Workspace portability Quick Console commands are missing.');
 if(!script.includes("['Workspace portability'")||!script.includes('MRCC_WORKSPACE_ACTIVE_KEYS.length===12')) fail.push('Workspace portability is missing from self-check coverage.');
-if(!html.includes('src="/brand-mark.svg"')) fail.push('Header is not using the SVG brand mark.');
+if(!documentHtml.includes('class="brand-sigil"')||!documentHtml.includes('<span class="brand-mr">MRCC</span>')) fail.push('Header is not using the MRCC v2 sigil/wordmark.');
 if(!html.includes('class="system-panel" id="offlineBar"')) fail.push('Compact system-status drawer is missing.');
 if(!script.includes("document.querySelectorAll('[data-workspace-tab]').length===10")||!script.includes("document.querySelectorAll('#mobileNav [data-workspace-tab]').length===5")) fail.push('Workspace self-check navigation counts are stale.');
 if(!html.includes('id="routeAnnouncer"')||!script.includes('function announceRoute')||!script.includes("history[replace?'replaceState':'pushState']")) fail.push('Accessible route announcements or browser history navigation are missing.');
