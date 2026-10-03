@@ -2799,3 +2799,140 @@ body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active svg{
     background-size:auto!important
   }
 }
+
+
+/* Identity refinement — clearer spectrum, shared semantic states, no legacy control palettes */
+.lab-home-parameter{--sf-accent:#6d9cff!important;--lab-accent:#6d9cff!important;--lab-accent-2:#55e8ff!important}
+#sandbox{--sf-accent:#6d9cff!important;--section-accent:#6d9cff!important;--lab-accent:#6d9cff!important;--lab-accent-2:#55e8ff!important}
+body.lab-stage-mode[data-lab-stage="sandbox"]{--lab-accent:#6d9cff!important;--lab-accent-2:#55e8ff!important}
+body.nav-focus:has(#sandbox.active-section){--section-accent:#6d9cff!important}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab="parameter"]{--switch-lab:#6d9cff!important}
+
+/* Presets and quick choices share one interaction language while inheriting each Lab hue. */
+#contrast .contrast-presets button,
+#timing .timing-presets button,
+#motion .motion-presets button,
+#kspace .kspace-presets button,
+#spatial .spatial-presets button,
+#artifact .artifact-lab-presets button{
+  border-color:color-mix(in srgb,var(--lab-accent) 18%,var(--neo-line))!important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--lab-accent) 3%,rgba(8,18,31,.96)),rgba(5,12,23,.98))!important;
+  color:#dceaf4!important
+}
+#contrast .contrast-presets button:hover,
+#timing .timing-presets button:hover,
+#motion .motion-presets button:hover,
+#kspace .kspace-presets button:hover,
+#spatial .spatial-presets button:hover,
+#artifact .artifact-lab-presets button:hover{
+  border-color:color-mix(in srgb,var(--lab-accent) 42%,var(--neo-line))!important;
+  background:color-mix(in srgb,var(--lab-accent) 7%,rgba(7,16,29,.98))!important
+}
+:is(
+  #contrast .contrast-presets,
+  #timing .timing-presets,
+  #motion .motion-presets,
+  #kspace .kspace-presets,
+  #spatial .spatial-presets,
+  #artifact .artifact-lab-presets
+) small{
+  color:#7f98aa!important
+}
+
+/* Contrast's visible timing display now belongs to Contrast rather than the old green system. */
+#contrast .contrast-timeline{
+  border-color:color-mix(in srgb,var(--lab-accent) 16%,var(--neo-line))!important;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--lab-accent) 2.5%,rgba(8,18,32,.94)),rgba(4,10,20,.97))!important
+}
+#contrast .contrast-timeline-track{
+  border-bottom-color:color-mix(in srgb,var(--lab-accent) 36%,var(--neo-line))!important
+}
+#contrast .contrast-event{
+  border-color:color-mix(in srgb,var(--lab-accent) 22%,var(--neo-line))!important;
+  background:rgba(7,15,27,.94)!important;
+  color:#dfeafa!important
+}
+#contrast .contrast-event.rf{border-color:color-mix(in srgb,var(--lab-accent-2) 34%,var(--neo-line))!important;color:#d9efff!important}
+#contrast .contrast-event.inv{border-color:color-mix(in srgb,var(--lab-accent) 42%,var(--neo-line))!important;color:#eadfff!important}
+#contrast .contrast-event.echo{border-color:color-mix(in srgb,var(--lab-accent-2) 28%,var(--neo-line))!important;color:#ddf5ff!important}
+#contrast .contrast-timeline-labels{color:#8199aa!important}
+
+/* Compact control/readout chrome follows Lab identity instead of one global cyan. */
+:is(#contrast,#timing,#motion,#kspace,#spatial,#artifact) output,
+#sandbox #paramControlsCard output{
+  color:color-mix(in srgb,var(--lab-accent) 60%,#eefaff)!important
+}
+:is(#contrast,#timing,#motion,#kspace,#spatial,#artifact) select,
+#sandbox #paramControlsCard select{
+  border-color:color-mix(in srgb,var(--lab-accent) 17%,var(--neo-line))!important
+}
+
+/* One semantic language across Labs: success stays mint, warning amber, incorrect coral. */
+:is(
+  #contrast .contrast-challenge-constraint.met,
+  #timing .timing-challenge-constraint.met,
+  #motion .motion-challenge-constraint.met,
+  #kspace .kspace-challenge-constraint.met,
+  #spatial .spatial-challenge-constraint.met,
+  #artifact .artifact-challenge-feedback.good,
+  #artifact .artifact-challenge-choices button.correct
+){
+  border-color:rgba(103,228,192,.42)!important;
+  background:rgba(103,228,192,.045)!important
+}
+:is(
+  #contrast .contrast-challenge-constraint.met b,
+  #timing .timing-challenge-constraint.met b,
+  #motion .motion-challenge-constraint.met b,
+  #kspace .kspace-challenge-constraint.met b,
+  #spatial .spatial-challenge-constraint.met b,
+  #artifact .artifact-challenge-feedback.good b,
+  #artifact .artifact-challenge-choices button.correct
+){
+  color:#aef4df!important
+}
+:is(
+  #contrast .contrast-challenge-constraint.miss,
+  #timing .timing-challenge-constraint.miss,
+  #motion .motion-challenge-constraint.miss,
+  #kspace .kspace-challenge-constraint.miss,
+  #spatial .spatial-challenge-constraint.miss,
+  #artifact .artifact-challenge-feedback.bad,
+  #artifact .artifact-challenge-choices button.wrong
+){
+  border-color:rgba(255,144,127,.42)!important;
+  background:rgba(255,144,127,.045)!important
+}
+:is(
+  #contrast .contrast-challenge-constraint.miss b,
+  #timing .timing-challenge-constraint.miss b,
+  #motion .motion-challenge-constraint.miss b,
+  #kspace .kspace-challenge-constraint.miss b,
+  #spatial .spatial-challenge-constraint.miss b,
+  #artifact .artifact-challenge-feedback.bad b,
+  #artifact .artifact-challenge-choices button.wrong
+){
+  color:#ffc7bd!important
+}
+
+/* Directional/numeric result emphasis is Lab-colored; explanatory copy remains neutral. */
+:is(
+  #contrast .contrast-card-head .compare-state,
+  #timing .timing-card-head .compare-state,
+  #motion .motion-card-head .compare-state,
+  #kspace .kspace-card-head .compare-state,
+  #spatial .spatial-card-head .compare-state,
+  #artifact .artifact-lab-card-head .compare-state
+){
+  border-color:color-mix(in srgb,var(--lab-accent) 28%,var(--neo-line))!important;
+  background:color-mix(in srgb,var(--lab-accent) 6%,rgba(6,14,27,.94))!important;
+  color:color-mix(in srgb,var(--lab-accent) 62%,#eaf7ff)!important
+}
+
+/* Avoid an over-bright rainbow effect: inactive Lab switcher icons stay partially muted. */
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab]:not(.active) svg{
+  opacity:.68
+}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab]:hover svg{
+  opacity:1
+}
