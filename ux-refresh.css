@@ -5407,3 +5407,18 @@ body.lab-stage-mode .v27-lab-switcher .v27-lab-exit span:first-child{
     min-width:42px!important
   }
 }
+
+
+/* Mode rail icon parity — Home uses the same vector language as every Lab */
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit .v27-home-icon{
+  display:block!important;
+  width:16px!important;
+  height:16px!important;
+  margin:0!important;
+  color:#86a5b8!important;
+  opacity:.86!important
+}
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit:hover .v27-home-icon{
+  color:#aeefff!important;
+  filter:drop-shadow(0 0 7px rgba(85,232,255,.18))!important
+}
