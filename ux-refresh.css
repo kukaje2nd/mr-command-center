@@ -4092,3 +4092,22 @@ body.lab-stage-mode canvas.consequence-highlight{
     margin-top:auto!important
   }
 }
+
+
+/* Parameter result hierarchy correction — visual map gets the flexible area, causal chain stays compact */
+body.lab-stage-mode #paramModelCard>h3{grid-row:1!important}
+body.lab-stage-mode #paramModelCard>.comparegrid{grid-row:2!important}
+body.lab-stage-mode #paramModelCard>.map-panel{
+  grid-row:3!important;
+  min-height:0!important;
+  height:100%!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode #paramModelCard>.parameter-deep-cockpit{
+  grid-row:4!important;
+  align-self:end!important
+}
+body.lab-stage-mode #paramModelCard .balance-list{
+  height:100%!important;
+  align-content:center!important
+}

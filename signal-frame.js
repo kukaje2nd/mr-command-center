@@ -259,7 +259,7 @@ const IMPACT_TARGETS={
 function impactBox(node){
   if(!node)return null;
   if(node.matches('canvas'))return node.closest('.kspace-canvas-shell,.spatial-canvas-shell,.motion-image-shell,.artifact-canvas-shell,.contrast-curve-panel')||node;
-  return node.closest('.comparecard,.contrast-summary>div,.timing-summary>div,.motion-summary>div,.kspace-readouts>div,.spatial-readouts>div,.card,.contrast-timeline,.motion-history')||node;
+  return node.closest('.comparecard,.balance-row,.artifact-lab-readout,.contrast-summary>div,.timing-summary>div,.motion-summary>div,.kspace-readouts>div,.spatial-readouts>div,.card,.contrast-timeline,.motion-history')||node;
 }
 function flashControlImpacts(control){
   if(!control)return;
