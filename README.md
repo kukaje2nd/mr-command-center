@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v27.0 — Lab Intelligence + Resonance Core
+v27.1 — Completion Pass
 
 ## Production
 - Entry point: `index.html`
@@ -58,6 +58,13 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. The Premium workspace currently exposes five public concept previews: Diffusion & b-Value, Parallel Imaging, RF Power Concepts, Gradient Encoding Concepts, and Off-Resonance & Phase.
+
+### v27.1 release notes
+- Finished the v27 visual refactor with stronger MRI-specific Home and Lab surfaces.
+- Added deep per-Lab intelligence: Parameter driver ranking, Contrast sensitivity, Timing pressure, Motion vulnerability, K-Space consequence synthesis, Spatial diagnosis, and Artifact evidence matching.
+- Moved system/offline diagnostics under Advanced Settings and removed Premium from the normal Home flow.
+- Added cache-busted production assets so the completion pass is visible immediately after deployment.
+- Expanded Sequence DNA with a top-candidate evidence matrix and next separating clue.
 
 ### v27.0 release notes
 - Introduced the Resonance Core visual identity and MRI-specific Lab icon system.

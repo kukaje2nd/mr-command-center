@@ -19,3 +19,132 @@ function dna(){try{sequenceDnaRank().slice(0,3).forEach(r=>{const c=document.que
 function canvases(){const m={motionHistoryCanvas:'Synthetic motion displacement across phase-line acquisition.',motionReferenceCanvas:'Stationary synthetic reference phantom.',motionResultCanvas:'Synthetic motion-corrupted reconstruction.',motionLinearCanvas:'Synthetic reconstruction using linear phase ordering.',motionCentricCanvas:'Synthetic reconstruction using centric phase ordering.',ksKspaceCanvas:'Synthetic k-space magnitude map for the active mask.',ksImageCanvas:'Synthetic reconstruction from the active k-space mask.',ksPsfCanvas:'Mathematical impulse response of the active synthetic mask.',spWorldCanvas:'Synthetic object with encoded field-of-view frame.',spReconCanvas:'Synthetic reconstruction illustrating wrap and sampling density.',artifactCanvas:'Stylized MRI artifact teaching pattern; Pattern DNA provides text evidence.'};Object.entries(m).forEach(([id,label])=>{const c=$(id);if(c){c.setAttribute('role','img');c.setAttribute('aria-label',label)}})}
 function boot(){switchers();LABS.forEach(([id,,s])=>intel(s,id));canvases();renderI();drawHome();document.querySelectorAll('.lab-home-card').forEach(c=>{const t=c.querySelector('h3')?.textContent?.trim(),b=c.querySelector('.lab-home-open'),id=LABS.find(x=>c.classList.contains('lab-home-'+x[0]))?.[0];if(t&&b)b.setAttribute('aria-label','Open '+t);if(id){const i=c.querySelector('.lab-home-icon');if(i)i.innerHTML=ICONS[id]}});document.addEventListener('input',()=>{requestAnimationFrame(renderI);queue()},{passive:true});document.addEventListener('change',()=>{requestAnimationFrame(renderI);queue()},{passive:true});addEventListener('resize',queue,{passive:true});if(typeof renderSequenceDna==='function'){const old=renderSequenceDna;window.renderSequenceDna=function(){const r=old.apply(this,arguments);requestAnimationFrame(dna);return r};requestAnimationFrame(dna)}if(typeof setWorkspaceTabActive==='function'){window.setWorkspaceTabActive=function(tab='home'){const d={safety:'reference',compare:'labs',more:'reference'}[tab]||tab,m={premium:'more',safety:'more',compare:'more'}[tab]||tab;document.querySelectorAll('#workspaceRail [data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===d;b.classList.toggle('active',on);on?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')});document.querySelectorAll('#mobileNav [data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===m;b.classList.toggle('active',on);on?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')})}}if(typeof openLab==='function'){const old=openLab;window.openLab=function(id){activeLab(id);const r=old.apply(this,arguments);requestAnimationFrame(()=>{renderI();drawHome()});return r}}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();})();
+
+;(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const LAB_SECTION={parameter:'sandbox',contrast:'contrast',timing:'timing',motion:'motion',kspace:'kspace',spatial:'spatial',artifact:'artifact'};
+const CONTROL_MAP={
+ sbFov:['parameter','FOV'],sbFreq:['parameter','frequency matrix'],sbPhase:['parameter','phase matrix'],sbPhaseFov:['parameter','phase FOV'],sbSlice:['parameter','slice thickness'],sbNex:['parameter','NEX'],sbBw:['parameter','bandwidth'],sbEtl:['parameter','ETL'],sbAccel:['parameter','acceleration'],sbPf:['parameter','partial Fourier'],
+ clMode:['contrast','sequence model'],clTr:['contrast','TR'],clTe:['contrast','TE'],clTi:['contrast','TI'],
+ timingTr:['timing','TR'],timingFirstEcho:['timing','first echo'],timingSpacing:['timing','echo spacing'],timingEtl:['timing','ETL'],timingCenter:['timing','center echo'],timingPhase:['timing','phase encodes'],timingNex:['timing','NEX'],
+ motionMode:['motion','motion pattern'],motionDirection:['motion','translation direction'],motionOrder:['motion','phase-line ordering'],motionAmplitude:['motion','motion amplitude'],motionOnset:['motion','motion onset'],motionCycles:['motion','motion cycles'],
+ ksMode:['kspace','mask family'],ksAmount:['kspace','mask amount / acceleration'],
+ spPhaseFov:['spatial','phase FOV'],spReadFov:['spatial','read FOV'],spPhaseSamples:['spatial','phase samples'],spReadSamples:['spatial','read samples'],
+ artifactSelect:['artifact','artifact evidence pattern'],artifactStrength:['artifact','artifact strength'],artifactDirection:['artifact','display / encoding direction']
+};
+const lastChange={};
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const pct=v=>(Math.round(v*1000)/10)+'%';
+const delta=v=>{const n=Math.round((v-1)*100);return (n>0?'+':'')+n+'%'};
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function host(lab,title,kicker='Lab Intelligence'){
+  const intel=document.querySelector('[data-v27-intel="'+lab+'"]'); if(!intel)return null;
+  let box=intel.parentElement.querySelector(':scope > .v271-analysis[data-lab="'+lab+'"]');
+  if(!box){box=document.createElement('section');box.className='v271-analysis';box.dataset.lab=lab;box.innerHTML='<div class="v271-analysis-head"><div><small>'+esc(kicker)+'</small><h3>'+esc(title)+'</h3></div><span class="v271-live"><i></i>live model</span></div><div class="v271-analysis-body"></div>';intel.insertAdjacentElement('afterend',box)}
+  return box.querySelector('.v271-analysis-body');
+}
+function bars(rows){
+  return '<div class="v271-bars">'+rows.map(r=>'<div class="v271-bar"><div><b>'+esc(r[0])+'</b><span>'+esc(r[2]||'')+'</span></div><div class="v271-track"><i style="--p:'+clamp(r[1])*100+'%;--c:'+(r[3]||'var(--lab-accent,#5be7ff)')+'"></i></div></div>').join('')+'</div>';
+}
+function parameterAnalysis(){
+  const body=host('parameter','What is driving this stack?');if(!body)return;
+  try{
+    const s=sandboxState(),keys=Object.keys(sbBase),labels={fov:'FOV',mx:'frequency matrix',phase:'phase matrix',phaseFov:'phase FOV',slice:'slice thickness',nex:'NEX',bw:'bandwidth',etl:'ETL',accel:'acceleration',pf:'partial Fourier'};
+    const rows=keys.filter(k=>Math.abs(Number(s[k])-Number(sbBase[k]))>1e-9).map(k=>{
+      const iso={...sbBase,[k]:s[k]},m=sandboxMetrics(iso);
+      const impacts=[['detail',m.detail],['SNR',m.snr],['time',m.time]];
+      const score=impacts.reduce((a,[,v])=>a+Math.abs(Math.log(Math.max(.001,v))),0);
+      const strongest=impacts.sort((a,b)=>Math.abs(Math.log(b[1]))-Math.abs(Math.log(a[1])))[0];
+      return {k,label:labels[k],score,strongest:strongest[0]+' '+delta(strongest[1]),detail:m.detail,snr:m.snr,time:m.time};
+    }).sort((a,b)=>b.score-a.score);
+    if(!rows.length){body.innerHTML='<div class="v271-empty"><b>Baseline stack</b><span>Move any Parameter control and MRCC will rank its isolated contribution to detail, SNR, and modeled time.</span></div>';return}
+    const max=Math.max(...rows.map(r=>r.score),.001),top=rows.slice(0,4);
+    body.innerHTML='<div class="v271-driver-grid">'+top.map((r,i)=>'<button type="button" data-v271-inspector="'+r.k+'" class="v271-driver '+(i===0?'lead':'')+'"><span class="v271-rank">'+(i+1)+'</span><div><small>'+esc(r.label)+'</small><b>'+esc(r.strongest)+'</b><span>D '+delta(r.detail)+' · SNR '+delta(r.snr)+' · time '+delta(r.time)+'</span></div><i style="--p:'+Math.max(8,Math.round(r.score/max*100))+'%"></i></button>').join('')+'</div><p class="v271-footnote">Each row isolates one changed lever against the Parameter Lab baseline. It is a teaching decomposition, not a scanner prediction.</p>';
+    body.querySelectorAll('[data-v271-inspector]').forEach(b=>b.onclick=()=>{try{setParameterInspector(b.dataset.v271Inspector);document.getElementById('parameterDeepCockpit')?.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}});
+  }catch(e){body.innerHTML='<div class="v271-empty"><b>Driver analysis unavailable</b><span>The underlying Parameter Lab remains active.</span></div>'}
+}
+function contrastSpread(s){const sig=contrastMaterialsModel.map(m=>contrastSignal(m,s)),mx=Math.max(...sig,.000001),mn=Math.min(...sig);return {spread:(mx-mn)/mx,sig}}
+function contrastAnalysis(){
+  const body=host('contrast','Which timing lever is separating the signals?');if(!body)return;
+  try{
+    const s=contrastState(),base=contrastSpread(s).spread,bounds={tr:[300,5000,Math.max(80,s.tr*.08)],te:[10,180,Math.max(5,s.te*.12)],ti:[50,2500,Math.max(30,s.ti*.08)]};
+    const levers=(s.mode==='ir'?['tr','te','ti']:['tr','te']).map(k=>{
+      const [lo,hi,step]=bounds[k],plus={...s,[k]:clamp(s[k]+step,lo,hi)},minus={...s,[k]:clamp(s[k]-step,lo,hi)},dp=contrastSpread(plus).spread-base,dm=contrastSpread(minus).spread-base;
+      const best=Math.abs(dp)>=Math.abs(dm)?{dir:'increase',d:dp}:{dir:'decrease',d:dm};
+      return {k,label:k.toUpperCase(),strength:Math.max(Math.abs(dp),Math.abs(dm)),best};
+    }).sort((a,b)=>b.strength-a.strength);
+    const max=Math.max(...levers.map(x=>x.strength),.001);
+    body.innerHTML='<div class="v271-sensitivity">'+levers.map((r,i)=>'<div class="'+(i===0?'lead':'')+'"><small>'+r.label+' local sensitivity</small><b>'+pct(r.strength)+' spread change</b><span>Try '+r.best.dir+' · '+(r.best.d>=0?'separation grows':'separation shrinks')+'</span><i style="--p:'+Math.max(5,r.strength/max*100)+'%"></i></div>').join('')+'</div><div class="v271-callout"><b>Current synthetic spread '+pct(base)+'</b><span>Local sensitivity tests a small timing perturbation around the current state; it does not imply clinical optimization.</span></div>';
+  }catch(e){}
+}
+function timingAnalysis(){
+  const body=host('timing','Where is the timing pressure?');if(!body)return;
+  try{
+    const s=timingState(),m=timingMetrics(s),util=clamp(m.trainSpan/Math.max(1,s.tr)),center=clamp(m.effectiveTe/Math.max(1,m.trainSpan)),trainPressure=clamp(m.trains/40),timePressure=clamp(m.timeSec/180);
+    body.innerHTML=bars([['TR occupied',util,Math.round(util*100)+'% of toy TR','#5be7ff'],['Center position',center,'echo '+s.center+' of '+s.etl,'#9a83ff'],['Train count',trainPressure,m.trains+' train'+(m.trains===1?'':'s'),'#68e1b8'],['Toy acquisition burden',timePressure,Math.round(m.timeSec)+' s','#ffd166']])+'<div class="v271-callout '+(!m.fit?'warn':'')+'"><b>'+(m.fit?'Train fits inside toy TR':'Train exceeds toy TR')+'</b><span>Train span '+Math.round(m.trainSpan)+' ms · effective-TE-like center '+Math.round(m.effectiveTe)+' ms · idle '+Math.round(m.idle)+' ms.</span></div>';
+  }catch(e){}
+}
+function motionAnalysis(){
+  const body=host('motion','Which phase lines are vulnerable?');if(!body)return;
+  try{
+    const s=motionState(),a=motionAcquire(s),st=motionLineStats(a),den=Math.max(.001,s.amplitude||1);
+    const cells=[];for(let y=0;y<KS_N;y++){const ky=motionSignedIndex(y),rank=a.rankByY[y],d=Math.abs(a.dispByRank[rank]),v=clamp(d/den);cells.push('<i class="'+(Math.abs(ky)<=4?'center':'')+'" style="--v:'+v+'" title="ky '+ky+' · rank '+rank+' · |shift| '+d.toFixed(2)+'"></i>')}
+    body.innerHTML='<div class="v271-motion-timeline"><div class="v271-motion-key"><span>outer</span><b>phase-line acquisition vulnerability</b><span>center</span></div><div class="v271-motion-lines">'+cells.join('')+'</div></div><div class="v271-kpis"><div><small>Center-band mean</small><b>'+st.centerMean.toFixed(2)+' px</b></div><div><small>Outer mean</small><b>'+st.outerMean.toFixed(2)+' px</b></div><div><small>Center lines affected</small><b>'+st.centerAffected+' / '+st.centerN+'</b></div><div><small>Center acquired</small><b>rank '+a.centerRank+'</b></div></div>';
+  }catch(e){}
+}
+function kspaceAnalysis(){
+  const body=host('kspace','What does this mask retain—and create?');if(!body)return;
+  try{
+    const s=kspaceState(),masked=kspaceApplyMask(s),e=kspaceEnergyStats(masked),p=kspaceMaskPsf(masked);
+    body.innerHTML=bars([['Samples retained',masked.retained,'Rough acquisition burden '+pct(masked.retained),'#52b7ff'],['Fourier energy retained',e.energyRetained,'Energy ≠ diagnostic importance','#ffd166'],['Center-band energy',e.centerRetained,'Broad structure proxy','#68e1b8'],['Outer-band energy',e.outerRetained,'Rapid spatial variation proxy','#9a83ff'],['Off-center mask response',p.sideRatio,'Side response '+pct(p.sideRatio),'#ff8f7d']])+'<div class="v271-callout"><b>Energy efficiency '+e.efficiency.toFixed(2)+'×</b><span>'+esc(kspaceModeSummary(s).meta)+' · mask half-peak support '+p.halfCount+' samples.</span></div>';
+  }catch(e){}
+}
+function spatialAnalysis(){
+  const body=host('spatial','Coverage problem or sampling problem?');if(!body)return;
+  try{
+    const s=spatialState(),m=spatialMetrics(s),copy=spatialTeachingCopy(s,m);
+    const readRepair=m.readWrap?'increase read FOV':m.readPixel>1.12?'increase read samples or reduce read FOV':'read axis contained';
+    const phaseRepair=m.phaseWrap?'increase phase FOV / anti-alias coverage':m.phasePixel>1.12?'increase phase samples or reduce phase FOV':'phase axis contained';
+    body.innerHTML='<div class="v271-axis-grid"><div class="'+(m.readWrap?'warn':'')+'"><small>Read axis</small><b>'+(m.readWrap?'coverage-limited':'coverage contained')+'</b><span>FOV '+Math.round(s.readFov)+'% · pixel '+m.readPixel.toFixed(2)+'× · '+readRepair+'</span></div><div class="'+(m.phaseWrap?'warn':'')+'"><small>Phase axis</small><b>'+(m.phaseWrap?'coverage-limited':'coverage contained')+'</b><span>FOV '+Math.round(s.phaseFov)+'% · pixel '+m.phasePixel.toFixed(2)+'× · '+phaseRepair+'</span></div></div><div class="v271-callout"><b>'+esc(copy.short)+'</b><span>'+esc(copy.detail)+' Fewer samples change the grid; undersized FOV creates periodic wrap in this model.</span></div>';
+  }catch(e){}
+}
+const ART_E={
+ motion:{m:'replicas',f:'global',d:'phase',c:'whole'},wrap:{m:'foldover',f:'outside',d:'axis',c:'outside'},chem:{m:'boundary',f:'interface',d:'frequency',c:'orderly'},metal:{m:'distortion',f:'focal',d:'local',c:'irregular'},zipper:{m:'line',f:'global',d:'persistent',c:'system'},trunc:{m:'ringing',f:'edge',d:'sampling',c:'edge'},flow:{m:'replicas',f:'source',d:'phase',c:'pulsatile'},dielectric:{m:'shading',f:'broad',d:'none',c:'smooth'}
+};
+function artifactMatcher(){
+  const body=host('artifact','Match the evidence before choosing the label','Evidence-driven matcher');if(!body)return;
+  let box=body.querySelector('.v271-artifact-matcher');
+  if(!box){box=document.createElement('div');box.className='v271-artifact-matcher';box.innerHTML='<div class="v271-matcher-controls"><label>Morphology<select data-e="m"><option value="">Any</option><option value="replicas">replicas / ghosts</option><option value="foldover">foldover</option><option value="boundary">bright-dark boundary</option><option value="distortion">focal distortion</option><option value="line">coherent line</option><option value="ringing">edge ringing</option><option value="shading">broad shading</option></select></label><label>Footprint<select data-e="f"><option value="">Any</option><option value="global">distributed / global</option><option value="outside">outside-FOV anatomy</option><option value="interface">fat-water interface</option><option value="focal">focal source</option><option value="edge">sharp edge</option><option value="source">vessel / CSF source</option><option value="broad">broad field</option></select></label><label>Direction behavior<select data-e="d"><option value="">Any</option><option value="phase">phase-related</option><option value="frequency">frequency-related</option><option value="axis">undersized encoded axis</option><option value="local">local B0 / non-axis</option><option value="persistent">persists across anatomy</option><option value="sampling">sampling-boundary</option><option value="none">not directional</option></select></label><label>Strongest clue<select data-e="c"><option value="">Any</option><option value="whole">whole-anatomy replicas</option><option value="outside">plausible outside-FOV anatomy</option><option value="orderly">orderly fat-water edge</option><option value="irregular">irregular local distortion</option><option value="system">system-like stripe</option><option value="edge">alternating bands at edge</option><option value="pulsatile">pulsatile source</option><option value="smooth">smooth shading</option></select></label></div><div class="v271-matcher-results"></div>';body.appendChild(box);box.querySelectorAll('select').forEach(s=>s.addEventListener('change',renderArtifactMatcher))}
+  renderArtifactMatcher();
+}
+function renderArtifactMatcher(){
+  const box=document.querySelector('.v271-artifact-matcher');if(!box)return;
+  const evidence={};box.querySelectorAll('select').forEach(s=>evidence[s.dataset.e]=s.value);
+  const active=Object.values(evidence).filter(Boolean).length,rows=Object.entries(ART_E).map(([id,p])=>{let hit=0,conf=0;for(const k of Object.keys(evidence)){if(!evidence[k])continue;p[k]===evidence[k]?hit++:conf++}return{id,hit,conf,score:active?hit/active:0}}).sort((a,b)=>b.score-a.score||a.conf-b.conf);
+  const out=box.querySelector('.v271-matcher-results');if(!active){out.innerHTML='<div class="v271-empty"><b>Add one evidence clue</b><span>MRCC will rank artifact patterns without requiring you to choose the answer first.</span></div>';return}
+  out.innerHTML=rows.slice(0,3).map((r,i)=>{const p=artifactProfile(r.id),a=artifacts[r.id];return '<button type="button" data-art-load="'+r.id+'" class="'+(i===0?'lead':'')+'"><small>'+(i===0?'Strongest evidence fit':'Alternate')+'</small><b>'+esc(a?.title||r.id)+' · '+Math.round(r.score*100)+'%</b><span>'+esc(p.discriminator)+'</span></button>'}).join('');
+  out.querySelectorAll('[data-art-load]').forEach(b=>b.onclick=()=>{const sel=$('artifactSelect');if(sel){sel.value=b.dataset.artLoad;artifactLabUpdate();sel.scrollIntoView({behavior:'smooth',block:'center'})}});
+}
+function dnaMatrix(){
+  try{
+    const root=$('seqDnaAmbiguity');if(!root)return;let box=root.parentElement.querySelector('.v271-dna-matrix');if(!box){box=document.createElement('div');box.className='v271-dna-matrix';root.insertAdjacentElement('afterend',box)}
+    const state=sequenceDnaState(),rank=sequenceDnaRank(state).slice(0,3),dims=['prep','echo','readout','output'];
+    box.innerHTML='<div class="v271-analysis-head"><div><small>DNA evidence matrix</small><h3>Why the top families rank where they do</h3></div></div><div class="v271-dna-table"><div class="head"><b>Family</b>'+dims.map(d=>'<span>'+esc(sequenceDnaDimensions[d].label)+'</span>').join('')+'</div>'+rank.map(r=>'<div><b>'+esc(r.family.code)+'</b>'+dims.map(d=>{const v=state[d],any=v==='any',match=any||sequenceDnaProfiles[r.id][d]?.includes(v);return '<span class="'+(any?'neutral':match?'match':'miss')+'">'+(any?'—':match?'✓ ':'× ')+esc(any?'not set':sequenceDnaLabel(d,v))+'</span>'}).join('')+'</div>').join('')+'</div><p class="v271-footnote">'+esc(sequenceDnaDifferentiator(rank[0],rank[1]))+'</p>';
+  }catch(e){}
+}
+function desc(id,text){const c=$(id);if(!c)return;let p=$(id+'V271Desc');if(!p){p=document.createElement('p');p.id=id+'V271Desc';p.className='sr-only';c.insertAdjacentElement('afterend',p);c.setAttribute('aria-describedby',p.id)}p.textContent=text}
+function canvasDescriptions(){
+  try{const s=motionState(),a=motionAcquire(s),st=motionLineStats(a);desc('motionHistoryCanvas','Motion '+s.mode+', '+s.amplitude+' pixel teaching amplitude, begins '+s.onset+' percent through acquisition. Center-band mean displacement '+st.centerMean.toFixed(2)+' pixels.')}catch(e){}
+  try{const s=kspaceState(),m=kspaceApplyMask(s),e=kspaceEnergyStats(m);desc('ksKspaceCanvas',kspaceModeSummary(s).title+'. '+pct(m.retained)+' samples and '+pct(e.energyRetained)+' Fourier energy retained.')}catch(e){}
+  try{const s=spatialState(),m=spatialMetrics(s),c=spatialTeachingCopy(s,m);desc('spReconCanvas',c.title+'. Read relative pixel width '+m.readPixel.toFixed(2)+' times baseline; phase relative pixel width '+m.phasePixel.toFixed(2)+' times baseline.')}catch(e){}
+  try{const s=artifactLabState(),p=artifactProfile(s.mode);desc('artifactCanvas',p.pattern+'. '+p.footprint+'. '+p.directionLogic+'.')}catch(e){}
+}
+let raf=0;function renderDeep(){cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{parameterAnalysis();contrastAnalysis();timingAnalysis();motionAnalysis();kspaceAnalysis();spatialAnalysis();artifactMatcher();dnaMatrix();canvasDescriptions();for(const [lab,label] of Object.entries(lastChange)){const h=document.querySelector('[data-v27-intel="'+lab+'"]');if(h){const b=h.querySelector('[data-v27-what]'),s=h.querySelector('[data-v27-wd]');if(b)b.textContent=label+' changed';if(s)s.textContent='The analysis below recomputed from the current Lab state.'}}})}
+function relocateDiagnostics(){const adv=document.querySelector('.v27-advanced-settings-grid'),sys=$('offlineBar');if(adv&&sys&&!adv.contains(sys)){const wrap=document.createElement('div');wrap.className='v271-diagnostics';wrap.innerHTML='<h4>System & offline diagnostics</h4><p>Cache, network, runtime self-checks, and offline status.</p>';wrap.appendChild(sys);adv.appendChild(wrap)}}
+document.addEventListener('input',e=>{const m=CONTROL_MAP[e.target?.id];if(m){lastChange[m[0]]=m[1];renderDeep()}},{passive:true});
+document.addEventListener('change',e=>{const m=CONTROL_MAP[e.target?.id];if(m){lastChange[m[0]]=m[1];renderDeep()}},{passive:true});
+const oldRender=window.renderSequenceDna;if(typeof oldRender==='function')window.renderSequenceDna=function(){const r=oldRender.apply(this,arguments);requestAnimationFrame(dnaMatrix);return r};
+function boot(){document.documentElement.dataset.mrccRelease='27.1';relocateDiagnostics();renderDeep();setTimeout(renderDeep,120);setTimeout(renderDeep,500)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
