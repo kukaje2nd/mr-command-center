@@ -5838,3 +5838,56 @@ body.lab-stage-mode .artifact-canvas-note span{
     grid-column:1/-1!important
   }
 }
+
+
+/* Scientific Lab v3 — state visibility must outrank shared display geometry. */
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider,
+  .contrast-field,.timing-field,.motion-field,.kspace-field,.spatial-field,.artifact-direction-field
+)[hidden],
+body.lab-stage-mode [hidden]{
+  display:none!important
+}
+
+/* Range tracks must remain visibly interactive in Chromium/WebKit and Firefox. */
+body.lab-stage-mode :is(
+  #paramControlsCard .sliderline,
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+)>input[type=range]{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:linear-gradient(
+    90deg,
+    var(--sf-accent,var(--lab-accent,#55e8ff)) 0 var(--sf-fill,50%),
+    rgba(122,157,180,.17) var(--sf-fill,50%) 100%
+  )!important
+}
+body.lab-stage-mode :is(
+  #paramControlsCard .sliderline,
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+)>input[type=range]::-webkit-slider-runnable-track{
+  height:5px!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:transparent!important
+}
+body.lab-stage-mode :is(
+  #paramControlsCard .sliderline,
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+)>input[type=range]::-moz-range-track{
+  height:5px!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:rgba(122,157,180,.17)!important
+}
+body.lab-stage-mode :is(
+  #paramControlsCard .sliderline,
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+)>input[type=range]::-moz-range-progress{
+  height:5px!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:var(--sf-accent,var(--lab-accent,#55e8ff))!important
+}
