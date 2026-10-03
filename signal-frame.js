@@ -268,7 +268,6 @@ document.addEventListener('click',e=>{
   const lab=labForElement(b);if(!lab)return;
   requestAnimationFrame(()=>{const now=labResultSnapshot(lab);applyInteractionDelta(lab,now,true);interactionBase=null;renderDeep()});
 },{passive:true});
-document.addEventListener('pointerup',()=>{if(interactionBase){const now=labResultSnapshot(interactionBase.lab);if(now)resultSnapshots[interactionBase.lab]=now;interactionBase=null}},{passive:true});
 requestAnimationFrame(()=>Object.keys(LAB_SECTION).forEach(lab=>{const snap=labResultSnapshot(lab);if(snap)resultSnapshots[lab]=snap}));
 const oldRender=window.renderSequenceDna;if(typeof oldRender==='function')window.renderSequenceDna=function(){const r=oldRender.apply(this,arguments);requestAnimationFrame(dnaMatrix);return r};
 function boot(){document.documentElement.dataset.mrccRelease='28.1';relocateDiagnostics();renderDeep();setTimeout(renderDeep,120);setTimeout(renderDeep,500)}

@@ -3857,3 +3857,138 @@ body.lab-stage-mode .lab-result-updating{
     grid-template-columns:repeat(2,minmax(0,1fr))!important
   }
 }
+
+
+/* Lab Outcome Workbench v2 — responsive guards (must remain after the desktop outcome rules) */
+@media (min-width:721px) and (max-width:900px){
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:minmax(320px,.90fr) minmax(0,1.10fr)!important;
+    grid-template-rows:1fr!important
+  }
+  body.lab-stage-mode #contrast>.contrast-layout,
+  body.lab-stage-mode #timing>.timing-layout,
+  body.lab-stage-mode #motion>.motion-layout,
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:minmax(285px,.76fr) minmax(0,1.24fr)!important;
+    grid-template-rows:1fr!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:minmax(230px,.68fr) repeat(2,minmax(0,1fr))!important;
+    grid-template-rows:1fr!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout>.kspace-controls-card,
+  body.lab-stage-mode #spatial>.spatial-layout>.spatial-controls-card{
+    grid-column:auto!important
+  }
+  body.lab-stage-mode #kspace>.kspace-readouts,
+  body.lab-stage-mode #spatial>.spatial-readouts{display:none!important}
+}
+
+/* Portrait phones: stack the experiment, but allocate more height to the visual result. */
+@media (max-width:720px){
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,.94fr) minmax(0,1.06fr)!important
+  }
+  body.lab-stage-mode #contrast>.contrast-layout{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,.78fr) minmax(0,1.22fr)!important
+  }
+  body.lab-stage-mode #timing>.timing-layout{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,.94fr) minmax(0,1.06fr)!important
+  }
+  body.lab-stage-mode #motion>.motion-layout{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,.72fr) minmax(0,1.28fr)!important
+  }
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,.68fr) minmax(0,1.32fr)!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-rows:minmax(0,.64fr) minmax(0,1.36fr)!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout>.kspace-controls-card,
+  body.lab-stage-mode #spatial>.spatial-layout>.spatial-controls-card{
+    grid-column:1/-1!important
+  }
+  body.lab-stage-mode #paramModelCard .parameter-causal-chain{
+    grid-template-columns:1fr!important
+  }
+  body.lab-stage-mode #paramModelCard .parameter-causal-chain>i{display:none!important}
+}
+
+/* Short screens: secondary hints collapse before controls or images do. */
+@media (max-height:680px){
+  body.lab-stage-mode main.shell{padding:5px 7px!important}
+  body.lab-stage-mode main>.section.active-section{gap:5px!important}
+  body.lab-stage-mode .v27-lab-switcher{min-height:40px!important;padding:3px!important}
+  body.lab-stage-mode .v27-lab-switcher button{min-height:32px!important;padding-block:2px!important}
+  body.lab-stage-mode :is(
+    #paramControlsCard,#paramModelCard,
+    .contrast-controls-card,.contrast-output-card,
+    .timing-controls-card,.timing-output-card,
+    .motion-controls-card,.motion-output-card,
+    .kspace-controls-card,.kspace-output-card,
+    .spatial-controls-card,.spatial-output-card,
+    .artifact-lab-controls,.artifact-lab-canvas-card
+  ){padding:8px!important}
+  body.lab-stage-mode :is(
+    .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider,
+    #paramControlsCard .sliderline
+  ){padding:2px 0!important}
+  body.lab-stage-mode :is(
+    .contrast-slider small,.timing-slider small,.motion-slider small,
+    .kspace-slider small,.spatial-slider small,.artifact-lab-slider small
+  ){display:none!important}
+  body.lab-stage-mode #paramModelCard .parameter-causal-chain{
+    padding:5px!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    min-height:58px!important;
+    max-height:66px!important
+  }
+  body.lab-stage-mode .v27-intel-cell{padding:5px 8px!important}
+  body.lab-stage-mode .v27-intel-cell small{display:none!important}
+  body.lab-stage-mode .v27-intel-cell b{font-size:.68rem!important;margin-top:0!important}
+  body.lab-stage-mode .v27-intel-cell span{
+    font-size:.54rem!important;
+    line-height:1.2!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden
+  }
+}
+
+/* Landscape phones revert to a horizontal instrument panel instead of a crushed portrait stack. */
+@media (max-width:720px) and (max-height:520px) and (orientation:landscape){
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:minmax(300px,.94fr) minmax(0,1.06fr)!important;
+    grid-template-rows:1fr!important
+  }
+  body.lab-stage-mode #contrast>.contrast-layout,
+  body.lab-stage-mode #timing>.timing-layout,
+  body.lab-stage-mode #motion>.motion-layout,
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:minmax(270px,.80fr) minmax(0,1.20fr)!important;
+    grid-template-rows:1fr!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:minmax(220px,.68fr) repeat(2,minmax(0,1fr))!important;
+    grid-template-rows:1fr!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout>.kspace-controls-card,
+  body.lab-stage-mode #spatial>.spatial-layout>.spatial-controls-card{
+    grid-column:auto!important
+  }
+  body.lab-stage-mode #paramModelCard .parameter-causal-chain{
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr)!important
+  }
+  body.lab-stage-mode #paramModelCard .parameter-causal-chain>i{display:block!important}
+}
