@@ -83,6 +83,7 @@ function guideReset(lab){
   const fn=window[cfg.reset];if(typeof fn==='function')fn();
   window.__mrccLastChange={lab,label:'Lab reset',value:'baseline'};
   requestAnimationFrame(()=>{renderI();drawHome()});
+  window.restartLabProof?.(lab);
 }
 function guideMove(lab,dir){
   const i=LABS.findIndex(x=>x[0]===lab);if(i<0)return;
@@ -223,6 +224,50 @@ function applyInteractionDelta(lab,now,commit=false){
   return text;
 }
 
+const PROOF_TASKS={
+  parameter:{title:'Make one tradeoff undeniable',goal:'Move the stack until detail, SNR, or modeled time shifts by at least 8 points from your session start.',hit:(b,n)=>Math.max(Math.abs(n.detail-b.detail),Math.abs(n.snr-b.snr),Math.abs(n.time-b.time))>=8},
+  contrast:{title:'Create a visible contrast change',goal:'Change timing until signal spread moves by at least 10 points, or the brightest synthetic material changes.',hit:(b,n)=>Math.abs(n.spread-b.spread)>=10||n.bright!==b.bright},
+  timing:{title:'Move timing enough to matter',goal:'Shift center timing, train count, or the time proxy enough to produce a clearly measurable consequence.',hit:(b,n)=>Math.abs(n.center-b.center)>=8||Math.abs(n.time-b.time)>=12||Math.abs(n.trains-b.trains)>=4},
+  motion:{title:'Make acquisition inconsistency visible',goal:'Change motion timing, amplitude, or ordering until affected lines or displacement changes clearly.',hit:(b,n)=>Math.abs(n.affected-b.affected)>=4||Math.abs(n.center-b.center)>=.5||Math.abs(n.peak-b.peak)>=.5},
+  kspace:{title:'Make the mask change the reconstruction',goal:'Alter the sampling mask until retained samples, retained energy, or side response moves substantially.',hit:(b,n)=>Math.abs(n.samples-b.samples)>=10||Math.abs(n.energy-b.energy)>=10||Math.abs(n.side-b.side)>=5},
+  spatial:{title:'Separate FOV from sampling',goal:'Cause wrap to appear/disappear, or move relative pixel width or sample burden far enough to compare the mechanisms.',hit:(b,n)=>Math.abs(n.read-b.read)>=.12||Math.abs(n.phase-b.phase)>=.12||Math.abs(n.burden-b.burden)>=15||n.wrap!==b.wrap},
+  artifact:{title:'Change pattern evidence',goal:'Change pattern, direction, or teaching strength enough to create a different visual-evidence state.',hit:(b,n)=>Math.abs(n.strength-b.strength)>=15||n.mode!==b.mode||n.direction!==b.direction}
+};
+const proofState={};
+function proofEnsure(lab){
+  if(proofState[lab])return proofState[lab];
+  proofState[lab]={base:labResultSnapshot(lab),touched:new Set()};
+  return proofState[lab];
+}
+function proofPanel(lab){
+  const guide=document.querySelector('[data-v281-guide="'+lab+'"]');if(!guide)return null;
+  let panel=guide.parentElement.querySelector(':scope > [data-v282-proof="'+lab+'"]');
+  if(panel)return panel;
+  const task=PROOF_TASKS[lab];if(!task)return null;
+  panel=document.createElement('section');panel.className='v282-lab-proof';panel.dataset.v282Proof=lab;panel.setAttribute('aria-label','Session experiment');
+  panel.innerHTML='<div class="v282-proof-head"><div><small>Session experiment</small><h3>'+esc(task.title)+'</h3></div><span data-proof-score>0 / 3</span></div><p class="v282-proof-goal">'+esc(task.goal)+'</p><div class="v282-proof-steps"><div data-proof-step="change"><i>1</i><span><b>Change one lever</b><small>Use a control or preset.</small></span></div><div data-proof-step="result"><i>2</i><span><b>Cause a measurable result</b><small>Push past the task threshold.</small></span></div><div data-proof-step="second"><i>3</i><span><b>Test a second lever</b><small>See whether the relationship holds.</small></span></div></div><div class="v282-proof-evidence"><div><small>Live evidence</small><b data-proof-evidence>Waiting for your first change</b><span data-proof-detail>MRCC will summarize the delta from this session starting point.</span></div><button type="button" onclick="restartLabProof(\''+lab+'\')">Restart task</button></div>';
+  guide.insertAdjacentElement('afterend',panel);return panel;
+}
+function proofRender(lab){
+  const task=PROOF_TASKS[lab],state=proofEnsure(lab),panel=proofPanel(lab),now=labResultSnapshot(lab);if(!task||!state.base||!now||!panel)return;
+  const changed=state.touched.size>=1,result=task.hit(state.base,now),second=state.touched.size>=2,flags={change:changed,result,second};
+  Object.entries(flags).forEach(([key,on])=>{const el=panel.querySelector('[data-proof-step="'+key+'"]');el?.classList.toggle('done',!!on)});
+  const score=[changed,result,second].filter(Boolean).length,scoreEl=panel.querySelector('[data-proof-score]');if(scoreEl){scoreEl.textContent=score+' / 3';scoreEl.classList.toggle('done',score===3)}
+  const deltaText=labDeltaText(lab,state.base,now),ev=panel.querySelector('[data-proof-evidence]'),detail=panel.querySelector('[data-proof-detail]');
+  if(ev)ev.textContent=deltaText||'Waiting for your first change';
+  if(detail)detail.textContent=score===3?'Experiment complete. Reset the task or keep exploring with a new combination.':result?'The modeled consequence cleared the task threshold. Now test another lever.':changed?'A lever changed; push it farther or try a preset until the result crosses the task threshold.':'MRCC will summarize the delta from this session starting point.';
+}
+function proofTouch(lab,key){
+  const state=proofEnsure(lab);if(!state||!key)return;state.touched.add(key);requestAnimationFrame(()=>proofRender(lab));
+}
+function proofRestart(lab){
+  const state=proofEnsure(lab);state.base=labResultSnapshot(lab);state.touched.clear();proofRender(lab);
+}
+function proofBoot(){
+  Object.keys(PROOF_TASKS).forEach(lab=>{proofPanel(lab);proofEnsure(lab);proofRender(lab)});
+}
+window.restartLabProof=proofRestart;
+
 function host(lab,title,kicker='Lab Intelligence'){
   const intel=document.querySelector('[data-v27-intel="'+lab+'"]'); if(!intel)return null;
   let box=intel.parentElement.querySelector(':scope > .v271-analysis[data-lab="'+lab+'"]');
@@ -357,7 +402,7 @@ function flashControlImpacts(control){
 }
 function noteControlChange(e){
   const m=CONTROL_MAP[e.target?.id];if(!m)return;
-  const lab=m[0],now=labResultSnapshot(lab);
+  const lab=m[0],now=labResultSnapshot(lab);proofTouch(lab,e.target.id);
   lastChange[lab]=m[1];
   window.__mrccLastChange={lab,label:m[1],value:controlReading(e.target),previous:interactionBase?.lab===lab&&interactionBase.controlId===e.target.id?interactionBase.controlValue:''};
   const deltaText=applyInteractionDelta(lab,now,e.type==='change');
@@ -381,13 +426,16 @@ document.addEventListener('focusin',e=>{
 document.addEventListener('input',noteControlChange,{passive:true});
 document.addEventListener('change',e=>{noteControlChange(e);const m=CONTROL_MAP[e.target?.id];if(m)interactionBase=null},{passive:true});
 document.addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b||!document.body.classList.contains('lab-stage-mode')||b.closest('.v27-lab-switcher'))return;
+  const b=e.target.closest('button');if(!b||!document.body.classList.contains('lab-stage-mode')||b.closest('.v27-lab-switcher,.v281-lab-guide,.v282-lab-proof'))return;
   const lab=labForElement(b);if(!lab)return;
-  requestAnimationFrame(()=>{const now=labResultSnapshot(lab);applyInteractionDelta(lab,now,true);interactionBase=null;renderDeep()});
+  const label=(b.querySelector('b')?.textContent||b.textContent||'Lab action').replace(/\s+/g,' ').trim().slice(0,64);
+  if(/reset/i.test(label)){setTimeout(()=>proofRestart(lab),0)}
+  else proofTouch(lab,'action:'+label);
+  requestAnimationFrame(()=>{const now=labResultSnapshot(lab);applyInteractionDelta(lab,now,true);interactionBase=null;renderDeep();proofRender(lab)});
 },{passive:true});
 requestAnimationFrame(()=>Object.keys(LAB_SECTION).forEach(lab=>{const snap=labResultSnapshot(lab);if(snap)resultSnapshots[lab]=snap}));
 const oldRender=window.renderSequenceDna;if(typeof oldRender==='function')window.renderSequenceDna=function(){const r=oldRender.apply(this,arguments);requestAnimationFrame(dnaMatrix);return r};
-function boot(){document.documentElement.dataset.mrccRelease='28.1';relocateDiagnostics();renderDeep();setTimeout(renderDeep,120);setTimeout(renderDeep,500)}
+function boot(){document.documentElement.dataset.mrccRelease='28.2';relocateDiagnostics();proofBoot();renderDeep();setTimeout(()=>{renderDeep();Object.keys(PROOF_TASKS).forEach(proofRender)},120);setTimeout(renderDeep,500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 ;(()=>{'use strict';
