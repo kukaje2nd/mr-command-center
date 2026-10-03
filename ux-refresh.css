@@ -323,7 +323,7 @@ main.shell{padding-bottom:74px!important}
   grid-template-columns:repeat(3,minmax(0,1fr))!important;
   gap:12px!important
 }
-.seqfam-family-card{min-height:120px!important;padding:13px!important}
+.seqfam-family{min-height:120px!important;padding:13px!important}
 .seqfam-detail{margin-top:16px!important;padding:20px!important;border-radius:18px!important}
 .seqfam-lab-grid{gap:14px!important}
 :is(.seqfam-anatomy-lab,.seqfam-dna-builder,.seqfam-translator,.seqfam-compare,.seqfam-challenge,.seqfam-map){
@@ -639,12 +639,12 @@ body.ui-reduce-motion .palitem{transition:none!important}
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
   gap:10px!important
 }
-.seqfam-family-card{
+.seqfam-family{
   min-height:132px!important;
   padding:14px!important;
   border-radius:13px!important
 }
-.seqfam-family-card.active{
+.seqfam-family.active{
   box-shadow:inset 3px 0 0 rgba(111,157,255,.62)!important;
   background:linear-gradient(145deg,rgba(111,157,255,.065),rgba(7,15,26,.96))!important
 }
@@ -746,4 +746,145 @@ body.ui-reduce-motion .palitem{transition:none!important}
 }
 @media (max-width:560px){
   .seqfam-grid{grid-template-columns:1fr!important}
+}
+
+
+/* Final polish pass — type rhythm, card proportions, focus and touch behavior */
+.section-head h2,.seqfam-hero h2{
+  max-width:880px!important;
+  font-size:clamp(1.64rem,2.8vw,2.38rem)!important;
+  line-height:1.075!important;
+  letter-spacing:-.032em!important;
+  text-wrap:balance
+}
+.section-head>p,.seqfam-hero p{
+  max-width:680px!important;
+  font-size:.86rem!important;
+  line-height:1.58!important;
+  text-wrap:pretty
+}
+.card h3,.card h4,.seqfam-detail h3,.premium-card h3,
+.seqfam-section-head h3,.seqfam-card-head h3{
+  line-height:1.24!important;
+  letter-spacing:-.012em!important
+}
+.card p,.card li,.premium-card p,.premium-feature-list li{line-height:1.54!important}
+.eyebrow{line-height:1.25!important}
+
+:is(.contrast-layout,.timing-layout,.motion-layout,.kspace-layout,.spatial-layout,.artifact-lab-grid){
+  align-items:stretch!important;
+  gap:14px!important
+}
+:is(.contrast-layout,.timing-layout,.motion-layout,.kspace-layout,.spatial-layout,.artifact-lab-grid)>.card,
+#paramControlsCard,#paramModelCard{
+  padding:18px!important;
+  border-radius:16px!important
+}
+:is(.contrast-layout,.timing-layout,.motion-layout,.kspace-layout,.spatial-layout,.artifact-lab-grid)>.card>h3,
+#paramControlsCard>h3,#paramModelCard>h3{
+  margin-bottom:11px!important;
+  font-size:.98rem!important
+}
+:is(.contrast-output-card,.timing-output-card,.motion-output-card,.kspace-output-card,.spatial-output-card,.artifact-output-card),
+#paramModelCard{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--sf-cyan)) 28%,rgba(126,196,239,.09))!important
+}
+:is(.contrast-output-card,.timing-output-card,.motion-output-card,.kspace-output-card,.spatial-output-card,.artifact-output-card) canvas,
+#paramModelCard canvas{display:block;max-width:100%}
+
+.motion-summary>div,.kspace-readouts>div,.spatial-readouts>div,
+.contrast-decomp-row>div{
+  min-height:62px!important;
+  border-radius:9px!important
+}
+
+.seqfam-family{
+  min-height:132px!important;
+  padding:14px!important;
+  border-radius:13px!important;
+  gap:9px!important
+}
+.seqfam-family:hover{border-color:rgba(111,157,255,.30)!important}
+.seqfam-family.active{
+  border-color:rgba(111,157,255,.42)!important;
+  box-shadow:inset 3px 0 0 rgba(111,157,255,.62)!important;
+  background:linear-gradient(145deg,rgba(111,157,255,.065),rgba(7,15,26,.96))!important
+}
+.seqfam-family-top b{font-size:.82rem!important;line-height:1.3!important}
+.seqfam-family p{font-size:.67rem!important;line-height:1.48!important}
+.seqfam-detail-hero h3{font-size:1.18rem!important}
+.seqfam-detail-hero p{font-size:.71rem!important;line-height:1.52!important}
+.seqfam-detail-block p,.seqfam-detail-block ul{font-size:.65rem!important;line-height:1.52!important}
+
+.lab-home-card h3{line-height:1.22!important}
+.lab-home-card-copy p{font-size:.82rem!important;line-height:1.5!important}
+.premium-card{min-height:286px!important}
+.premium-card p{font-size:.74rem!important}
+.premium-feature-list li{font-size:.73rem!important}
+
+.palette,.prefs,.premiummodal,.v27-hub{
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable
+}
+.palresults,.premiummodal-body,.prefs,.v27-hub{
+  scrollbar-width:thin;
+  scrollbar-color:rgba(126,196,239,.24) transparent
+}
+.paletteclose,.prefs-close,.premium-close,.v27-hub-close{color:#bdd0dc!important}
+
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,summary:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid rgba(91,231,255,.84)!important;
+  outline-offset:3px!important
+}
+.seqfam-family:focus-visible,.palitem:focus-visible,.labs-home-work-grid button:focus-visible{
+  border-color:rgba(91,231,255,.42)!important
+}
+
+@media (max-width:1180px){
+  .seqfam-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media (max-width:760px){
+  .section-head:after,.seqfam-hero:after{display:none!important}
+  .section-head,.seqfam-hero{padding:17px 15px!important}
+  :is(.contrast-boundary,.timing-boundary,.motion-boundary,.kspace-boundary,.spatial-boundary,.artifact-lab-boundary,.seqfam-boundary){
+    flex-direction:column!important;
+    gap:4px!important;
+    padding:9px 11px!important
+  }
+  :is(.contrast-boundary,.timing-boundary,.motion-boundary,.kspace-boundary,.spatial-boundary,.artifact-lab-boundary,.seqfam-boundary) b{
+    white-space:normal!important
+  }
+  :is(.contrast-layout,.timing-layout,.motion-layout,.kspace-layout,.spatial-layout,.artifact-lab-grid)>.card,
+  #paramControlsCard,#paramModelCard{
+    padding:14px!important;
+    border-radius:14px!important
+  }
+  .seqfam-grid{grid-template-columns:1fr!important}
+  .seqfam-family{min-height:0!important}
+  .seqfam-filters,.seqfam-quick-aliases{
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
+    padding-bottom:3px!important;
+    scrollbar-width:none
+  }
+  .seqfam-filters::-webkit-scrollbar,.seqfam-quick-aliases::-webkit-scrollbar{display:none}
+  .seqfam-filters button,.seqfam-quick-aliases button{flex:0 0 auto!important}
+  .palette,.prefs,.premiummodal,.v27-hub{
+    padding-bottom:max(14px,env(safe-area-inset-bottom))!important
+  }
+  .palresults{max-height:56dvh!important}
+}
+@media (max-width:420px){
+  main.shell{padding-left:9px!important;padding-right:9px!important}
+  .section-head,.seqfam-hero{border-radius:14px!important}
+  .labs-home-hero{padding:21px 15px!important}
+  .labs-home-copy h1{font-size:clamp(2.05rem,11.5vw,2.8rem)!important}
+  .v27-lab-switcher button{min-width:88px!important}
+  .palitem{min-height:58px!important;padding:9px!important}
+}
+@media (hover:none){
+  button:hover:not(:disabled),.btn:hover:not(:disabled),.lab-home-card:hover,.seqfam-family:hover,.premium-card:hover{
+    transform:none!important
+  }
 }
