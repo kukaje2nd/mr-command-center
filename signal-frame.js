@@ -245,7 +245,7 @@ function proofPanel(lab){
   if(panel)return panel;
   const task=PROOF_TASKS[lab];if(!task)return null;
   panel=document.createElement('section');panel.className='v282-lab-proof';panel.dataset.v282Proof=lab;panel.setAttribute('aria-label','Session experiment');
-  panel.innerHTML='<div class="v282-proof-head"><div><small>Session experiment</small><h3>'+esc(task.title)+'</h3></div><span data-proof-score>0 / 3</span></div><p class="v282-proof-goal">'+esc(task.goal)+'</p><div class="v282-proof-steps"><div data-proof-step="change"><i>1</i><span><b>Change one lever</b><small>Use a control or preset.</small></span></div><div data-proof-step="result"><i>2</i><span><b>Cause a measurable result</b><small>Push past the task threshold.</small></span></div><div data-proof-step="second"><i>3</i><span><b>Test a second lever</b><small>See whether the relationship holds.</small></span></div></div><div class="v282-proof-evidence"><div><small>Live evidence</small><b data-proof-evidence>Waiting for your first change</b><span data-proof-detail>MRCC will summarize the delta from this session starting point.</span></div><button type="button" onclick="restartLabProof(\''+lab+'\')">Restart task</button></div>';
+  panel.innerHTML='<div class="v282-proof-head"><div><small>Session experiment</small><h3>'+esc(task.title)+'</h3></div><span data-proof-score>0 / 3</span></div><p class="v282-proof-goal">'+esc(task.goal)+'</p><div class="v282-proof-steps"><div data-proof-step="change"><i>1</i><span><b>Change one lever</b><small>Use a control or preset.</small></span></div><div data-proof-step="result"><i>2</i><span><b>Cause a measurable result</b><small>Push past the task threshold.</small></span></div><div data-proof-step="second"><i>3</i><span><b>Test a second lever</b><small>See whether the relationship holds.</small></span></div></div><div class="v282-proof-evidence"><div role="status" aria-live="polite" aria-atomic="true"><small>Live evidence</small><b data-proof-evidence>Waiting for your first change</b><span data-proof-detail>MRCC will summarize the delta from this session starting point.</span></div><button type="button" onclick="restartLabProof(\''+lab+'\')">Restart task</button></div>';
   guide.insertAdjacentElement('afterend',panel);return panel;
 }
 function proofRender(lab){
@@ -435,7 +435,7 @@ document.addEventListener('click',e=>{
 },{passive:true});
 requestAnimationFrame(()=>Object.keys(LAB_SECTION).forEach(lab=>{const snap=labResultSnapshot(lab);if(snap)resultSnapshots[lab]=snap}));
 const oldRender=window.renderSequenceDna;if(typeof oldRender==='function')window.renderSequenceDna=function(){const r=oldRender.apply(this,arguments);requestAnimationFrame(dnaMatrix);return r};
-function boot(){document.documentElement.dataset.mrccRelease='28.2';relocateDiagnostics();proofBoot();renderDeep();setTimeout(()=>{renderDeep();Object.keys(PROOF_TASKS).forEach(proofRender)},120);setTimeout(renderDeep,500)}
+function boot(){document.documentElement.dataset.mrccRelease='28.1';relocateDiagnostics();proofBoot();renderDeep();setTimeout(()=>{renderDeep();Object.keys(PROOF_TASKS).forEach(proofRender)},120);setTimeout(renderDeep,500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 ;(()=>{'use strict';
