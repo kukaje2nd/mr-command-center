@@ -2238,3 +2238,270 @@ body.lab-stage-mode .artifact-lab-readout small,
 body.lab-stage-mode .artifact-lab-readout span{
   color:#7f97a8!important
 }
+
+
+/* Live-consequence Lab workbench — spacious experiment + persistent result feedback */
+body.lab-stage-mode main>.section.active-section{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:10px!important
+}
+body.lab-stage-mode main>.section.active-section>.v27-lab-switcher{
+  grid-column:1!important;
+  grid-row:1!important
+}
+body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+  display:grid!important;
+  grid-column:1!important;
+  grid-row:3!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+  min-height:104px!important;
+  max-height:122px!important;
+  margin:0!important;
+  padding:7px!important;
+  overflow:hidden!important;
+  border:1px solid color-mix(in srgb,var(--lab-accent,#55e8ff) 18%,var(--neo-line))!important;
+  border-radius:15px!important;
+  background:linear-gradient(155deg,rgba(7,17,31,.96),rgba(4,10,20,.985))!important;
+  box-shadow:0 14px 38px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.018)!important
+}
+body.lab-stage-mode main>.section.active-section>.v271-analysis{
+  display:none!important
+}
+body.lab-stage-mode .v27-intel-cell{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:12px 14px!important;
+  border:1px solid color-mix(in srgb,var(--lab-accent,#55e8ff) 12%,var(--neo-line))!important;
+  border-radius:11px!important;
+  background:
+    linear-gradient(135deg,color-mix(in srgb,var(--lab-accent,#55e8ff) 3.5%,rgba(9,20,35,.94)),rgba(5,12,23,.96))!important
+}
+body.lab-stage-mode .v27-intel-cell small{
+  color:color-mix(in srgb,var(--lab-accent,#55e8ff) 78%,#b8d0df)!important;
+  font-size:.65rem!important;
+  letter-spacing:.10em!important
+}
+body.lab-stage-mode .v27-intel-cell b{
+  margin-top:5px!important;
+  color:#eef8ff!important;
+  font-size:clamp(.88rem,1.05vw,1.04rem)!important;
+  line-height:1.24!important;
+  text-wrap:balance
+}
+body.lab-stage-mode .v27-intel-cell span{
+  margin-top:5px!important;
+  color:#91a9ba!important;
+  font-size:.72rem!important;
+  line-height:1.42!important;
+  text-wrap:pretty
+}
+
+/* Give the experiment/result pair the majority of the viewport rather than compressing it. */
+body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+  grid-template-columns:minmax(390px,.76fr) minmax(0,1.24fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode #contrast>.contrast-layout,
+body.lab-stage-mode #timing>.timing-layout{
+  grid-template-columns:minmax(340px,.68fr) minmax(0,1.32fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode #motion>.motion-layout,
+body.lab-stage-mode #artifact>.artifact-lab-grid{
+  grid-template-columns:minmax(320px,.62fr) minmax(0,1.38fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode #kspace>.kspace-layout,
+body.lab-stage-mode #spatial>.spatial-layout{
+  grid-template-columns:minmax(285px,.62fr) repeat(2,minmax(0,1fr))!important;
+  gap:12px!important
+}
+body.lab-stage-mode :is(
+  #paramControlsCard,#paramModelCard,
+  .contrast-controls-card,.contrast-output-card,
+  .timing-controls-card,.timing-output-card,
+  .motion-controls-card,.motion-output-card,
+  .kspace-controls-card,.kspace-output-card,
+  .spatial-controls-card,.spatial-output-card,
+  .artifact-lab-controls,.artifact-lab-canvas-card
+){
+  padding:16px!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider,
+  #paramControlsCard .sliderline
+){
+  padding:7px 0!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider label,.timing-slider label,.motion-slider label,
+  .kspace-slider label,.spatial-slider label,.artifact-lab-slider label,
+  #paramControlsCard .sliderline label
+){
+  font-size:.69rem!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider small,.timing-slider small,.motion-slider small,
+  .kspace-slider small,.spatial-slider small,.artifact-lab-slider small
+){
+  display:block!important;
+  font-size:.57rem!important;
+  line-height:1.3!important;
+  color:#7892a5!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider output,.timing-slider output,.motion-slider output,
+  .kspace-slider output,.spatial-slider output,.artifact-lab-slider output,
+  #paramControlsCard .sliderline output
+){
+  font-size:.69rem!important
+}
+
+/* Wide screens use otherwise-empty space as a live consequence rail. */
+@media (min-width:1180px) and (min-height:620px){
+  body.lab-stage-mode main>.section.active-section{
+    grid-template-columns:minmax(0,1fr) minmax(300px,22vw)!important;
+    grid-template-rows:auto minmax(0,1fr)!important;
+    column-gap:12px!important;
+    row-gap:10px!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v27-lab-switcher{
+    grid-column:1/-1!important;
+    grid-row:1!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    grid-column:2!important;
+    grid-row:2!important;
+    grid-template-columns:1fr!important;
+    grid-template-rows:repeat(3,minmax(0,1fr))!important;
+    min-height:0!important;
+    max-height:none!important;
+    height:100%!important;
+    padding:8px!important
+  }
+  body.lab-stage-mode main>.section.active-section>:is(
+    .grid2:has(#paramControlsCard),.contrast-layout,.timing-layout,.motion-layout,
+    .kspace-layout,.spatial-layout,.artifact-lab-grid
+  ){
+    grid-column:1!important;
+    grid-row:2!important;
+    min-height:0!important
+  }
+  body.lab-stage-mode .v27-intel-cell{
+    padding:16px!important;
+    justify-content:center!important
+  }
+  body.lab-stage-mode .v27-intel-cell b{
+    font-size:clamp(.95rem,1.15vw,1.16rem)!important
+  }
+  body.lab-stage-mode .v27-intel-cell span{
+    font-size:.76rem!important;
+    line-height:1.48!important
+  }
+}
+
+/* Large monitors get more output area rather than oversized controls. */
+@media (min-width:1540px){
+  body.lab-stage-mode main>.section.active-section{
+    grid-template-columns:minmax(0,1fr) minmax(330px,20vw)!important
+  }
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:minmax(420px,.7fr) minmax(0,1.3fr)!important
+  }
+  body.lab-stage-mode #contrast>.contrast-layout,
+  body.lab-stage-mode #timing>.timing-layout{
+    grid-template-columns:minmax(360px,.62fr) minmax(0,1.38fr)!important
+  }
+  body.lab-stage-mode #motion>.motion-layout,
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:minmax(340px,.56fr) minmax(0,1.44fr)!important
+  }
+}
+
+/* Tablet/small-laptop: result strip stays visible but the workbench remains roomy. */
+@media (min-width:721px) and (max-width:1179px){
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    min-height:92px!important;
+    max-height:104px!important
+  }
+  body.lab-stage-mode .v27-intel-cell{
+    padding:9px 11px!important
+  }
+  body.lab-stage-mode .v27-intel-cell b{font-size:.84rem!important}
+  body.lab-stage-mode .v27-intel-cell span{font-size:.66rem!important;line-height:1.34!important}
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:minmax(330px,.82fr) minmax(0,1.18fr)!important
+  }
+  body.lab-stage-mode #contrast>.contrast-layout,
+  body.lab-stage-mode #timing>.timing-layout{
+    grid-template-columns:minmax(300px,.76fr) minmax(0,1.24fr)!important
+  }
+  body.lab-stage-mode #motion>.motion-layout,
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:minmax(285px,.7fr) minmax(0,1.3fr)!important
+  }
+}
+
+/* Phones prioritize "changed + result"; deeper rationale yields space to the interaction. */
+@media (max-width:720px){
+  body.lab-stage-mode main>.section.active-section{
+    gap:6px!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    min-height:86px!important;
+    max-height:96px!important;
+    gap:5px!important;
+    padding:5px!important
+  }
+  body.lab-stage-mode .v27-intel-cell{
+    padding:7px 8px!important
+  }
+  body.lab-stage-mode .v27-intel-cell small{font-size:.54rem!important}
+  body.lab-stage-mode .v27-intel-cell b{font-size:.73rem!important;margin-top:2px!important}
+  body.lab-stage-mode .v27-intel-cell span{font-size:.58rem!important;margin-top:2px!important;line-height:1.28!important}
+}
+@media (max-width:520px){
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    min-height:74px!important;
+    max-height:82px!important
+  }
+  body.lab-stage-mode .v27-intelligence .v27-intel-cell:nth-child(3){
+    display:none!important
+  }
+}
+
+/* Very short landscape screens keep the two essential feedback cells without crushing the Lab. */
+@media (max-height:520px){
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    min-height:58px!important;
+    max-height:66px!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important
+  }
+  body.lab-stage-mode .v27-intelligence .v27-intel-cell:nth-child(3){
+    display:none!important
+  }
+  body.lab-stage-mode .v27-intel-cell{
+    padding:5px 8px!important
+  }
+  body.lab-stage-mode .v27-intel-cell small{display:none!important}
+  body.lab-stage-mode .v27-intel-cell b{font-size:.68rem!important;margin-top:0!important}
+  body.lab-stage-mode .v27-intel-cell span{font-size:.54rem!important}
+}
+
+/* Make a changed control/result perceptible without noisy animation. */
+@keyframes labResultPulse{
+  0%{border-color:color-mix(in srgb,var(--lab-accent,#55e8ff) 48%,var(--neo-line));background:color-mix(in srgb,var(--lab-accent,#55e8ff) 8%,rgba(7,17,31,.96))}
+  100%{border-color:color-mix(in srgb,var(--lab-accent,#55e8ff) 12%,var(--neo-line));background:linear-gradient(135deg,color-mix(in srgb,var(--lab-accent,#55e8ff) 3.5%,rgba(9,20,35,.94)),rgba(5,12,23,.96))}
+}
+body.lab-stage-mode .v27-intel-cell.sf-updated{
+  animation:labResultPulse .48s ease-out
+}
+@media (prefers-reduced-motion:reduce){
+  body.lab-stage-mode .v27-intel-cell.sf-updated{animation:none!important}
+}
