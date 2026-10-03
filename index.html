@@ -36,7 +36,7 @@
 </head>
 <body class="nav-home">
 <a class="skiplink" href="#mainContent">Skip to main content</a><div class="sr-only" id="routeAnnouncer" role="status" aria-live="polite" aria-atomic="true"></div>
-<header class="topbar"><div class="topin"><a class="brandlockup" href="#" onclick="showHome();return false" aria-label="MR Command Center by Edon Kukaj"><img class="brandmark" id="brandMark" src="/brand-mark.svg" alt=""><span class="brandidentity"><span class="brandname"><span class="brand-mr">MR</span><span class="brand-command">COMMAND CENTER</span></span><span class="brandcredit">Edon Kukaj</span></span><span class="releasebadge" aria-label="Current build version">v28.1</span></a><div class="grow"></div><span class="routechip" id="routeChip" aria-live="polite">Home</span><div class="top-actions" aria-label="Workspace actions"><button class="quickbtn" onclick="openPalette()" aria-label="Search MR Command Center"><span>Search</span><kbd>⌘/Ctrl K</kbd></button><button class="displaybtn" onclick="openPreferences()" aria-label="Open settings and keyboard shortcuts"><span>Settings</span><kbd>?</kbd></button><button class="installbtn" id="installBtn" onclick="promptInstall()" aria-label="Install MR Command Center">Install</button></div></div></header>
+<header class="topbar"><div class="topin"><a class="brandlockup brandlockup-v2" href="#" onclick="showHome();return false" aria-label="MRCC — Interactive MRI Labs"><span class="brand-sigil" aria-hidden="true"><span class="brand-sigil-m">M</span><span class="brand-sigil-r">R</span><i></i></span><span class="brandidentity"><span class="brandname"><span class="brand-mr">MRCC</span></span><span class="brandcredit">Interactive MRI Labs</span></span><span class="releasebadge" aria-label="Current build version">28.1</span></a><div class="grow"></div><span class="routechip" id="routeChip" aria-live="polite">Home</span><div class="top-actions" aria-label="Workspace actions"><button class="quickbtn" onclick="openPalette()" aria-label="Search MR Command Center"><span>Search</span><kbd>⌘/Ctrl K</kbd></button><button class="displaybtn" onclick="openPreferences()" aria-label="Open settings and keyboard shortcuts"><span>Settings</span><kbd>?</kbd></button><button class="installbtn" id="installBtn" onclick="promptInstall()" aria-label="Install MR Command Center">Install</button></div></div></header>
 <main class="shell" id="mainContent">
 <div class="notice compact-notice"><span class="boundary-mark" aria-hidden="true">i</span><span><strong>Learning-use boundary</strong> — educational MRI learning only; no implant clearance, patient-specific decisions, or scanner-specific prescriptions. Manufacturer labeling, scanner limits, and facility MR safety policy control.</span></div>
 <div class="updatebar" id="updateBar" role="status" aria-live="polite"><div><b>Update available</b><p>A newer MR Command Center build is ready.</p></div><button class="updatebtn" onclick="applyAppUpdate()">Update & reload</button></div>
@@ -50,16 +50,26 @@
 <section id="cockpit" class="labs-home" aria-labelledby="cockpitTitle">
   <div class="labs-home-hero">
     <div class="labs-home-copy">
-      <div class="eyebrow">MR Command Center · Labs</div>
-      <h1 id="cockpitTitle">Learn MRI by changing the model.</h1>
-      <p>Interactive teaching labs for parameter tradeoffs, contrast behavior, sequence timing, motion, k-space sampling, and artifact patterns that make more sense when you can manipulate them.</p>
-      <div class="labs-home-actions"><button type="button" class="labs-home-primary" id="homeResumeLabBtn" onclick="resumeLastLab()">Open Parameter Lab <span>→</span></button><button type="button" onclick="browseLabs()">Browse all labs <span>↓</span></button></div>
+      <div class="home-kicker"><span class="home-kicker-dot"></span><span>Interactive MRI learning system</span><i>7 live labs</i></div>
+      <h1 id="cockpitTitle">Change the physics.<br><span>See the consequence.</span></h1>
+      <p>Build intuition by manipulating simplified MRI models and watching signal, timing, sampling, motion, spatial encoding, and artifact behavior respond immediately.</p>
+      <div class="labs-home-actions"><button type="button" class="labs-home-primary" id="homeResumeLabBtn" onclick="resumeLastLab()">Enter last lab <span>→</span></button><button type="button" onclick="browseLabs()">Explore the lab library <span>↓</span></button></div>
+      <div class="labs-home-proof" aria-label="MRCC learning loop"><span><b>01</b>Change a control</span><span><b>02</b>Watch the model</span><span><b>03</b>Read the consequence</span></div>
       <div class="labs-home-boundary"><span aria-hidden="true">i</span><p>Relative educational models only. Labs do not prescribe scanner protocols, establish image adequacy, or replace manufacturer labeling, scanner limits, authoritative MR safety guidance, or local policy.</p></div>
     </div>
-    <div class="labs-home-orbit v27-resonance-scene" aria-hidden="true"><span class="v27-resonance-grid"></span><img class="v27-resonance-logo" src="/brand-mark.svg" alt=""><svg class="v27-resonance-trace" viewBox="0 0 600 80" preserveAspectRatio="none"><path d="M0 44H96c22 0 24-32 38-32s17 58 33 58 22-43 38-43 22 17 42 17H600"/><path class="baseline" d="M0 44H600"/></svg></div>
+    <div class="labs-home-orbit home-signal-console" aria-hidden="true">
+      <div class="home-console-head"><span><i></i>LIVE MODEL</span><b>MRCC / 01</b></div>
+      <div class="home-console-field">
+        <span class="home-console-ring ring-a"></span><span class="home-console-ring ring-b"></span><span class="home-console-ring ring-c"></span>
+        <span class="home-console-axis axis-x"></span><span class="home-console-axis axis-y"></span>
+        <span class="home-console-node node-a"></span><span class="home-console-node node-b"></span><span class="home-console-node node-c"></span>
+        <svg class="home-console-trace" viewBox="0 0 600 120" preserveAspectRatio="none"><path d="M0 64H86c28 0 31-46 50-46s22 84 43 84 29-64 52-64 31 27 57 27 31-13 50-13H600"/><path class="baseline" d="M0 64H600"/></svg>
+      </div>
+      <div class="home-console-readouts"><span><small>PARAMETER</small><b>Δ LIVE</b></span><span><small>SIGNAL</small><b>RESPONDS</b></span><span><small>RESULT</small><b>EXPLAINED</b></span></div>
+    </div>
   </div>
-  <button type="button" class="v27-home-search" onclick="openPalette()" aria-label="Search MR Command Center"><span>⌕</span><span><b>Search MR Command Center</b><small>Labs, sequence families, artifacts, safety, scan math…</small></span><kbd>⌘ K</kbd></button>
-  <div class="labs-library-head"><div><div class="eyebrow">Lab library</div><h2>Pick the model you want to interrogate.</h2></div><button type="button" onclick="openPalette()">⌕ Find a tool</button></div>
+  <button type="button" class="v27-home-search" onclick="openPalette()" aria-label="Search MRI labs and reference"><span>⌕</span><span><b>Jump to a lab, sequence, or reference</b><small>Contrast, motion, k-space, artifacts, safety, scan math…</small></span><kbd>⌘ K</kbd></button>
+  <div class="labs-library-head"><div><div class="eyebrow">Lab library</div><h2>Seven ways to make MRI behavior visible.</h2><p>Open a model, change one thing, and follow the consequence.</p></div><button type="button" onclick="openPalette()">⌕ Find a tool</button></div>
   <div class="labs-library">
     <article class="lab-home-card lab-home-parameter">
       <div class="lab-home-card-top"><span class="lab-home-icon">⇄</span><span class="lab-home-badge">flagship</span></div>
