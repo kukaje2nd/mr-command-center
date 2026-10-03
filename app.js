@@ -1782,6 +1782,53 @@ function restoreContrastState(){
   if($('clMode'))$('clMode').value=mode;if($('clTr'))$('clTr').value=tr;if($('clTe'))$('clTe').value=te;if($('clTi'))$('clTi').value=ti;
   contrastUpdate(false);
 }
+
+function drawContrastFocusScience(state,signals){
+  const setup=parameterCanvasContext('contrastFocusCanvas',560,240);if(!setup)return;
+  const {x,w,h}=setup,pad=34,gap=28,panelW=(w-pad*2-gap)/2,top=24,bottom=h-35,ph=bottom-top;
+  x.fillStyle='#030711';x.fillRect(0,0,w,h);
+  x.strokeStyle='rgba(165,140,255,.045)';
+  for(let gx=0;gx<w;gx+=24){x.beginPath();x.moveTo(gx,0);x.lineTo(gx,h);x.stroke()}
+  for(let gy=0;gy<h;gy+=24){x.beginPath();x.moveTo(0,gy);x.lineTo(w,gy);x.stroke()}
+  const panels=[
+    {x0:pad,title:state.mode==='ir'?'LONGITUDINAL / IR':'LONGITUDINAL RECOVERY',maxT:Math.max(300,state.tr),marker:state.mode==='ir'?state.ti:state.tr,kind:'long'},
+    {x0:pad+panelW+gap,title:'TRANSVERSE DECAY',maxT:180,marker:state.te,kind:'trans'}
+  ];
+  panels.forEach(p=>{
+    x.fillStyle='rgba(7,14,28,.70)';x.fillRect(p.x0,top,panelW,ph);
+    x.strokeStyle='rgba(126,196,239,.075)';
+    for(let i=1;i<4;i++){const yy=top+ph*i/4;x.beginPath();x.moveTo(p.x0,yy);x.lineTo(p.x0+panelW,yy);x.stroke()}
+    for(let i=1;i<6;i++){const xx=p.x0+panelW*i/6;x.beginPath();x.moveTo(xx,top);x.lineTo(xx,bottom);x.stroke()}
+    x.fillStyle='rgba(191,211,224,.70)';x.font='800 9px ui-monospace,monospace';x.fillText(p.title,p.x0,14);
+    contrastMaterialsModel.forEach((m,idx)=>{
+      x.strokeStyle=contrastPalette[idx];x.lineWidth=2;x.beginPath();
+      for(let i=0;i<=140;i++){
+        const t=p.maxT*i/140,val=p.kind==='long'?contrastLongitudinalTerm(m,state,t):contrastTransverseTerm(m,t);
+        const ymin=p.kind==='long'&&state.mode==='ir'?-1:0,ymax=1,xx=p.x0+panelW*i/140,yy=top+(ymax-val)/(ymax-ymin)*ph;
+        if(i===0)x.moveTo(xx,yy);else x.lineTo(xx,yy)
+      }
+      x.stroke()
+    });
+    const markerX=p.x0+panelW*Math.min(1,p.marker/p.maxT);
+    x.strokeStyle=p.kind==='long'?'rgba(255,209,102,.78)':'rgba(85,232,255,.82)';x.setLineDash([4,4]);
+    x.beginPath();x.moveTo(markerX,top);x.lineTo(markerX,bottom);x.stroke();x.setLineDash([]);
+    contrastMaterialsModel.forEach((m,idx)=>{
+      const val=p.kind==='long'?contrastLongitudinalTerm(m,state,p.marker):contrastTransverseTerm(m,p.marker);
+      const ymin=p.kind==='long'&&state.mode==='ir'?-1:0,ymax=1,yy=top+(ymax-val)/(ymax-ymin)*ph;
+      x.fillStyle=contrastPalette[idx];x.beginPath();x.arc(markerX,yy,4,0,Math.PI*2);x.fill()
+    });
+    x.fillStyle='rgba(150,173,190,.62)';x.font='700 8px ui-monospace,monospace';x.fillText('0',p.x0,bottom+14);
+    x.textAlign='right';x.fillText(Math.round(p.maxT)+' ms',p.x0+panelW,bottom+14);x.textAlign='left'
+  });
+  const max=Math.max(...signals,.000001),barY=h-13,total=panelW*2+gap,bw=(total-10)/3;
+  contrastMaterialsModel.forEach((m,i)=>{
+    const xx=pad+i*(bw+5),v=signals[i]/max;
+    x.fillStyle='rgba(255,255,255,.035)';x.fillRect(xx,barY,bw,5);
+    x.fillStyle=contrastPalette[i];x.fillRect(xx,barY,bw*v,5)
+  });
+  const marker=$('contrastFocusMarker');
+  if(marker)marker.textContent=(state.mode==='ir'?'TI '+Math.round(state.ti)+' · ':'TR '+Math.round(state.tr)+' · ')+'TE '+Math.round(state.te)+' ms';
+}
 function contrastUpdate(save=true){
   if(!$('clMode'))return;
   const state=contrastState(),signals=contrastMaterialsModel.map(m=>contrastSignal(m,state)),max=Math.max(...signals,.000001),min=Math.min(...signals),cue=contrastTeachingCue(state);
@@ -1794,6 +1841,7 @@ function contrastUpdate(save=true){
   $('clTimelineTe').textContent='TE '+Math.round(state.te)+' ms';$('clTimelineTr').textContent='TR '+Math.round(state.tr)+' ms';$('clTimelineTi').textContent=state.mode==='ir'?'TI '+Math.round(state.ti)+' ms':'';
   $('clEchoEvent').style.left=Math.min(82,Math.max(12,(state.te/180)*75+8))+'%';$('clTrMarker').style.left=Math.min(96,Math.max(65,(state.tr/5000)*31+65))+'%';
   if(state.mode==='ir')$('clInvEvent').style.left=Math.min(58,Math.max(10,(state.ti/2500)*48+8))+'%';
+  drawContrastFocusScience(state,signals);
   renderContrastDeep(state,signals);
   if(save)persistContrastState(state);
   if(typeof renderLabsHome==='function')renderLabsHome();
@@ -1946,6 +1994,48 @@ function formatTimingDuration(seconds){
   return m?m+':'+sec:total+' s';
 }
 function persistTimingState(state){try{localStorage.setItem('mrcc_timing_current',JSON.stringify({...state,savedAt:new Date().toISOString()}))}catch(e){}}
+
+function drawTimingFocusScience(state,m){
+  const setup=parameterCanvasContext('timingFocusCanvas',560,240);if(!setup)return;
+  const {x,w,h}=setup,pad=34,top=28,trainY=h*.38,kY=h*.72,right=w-pad,plotW=right-pad,scaleMax=Math.max(state.tr,m.trainSpan*1.12);
+  x.fillStyle='#030711';x.fillRect(0,0,w,h);
+  x.strokeStyle='rgba(84,217,255,.045)';
+  for(let gx=0;gx<w;gx+=24){x.beginPath();x.moveTo(gx,0);x.lineTo(gx,h);x.stroke()}
+  for(let gy=0;gy<h;gy+=24){x.beginPath();x.moveTo(0,gy);x.lineTo(w,gy);x.stroke()}
+  x.fillStyle='rgba(190,211,224,.72)';x.font='800 9px ui-monospace,monospace';
+  x.fillText('ECHO TRAIN / ONE TOY TR',pad,15);x.fillText('ABSTRACT K-SPACE ORDER',pad,kY-31);
+  x.strokeStyle='rgba(126,196,239,.12)';x.beginPath();x.moveTo(pad,trainY);x.lineTo(right,trainY);x.moveTo(pad,kY);x.lineTo(right,kY);x.stroke();
+  x.strokeStyle='rgba(109,156,255,.85)';x.lineWidth=2;x.beginPath();x.moveTo(pad,trainY+18);x.lineTo(pad,trainY-40);x.stroke();
+  x.fillStyle='#9fc1ff';x.font='800 8px ui-monospace,monospace';x.fillText('RF',pad+5,trainY-30);
+  for(let i=0;i<state.etl;i++){
+    const t=state.firstEcho+i*state.spacing,xx=pad+(t/scaleMax)*plotW,center=i+1===state.center,amp=center?34:22;
+    x.strokeStyle=center?'#ffd166':'rgba(84,217,255,.72)';x.lineWidth=center?2.5:1.5;x.beginPath();
+    x.moveTo(xx,trainY);x.lineTo(xx-5,trainY-amp*.55);x.lineTo(xx,trainY-amp);x.lineTo(xx+5,trainY-amp*.55);x.lineTo(xx,trainY);x.stroke();
+    if(center){
+      x.fillStyle='#ffd166';x.beginPath();x.arc(xx,trainY-amp,4,0,Math.PI*2);x.fill();
+      x.fillStyle='rgba(255,225,150,.82)';x.font='800 8px ui-monospace,monospace';x.fillText('CENTER',xx+7,trainY-amp-3)
+    }
+  }
+  const trX=pad+(state.tr/scaleMax)*plotW;
+  x.strokeStyle=m.fit?'rgba(103,228,192,.55)':'rgba(255,144,127,.72)';x.setLineDash([4,4]);
+  x.beginPath();x.moveTo(trX,top);x.lineTo(trX,trainY+25);x.stroke();x.setLineDash([]);
+  x.fillStyle='rgba(164,187,201,.66)';x.font='700 8px ui-monospace,monospace';x.fillText('TR '+Math.round(state.tr)+' ms',Math.min(right-68,trX+5),top+9);
+  const cells=Math.min(32,state.etl),cellW=plotW/cells;
+  for(let i=0;i<cells;i++){
+    const echo=i+1,dist=Math.abs(echo-state.center)/Math.max(1,state.etl-1),energy=1-dist*.72,xx=pad+i*cellW;
+    x.fillStyle=echo===state.center?'rgba(255,209,102,.80)':'rgba(84,217,255,'+(.12+.40*energy)+')';
+    x.fillRect(xx+1,kY-10,Math.max(2,cellW-2),20)
+  }
+  x.strokeStyle='rgba(126,196,239,.12)';x.strokeRect(pad,kY-10,plotW,20);
+  x.fillStyle='rgba(143,165,180,.68)';x.font='700 8px ui-monospace,monospace';
+  x.fillText('early / outer',pad,kY+26);x.textAlign='center';x.fillText('selected center echo → low-frequency center',w/2,kY+26);x.textAlign='right';x.fillText('late / outer',right,kY+26);x.textAlign='left';
+  const baselineSec=96,burden=Math.min(1.35,m.timeSec/baselineSec),by=h-22;
+  x.fillStyle='rgba(255,255,255,.035)';x.fillRect(pad,by,plotW,6);
+  x.fillStyle=m.timeSec<=baselineSec?'rgba(103,228,192,.72)':'rgba(255,144,127,.72)';x.fillRect(pad,by,plotW*Math.min(1,burden),6);
+  if(burden>1){x.fillStyle='rgba(255,144,127,.88)';x.fillRect(right-3,by-2,3,10)}
+  const status=$('timingFocusStatus');
+  if(status)status.textContent='ETL '+state.etl+' · center '+state.center+' · '+Math.round(m.effectiveTe)+' ms';
+}
 function timingUpdate(save=true){
   if(!$('timingTr'))return;
   const etl=Math.max(1,Math.round(+$('timingEtl').value||8));$('timingCenter').max=etl;if(+$('timingCenter').value>etl)$('timingCenter').value=Math.ceil(etl/2);
@@ -1958,6 +2048,7 @@ function timingUpdate(save=true){
   $('timingTrMarker').style.left=trPct+'%';$('timingTrainBand').style.left=firstPct+'%';$('timingTrainBand').style.width=Math.max(.8,lastPct-firstPct)+'%';
   $('timingEchoRow').innerHTML=Array.from({length:state.etl},(_,i)=>{const echoTime=state.firstEcho+i*state.spacing,pct=Math.min(99,(echoTime/scaleMax)*100),center=i+1===state.center;return '<span class="timing-echo '+(center?'center':'')+'" style="left:'+pct+'%" title="Echo '+(i+1)+' · '+Math.round(echoTime)+' ms"><i></i><small>'+(i+1)+'</small></span>'}).join('');
   $('timingScaleSummary').textContent='TR '+Math.round(state.tr)+' ms · train ends '+Math.round(m.trainSpan)+' ms · idle-like remainder '+Math.round(m.idle)+' ms';
+  drawTimingFocusScience(state,m);
   renderTimingDeep(state,m);
   if(save)persistTimingState(state);if(typeof renderLabsHome==='function')renderLabsHome();
 }

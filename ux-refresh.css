@@ -5322,3 +5322,196 @@ body.lab-stage-mode #sandbox>.v27-intelligence .v27-intel-cell span{
   }
   body.lab-stage-mode #paramModelCard>.comparegrid .comparecard:nth-child(n+3){display:none!important}
 }
+
+
+/* Scientific Lab v3 — focused Contrast + Timing and robust shared controls */
+
+/* Desktop switcher: stable equal stations, no oversized active tile or wrapped K-Space text. */
+@media (min-width:1180px){
+  body.lab-stage-mode .v27-lab-switcher{
+    display:grid!important;
+    grid-template-columns:52px repeat(7,minmax(92px,1fr))!important;
+    gap:5px!important
+  }
+  body.lab-stage-mode .v27-lab-switcher button,
+  body.lab-stage-mode .v27-lab-switcher button.active,
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-exit{
+    flex:none!important;
+    width:auto!important;
+    min-width:0!important;
+    gap:6px!important;
+    justify-content:center!important;
+    padding:4px 7px!important
+  }
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-label,
+  body.lab-stage-mode .v27-lab-switcher button.active .v27-lab-label{
+    display:inline!important;
+    min-width:0!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    white-space:nowrap!important;
+    font-size:.61rem!important
+  }
+}
+
+/* Every focused Lab slider uses a two-row instrument geometry so the actual track cannot collapse. */
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+){
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  grid-template-rows:auto 18px!important;
+  column-gap:10px!important;
+  row-gap:4px!important;
+  min-height:48px!important;
+  padding:7px 0!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+)>div:first-child{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+  min-width:0!important;
+  margin:0!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+) label{
+  display:inline!important;
+  color:#bacbd7!important;
+  font-size:.63rem!important;
+  line-height:1.2!important;
+  overflow-wrap:normal!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+) small{
+  display:inline!important;
+  margin-left:7px!important;
+  color:#607a8d!important;
+  font-size:.50rem!important;
+  line-height:1.2!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+)>input[type=range]{
+  grid-column:1!important;
+  grid-row:2!important;
+  width:100%!important;
+  height:18px!important;
+  min-width:0!important;
+  cursor:ew-resize!important;
+  box-shadow:none!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+)>output{
+  grid-column:2!important;
+  grid-row:2!important;
+  min-width:58px!important;
+  align-self:center!important;
+  color:color-mix(in srgb,var(--lab-accent) 68%,#eaf7ff)!important;
+  font-size:.62rem!important;
+  font-weight:900!important;
+  text-align:right!important
+}
+
+/* Contrast: curves become the dominant visual instead of being hidden below the focused view. */
+body.lab-stage-mode .contrast-output-card{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto auto!important;
+  gap:8px!important
+}
+body.lab-stage-mode .contrast-focus-science{
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  border:1px solid rgba(165,140,255,.14)!important;
+  border-radius:11px!important;
+  background:#030711!important
+}
+body.lab-stage-mode .contrast-focus-science canvas{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important
+}
+.focus-plot-legend{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:29px;
+  padding:5px 9px;
+  border-top:1px solid rgba(126,196,239,.055);
+  color:#6c8497;
+  font-size:.49rem;
+  font-weight:760
+}
+.focus-plot-legend span{display:inline-flex;align-items:center;gap:4px}
+.focus-plot-legend i{width:7px;height:2px;border-radius:2px}
+.focus-plot-legend i.a{background:#27ddef}.focus-plot-legend i.b{background:#6e9cff}.focus-plot-legend i.c{background:#9e7cf7}
+.focus-plot-legend b{margin-left:auto;color:#9e8cff;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.48rem;letter-spacing:.04em}
+body.lab-stage-mode .contrast-materials{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:5px!important
+}
+body.lab-stage-mode .contrast-material{padding:7px!important}
+body.lab-stage-mode .contrast-material-meta{display:none!important}
+body.lab-stage-mode .contrast-signal-track{margin:5px 0 0!important}
+body.lab-stage-mode .contrast-summary{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:5px!important
+}
+body.lab-stage-mode .contrast-summary>div{padding:6px 7px!important}
+body.lab-stage-mode .contrast-summary span{display:none!important}
+body.lab-stage-mode .contrast-timeline,
+body.lab-stage-mode .contrast-note{display:none!important}
+
+/* Timing: real echo geometry and center-of-k-space assignment dominate the workspace. */
+body.lab-stage-mode .timing-output-card{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:8px!important
+}
+body.lab-stage-mode .timing-focus-science{
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  border:1px solid rgba(84,217,255,.14)!important;
+  border-radius:11px!important;
+  background:#030711!important
+}
+body.lab-stage-mode .timing-focus-science canvas{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important
+}
+.timing-focus-legend{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-height:29px;
+  padding:5px 9px;
+  border-top:1px solid rgba(126,196,239,.055);
+  color:#698296;
+  font-size:.48rem;
+  font-weight:760
+}
+.timing-focus-legend span{display:inline-flex;align-items:center;gap:4px}
+.timing-focus-legend i{width:7px;height:2px;border-radius:2px}
+.timing-focus-legend i.excite{background:#6d9cff}.timing-focus-legend i.echo{background:#54d9ff}.timing-focus-legend i.center{background:#ffd166}
+.timing-focus-legend b{margin-left:auto;color:#8fdcec;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.48rem}
+body.lab-stage-mode .timing-timeline,
+body.lab-stage-mode .timing-relationship-grid{display:none!important}
+body.lab-stage-mode .timing-summary{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:5px!important
+}
+body.lab-stage-mode .timing-summary>div{padding:6px 7px!important}
+body.lab-stage-mode .timing-summary span{display:none!important}
