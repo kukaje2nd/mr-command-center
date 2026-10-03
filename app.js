@@ -260,6 +260,9 @@ const workspaceViewTargets={compare:'parameterCompareWorkbench',challenges:'labC
 const workspaceViewTitles={compare:'A/B Compare',challenges:'Constraint Challenges',reference:'Parameter Reference',presets:'Parameter Presets'};
 const labRouteInfo={sandbox:{id:'parameter',label:'Parameter Lab'},contrast:{id:'contrast',label:'Contrast Lab'},timing:{id:'timing',label:'Sequence Timing Lab'},motion:{id:'motion',label:'Motion Lab'},kspace:{id:'kspace',label:'K-Space Lab'},spatial:{id:'spatial',label:'Spatial Encoding Lab'},artifact:{id:'artifact',label:'Artifact Lab'}};
 let lastLabRoute='sandbox',hasSavedLastLab=false;
+let labStageMode=false;
+function setLabStageMode(on=false){labStageMode=!!on;document.body.classList.toggle('lab-stage-mode',labStageMode)}
+
 try{const saved=localStorage.getItem('mrcc_last_lab');if(labRouteInfo[saved]){lastLabRoute=saved;hasSavedLastLab=true}}catch(e){}
 function rememberLastLabRoute(route){if(!labRouteInfo[route])return;lastLabRoute=route;hasSavedLastLab=true;try{localStorage.setItem('mrcc_last_lab',route)}catch(e){}}
 function resumeLastLab(){openLab((labRouteInfo[lastLabRoute]||labRouteInfo.sandbox).id)}
@@ -273,7 +276,7 @@ function restoreRouteFromHash(){
   if(id==='learn'){openWorkspaceView('challenges',true);return}
   if(homeSectionTitles[id]){showHome(false,true);return}
   if(workspaceViewTargets[id]){openWorkspaceView(id,false);return}
-  if(sectionTitles[id]){if(labRouteInfo[id])rememberLastLabRoute(id);setFocusedSection(id);setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}
+  if(sectionTitles[id]){if(labRouteInfo[id]){rememberLastLabRoute(id);setLabStageMode(true)}else setLabStageMode(false);setFocusedSection(id);setTimeout(()=>$(id)?.scrollIntoView({behavior:'auto',block:'start'}),0);return}
   showHome(false,true);
 }
 window.addEventListener('hashchange',restoreRouteFromHash);
@@ -332,6 +335,7 @@ function keepActiveLabVisible(target){
 function openLab(id='parameter'){
   const target=id==='contrast'?'contrast':id==='timing'?'timing':id==='motion'?'motion':id==='kspace'?'kspace':id==='spatial'?'spatial':id==='artifact'?'artifact':'sandbox';
   rememberLastLabRoute(target);
+  setLabStageMode(true);
   go(target,true);
   setWorkspaceTabActive('labs');keepActiveLabVisible(target);
   if(target==='contrast')setTimeout(()=>contrastUpdate(),20);
@@ -343,6 +347,7 @@ function openLab(id='parameter'){
 }
 function openWorkspaceView(mode='labs',updateRoute=true){
   if(mode==='labs'||mode==='workspace'){resumeLastLab();return}
+  setLabStageMode(false);
   if(mode==='safety'){
     if(updateRoute)go('safety');
     else{setFocusedSection('safety');setTimeout(()=>$('safety')?.scrollIntoView({behavior:'auto',block:'start'}),0)}
@@ -374,6 +379,9 @@ function renderFocusBar(id){
 }
 function setFocusedSection(id){
   const el=$(id);if(!el||!sectionTitles[id])return false;
+  const interactiveLab=['sandbox','contrast','timing','motion','kspace','spatial','artifact'].includes(id);
+  if(!interactiveLab)labStageMode=false;
+  document.body.classList.toggle('lab-stage-mode',interactiveLab&&labStageMode);
   document.body.classList.remove('nav-home','nav-premium');document.body.classList.add('nav-focus');
   document.querySelectorAll('main>.section').forEach(s=>s.classList.toggle('active-section',s.id===id));
   document.querySelectorAll('[data-module-card]').forEach(b=>{const on=b.dataset.moduleCard===id;if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
@@ -383,6 +391,7 @@ function setFocusedSection(id){
   return true;
 }
 function showHome(scroll=true,replaceRoute=false,updateRoute=true){
+  setLabStageMode(false);
   document.body.classList.remove('nav-focus','nav-premium');document.body.classList.add('nav-home');
   document.querySelectorAll('main>.section.active-section').forEach(x=>x.classList.remove('active-section'));
   $('focusBar')?.classList.remove('show');
@@ -393,6 +402,7 @@ function showHome(scroll=true,replaceRoute=false,updateRoute=true){
 }
 const premiumDeepRoutes={diffusion:'premium-diffusion',parallel:'premium-parallel',rfpower:'premium-rfpower',gradient:'premium-gradient',offresonance:'premium-offresonance'};
 function openPremiumWorkspace(scroll=true,replaceRoute=false,updateRoute=true){
+  setLabStageMode(false);
   document.body.classList.remove('nav-home','nav-focus');document.body.classList.add('nav-premium');
   document.querySelectorAll('main>.section.active-section').forEach(x=>x.classList.remove('active-section'));$('focusBar')?.classList.remove('show');
   setWorkspaceTabActive('premium');setRouteContext('Premium Labs');setPremiumFilter(premiumFilter||'all');renderPremiumChallenge();

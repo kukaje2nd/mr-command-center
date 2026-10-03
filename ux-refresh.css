@@ -888,3 +888,389 @@ textarea:focus-visible,summary:focus-visible,[tabindex]:focus-visible{
     transform:none!important
   }
 }
+
+
+/* Focused Lab Stage — one-screen interactive workbench */
+body.lab-stage-mode{
+  overflow:hidden!important;
+  overscroll-behavior:none!important
+}
+body.lab-stage-mode .topbar,
+body.lab-stage-mode .workspace-rail,
+body.lab-stage-mode .v27-workspace-rail,
+body.lab-stage-mode .mobile-nav,
+body.lab-stage-mode .v27-mobile-nav,
+body.lab-stage-mode footer{
+  display:none!important
+}
+body.lab-stage-mode main.shell{
+  width:100%!important;
+  max-width:none!important;
+  height:100dvh!important;
+  margin:0!important;
+  padding:10px 12px!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode main>.section.active-section{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr);
+  gap:8px!important;
+  width:100%;
+  height:100%;
+  min-height:0;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  animation:none!important
+}
+body.lab-stage-mode main>.section.active-section:before{display:none!important}
+body.lab-stage-mode main>.section.active-section>*{display:none!important}
+body.lab-stage-mode main>.section.active-section>.v27-lab-switcher{display:flex!important}
+body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard),
+body.lab-stage-mode #contrast>.contrast-layout,
+body.lab-stage-mode #timing>.timing-layout,
+body.lab-stage-mode #motion>.motion-layout,
+body.lab-stage-mode #kspace>.kspace-layout,
+body.lab-stage-mode #spatial>.spatial-layout,
+body.lab-stage-mode #artifact>.artifact-lab-grid{
+  display:grid!important;
+  height:100%!important;
+  min-height:0!important;
+  margin:0!important;
+  gap:10px!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode #kspace,
+body.lab-stage-mode #spatial{
+  grid-template-rows:auto minmax(0,1fr) auto
+}
+body.lab-stage-mode #kspace>.kspace-readouts,
+body.lab-stage-mode #spatial>.spatial-readouts{
+  display:grid!important;
+  margin:0!important;
+  gap:6px!important
+}
+body.lab-stage-mode #kspace>.kspace-readouts>div,
+body.lab-stage-mode #spatial>.spatial-readouts>div{
+  min-height:0!important;
+  padding:6px 8px!important;
+  border-radius:8px!important
+}
+body.lab-stage-mode #kspace>.kspace-readouts small,
+body.lab-stage-mode #spatial>.spatial-readouts small{font-size:.48rem!important}
+body.lab-stage-mode #kspace>.kspace-readouts b,
+body.lab-stage-mode #spatial>.spatial-readouts b{font-size:.68rem!important;margin-top:2px!important}
+body.lab-stage-mode #kspace>.kspace-readouts span,
+body.lab-stage-mode #spatial>.spatial-readouts span{font-size:.50rem!important;margin-top:1px!important;line-height:1.25!important}
+
+body.lab-stage-mode .v27-lab-switcher{
+  position:relative!important;
+  top:auto!important;
+  z-index:5!important;
+  min-height:48px!important;
+  margin:0!important;
+  padding:4px!important;
+  border-radius:12px!important;
+  overflow:hidden!important;
+  flex-wrap:nowrap!important
+}
+body.lab-stage-mode .v27-lab-switcher button{
+  min-height:38px!important;
+  padding:4px 9px!important;
+  font-size:.72rem!important
+}
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit{
+  margin-right:3px!important;
+  border-color:rgba(126,196,239,.16)!important;
+  background:rgba(255,255,255,.025)!important
+}
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit span:first-child{
+  font-size:1rem;
+  line-height:1
+}
+
+/* Only the live workbench survives inside each Lab. */
+body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+  grid-template-columns:minmax(420px,.92fr) minmax(0,1.08fr)!important
+}
+body.lab-stage-mode #contrast>.contrast-layout,
+body.lab-stage-mode #timing>.timing-layout,
+body.lab-stage-mode #motion>.motion-layout,
+body.lab-stage-mode #artifact>.artifact-lab-grid{
+  grid-template-columns:minmax(330px,.78fr) minmax(0,1.22fr)!important
+}
+body.lab-stage-mode #kspace>.kspace-layout,
+body.lab-stage-mode #spatial>.spatial-layout{
+  grid-template-columns:minmax(280px,.72fr) repeat(2,minmax(0,1fr))!important
+}
+body.lab-stage-mode #kspace>.kspace-layout>.kspace-controls-card,
+body.lab-stage-mode #spatial>.spatial-layout>.spatial-controls-card{
+  grid-column:auto!important;
+  grid-row:auto!important
+}
+
+body.lab-stage-mode :is(
+  #paramControlsCard,#paramModelCard,
+  .contrast-controls-card,.contrast-output-card,
+  .timing-controls-card,.timing-output-card,
+  .motion-controls-card,.motion-output-card,
+  .kspace-controls-card,.kspace-output-card,
+  .spatial-controls-card,.spatial-output-card,
+  .artifact-lab-controls,.artifact-lab-canvas-card
+){
+  min-width:0!important;
+  min-height:0!important;
+  height:100%!important;
+  padding:12px!important;
+  border-radius:14px!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode :is(
+  #paramControlsCard,#paramModelCard,
+  .contrast-controls-card,.contrast-output-card,
+  .timing-controls-card,.timing-output-card,
+  .motion-controls-card,.motion-output-card,
+  .kspace-controls-card,.kspace-output-card,
+  .spatial-controls-card,.spatial-output-card,
+  .artifact-lab-controls,.artifact-lab-canvas-card
+)>h3{font-size:.9rem!important;margin-bottom:6px!important}
+
+/* Parameter Lab: keep controls + live model, remove workspace/lesson layers. */
+body.lab-stage-mode #paramControlsCard>p.sub,
+body.lab-stage-mode #paramControlsCard .param-lens,
+body.lab-stage-mode #paramControlsCard .snapshot-actions,
+body.lab-stage-mode #paramControlsCard .preset-library,
+body.lab-stage-mode #paramControlsCard>.small,
+body.lab-stage-mode #paramModelCard .parameter-deep-cockpit,
+body.lab-stage-mode #paramModelCard .parameter-equation-lab,
+body.lab-stage-mode #paramModelCard .tradegrid{
+  display:none!important
+}
+body.lab-stage-mode #paramControlsCard .sandbox{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:7px!important;
+  margin-top:4px!important
+}
+body.lab-stage-mode #paramControlsCard .param-group{
+  min-width:0!important;
+  padding:8px!important;
+  border-radius:10px!important
+}
+body.lab-stage-mode #paramControlsCard .param-group-title{margin-bottom:4px!important}
+body.lab-stage-mode #paramControlsCard .param-group-title b{font-size:.68rem!important}
+body.lab-stage-mode #paramControlsCard .param-group-title span{font-size:.52rem!important}
+body.lab-stage-mode #paramControlsCard .sliderline{
+  min-height:0!important;
+  margin:0!important;
+  padding:4px 0!important;
+  gap:6px!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline label{font-size:.62rem!important}
+body.lab-stage-mode #paramControlsCard .sliderline output{font-size:.61rem!important}
+body.lab-stage-mode #paramControlsCard .btnline{margin-top:6px!important}
+body.lab-stage-mode #paramControlsCard .btnline .btn{min-height:34px!important;padding:5px 9px!important;font-size:.68rem!important}
+body.lab-stage-mode #paramModelCard{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  gap:8px!important
+}
+body.lab-stage-mode #paramModelCard>.comparegrid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:6px!important;
+  margin:0!important
+}
+body.lab-stage-mode #paramModelCard>.comparegrid .comparecard{padding:8px!important}
+body.lab-stage-mode #paramModelCard>.comparegrid .n{font-size:clamp(.9rem,1.8vw,1.35rem)!important}
+body.lab-stage-mode #paramModelCard>.map-panel{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:10px!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode #paramModelCard .map-head{margin-bottom:4px!important}
+body.lab-stage-mode #paramModelCard .map-head p{display:none!important}
+body.lab-stage-mode #paramModelCard .balance-list{
+  align-content:center!important;
+  gap:5px!important;
+  min-height:0!important
+}
+body.lab-stage-mode #paramModelCard .balance-row{min-height:0!important}
+body.lab-stage-mode #paramModelCard .dominant{padding:7px!important;font-size:.65rem!important}
+
+/* Hide verbose/preset layers so the experiment itself owns the screen. */
+body.lab-stage-mode :is(
+  .contrast-presets,.contrast-equation,.contrast-note,
+  .timing-presets,.timing-cue,
+  .motion-presets,.motion-cue,.motion-explain,
+  .kspace-presets,.kspace-explain,
+  .spatial-presets,.spatial-explain,
+  .artifact-lab-presets,.artifact-canvas-note
+){display:none!important}
+
+body.lab-stage-mode :is(
+  .contrast-card-head,.timing-card-head,.motion-card-head,
+  .kspace-card-head,.spatial-card-head,.artifact-lab-card-head
+){margin-bottom:6px!important}
+body.lab-stage-mode :is(
+  .contrast-card-head h3,.timing-card-head h3,.motion-card-head h3,
+  .kspace-card-head h3,.spatial-card-head h3,.artifact-lab-card-head h3
+){font-size:.88rem!important;margin:.1rem 0 0!important}
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+){
+  min-height:0!important;
+  margin:0!important;
+  padding:5px 0!important;
+  gap:6px!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider label,.timing-slider label,.motion-slider label,.kspace-slider label,.spatial-slider label,.artifact-lab-slider label
+){font-size:.62rem!important}
+body.lab-stage-mode :is(
+  .contrast-slider small,.timing-slider small,.motion-slider small,.kspace-slider small,.spatial-slider small,.artifact-lab-slider small
+){font-size:.49rem!important;line-height:1.2!important}
+body.lab-stage-mode :is(
+  .contrast-slider output,.timing-slider output,.motion-slider output,.kspace-slider output,.spatial-slider output,.artifact-lab-slider output
+){font-size:.61rem!important}
+body.lab-stage-mode :is(.contrast-field,.kspace-field,.field){margin-bottom:6px!important}
+body.lab-stage-mode :is(.contrast-field,.kspace-field,.field)>span,
+body.lab-stage-mode .field>label{font-size:.60rem!important}
+
+/* Let live visuals expand into the freed space. */
+body.lab-stage-mode :is(
+  .contrast-output-card,.timing-output-card,.motion-output-card,
+  .kspace-output-card,.spatial-output-card,.artifact-lab-canvas-card
+){
+  display:flex!important;
+  flex-direction:column!important
+}
+body.lab-stage-mode :is(
+  .kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell
+){
+  flex:1 1 auto!important;
+  width:auto!important;
+  max-width:100%!important;
+  min-height:0!important;
+  height:auto!important;
+  aspect-ratio:1!important;
+  margin:auto!important
+}
+body.lab-stage-mode :is(
+  .kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell
+) canvas{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain
+}
+body.lab-stage-mode .contrast-materials{margin-top:2px!important}
+body.lab-stage-mode .contrast-summary{margin-top:6px!important;gap:5px!important}
+body.lab-stage-mode .contrast-summary>div{padding:6px!important}
+body.lab-stage-mode .contrast-timeline{margin-top:auto!important}
+body.lab-stage-mode .timing-summary,
+body.lab-stage-mode .motion-summary{gap:5px!important;margin-top:6px!important}
+body.lab-stage-mode .timing-summary>div,
+body.lab-stage-mode .motion-summary>div{padding:6px!important}
+body.lab-stage-mode .motion-history{min-height:0!important;margin-top:4px!important}
+body.lab-stage-mode .artifact-lab-readout{margin-top:auto!important;padding:7px!important}
+body.lab-stage-mode .artifact-lab-readout span{font-size:.52rem!important;line-height:1.25!important}
+
+/* Tablet and phone: still one viewport. Controls compress; output remains visible. */
+@media (max-width:900px){
+  body.lab-stage-mode main.shell{padding:6px!important}
+  body.lab-stage-mode main>.section.active-section{gap:5px!important}
+  body.lab-stage-mode .v27-lab-switcher{
+    min-height:44px!important;
+    gap:2px!important;
+    justify-content:space-between!important
+  }
+  body.lab-stage-mode .v27-lab-switcher button{
+    flex:1 1 0!important;
+    min-width:0!important;
+    min-height:36px!important;
+    padding:3px!important;
+    justify-content:center!important
+  }
+  body.lab-stage-mode .v27-lab-switcher svg{margin:0!important;width:17px!important;height:17px!important}
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-label{display:none!important}
+
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard),
+  body.lab-stage-mode #contrast>.contrast-layout,
+  body.lab-stage-mode #timing>.timing-layout,
+  body.lab-stage-mode #motion>.motion-layout,
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,1.02fr) minmax(0,.98fr)!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-rows:minmax(0,.86fr) minmax(0,1.14fr)!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout>.kspace-controls-card,
+  body.lab-stage-mode #spatial>.spatial-layout>.spatial-controls-card{
+    grid-column:1/-1!important
+  }
+  body.lab-stage-mode :is(
+    #paramControlsCard,#paramModelCard,
+    .contrast-controls-card,.contrast-output-card,
+    .timing-controls-card,.timing-output-card,
+    .motion-controls-card,.motion-output-card,
+    .kspace-controls-card,.kspace-output-card,
+    .spatial-controls-card,.spatial-output-card,
+    .artifact-lab-controls,.artifact-lab-canvas-card
+  ){padding:8px!important;border-radius:11px!important}
+
+  body.lab-stage-mode #paramControlsCard .sandbox{gap:4px!important}
+  body.lab-stage-mode #paramControlsCard .param-group{padding:5px!important}
+  body.lab-stage-mode #paramControlsCard .sliderline{padding:2px 0!important}
+  body.lab-stage-mode #paramControlsCard .btnline{display:none!important}
+  body.lab-stage-mode #paramModelCard>.map-panel{padding:6px!important}
+  body.lab-stage-mode #paramModelCard .map-head{display:none!important}
+
+  body.lab-stage-mode .timing-controls-card,
+  body.lab-stage-mode .motion-controls-card{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    align-content:start!important;
+    gap:0 8px!important
+  }
+  body.lab-stage-mode .timing-controls-card>.timing-card-head,
+  body.lab-stage-mode .motion-controls-card>.motion-card-head{
+    grid-column:1/-1!important
+  }
+  body.lab-stage-mode .contrast-controls-card{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    align-content:start!important;
+    gap:0 8px!important
+  }
+  body.lab-stage-mode .contrast-controls-card>.contrast-card-head,
+  body.lab-stage-mode .contrast-controls-card>.contrast-field{
+    grid-column:1/-1!important
+  }
+  body.lab-stage-mode :is(
+    .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+  ){padding:2px 0!important}
+  body.lab-stage-mode :is(.kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell){
+    max-height:28dvh!important
+  }
+  body.lab-stage-mode #kspace>.kspace-readouts,
+  body.lab-stage-mode #spatial>.spatial-readouts{display:none!important}
+  body.lab-stage-mode #kspace,
+  body.lab-stage-mode #spatial{grid-template-rows:auto minmax(0,1fr)!important}
+}
+@media (max-width:520px){
+  body.lab-stage-mode #paramControlsCard .param-group-title span,
+  body.lab-stage-mode :is(.contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider) small{
+    display:none!important
+  }
+  body.lab-stage-mode #paramControlsCard .sliderline label{font-size:.56rem!important}
+  body.lab-stage-mode #paramModelCard>.comparegrid .comparecard{padding:4px!important}
+  body.lab-stage-mode #paramModelCard>.comparegrid .d{font-size:.48rem!important}
+  body.lab-stage-mode .contrast-summary>div:nth-child(3),
+  body.lab-stage-mode .timing-summary>div:nth-child(n+3),
+  body.lab-stage-mode .motion-summary>div:nth-child(n+3){display:none!important}
+}
