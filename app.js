@@ -1479,7 +1479,7 @@ const burn=[...document.querySelectorAll('.burncheck')];function burnUpdate(){co
 function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function runSelfCheck(){
   const checks=[
-    ['Brand + shell',!!$('brandMark')&&!!$('workspaceRail')&&!!$('cockpit')&&!!$('mobileNav')],
+    ['Brand + shell',!!document.querySelector('.brand-sigil')&&!!$('workspaceRail')&&!!$('cockpit')&&!!$('mobileNav')],
     ['Labs home',typeof renderLabsHome==='function'&&!!$('homeParameterState')&&!!$('homeContrastState')&&!!$('homeKspaceState')&&!!$('homeSpatialState')&&!!$('homeArtifactState')],
     ['Parameter Lab',typeof sandboxUpdate==='function'&&typeof sandboxMetrics==='function'&&typeof renderParameterDeepDive==='function'&&typeof renderParameterEquations==='function'&&!!$('sbFreq')&&!!$('sbAccel')&&!!$('parameterReference')&&!!$('parameterDeepCockpit')&&!!$('parameterEquationLab')],
     ['Parameter continuity',typeof restoreSandboxCurrentState==='function'&&typeof quickSaveSandboxPreset==='function'&&!!$('labContinuity')],

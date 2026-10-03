@@ -88,7 +88,7 @@ const requiredIds=[
   'parameterCompareWorkbench','compareContext','compareASummary','compareAMeta','compareBSummary','compareBMeta','compareSwapBtn','compareRestoreBtn','compareClearBtn','comparisonHistoryList',
   'paramRefGeometry','paramRefSignal','paramRefTime','paramRefContrast','paramRefArtifact',
   'math','rescue','artifact','safety','burn',
-  'brandMark','paletteBack','paletteFilters','prefsBack','dataHealthSummary','retiredDataSummary','clearRetiredDataBtn',
+  'paletteBack','paletteFilters','prefsBack','dataHealthSummary','retiredDataSummary','clearRetiredDataBtn',
   'premiumLabs','premiumLabsTitle','premiumBack','premiumModalTitle','premiumModalKicker','premiumModalDescription',
   'diffusionPreview','diffusionPreviewTitle','diffPreviewB','diffPreviewD','diffPreviewBOut','diffPreviewDOut','diffPreviewSignal','diffPreviewLoss','diffPreviewCanvas','diffPreviewPointLabel',
   'parallelPreview','parallelPreviewTitle','parallelPreviewR','parallelPreviewDiversity','parallelPreviewROut','parallelPreviewDiversityOut','parallelPreviewSampling','parallelPreviewG','parallelPreviewEfficiency','parallelPreviewCanvas','parallelPreviewLineLabel','parallelPreviewPenaltyLabel',
@@ -109,7 +109,7 @@ const forbiddenFragments=[
 for(const fragment of forbiddenFragments){if(html.includes(fragment)) fail.push('Removed legacy surface returned unexpectedly: '+fragment);}
 
 const requiredCopy=[
-  'Learn MRI by changing the model.','Lab library','Pick the model you want to interrogate.','Your local workspace','Resume without rebuilding the experiment.',
+  'Change the physics.','See the consequence.','Lab library','Seven ways to make MRI behavior visible.','Your local workspace','Resume without rebuilding the experiment.',
   'Parameter Lab','Build, compare, and reason through the parameter stack',
   'Contrast Lab','Change timing. Watch synthetic signals separate.','Model boundary','Synthetic material definitions',
   'Sequence Timing Lab','Build an echo train. See where the timing goes.','One repetition window','Echo-train timeline',
@@ -139,10 +139,10 @@ if(!html.includes('<title>MR Command Center — MRI Labs</title>')) fail.push('P
 if(!html.includes('rel="canonical" href="https://mr-command-center.vercel.app/"')) fail.push('Canonical production URL is missing.');
 if(!html.includes('property="og:title" content="MR Command Center — MRI Labs"')) fail.push('Open Graph title metadata is missing.');
 if(!html.includes('<meta name="author" content="Edon Kukaj" />')) fail.push('Edon Kukaj author metadata is missing.');
-if(!html.includes('<span class="brandcredit">Edon Kukaj</span>')||!html.includes('aria-label="MR Command Center by Edon Kukaj"')) fail.push('Edon Kukaj brand credit is missing from the header.');
+if(!html.includes('class="brandlockup brandlockup-v2"')||!html.includes('class="brand-sigil"')||!html.includes('aria-label="MRCC — Interactive MRI Labs"')) fail.push('MRCC v2 header identity is incomplete.');
 if(!html.includes('class="top-actions"')) fail.push('Header action grouping is missing.');
 if(!html.includes('/* v10.1 Interface refinement */')||!html.includes('scroll-snap-type:x proximity')||!html.includes('.workspace-rail button.active:before')||!html.includes('.lab-home-card:hover,.lab-home-card:focus-within')) fail.push('v10.1 interface refinement styles are incomplete.');
-if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">v28.1</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v28.1</span>')) fail.push('Current live release identity is incomplete.');
+if(!html.includes('/* v10.2 Live release identity + navigation */')||!html.includes('class="releasebadge" aria-label="Current build version">28.1</span>')||!html.includes('id="routeChip"')||!html.includes('Created by <b>Edon Kukaj</b>')||!html.includes('class="footer-version">v28.1</span>')) fail.push('Current live release identity is incomplete.');
 if(!script.includes("function setRouteContext(label='Home')")||!script.includes('function keepActiveLabVisible(target)')||!script.includes("setRouteContext(sectionTitles[id])")) fail.push('v10.2 route context or active-Lab mobile navigation is incomplete.');
 if(!html.includes('env(safe-area-inset-bottom)')) fail.push('v10.2 mobile safe-area handling is missing.');
 if(documentHtml.includes('active v15 workspace keys')) fail.push('Workspace restore copy references an outdated workspace generation.');
@@ -217,7 +217,7 @@ if(!privacy.includes('Privacy & Data — MR Command Center')||!privacy.includes(
 if(!robots.includes('User-agent: *')||!robots.includes('Sitemap: https://mr-command-center.vercel.app/sitemap.xml')) fail.push('robots.txt is missing public crawl/sitemap markers.');
 if(!sitemap.includes('https://mr-command-center.vercel.app/about.html')||!sitemap.includes('https://mr-command-center.vercel.app/privacy.html')) fail.push('sitemap.xml is missing public pages.');
 if(!html.includes('@media(prefers-reduced-motion:reduce)')) fail.push('Native reduced-motion fallback is missing.');
-if(!documentHtml.includes('v27-resonance-scene')||!documentHtml.includes('homeArtifactPreview')||!documentHtml.includes('homeTimingPreview')||!documentHtml.includes('homeMotionPreview')||!documentHtml.includes('homeSpatialPreview')) fail.push('v28 Labs Home visual system is incomplete.');
+if(!documentHtml.includes('home-signal-console')||!documentHtml.includes('home-console-readouts')||!documentHtml.includes('homeArtifactPreview')||!documentHtml.includes('homeTimingPreview')||!documentHtml.includes('homeMotionPreview')||!documentHtml.includes('homeSpatialPreview')) fail.push('Labs Home visual system is incomplete.');
 if((html.match(/<span>Search workspace<\/span><kbd>\/<\/kbd>/g)||[]).length!==1) fail.push('Keyboard shortcut list contains a duplicate Search workspace entry.');
 if(!html.includes('aria-label="Search tools and problems"')) fail.push('Quick Console search field lacks an accessible name.');
 if(!html.includes('id="homeResumeLabBtn"')||!script.includes("mrcc_last_lab")||!script.includes('function resumeLastLab')) fail.push('Persistent last-Lab resume flow is missing.');

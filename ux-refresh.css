@@ -3462,3 +3462,92 @@ body.nav-home .compact-notice{display:none!important}
   .labs-library-head{align-items:flex-start!important}
   .labs-library-head>button{display:none}
 }
+
+
+/* Homepage v2 polish — flagship entry and quieter orientation chrome */
+body.nav-home .routechip{display:none!important}
+
+/* The flagship Lab earns a different composition; the other six remain comparable modules. */
+@media (min-width:861px){
+  .labs-library{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important
+  }
+  .lab-home-parameter{
+    grid-column:1/-1!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1.05fr) minmax(320px,.72fr)!important;
+    grid-template-rows:auto auto 1fr auto!important;
+    grid-template-areas:
+      "top preview"
+      "copy preview"
+      "state preview"
+      "tags action"!important;
+    column-gap:22px!important;
+    align-items:start!important;
+    min-height:320px!important;
+    padding:22px!important
+  }
+  .lab-home-parameter .lab-home-card-top{grid-area:top}
+  .lab-home-parameter .lab-home-card-copy{grid-area:copy}
+  .lab-home-parameter .v27-home-preview{
+    grid-area:preview;
+    align-self:stretch;
+    height:100%!important;
+    min-height:258px!important;
+    margin:0!important
+  }
+  .lab-home-parameter .v27-home-preview canvas{
+    height:100%!important;
+    min-height:258px!important
+  }
+  .lab-home-parameter .lab-home-state{
+    grid-area:state;
+    align-self:end;
+    margin-top:12px
+  }
+  .lab-home-parameter .lab-home-tags{
+    grid-area:tags;
+    align-self:end
+  }
+  .lab-home-parameter .lab-home-open{
+    grid-area:action;
+    align-self:end;
+    justify-self:end;
+    width:min(190px,100%)!important;
+    margin-top:10px!important
+  }
+  .lab-home-parameter .lab-home-card-copy h3{
+    margin-top:18px!important;
+    font-size:clamp(1.45rem,2.2vw,1.85rem)!important
+  }
+  .lab-home-parameter .lab-home-card-copy p{
+    max-width:610px;
+    font-size:.9rem!important;
+    line-height:1.6!important
+  }
+}
+
+/* The flagship preview needs a little more graphic weight than small card previews. */
+.lab-home-parameter .v27-home-preview{
+  background:
+    linear-gradient(rgba(109,156,255,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(85,232,255,.024) 1px,transparent 1px),
+    #040a13!important;
+  background-size:22px 22px,22px 22px,auto!important;
+  border-color:rgba(109,156,255,.18)!important
+}
+
+/* Keep the header readable as utilities disappear on smaller widths. */
+@media (max-width:720px){
+  .top-actions .quickbtn span,
+  .top-actions .quickbtn kbd{display:none!important}
+  .top-actions .quickbtn{
+    width:38px!important;
+    min-width:38px!important;
+    padding:0!important
+  }
+  .top-actions .quickbtn:before{
+    content:"⌕";
+    font-size:1rem
+  }
+}
