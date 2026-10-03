@@ -1,5 +1,14 @@
 (()=>{'use strict';
 const $=id=>document.getElementById(id);const LABS=[['parameter','Parameter','sandbox'],['contrast','Contrast','contrast'],['timing','Timing','timing'],['motion','Motion','motion'],['kspace','K-Space','kspace'],['spatial','Spatial','spatial'],['artifact','Artifact','artifact']];
+const LAB_GUIDES={
+  parameter:{section:'sandbox',title:'Trace one tradeoff end to end',prompt:'Start with FOV or phase matrix. Change one control, then follow the live model, causal chain, and A/B result before changing a second variable.',controls:'#paramControlsCard',result:'#paramModelCard',reset:'sandboxReset'},
+  contrast:{section:'contrast',title:'Make one timing change visible',prompt:'Load a familiar timing preset, then move TR or TE by itself. Watch signal spread, the brightest synthetic material, and the relaxation curves change together.',controls:'.contrast-controls-card',result:'.contrast-output-card',reset:'contrastReset'},
+  timing:{section:'timing',title:'Move the center of the echo train',prompt:'Start with the short-train preset. Raise ETL or move the center echo, then compare effective-TE-like timing, train count, and the acquisition-time proxy.',controls:'.timing-controls-card',result:'.timing-output-card',reset:'timingReset'},
+  motion:{section:'motion',title:'Change when motion happens',prompt:'Use the sudden-shift preset, move onset earlier or later, then switch phase-line ordering. Compare acquisition history with the reconstructed consequence.',controls:'.motion-controls-card',result:'.motion-output-card',reset:'motionReset'},
+  kspace:{section:'kspace',title:'Change what survives in frequency space',prompt:'Load Center only, adjust the retained amount, then compare coefficient count, Fourier energy, and the teaching reconstruction before trying undersampling.',controls:'.kspace-controls-card',result:'.kspace-readouts',reset:'kspaceReset'},
+  spatial:{section:'spatial',title:'Separate coverage from sampling density',prompt:'Load Phase wrap and raise phase FOV until folding disappears. Then change sample count without changing FOV to see a different effect.',controls:'.spatial-controls-card',result:'.spatial-readouts',reset:'spatialReset'},
+  artifact:{section:'artifact',title:'Separate pattern from mechanism',prompt:'Choose a visual pattern, change strength or direction, then use Pattern DNA and the look-alike differential to test whether appearance alone is enough.',controls:'.artifact-lab-controls',result:'.artifact-lab-canvas-card',reset:'artifactLabReset'}
+};
 const ICONS={parameter:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M16 7h4M4 17h4M11 17h9M13 4v6M8 14v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',contrast:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17c4-11 7-11 9 0 2-8 5-9 9-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3 6h18" stroke="currentColor" opacity=".35"/></svg>',timing:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14h3l2-7 3 12 3-10 2 5h5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 21h18" stroke="currentColor" opacity=".35"/></svg>',motion:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8c4-5 5 8 9 3s5 7 9 3M3 15c4-5 5 8 9 3s5 7 9 3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',kspace:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v18M9 3v18M15 3v18M19 3v18M3 5h18M3 9h18M3 15h18M3 19h18" stroke="currentColor" opacity=".35"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>',spatial:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 5v14M16 5v14M4 10h16M4 15h16" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 8V3h5M21.5 16v5h-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',artifact:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h10v10H5zM9 9h10v10H9z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 20h16" stroke="currentColor" opacity=".35"/></svg>'};
 function cv(id,h=122){const c=$(id);if(!c)return null;const d=Math.min(2.5,devicePixelRatio||1),rect=c.getBoundingClientRect(),w=Math.max(180,Math.round(rect.width||300)),rh=Math.max(96,Math.round(rect.height||h||122));c.width=Math.round(w*d);c.height=Math.round(rh*d);const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);const bg=x.createLinearGradient(0,0,0,rh);bg.addColorStop(0,'#07111d');bg.addColorStop(1,'#040912');x.fillStyle=bg;x.fillRect(0,0,w,rh);x.strokeStyle='rgba(140,190,220,.045)';for(let q=0;q<w;q+=24){x.beginPath();x.moveTo(q,0);x.lineTo(q,rh);x.stroke()}for(let q=0;q<rh;q+=24){x.beginPath();x.moveTo(0,q);x.lineTo(w,q);x.stroke()}return{x,w,h:rh}}
 function homeHud(a,label,accent='#6d9cff'){
@@ -63,6 +72,33 @@ function artifact(){const a=cv('homeArtifactPreview');if(!a)return;let s={mode:'
 }
 const PREV={parameter,contrast,timing,motion,kspace,spatial,artifact};function drawHome(){Object.values(PREV).forEach(f=>{try{f()}catch(e){}})}let raf=0;function queue(){cancelAnimationFrame(raf);raf=requestAnimationFrame(drawHome)}
 function switchers(){document.querySelectorAll('[data-v27-shared-switcher]').forEach(h=>{h.classList.add('v27-lab-switcher');h.innerHTML='<button type="button" class="v27-lab-exit" onclick="showHome()" aria-label="Exit Lab and return to Labs home"><svg class="v27-home-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 11.2 12 4.8l7.5 6.4v8H14.8v-5.2H9.2v5.2H4.5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><span class="v27-lab-label">Home</span></button>'+LABS.map(([id,label])=>`<button type="button" data-v27-lab="${id}" onclick="openLab('${id}')" aria-label="Open ${label} Lab">${ICONS[id]}<span class="v27-lab-label">${label}</span></button>`).join('')})}function activeLab(id){document.querySelectorAll('[data-v27-lab]').forEach(b=>{const on=b.dataset.v27Lab===id;b.classList.toggle('active',on);on?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')})}
+function guideScroll(lab,kind){
+  const cfg=LAB_GUIDES[lab],section=cfg&&$(cfg.section);if(!cfg||!section)return;
+  const target=section.querySelector(kind==='controls'?cfg.controls:cfg.result);
+  target?.scrollIntoView({behavior:document.documentElement.classList.contains('ui-reduce-motion')?'auto':'smooth',block:'start'});
+  if(target){target.classList.add('v281-guide-target');setTimeout(()=>target.classList.remove('v281-guide-target'),700)}
+}
+function guideReset(lab){
+  const cfg=LAB_GUIDES[lab];if(!cfg)return;
+  const fn=window[cfg.reset];if(typeof fn==='function')fn();
+  window.__mrccLastChange={lab,label:'Lab reset',value:'baseline'};
+  requestAnimationFrame(()=>{renderI();drawHome()});
+  window.restartLabProof?.(lab);
+}
+function guideMove(lab,dir){
+  const i=LABS.findIndex(x=>x[0]===lab);if(i<0)return;
+  const next=(i+dir+LABS.length)%LABS.length;openLab(LABS[next][0]);
+}
+function guides(){
+  LABS.forEach(([lab,label,sectionId],index)=>{
+    const section=$(sectionId),cfg=LAB_GUIDES[lab];if(!section||!cfg||section.querySelector('[data-v281-guide]'))return;
+    const head=section.querySelector('.section-head');
+    const guide=document.createElement('aside');guide.className='v281-lab-guide';guide.dataset.v281Guide=lab;guide.setAttribute('aria-label',label+' Lab quick start');
+    guide.innerHTML=`<div class="v281-guide-copy"><div class="v281-guide-kicker"><span>Lab ${index+1} / ${LABS.length}</span><i>Quick start</i></div><b>${cfg.title}</b><p>${cfg.prompt}</p></div><div class="v281-guide-actions"><button type="button" onclick="guideScroll('${lab}','controls')"><span>01</span>Controls</button><button type="button" onclick="guideScroll('${lab}','result')"><span>02</span>Live result</button><button type="button" onclick="guideReset('${lab}')"><span>↺</span>Reset</button></div><div class="v281-guide-nav"><button type="button" onclick="guideMove('${lab}',-1)" aria-label="Open previous Lab">←</button><span>${label}</span><button type="button" onclick="guideMove('${lab}',1)" aria-label="Open next Lab">→</button></div>`;
+    (head||section.firstElementChild)?.insertAdjacentElement('afterend',guide);
+  });
+}
+window.guideScroll=guideScroll;window.guideReset=guideReset;window.guideMove=guideMove;
 function makeHub(id,title,kicker,items){let b=$(id);if(b)return b;b=document.createElement('div');b.id=id;b.className='v27-hubback';b.setAttribute('aria-hidden','true');b.innerHTML=`<section class="v27-hub" role="dialog" aria-modal="true" aria-labelledby="${id}Title"><div class="v27-hub-head"><div><div class="v27-kicker">${kicker}</div><h2 id="${id}Title">${title}</h2></div><button class="v27-hub-close" aria-label="Close">✕</button></div><div class="v27-hub-grid">${items.map(x=>`<button type="button" data-action="${x[0]}"><b>${x[1]}</b><small>${x[2]}</small></button>`).join('')}</div></section>`;document.body.appendChild(b);b.addEventListener('click',e=>{if(e.target===b||e.target.closest('.v27-hub-close'))close(b);const x=e.target.closest('[data-action]');if(x){close(b);run(x.dataset.action)}});return b}function close(b){b.classList.remove('open');b.setAttribute('aria-hidden','true')}function open(b){b.classList.add('open');b.setAttribute('aria-hidden','false');setTimeout(()=>b.querySelector('button')?.focus(),0)}function run(a){if(a==='parameterref'){go?.('sandbox',true);setTimeout(()=>$('parameterReference')?.scrollIntoView({behavior:'smooth'}),100)}else if(a==='settings')openPreferences?.();else if(a==='search')openPalette?.();else if(a==='premium')openPremiumWorkspace?.();else if(a==='home')showHome?.();else if(a==='compare')openParameterWorkspace?.('compare');else go?.(a)}
 window.openV27ReferenceHub=()=>open(makeHub('v27ReferenceHub','MRI Reference','Reference hub',[['parameterref','Parameter Reference','Geometry, signal, efficiency, contrast, artifacts'],['math','Scan Math','Voxel size and acquisition-time relationships'],['rescue','Sequence Rescue','Work backward from the limiting problem'],['artifact','Artifact troubleshooting','Pattern, mechanism, direction, discriminator'],['safety','MR Safety','Evidence chain and escalation routes'],['burn','Thermal / RF','Heating, loops, cables, and setup concepts']]));window.openV27MoreMenu=()=>open(makeHub('v27MoreHub','More MRCC tools','Workspace',[['premium','Premium previews','Advanced interactive concept models'],['compare','Parameter A/B Compare','Compare saved A against the live stack'],['safety','MR Safety','Safety reference and escalation'],['settings','Settings','Text size, contrast, motion, backup'],['search','Search','Find a Lab, sequence, artifact, or reference'],['home','Home','Return to MRCC Home']]));
 function intel(section,lab){
@@ -115,7 +151,7 @@ function renderI(){
 }
 function dna(){try{sequenceDnaRank().slice(0,3).forEach(r=>{const c=document.querySelector(`[data-seq-dna-family="${r.id}"]`);if(!c||c.querySelector('.v27-dna-evidence'))return;const b=document.createElement('div');b.className='v27-dna-evidence';const f=x=>x.map(([d,v])=>`<span>${sequenceDnaDimensions[d].label}: ${sequenceDnaLabel(d,v)}</span>`).join('')||'<span>None</span>';b.innerHTML=`<div><small>Matches</small>${f(r.matched)}</div><div class="conflict"><small>Conflicts</small>${f(r.missed)}</div>`;c.appendChild(b)})}catch(e){}}
 function canvases(){const m={motionHistoryCanvas:'Synthetic motion displacement across phase-line acquisition.',motionReferenceCanvas:'Stationary synthetic reference phantom.',motionResultCanvas:'Synthetic motion-corrupted reconstruction.',motionLinearCanvas:'Synthetic reconstruction using linear phase ordering.',motionCentricCanvas:'Synthetic reconstruction using centric phase ordering.',ksKspaceCanvas:'Synthetic k-space magnitude map for the active mask.',ksImageCanvas:'Synthetic reconstruction from the active k-space mask.',ksPsfCanvas:'Mathematical impulse response of the active synthetic mask.',spWorldCanvas:'Synthetic object with encoded field-of-view frame.',spReconCanvas:'Synthetic reconstruction illustrating wrap and sampling density.',artifactCanvas:'Stylized MRI artifact teaching pattern; Pattern DNA provides text evidence.'};Object.entries(m).forEach(([id,label])=>{const c=$(id);if(c){c.setAttribute('role','img');c.setAttribute('aria-label',label)}})}
-function boot(){switchers();LABS.forEach(([id,,s])=>intel(s,id));canvases();renderI();drawHome();document.querySelectorAll('.lab-home-card').forEach(c=>{const t=c.querySelector('h3')?.textContent?.trim(),b=c.querySelector('.lab-home-open'),id=LABS.find(x=>c.classList.contains('lab-home-'+x[0]))?.[0];if(t&&b)b.setAttribute('aria-label','Open '+t);if(id){const i=c.querySelector('.lab-home-icon');if(i)i.innerHTML=ICONS[id]}});document.addEventListener('input',()=>{requestAnimationFrame(renderI);queue()},{passive:true});document.addEventListener('change',()=>{requestAnimationFrame(renderI);queue()},{passive:true});document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.closest('.v27-lab-switcher'))return;const section=b.closest('.section');if(!section||!document.body.classList.contains('lab-stage-mode'))return;const lab=LABS.find(x=>x[2]===section.id)?.[0];if(!lab)return;const label=(b.querySelector('b')?.textContent||b.textContent||'Lab action').replace(/\s+/g,' ').trim().slice(0,48);window.__mrccLastChange={lab,label,value:'applied'};requestAnimationFrame(()=>{renderI();queue()})},{passive:true});addEventListener('resize',queue,{passive:true});if(typeof renderSequenceDna==='function'){const old=renderSequenceDna;window.renderSequenceDna=function(){const r=old.apply(this,arguments);requestAnimationFrame(dna);return r};requestAnimationFrame(dna)}if(typeof setWorkspaceTabActive==='function'){window.setWorkspaceTabActive=function(tab='home'){const d={safety:'reference',compare:'labs',more:'reference'}[tab]||tab,m={premium:'more',safety:'more',compare:'more'}[tab]||tab;document.querySelectorAll('#workspaceRail [data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===d;b.classList.toggle('active',on);on?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')});document.querySelectorAll('#mobileNav [data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===m;b.classList.toggle('active',on);on?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')})}}if(typeof openLab==='function'){const old=openLab;window.openLab=function(id){activeLab(id);const r=old.apply(this,arguments);requestAnimationFrame(()=>{renderI();drawHome()});return r}}}
+function boot(){switchers();guides();LABS.forEach(([id,,s])=>intel(s,id));canvases();renderI();drawHome();document.querySelectorAll('.lab-home-card').forEach(c=>{const t=c.querySelector('h3')?.textContent?.trim(),b=c.querySelector('.lab-home-open'),id=LABS.find(x=>c.classList.contains('lab-home-'+x[0]))?.[0];if(t&&b)b.setAttribute('aria-label','Open '+t);if(id){const i=c.querySelector('.lab-home-icon');if(i)i.innerHTML=ICONS[id]}});document.addEventListener('input',()=>{requestAnimationFrame(renderI);queue()},{passive:true});document.addEventListener('change',()=>{requestAnimationFrame(renderI);queue()},{passive:true});document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.closest('.v27-lab-switcher'))return;const section=b.closest('.section');if(!section||!document.body.classList.contains('lab-stage-mode'))return;const lab=LABS.find(x=>x[2]===section.id)?.[0];if(!lab)return;const label=(b.querySelector('b')?.textContent||b.textContent||'Lab action').replace(/\s+/g,' ').trim().slice(0,48);window.__mrccLastChange={lab,label,value:'applied'};requestAnimationFrame(()=>{renderI();queue()})},{passive:true});addEventListener('resize',queue,{passive:true});if(typeof renderSequenceDna==='function'){const old=renderSequenceDna;window.renderSequenceDna=function(){const r=old.apply(this,arguments);requestAnimationFrame(dna);return r};requestAnimationFrame(dna)}if(typeof setWorkspaceTabActive==='function'){window.setWorkspaceTabActive=function(tab='home'){const d={safety:'reference',compare:'labs',more:'reference'}[tab]||tab,m={premium:'more',safety:'more',compare:'more'}[tab]||tab;document.querySelectorAll('#workspaceRail [data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===d;b.classList.toggle('active',on);on?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')});document.querySelectorAll('#mobileNav [data-workspace-tab]').forEach(b=>{const on=b.dataset.workspaceTab===m;b.classList.toggle('active',on);on?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')})}}if(typeof openLab==='function'){const old=openLab;window.openLab=function(id){activeLab(id);const r=old.apply(this,arguments);requestAnimationFrame(()=>{renderI();drawHome()});return r}}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();})();
 
 ;(()=>{'use strict';
@@ -187,6 +223,50 @@ function applyInteractionDelta(lab,now,commit=false){
   if(commit||!interactionBase)resultSnapshots[lab]=now;
   return text;
 }
+
+const PROOF_TASKS={
+  parameter:{title:'Make one tradeoff undeniable',goal:'Move the stack until detail, SNR, or modeled time shifts by at least 8 points from your session start.',hit:(b,n)=>Math.max(Math.abs(n.detail-b.detail),Math.abs(n.snr-b.snr),Math.abs(n.time-b.time))>=8},
+  contrast:{title:'Create a visible contrast change',goal:'Change timing until signal spread moves by at least 10 points, or the brightest synthetic material changes.',hit:(b,n)=>Math.abs(n.spread-b.spread)>=10||n.bright!==b.bright},
+  timing:{title:'Move timing enough to matter',goal:'Shift center timing, train count, or the time proxy enough to produce a clearly measurable consequence.',hit:(b,n)=>Math.abs(n.center-b.center)>=8||Math.abs(n.time-b.time)>=12||Math.abs(n.trains-b.trains)>=4},
+  motion:{title:'Make acquisition inconsistency visible',goal:'Change motion timing, amplitude, or ordering until affected lines or displacement changes clearly.',hit:(b,n)=>Math.abs(n.affected-b.affected)>=4||Math.abs(n.center-b.center)>=.5||Math.abs(n.peak-b.peak)>=.5},
+  kspace:{title:'Make the mask change the reconstruction',goal:'Alter the sampling mask until retained samples, retained energy, or side response moves substantially.',hit:(b,n)=>Math.abs(n.samples-b.samples)>=10||Math.abs(n.energy-b.energy)>=10||Math.abs(n.side-b.side)>=5},
+  spatial:{title:'Separate FOV from sampling',goal:'Cause wrap to appear/disappear, or move relative pixel width or sample burden far enough to compare the mechanisms.',hit:(b,n)=>Math.abs(n.read-b.read)>=.12||Math.abs(n.phase-b.phase)>=.12||Math.abs(n.burden-b.burden)>=15||n.wrap!==b.wrap},
+  artifact:{title:'Change pattern evidence',goal:'Change pattern, direction, or teaching strength enough to create a different visual-evidence state.',hit:(b,n)=>Math.abs(n.strength-b.strength)>=15||n.mode!==b.mode||n.direction!==b.direction}
+};
+const proofState={};
+function proofEnsure(lab){
+  if(proofState[lab])return proofState[lab];
+  proofState[lab]={base:labResultSnapshot(lab),touched:new Set()};
+  return proofState[lab];
+}
+function proofPanel(lab){
+  const guide=document.querySelector('[data-v281-guide="'+lab+'"]');if(!guide)return null;
+  let panel=guide.parentElement.querySelector(':scope > [data-v282-proof="'+lab+'"]');
+  if(panel)return panel;
+  const task=PROOF_TASKS[lab];if(!task)return null;
+  panel=document.createElement('section');panel.className='v282-lab-proof';panel.dataset.v282Proof=lab;panel.setAttribute('aria-label','Session experiment');
+  panel.innerHTML='<div class="v282-proof-head"><div><small>Session experiment</small><h3>'+esc(task.title)+'</h3></div><span data-proof-score>0 / 3</span></div><p class="v282-proof-goal">'+esc(task.goal)+'</p><div class="v282-proof-steps"><div data-proof-step="change"><i>1</i><span><b>Change one lever</b><small>Use a control or preset.</small></span></div><div data-proof-step="result"><i>2</i><span><b>Cause a measurable result</b><small>Push past the task threshold.</small></span></div><div data-proof-step="second"><i>3</i><span><b>Test a second lever</b><small>See whether the relationship holds.</small></span></div></div><div class="v282-proof-evidence"><div role="status" aria-live="polite" aria-atomic="true"><small>Live evidence</small><b data-proof-evidence>Waiting for your first change</b><span data-proof-detail>MRCC will summarize the delta from this session starting point.</span></div><button type="button" onclick="restartLabProof(\''+lab+'\')">Restart task</button></div>';
+  guide.insertAdjacentElement('afterend',panel);return panel;
+}
+function proofRender(lab){
+  const task=PROOF_TASKS[lab],state=proofEnsure(lab),panel=proofPanel(lab),now=labResultSnapshot(lab);if(!task||!state.base||!now||!panel)return;
+  const changed=state.touched.size>=1,result=task.hit(state.base,now),second=state.touched.size>=2,flags={change:changed,result,second};
+  Object.entries(flags).forEach(([key,on])=>{const el=panel.querySelector('[data-proof-step="'+key+'"]');el?.classList.toggle('done',!!on)});
+  const score=[changed,result,second].filter(Boolean).length,scoreEl=panel.querySelector('[data-proof-score]');if(scoreEl){scoreEl.textContent=score+' / 3';scoreEl.classList.toggle('done',score===3)}
+  const deltaText=labDeltaText(lab,state.base,now),ev=panel.querySelector('[data-proof-evidence]'),detail=panel.querySelector('[data-proof-detail]');
+  if(ev)ev.textContent=deltaText||'Waiting for your first change';
+  if(detail)detail.textContent=score===3?'Experiment complete. Reset the task or keep exploring with a new combination.':result?'The modeled consequence cleared the task threshold. Now test another lever.':changed?'A lever changed; push it farther or try a preset until the result crosses the task threshold.':'MRCC will summarize the delta from this session starting point.';
+}
+function proofTouch(lab,key){
+  const state=proofEnsure(lab);if(!state||!key)return;state.touched.add(key);requestAnimationFrame(()=>proofRender(lab));
+}
+function proofRestart(lab){
+  const state=proofEnsure(lab);state.base=labResultSnapshot(lab);state.touched.clear();proofRender(lab);
+}
+function proofBoot(){
+  Object.keys(PROOF_TASKS).forEach(lab=>{proofPanel(lab);proofEnsure(lab);proofRender(lab)});
+}
+window.restartLabProof=proofRestart;
 
 function host(lab,title,kicker='Lab Intelligence'){
   const intel=document.querySelector('[data-v27-intel="'+lab+'"]'); if(!intel)return null;
@@ -322,7 +402,7 @@ function flashControlImpacts(control){
 }
 function noteControlChange(e){
   const m=CONTROL_MAP[e.target?.id];if(!m)return;
-  const lab=m[0],now=labResultSnapshot(lab);
+  const lab=m[0],now=labResultSnapshot(lab);proofTouch(lab,e.target.id);
   lastChange[lab]=m[1];
   window.__mrccLastChange={lab,label:m[1],value:controlReading(e.target),previous:interactionBase?.lab===lab&&interactionBase.controlId===e.target.id?interactionBase.controlValue:''};
   const deltaText=applyInteractionDelta(lab,now,e.type==='change');
@@ -346,13 +426,16 @@ document.addEventListener('focusin',e=>{
 document.addEventListener('input',noteControlChange,{passive:true});
 document.addEventListener('change',e=>{noteControlChange(e);const m=CONTROL_MAP[e.target?.id];if(m)interactionBase=null},{passive:true});
 document.addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b||!document.body.classList.contains('lab-stage-mode')||b.closest('.v27-lab-switcher'))return;
+  const b=e.target.closest('button');if(!b||!document.body.classList.contains('lab-stage-mode')||b.closest('.v27-lab-switcher,.v281-lab-guide,.v282-lab-proof'))return;
   const lab=labForElement(b);if(!lab)return;
-  requestAnimationFrame(()=>{const now=labResultSnapshot(lab);applyInteractionDelta(lab,now,true);interactionBase=null;renderDeep()});
+  const label=(b.querySelector('b')?.textContent||b.textContent||'Lab action').replace(/\s+/g,' ').trim().slice(0,64);
+  if(/reset/i.test(label)){setTimeout(()=>proofRestart(lab),0)}
+  else proofTouch(lab,'action:'+label);
+  requestAnimationFrame(()=>{const now=labResultSnapshot(lab);applyInteractionDelta(lab,now,true);interactionBase=null;renderDeep();proofRender(lab)});
 },{passive:true});
 requestAnimationFrame(()=>Object.keys(LAB_SECTION).forEach(lab=>{const snap=labResultSnapshot(lab);if(snap)resultSnapshots[lab]=snap}));
 const oldRender=window.renderSequenceDna;if(typeof oldRender==='function')window.renderSequenceDna=function(){const r=oldRender.apply(this,arguments);requestAnimationFrame(dnaMatrix);return r};
-function boot(){document.documentElement.dataset.mrccRelease='28.1';relocateDiagnostics();renderDeep();setTimeout(renderDeep,120);setTimeout(renderDeep,500)}
+function boot(){document.documentElement.dataset.mrccRelease='28.1';relocateDiagnostics();proofBoot();renderDeep();setTimeout(()=>{renderDeep();Object.keys(PROOF_TASKS).forEach(proofRender)},120);setTimeout(renderDeep,500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 ;(()=>{'use strict';
