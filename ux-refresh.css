@@ -557,3 +557,193 @@ main.shell{padding-bottom:74px!important}
 body.ui-reduce-motion .lab-home-card,
 body.ui-reduce-motion .card,
 body.ui-reduce-motion .palitem{transition:none!important}
+
+
+/* Second refinement pass — contextual hierarchy and density tuning */
+
+/* Context belongs after the experiment: useful, but visually secondary. */
+.v27-intelligence{
+  margin:14px 0 7px!important;
+  padding:7px!important;
+  gap:6px!important;
+  border:1px solid color-mix(in srgb,var(--sf-accent,var(--sf-cyan)) 12%,var(--ux-line))!important;
+  border-radius:13px!important;
+  background:rgba(255,255,255,.006)!important
+}
+.v27-intel-cell{
+  min-height:82px!important;
+  padding:9px 10px!important;
+  border-radius:9px!important;
+  border-color:rgba(126,196,239,.075)!important;
+  background:rgba(255,255,255,.009)!important
+}
+.v27-intel-cell small{
+  font-size:.60rem!important;
+  letter-spacing:.095em!important;
+  color:color-mix(in srgb,var(--sf-accent,var(--sf-cyan)) 78%,#a8c1cf)!important
+}
+.v27-intel-cell b{margin-top:3px!important;font-size:.82rem!important}
+.v27-intel-cell span{margin-top:3px!important;font-size:.70rem!important;line-height:1.42!important;color:#8fa4b2!important}
+.v271-analysis{
+  margin:0 0 20px!important;
+  border-radius:13px!important;
+  border-color:rgba(126,196,239,.09)!important;
+  background:linear-gradient(150deg,rgba(7,16,27,.78),rgba(5,11,20,.84))!important
+}
+.v271-analysis-head{padding:10px 12px!important;border-bottom-color:rgba(126,196,239,.075)!important}
+.v271-analysis-head small{font-size:.60rem!important}
+.v271-analysis-head h3{font-size:.9rem!important}
+.v271-analysis-body{padding:11px 12px!important}
+.v271-driver-grid{gap:6px!important}
+.v271-driver,.v271-sensitivity>div,.v271-axis-grid>div,.v271-kpis>div{
+  border-radius:9px!important;
+  background:rgba(255,255,255,.009)!important
+}
+.v271-footnote{margin-bottom:0!important;color:#7f94a3!important;font-size:.66rem!important}
+
+/* Make the transition from live experiment to deeper study unmistakable. */
+.contrast-deep-grid,.timing-deep-grid,.motion-deep-grid,
+.kspace-deep-grid,.spatial-deep-grid,.artifact-deep-grid{
+  padding-top:18px!important;
+  border-top:1px solid rgba(126,196,239,.075)!important
+}
+
+/* Home utility area: 2×2 is easier to scan than four narrow cards. */
+.labs-home-work-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important
+}
+.labs-home-work-grid button{
+  min-height:78px!important;
+  padding:11px 12px!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.009)!important
+}
+.labs-home-work-grid b{font-size:.74rem!important}
+.labs-home-work-grid small{font-size:.64rem!important;line-height:1.4!important}
+.labs-principle-strip{
+  margin-top:12px!important;
+  gap:8px!important;
+  border-color:rgba(126,196,239,.075)!important;
+  background:transparent!important
+}
+.labs-principle-strip>div{padding:11px!important}
+
+/* Sequence Families is a browse + inspect workspace, not a card wall. */
+.seqfam-layout{
+  grid-template-columns:minmax(0,.92fr) minmax(390px,1.08fr)!important;
+  gap:16px!important;
+  align-items:start!important
+}
+.seqfam-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important
+}
+.seqfam-family-card{
+  min-height:132px!important;
+  padding:14px!important;
+  border-radius:13px!important
+}
+.seqfam-family-card.active{
+  box-shadow:inset 3px 0 0 rgba(111,157,255,.62)!important;
+  background:linear-gradient(145deg,rgba(111,157,255,.065),rgba(7,15,26,.96))!important
+}
+.seqfam-detail{
+  padding:19px!important;
+  border-radius:17px!important;
+  border-color:rgba(111,157,255,.25)!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.16)!important
+}
+.seqfam-section-head{margin-bottom:9px!important}
+.seqfam-toolbar{
+  grid-template-columns:minmax(0,1fr) minmax(190px,.32fr)!important;
+  gap:10px 12px!important;
+  padding:12px!important
+}
+.seqfam-filters{grid-column:1/-1!important}
+
+/* Premium hub: status supports the content instead of competing with it. */
+.premium-workspace-banner{
+  padding:14px 16px!important;
+  border-radius:13px!important;
+  background:linear-gradient(145deg,rgba(158,124,247,.045),rgba(7,14,25,.92))!important
+}
+.premium-hub-summary{
+  gap:8px!important;
+  margin:10px 0 12px!important
+}
+.premium-hub-summary>div{
+  min-height:66px!important;
+  padding:10px 11px!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.009)!important
+}
+.premium-hub-toolbar{
+  padding:8px 10px!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.008)!important
+}
+
+/* Open surfaces: consistent header/action geometry and quieter chrome. */
+.palettehead,.premiummodal-head,.v27-hub-head{
+  min-height:66px!important
+}
+.paletteclose,.prefs-close,.premium-close,.v27-hub-close{
+  width:40px!important;
+  height:40px!important;
+  flex:0 0 40px!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.014)!important
+}
+.paletteclose:hover,.prefs-close:hover,.premium-close:hover,.v27-hub-close:hover{
+  background:rgba(39,221,239,.055)!important
+}
+.palitem:hover,.palitem.active{
+  background:linear-gradient(90deg,rgba(39,221,239,.045),rgba(111,157,255,.025))!important;
+  border-color:rgba(126,211,255,.16)!important
+}
+.pref-card{
+  min-height:124px;
+  background:rgba(255,255,255,.008)!important
+}
+.v27-advanced-settings,.prefs .pref-card[style*="grid-column"]{min-height:0!important}
+.prefs-foot{
+  margin-top:16px!important;
+  padding-top:14px!important;
+  border-top-color:rgba(126,196,239,.08)!important
+}
+.premium-summary{
+  padding:12px 13px!important;
+  border:1px solid rgba(158,124,247,.11)!important;
+  border-radius:11px!important;
+  background:rgba(158,124,247,.018)!important
+}
+
+/* Small tactile improvement without adding animation noise. */
+.lab-home-open,.premium-open,.labs-home-work-grid button,.v27-hub-grid button{
+  transition:border-color .16s var(--sf-ease),background .16s var(--sf-ease),transform .16s var(--sf-ease)!important
+}
+.lab-home-open:hover,.premium-open:hover,.labs-home-work-grid button:hover,.v27-hub-grid button:hover{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--sf-cyan)) 30%,var(--ux-line))!important
+}
+
+@media (max-width:1180px){
+  .seqfam-layout{grid-template-columns:1fr!important}
+  .seqfam-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media (max-width:900px){
+  .seqfam-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .seqfam-toolbar{grid-template-columns:1fr!important}
+  .seqfam-filters{grid-column:auto!important}
+}
+@media (max-width:760px){
+  .v27-intelligence{grid-template-columns:1fr!important;padding:6px!important}
+  .v27-intel-cell{min-height:0!important}
+  .v271-analysis{margin-bottom:14px!important}
+  .labs-home-work-grid{grid-template-columns:1fr!important}
+  .pref-card{min-height:0}
+  .premium-hub-summary{grid-template-columns:1fr!important}
+}
+@media (max-width:560px){
+  .seqfam-grid{grid-template-columns:1fr!important}
+}
