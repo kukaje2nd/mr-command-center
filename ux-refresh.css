@@ -5222,3 +5222,209 @@ body.lab-stage-mode :is(
     min-height:220px!important
   }
 }
+
+
+/* Focused Lab instrument rail v2 — one navigation surface, equal stations, no label collisions */
+body.lab-stage-mode .v27-lab-switcher{
+  display:grid!important;
+  grid-template-columns:84px repeat(7,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:0!important;
+  min-height:52px!important;
+  height:52px!important;
+  padding:3px!important;
+  margin:0!important;
+  overflow:hidden!important;
+  border:1px solid rgba(126,196,239,.15)!important;
+  border-radius:14px!important;
+  background:
+    linear-gradient(180deg,rgba(7,16,30,.97),rgba(4,10,20,.98))!important;
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.025),
+    0 10px 28px rgba(0,0,0,.18)!important
+}
+
+body.lab-stage-mode .v27-lab-switcher button{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:44px!important;
+  height:44px!important;
+  flex:none!important;
+  gap:9px!important;
+  padding:0 14px!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:9px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#7e95a7!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  font-size:.72rem!important;
+  font-weight:820!important;
+  line-height:1!important;
+  letter-spacing:.005em!important
+}
+
+body.lab-stage-mode .v27-lab-switcher button:not(:last-child):after{
+  content:"";
+  position:absolute;
+  right:0;
+  top:9px;
+  bottom:9px;
+  width:1px;
+  background:rgba(126,196,239,.065);
+  pointer-events:none
+}
+
+body.lab-stage-mode .v27-lab-switcher svg{
+  flex:0 0 17px!important;
+  width:17px!important;
+  height:17px!important;
+  margin:0!important;
+  opacity:.64;
+  transition:opacity .16s ease,filter .16s ease,color .16s ease!important
+}
+
+body.lab-stage-mode .v27-lab-switcher .v27-lab-label{
+  display:block!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+  color:inherit!important;
+  font-size:.72rem!important;
+  font-weight:820!important;
+  line-height:1!important;
+  letter-spacing:.005em!important
+}
+
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit{
+  justify-content:center!important;
+  gap:7px!important;
+  padding-inline:9px!important;
+  border:0!important;
+  background:transparent!important;
+  color:#7190a4!important
+}
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit span:first-child{
+  flex:0 0 auto;
+  font-size:.92rem!important;
+  line-height:1!important;
+  color:#77b6d2
+}
+
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab]{
+  --rail-accent:var(--switch-lab,var(--lab-accent,#55e8ff))
+}
+
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab]:hover,
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit:hover{
+  background:rgba(255,255,255,.018)!important;
+  color:#dceaf3!important
+}
+
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active{
+  flex:none!important;
+  gap:9px!important;
+  border:0!important;
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb,var(--rail-accent) 10%,rgba(7,17,31,.98)),
+      color-mix(in srgb,var(--rail-accent) 3%,rgba(5,12,23,.98))
+    )!important;
+  color:#f5fbff!important;
+  box-shadow:
+    inset 0 -2px var(--rail-accent),
+    inset 0 0 24px color-mix(in srgb,var(--rail-accent) 4%,transparent)!important
+}
+
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active:before{
+  content:"";
+  position:absolute;
+  left:12px;
+  top:8px;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:var(--rail-accent);
+  box-shadow:0 0 9px color-mix(in srgb,var(--rail-accent) 55%,transparent)
+}
+
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active svg{
+  color:var(--rail-accent)!important;
+  opacity:1!important;
+  filter:drop-shadow(0 0 7px color-mix(in srgb,var(--rail-accent) 20%,transparent))!important
+}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active .v27-lab-label{
+  display:block!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+  font-size:.72rem!important
+}
+
+/* Large desktop: a little more breathing room without changing station widths. */
+@media (min-width:1500px){
+  body.lab-stage-mode .v27-lab-switcher{
+    grid-template-columns:92px repeat(7,minmax(0,1fr))!important
+  }
+  body.lab-stage-mode .v27-lab-switcher button{
+    padding-inline:16px!important;
+    gap:10px!important
+  }
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-label{
+    font-size:.76rem!important
+  }
+}
+
+/* Laptop/tablet: preserve the clean rail by switching to icon stations before labels can collide. */
+@media (max-width:1080px){
+  body.lab-stage-mode .v27-lab-switcher{
+    grid-template-columns:58px repeat(7,minmax(52px,1fr))!important;
+    height:48px!important;
+    min-height:48px!important
+  }
+  body.lab-stage-mode .v27-lab-switcher button{
+    justify-content:center!important;
+    min-height:40px!important;
+    height:40px!important;
+    padding:0 7px!important;
+    gap:0!important
+  }
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-label{
+    display:none!important
+  }
+  body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active .v27-lab-label{
+    display:none!important
+  }
+  body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active:before{
+    left:50%!important;
+    top:5px!important;
+    transform:translateX(-50%)
+  }
+}
+
+/* Very small screens: compact icon rail, still one line and still fully usable. */
+@media (max-width:620px){
+  body.lab-stage-mode .v27-lab-switcher{
+    grid-template-columns:46px repeat(7,minmax(40px,1fr))!important;
+    height:44px!important;
+    min-height:44px!important;
+    border-radius:11px!important
+  }
+  body.lab-stage-mode .v27-lab-switcher button{
+    min-height:36px!important;
+    height:36px!important;
+    padding:0 4px!important
+  }
+  body.lab-stage-mode .v27-lab-switcher svg{
+    width:16px!important;
+    height:16px!important;
+    flex-basis:16px!important
+  }
+}
