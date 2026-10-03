@@ -4434,3 +4434,308 @@ body.lab-stage-mode :is(
   }
   .seqfam-anatomy-arrow{display:none!important}
 }
+
+
+/* MRCC composition pass — visual calm, deliberate whitespace, output-first hierarchy */
+
+/* Normal desktops keep the full experiment width. The analysis rail is an ultra-wide enhancement. */
+@media (min-width:1360px) and (max-width:1539px){
+  body.lab-stage-mode main>.section.active-section{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important
+  }
+  body.lab-stage-mode main>.section.active-section>:is(
+    .grid2:has(#paramControlsCard),.contrast-layout,.timing-layout,.motion-layout,
+    .kspace-layout,.spatial-layout,.artifact-lab-grid
+  ){
+    grid-column:1!important;
+    grid-row:2!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v271-analysis{
+    display:none!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    grid-column:1!important;
+    grid-row:3!important
+  }
+}
+@media (min-width:1540px) and (min-height:720px){
+  body.lab-stage-mode main>.section.active-section{
+    grid-template-columns:minmax(0,1fr) clamp(300px,19vw,360px)!important
+  }
+}
+
+/* The viewport belongs to the model. Control bays are quieter; output planes carry the depth. */
+body.lab-stage-mode :is(
+  #paramControlsCard,.contrast-controls-card,.timing-controls-card,.motion-controls-card,
+  .kspace-controls-card,.spatial-controls-card,.artifact-lab-controls
+){
+  border-color:color-mix(in srgb,var(--lab-accent) 11%,var(--neo-line))!important;
+  background:
+    linear-gradient(155deg,rgba(7,16,29,.94),rgba(4,10,19,.975))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.012)!important
+}
+body.lab-stage-mode :is(
+  #paramModelCard,.contrast-output-card,.timing-output-card,.motion-output-card,
+  .kspace-output-card,.spatial-output-card,.artifact-lab-canvas-card
+){
+  border-color:color-mix(in srgb,var(--lab-accent) 28%,var(--neo-line))!important;
+  box-shadow:
+    inset 0 1px color-mix(in srgb,var(--lab-accent) 11%,transparent),
+    0 15px 42px rgba(0,0,0,.20),
+    0 0 26px color-mix(in srgb,var(--lab-accent) 3.5%,transparent)!important
+}
+
+/* Headers should orient, not consume the experiment. */
+body.lab-stage-mode :is(
+  .contrast-card-head,.timing-card-head,.motion-card-head,
+  .kspace-card-head,.spatial-card-head,.artifact-lab-card-head
+){
+  min-height:32px!important;
+  margin-bottom:7px!important;
+  padding-bottom:6px!important
+}
+body.lab-stage-mode :is(
+  .contrast-card-head,.timing-card-head,.motion-card-head,
+  .kspace-card-head,.spatial-card-head,.artifact-lab-card-head
+) h3{
+  font-size:.78rem!important;
+  letter-spacing:.015em!important
+}
+body.lab-stage-mode :is(
+  .contrast-card-head,.timing-card-head,.motion-card-head,
+  .kspace-card-head,.spatial-card-head,.artifact-lab-card-head
+)>span{
+  font-size:.50rem!important;
+  letter-spacing:.055em!important
+}
+
+/* The persistent consequence strip becomes compact telemetry instead of a third set of cards. */
+body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+  min-height:74px!important;
+  max-height:84px!important;
+  padding:5px!important;
+  gap:5px!important;
+  border-radius:12px!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.13),inset 0 1px rgba(255,255,255,.012)!important
+}
+body.lab-stage-mode .v27-intel-cell{
+  padding:7px 10px!important;
+  border-radius:8px!important;
+  border-color:rgba(126,196,239,.055)!important;
+  background:rgba(255,255,255,.004)!important
+}
+body.lab-stage-mode .v27-intel-cell small{
+  font-size:.47rem!important;
+  letter-spacing:.085em!important
+}
+body.lab-stage-mode .v27-intel-cell b{
+  margin-top:2px!important;
+  font-size:.72rem!important;
+  line-height:1.18!important
+}
+body.lab-stage-mode .v27-intel-cell span{
+  margin-top:2px!important;
+  font-size:.57rem!important;
+  line-height:1.28!important
+}
+
+/* Controls breathe vertically; help copy yields before the active control does. */
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider,
+  #paramControlsCard .sliderline
+){
+  margin:0!important;
+  padding:6px 0!important;
+  border-bottom-color:rgba(126,196,239,.045)!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider
+)>div:first-child,
+body.lab-stage-mode #paramControlsCard .sliderline>div:first-child{
+  margin-bottom:4px!important
+}
+body.lab-stage-mode :is(
+  .contrast-slider small,.timing-slider small,.motion-slider small,
+  .kspace-slider small,.spatial-slider small,.artifact-lab-slider small
+){
+  color:#667f91!important;
+  font-size:.54rem!important;
+  line-height:1.28!important
+}
+
+/* Scanner wells use nearly all available card space; avoid nested-frame syndrome. */
+body.lab-stage-mode :is(
+  .kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell,.motion-image-shell,
+  .contrast-curve-panel,.motion-history,.timing-timeline
+){
+  border-radius:10px!important
+}
+body.lab-stage-mode :is(
+  .kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell,.motion-image-shell
+){
+  flex:1 1 auto!important;
+  min-height:0!important
+}
+
+/* K-space and Spatial deserve broad image planes. */
+@media (min-width:1000px){
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:clamp(230px,18vw,290px) minmax(0,1fr) minmax(0,1fr)!important;
+    gap:14px!important
+  }
+}
+
+/* Parameter controls are dense by nature: keep labels readable while protecting the model area. */
+@media (min-width:1000px){
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:clamp(360px,29vw,430px) minmax(0,1fr)!important
+  }
+}
+
+/* Contrast/Timing/Motion/Artifact use a narrower instrument rack and a wider result plane. */
+@media (min-width:1000px){
+  body.lab-stage-mode #contrast>.contrast-layout,
+  body.lab-stage-mode #timing>.timing-layout{
+    grid-template-columns:clamp(300px,25vw,360px) minmax(0,1fr)!important
+  }
+  body.lab-stage-mode #motion>.motion-layout,
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:clamp(280px,23vw,340px) minmax(0,1fr)!important
+  }
+}
+
+/* Home library: information recedes; preview graphics and titles lead. */
+.lab-home-card{
+  padding:18px!important;
+  gap:0!important
+}
+.lab-home-card-top{
+  min-height:30px!important;
+  padding-bottom:4px!important
+}
+.lab-home-badge{
+  opacity:.66!important
+}
+.lab-home-card-copy h3{
+  margin:12px 0 6px!important
+}
+.lab-home-card-copy p{
+  max-width:54ch!important;
+  color:#8198a9!important;
+  line-height:1.48!important
+}
+.lab-home-state{
+  margin-top:10px!important;
+  padding-top:9px!important;
+  border-top:1px solid rgba(126,196,239,.055)!important
+}
+.lab-home-state small{
+  display:none!important
+}
+.lab-home-state b{
+  font-size:.72rem!important;
+  line-height:1.28!important
+}
+.lab-home-state span{
+  margin-top:2px!important;
+  color:#71899b!important;
+  font-size:.61rem!important;
+  line-height:1.32!important
+}
+.lab-home-tags{
+  margin-top:8px!important;
+  gap:4px!important
+}
+.lab-home-tags span{
+  padding:3px 6px!important;
+  border-color:rgba(126,196,239,.07)!important;
+  background:rgba(255,255,255,.003)!important;
+  color:#637d90!important;
+  font-size:.49rem!important
+}
+.lab-home-tags span:nth-child(n+4){
+  display:none!important
+}
+.lab-home-open{
+  min-height:38px!important;
+  margin-top:11px!important
+}
+
+/* Home secondary cards keep a stable visual rhythm without artificial height. */
+@media (min-width:861px){
+  .labs-library>.lab-home-card:not(.lab-home-parameter){
+    display:grid!important;
+    grid-template-rows:auto auto minmax(138px,1fr) auto auto auto!important
+  }
+  .labs-library>.lab-home-card:not(.lab-home-parameter) .v27-home-preview{
+    min-height:148px!important;
+    margin-top:13px!important
+  }
+}
+
+/* Sequence surfaces: fewer nested borders, more breathing room around the acquisition anatomy. */
+.seqfam-anatomy-grid{
+  gap:16px!important
+}
+.seqfam-anatomy-timeline{
+  display:grid!important;
+  gap:7px!important
+}
+.seqfam-anatomy-lane{
+  border-color:rgba(126,196,239,.055)!important;
+  background:rgba(255,255,255,.003)!important
+}
+.seqfam-anatomy-node{
+  box-shadow:none!important
+}
+.seqfam-detail-block{
+  border-color:rgba(126,196,239,.055)!important;
+  background:rgba(255,255,255,.003)!important
+}
+
+/* Premium cards should read as concept instruments, not another dense catalog. */
+.premium-card{
+  padding:17px!important;
+  border-color:color-mix(in srgb,var(--premium-accent,#a58cff) 15%,var(--neo-line))!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.12)!important
+}
+.premium-card .premium-feature-list{
+  margin-top:10px!important
+}
+.premium-card .premium-feature-list li{
+  margin-block:3px!important;
+  color:#839aaa!important
+}
+.premium-card-tags{
+  gap:4px!important
+}
+.premium-card-tags span:nth-child(n+4){
+  display:none!important
+}
+
+/* Reference tools need authority and calm: neutral surfaces, minimal decorative glow. */
+.reference-tool-section .card{
+  border-color:rgba(105,185,255,.10)!important;
+  background:linear-gradient(155deg,rgba(8,18,31,.94),rgba(5,11,21,.97))!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.11)!important
+}
+.reference-tool-section .card:after{
+  opacity:.25!important
+}
+.reference-tool-section .section-head{
+  margin-bottom:16px!important
+}
+
+/* Very wide displays: don't let content stretch into billboard proportions. */
+@media (min-width:1900px){
+  .labs-home,.sequence-family-lab,.reference-tool-section,.premium-zone{
+    max-width:1680px!important;
+    margin-inline:auto!important
+  }
+  body.lab-stage-mode main.shell{
+    max-width:1880px!important;
+    margin-inline:auto!important
+  }
+}
