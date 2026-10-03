@@ -149,11 +149,11 @@ function boot(){document.documentElement.dataset.mrccRelease='28.0';relocateDiag
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 ;(()=>{'use strict';
-function sfRange(el){if(!el||el.type!=='range')return;const a=Number(el.min||0),b=Number(el.max||100),v=Number(el.value||0);el.style.setProperty('--sf-fill',(b>a?Math.max(0,Math.min(100,(v-a)/(b-a)*100)):0)+'%')}
+function sfRange(el){if(!el||el.type!=='range')return;const a=Number(el.min||0),b=Number(el.max||100),v=Number(el.value||0),p=b>a?((v-a)/(b-a))*100:0;el.style.setProperty('--sf-fill',Math.max(0,Math.min(100,p))+'%')}
 function sfRefresh(){document.querySelectorAll('input[type="range"]').forEach(sfRange);document.querySelectorAll('.card,.lab-home-card,.seqfam-family-card,.premium-card,.v271-analysis,.pref-card').forEach(el=>{if(el.dataset.sfReactive)return;el.dataset.sfReactive='1';el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--sf-x',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');el.style.setProperty('--sf-y',((e.clientY-r.top)/r.height*100).toFixed(1)+'%')},{passive:true});el.addEventListener('pointerleave',()=>{el.style.setProperty('--sf-x','50%');el.style.setProperty('--sf-y','0%')},{passive:true})})}
-document.addEventListener('input',e=>{if(e.target&&e.target.type==='range')sfRange(e.target)},{passive:true});
-document.addEventListener('change',e=>{if(e.target&&e.target.type==='range')sfRange(e.target)},{passive:true});
-const obs=new MutationObserver(m=>{if(m.some(x=>x.type==='childList'))requestAnimationFrame(sfRefresh)});
-function boot(){document.documentElement.dataset.mrccRelease='28.0';sfRefresh();obs.observe(document.body,{subtree:true,childList:true});setTimeout(sfRefresh,300)}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+document.addEventListener('input',e=>{if(e.target?.type==='range')sfRange(e.target)},{passive:true});
+document.addEventListener('change',e=>{if(e.target?.type==='range')sfRange(e.target)},{passive:true});
+const sfObs=new MutationObserver(m=>{if(m.some(x=>x.type==='childList'))requestAnimationFrame(sfRefresh)});
+function sfBoot(){document.documentElement.dataset.mrccRelease='28.0';sfRefresh();sfObs.observe(document.body,{subtree:true,childList:true});setTimeout(sfRefresh,300)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sfBoot,{once:true});else sfBoot();
 })();

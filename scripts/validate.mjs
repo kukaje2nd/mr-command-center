@@ -130,8 +130,8 @@ for(const name of removedLogic){if(script.includes(name)) fail.push('Obsolete lo
 
 if(!fs.existsSync('brand-mark.svg')) fail.push('brand-mark.svg is missing.');
 if(fs.existsSync('brand-mark.png')) fail.push('Legacy brand-mark.png should not remain in the repository.');
-if(!brand.includes('MR Command Center Flux Monogram')||!brand.includes('#22e6f5')||!brand.includes('#a47cff')) fail.push('Brand mark does not contain the v27 Resonance Core identity markers.');
-if(!manifest.includes('Sequence Timing')||!manifest.includes('K-Space')||!manifest.includes('Artifact')||!manifest.includes('Sequence Families')) fail.push('Manifest description is not aligned with the v27 MRI Labs product.');
+if(!brand.includes('MR Command Center Flux Monogram')||!brand.includes('#22e6f5')||!brand.includes('#a47cff')) fail.push('Brand mark does not contain the v28 Flux Monogram identity markers.');
+if(!manifest.includes('Sequence Timing')||!manifest.includes('K-Space')||!manifest.includes('Artifact')||!manifest.includes('Sequence Families')) fail.push('Manifest description is not aligned with the v28 MRI Labs product.');
 if(!manifest.includes('/icon.svg')) fail.push('Manifest does not include the SVG application icon.');
 if(!sw.includes("mrcc-v28.0.0")) fail.push('Service worker cache marker is not v28.0.0.');
 if(!sw.includes('/brand-mark.svg')) fail.push('Service worker core assets do not include the brand mark.');
@@ -186,7 +186,7 @@ if(!script.includes("offresonance:{title:'Off-Resonance & Phase Lab'")||!script.
 if(!html.includes('not a field-map, shim prescription, chemical-species classifier')&&!html.includes('not a field map, shim tool, chemical-species classifier')) fail.push('Off-Resonance preview boundary is incomplete.');
 if(!premiumDoc.includes('Premium Lab Hub')||!premiumDoc.includes('Off-Resonance & Phase teaser rule')) fail.push('PREMIUM_LABS.md is missing v12.0 Hub / Off-Resonance contracts.');
 if(!html.includes('/* v13.0 Premium workspace + challenge mode */')||!html.includes('body.nav-premium #cockpit{display:block!important}')||!html.includes('MR Command Center · Premium workspace')) fail.push('v13.0 dedicated Premium workspace UI is incomplete.');
-if((documentHtml.match(/data-workspace-tab="premium" onclick="openPremiumWorkspace\(\)"/g)||[]).length!==1||!documentHtml.includes('data-workspace-tab="more"')) fail.push('v27 Premium/More navigation contract is incomplete.');
+if((documentHtml.match(/data-workspace-tab="premium" onclick="openPremiumWorkspace\(\)"/g)||[]).length!==1||!documentHtml.includes('data-workspace-tab="more"')) fail.push('v28 Premium/More navigation contract is incomplete.');
 if(!script.includes("const premiumDeepRoutes={diffusion:'premium-diffusion'")||!script.includes("if(id==='premium'){openPremiumWorkspace(false,true,false);return}")||!script.includes('openPremiumAccess(premiumLab,false)')) fail.push('v13.0 Premium deep routing is incomplete.');
 if(!html.includes('id="premiumChallengeZone"')||!html.includes('id="premiumChallengeOptions"')||!script.includes('const premiumChallengeBank=[')||!script.includes('function answerPremiumChallenge(choice)')||!script.includes('function nextPremiumChallenge()')) fail.push('v13.0 Premium Concept Challenge is incomplete.');
 if((script.match(/\{lab:'(?:diffusion|parallel|rfpower|gradient|offresonance)'/g)||[]).length!==5) fail.push('Premium Concept Challenge must cover all five Premium preview models.');
@@ -206,7 +206,7 @@ if(!appCss.includes('/* v16.0 Runtime modularization')||!script.includes('/* v16
 if(!script.includes("build:'28.0'")) fail.push('Current workspace export build marker is not v28.0.');
 if(documentHtml.length>180000) fail.push('v16.0 HTML shell regression: index.html is unexpectedly large.');
 if(appCss.length<150000||script.length<150000) fail.push('v16.0 extracted runtime assets look incomplete.');
-if(!sw.includes("'/app.css?v=28.0'")||!sw.includes("'/app.js?v=28.0'")||!sw.includes("'/v27.css?v=28.0'")||!sw.includes("'/v27.js?v=28.0'")) fail.push('v28.0 runtime assets are missing from the offline core cache.');
+if(!sw.includes("'/app.css?v=28.0'")||!sw.includes("'/app.js?v=28.0'")||!sw.includes("'/signal-frame.css?v=28.0'")||!sw.includes("'/signal-frame.js?v=28.0'")) fail.push('v28.0 runtime assets are missing from the offline core cache.');
 if(!vercelConfig.includes('X-Content-Type-Options')||!vercelConfig.includes('X-Frame-Options')||!vercelConfig.includes('Referrer-Policy')||!vercelConfig.includes('Permissions-Policy')||!vercelConfig.includes('must-revalidate')) fail.push('v16.0 Vercel public hardening headers are incomplete.');
 if(!script.includes('const MRCC_RETIRED_DATA_KEYS=')||!script.includes('function clearRetiredLegacyData')||!html.includes('id="retiredDataSummary"')||!html.includes('id="clearRetiredDataBtn"')) fail.push('v15.0 retired-data controls are incomplete.');
 for(const retiredFn of ['renderPackLibrary','renderCaseLab','renderPackStudio','renderStudyReport','renderStudySession','renderContinueLearning','renderLearningProgress','scoreQuiz']){if(script.includes('function '+retiredFn+'(')) fail.push('Retired runtime function returned: '+retiredFn);}
@@ -217,7 +217,7 @@ if(!privacy.includes('Privacy & Data — MR Command Center')||!privacy.includes(
 if(!robots.includes('User-agent: *')||!robots.includes('Sitemap: https://mr-command-center.vercel.app/sitemap.xml')) fail.push('robots.txt is missing public crawl/sitemap markers.');
 if(!sitemap.includes('https://mr-command-center.vercel.app/about.html')||!sitemap.includes('https://mr-command-center.vercel.app/privacy.html')) fail.push('sitemap.xml is missing public pages.');
 if(!html.includes('@media(prefers-reduced-motion:reduce)')) fail.push('Native reduced-motion fallback is missing.');
-if(!documentHtml.includes('v27-resonance-scene')||!documentHtml.includes('homeArtifactPreview')||!documentHtml.includes('homeTimingPreview')||!documentHtml.includes('homeMotionPreview')||!documentHtml.includes('homeSpatialPreview')) fail.push('v27 Labs Home visual system is incomplete.');
+if(!documentHtml.includes('v27-resonance-scene')||!documentHtml.includes('homeArtifactPreview')||!documentHtml.includes('homeTimingPreview')||!documentHtml.includes('homeMotionPreview')||!documentHtml.includes('homeSpatialPreview')) fail.push('v28 Labs Home visual system is incomplete.');
 if((html.match(/<span>Search workspace<\/span><kbd>\/<\/kbd>/g)||[]).length!==1) fail.push('Keyboard shortcut list contains a duplicate Search workspace entry.');
 if(!html.includes('aria-label="Search tools and problems"')) fail.push('Quick Console search field lacks an accessible name.');
 if(!html.includes('id="homeResumeLabBtn"')||!script.includes("mrcc_last_lab")||!script.includes('function resumeLastLab')) fail.push('Persistent last-Lab resume flow is missing.');
@@ -302,8 +302,8 @@ if(!script.includes("document.title='MR Command Center — MRI Labs'")||!html.in
 if(!html.includes('body.nav-home #cockpit{display:block!important}')||!html.includes('.creator-zone,.practice-zone,.reference-onboarding{display:none!important}')) fail.push('Labs home visibility or retired secondary surfaces are incorrect.');
 if(script.includes('retiredV7Commands')) fail.push('Obsolete retired-command search filter should not remain after v15 cleanup.');
 if(!script.includes("if(id==='learn'){openWorkspaceView('challenges',true);return}")) fail.push('Retired Micro-Lab route does not redirect to current Challenges.');
-if(!documentHtml.includes('data-workspace-tab="home"')||!documentHtml.includes('data-workspace-tab="labs"')||!documentHtml.includes('data-workspace-tab="protocol"')||!documentHtml.includes('data-workspace-tab="reference"')||!documentHtml.includes('data-workspace-tab="premium"')||!documentHtml.includes('data-workspace-tab="more"')) fail.push('v27 workspace navigation is incomplete.');
-if(!documentHtml.includes('onclick="openLab(\'kspace\')"')||!documentHtml.includes('data-v27-shared-switcher')) fail.push('K-Space Lab is not fully activated across v27 Labs navigation and home.');
+if(!documentHtml.includes('data-workspace-tab="home"')||!documentHtml.includes('data-workspace-tab="labs"')||!documentHtml.includes('data-workspace-tab="protocol"')||!documentHtml.includes('data-workspace-tab="reference"')||!documentHtml.includes('data-workspace-tab="premium"')||!documentHtml.includes('data-workspace-tab="more"')) fail.push('v28 workspace navigation is incomplete.');
+if(!documentHtml.includes('onclick="openLab(\'kspace\')"')||!documentHtml.includes('data-v27-shared-switcher')) fail.push('K-Space Lab is not fully activated across v28 Labs navigation and home.');
 const contrastModelPos=script.indexOf('const contrastMaterialsModel='),contrastRestorePos=script.lastIndexOf('restoreContrastState();');
 const kspaceModelPos=script.indexOf('const KS_N=32'),kspaceRestorePos=script.lastIndexOf('restoreKspaceState();');
 if(contrastModelPos<0||contrastRestorePos<=contrastModelPos||kspaceModelPos<0||kspaceRestorePos<=kspaceModelPos) fail.push('Contrast/K-Space state restoration runs before the lab engines initialize.');
@@ -381,9 +381,9 @@ if(!script.includes('const sequenceDnaDimensions=')||!script.includes('const seq
 if(!appCss.includes('/* v26.0 Sequence DNA Builder */')||!appCss.includes('.seqfam-dna-controls')||!appCss.includes('.seqfam-dna-results')||!appCss.includes('.seqfam-dna-ambiguity')) fail.push('v26.0 Sequence DNA responsive styling is incomplete.');
 if((script.match(/^[ ]{2}[a-z0-9]+:\{prep:/gm)||[]).length<13||!script.includes("radial:{prep:['none'],echo:['refocusTrain'],readout:['blade']")||!script.includes("dixon:{prep:['waterfat'],echo:['gradient','refocusTrain']")||!script.includes("ir:{prep:['inversion'],echo:['spin','refocusTrain']")) fail.push('v28.0 Sequence DNA family profile coverage is incomplete.');
 
-if(!fs.existsSync('v27.js')||!fs.existsSync('v27.css')) fail.push('v28.0 completion assets are missing.');
-if(!fs.readFileSync('v27.js','utf8').includes('Which phase lines are vulnerable?')||!fs.readFileSync('v27.js','utf8').includes('Match the evidence before choosing the label')||!fs.readFileSync('v27.js','utf8').includes('sfRange')) fail.push('v28.0 interaction/runtime layer is incomplete.');
-if(!fs.readFileSync('v27.css','utf8').includes('v28.0 Signal Frame')) fail.push('v28.0 Signal Frame visual layer is missing.');
+if(!fs.existsSync('signal-frame.js')||!fs.existsSync('signal-frame.css')) fail.push('v28.0 completion assets are missing.');
+if(!fs.readFileSync('signal-frame.js','utf8').includes('Which phase lines are vulnerable?')||!fs.readFileSync('signal-frame.js','utf8').includes('Match the evidence before choosing the label')||!fs.readFileSync('signal-frame.js','utf8').includes('sfRange')) fail.push('v28.0 interaction/runtime layer is incomplete.');
+if(!fs.readFileSync('signal-frame.css','utf8').includes('v28.0 Signal Frame')) fail.push('v28.0 completion visual layer is missing.');
 if(fail.length){
   console.error('\nMR Command Center validation failed:\n');
   for(const item of fail) console.error('- '+item);

@@ -7,8 +7,8 @@ v28.0 — Signal Frame
 
 ## Production
 - Entry point: `index.html`
-- Application stylesheets: `app.css` + `v27.css`
-- Application runtime: `app.js` + `v27.js`
+- Application stylesheets: `app.css` + `signal-frame.css`
+- Application runtime: `app.js` + `signal-frame.js`
 - Static PWA manifest: `manifest.webmanifest`
 - Offline worker: `sw.js`
 - Vercel response headers: `vercel.json`
@@ -60,11 +60,12 @@ Each release updates the application, validator, and service-worker cache marker
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. The Premium workspace currently exposes five public concept previews: Diffusion & b-Value, Parallel Imaging, RF Power Concepts, Gradient Encoding Concepts, and Off-Resonance & Phase.
 
 ### v28.0 release notes
-- Unified the entire application under the Signal Frame visual system: Home, all Labs, Sequence Families, Reference, Premium, Settings, and public pages.
-- Replaced the previous Resonance Core logo with the clearer Flux Monogram.
-- Added spectral range fills, pointer-responsive instrument surfaces, consistent hover/focus behavior, and restrained section-entry motion.
-- Standardized headers, cards, model-boundary notices, controls, spacing, and mobile presentation.
-- Retuned teaching canvas accents toward cyan, indigo, and violet so the instruments match the surrounding interface.
+- Rebuilt MR Command Center around Signal Frame, one futuristic-modern visual system across Home, Labs, Sequence Families, Reference, Premium, Settings, and public pages.
+- Replaced the Resonance Core identity with the cleaner Flux Monogram.
+- Standardized section headers, card depth, controls, model-boundary notices, navigation states, and responsive spacing.
+- Added spectral range fills and pointer-reactive instrument surfaces for a more tactile interface.
+- Retuned interactive runtime colors toward cyan, indigo, and violet so embedded MRI visuals match the surrounding UI.
+- Replaced the v27 presentation/runtime layer with signal-frame.css and signal-frame.js.
 
 ### v27.1 release notes
 - Finished the v27 visual refactor with stronger MRI-specific Home and Lab surfaces.

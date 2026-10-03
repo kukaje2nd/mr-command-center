@@ -1,5 +1,5 @@
 const CACHE_NAME = 'mrcc-v28.0.0';
-const CORE_ASSETS = ['/', '/index.html', '/app.css?v=28.0', '/v27.css?v=28.0', '/app.js?v=28.0', '/v27.js?v=28.0', '/manifest.webmanifest', '/icon.svg', '/brand-mark.svg', '/premium-products.json', '/about.html', '/privacy.html', '/public-v27.css', '/404.html', '/og-v28.svg'];
+const CORE_ASSETS = ['/', '/index.html', '/app.css?v=28.0', '/signal-frame.css?v=28.0', '/app.js?v=28.0', '/signal-frame.js?v=28.0', '/manifest.webmanifest', '/icon.svg', '/brand-mark.svg', '/premium-products.json', '/about.html', '/privacy.html', '/public-signal.css?v=28.0', '/404.html', '/og-v28.svg'];
 
 self.addEventListener('install', event => {
   event.waitUntil(

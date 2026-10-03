@@ -1,1 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc"><title id="title">MR Command Center Flux Monogram</title><desc id="desc">A geometric MR monogram wrapped by a magnetic-field arc and signal node.</desc><defs><linearGradient id="g" x1="38" y1="42" x2="218" y2="218" gradientUnits="userSpaceOnUse"><stop stop-color="#22e6f5"/><stop offset=".52" stop-color="#5d91ff"/><stop offset="1" stop-color="#a47cff"/></linearGradient></defs><path d="M48 184V72l62 61 51-59v110" fill="none" stroke="url(#g)" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/><path d="M160 75h27c22 0 33 12 33 29 0 18-12 30-34 30h-26m27 0 35 50" fill="none" stroke="url(#g)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><path d="M38 191c22 26 61 39 101 34 54-6 95-39 99-82" fill="none" stroke="url(#g)" stroke-width="5" opacity=".5"/><circle cx="217" cy="52" r="9" fill="#eafaff" stroke="#75eaff" stroke-width="4"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+<title id="title">MR Command Center Flux Monogram</title>
+<desc id="desc">A geometric MR monogram wrapped by magnetic-field arcs and a signal node.</desc>
+<defs>
+<linearGradient id="g" x1="42" y1="44" x2="218" y2="214" gradientUnits="userSpaceOnUse"><stop stop-color="#22e6f5"/><stop offset=".5" stop-color="#5d91ff"/><stop offset="1" stop-color="#a47cff"/></linearGradient>
+<linearGradient id="a" x1="28" y1="214" x2="230" y2="34" gradientUnits="userSpaceOnUse"><stop stop-color="#35e8f1" stop-opacity=".16"/><stop offset=".5" stop-color="#67a5ff"/><stop offset="1" stop-color="#a47cff"/></linearGradient>
+</defs>
+<path d="M48 184V72l61 61 52-59v110" fill="none" stroke="url(#g)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M160 75h28c22 0 32 12 32 29 0 18-12 30-34 30h-25m26 0 35 50" fill="none" stroke="url(#g)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M37 190c24 27 62 39 102 34 54-7 95-39 99-82" fill="none" stroke="url(#a)" stroke-width="5" stroke-linecap="round"/>
+<path d="M34 158c-8-48 19-97 65-119 38-18 85-13 119 12" fill="none" stroke="url(#a)" stroke-width="4" stroke-linecap="round" opacity=".78"/>
+<circle cx="217" cy="52" r="9" fill="#effcff" stroke="#75eaff" stroke-width="4"/>
+<path d="M27 128h26M203 128h26M128 26v21M128 209v21" stroke="#6fe7f4" stroke-width="3" stroke-linecap="round" opacity=".68"/>
+</svg>
