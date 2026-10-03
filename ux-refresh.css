@@ -1735,3 +1735,6 @@ body.ui-reduce-motion .card{transition:none!important}
   .lab-home-card{box-shadow:0 12px 34px rgba(0,0,0,.18)!important}
   body.lab-stage-mode main.shell:before{background-size:26px 26px}
 }
+
+/* Spectral surface anchoring */
+.pref-card{position:relative!important;overflow:hidden!important}
