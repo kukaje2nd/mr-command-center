@@ -2936,3 +2936,29 @@ body.lab-stage-mode .v27-lab-switcher [data-v27-lab]:not(.active) svg{
 body.lab-stage-mode .v27-lab-switcher [data-v27-lab]:hover svg{
   opacity:1
 }
+
+
+/* Visualization palette alignment — identity reaches the actual data wells */
+#contrast .contrast-signal-track{
+  border-color:color-mix(in srgb,var(--lab-accent) 15%,var(--neo-line))!important;
+  background:rgba(4,10,20,.92)!important
+}
+#contrast .contrast-signal-track i{
+  background:linear-gradient(90deg,#7e70ff,var(--lab-accent),var(--lab-accent-2))!important;
+  box-shadow:0 0 14px color-mix(in srgb,var(--lab-accent) 13%,transparent)!important
+}
+#kspace :is(.kspace-canvas-shell,.kspace-psf-shell){
+  border-color:color-mix(in srgb,var(--lab-accent) 24%,var(--neo-line))!important;
+  box-shadow:inset 0 0 36px rgba(0,0,0,.42),0 0 22px rgba(255,209,102,.035)!important
+}
+#motion .motion-history canvas{
+  background:#040812!important
+}
+#artifact .artifact-canvas-shell{
+  border-color:color-mix(in srgb,var(--lab-accent) 24%,var(--neo-line))!important;
+  background:#040711!important;
+  box-shadow:inset 0 0 38px rgba(0,0,0,.46),0 0 24px rgba(217,140,255,.035)!important
+}
+#spatial .spatial-canvas-shell{
+  border-color:color-mix(in srgb,var(--lab-accent) 24%,var(--neo-line))!important
+}
