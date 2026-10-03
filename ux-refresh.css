@@ -4739,3 +4739,50 @@ body.lab-stage-mode :is(
     margin-inline:auto!important
   }
 }
+
+
+/* Adaptive experiment density — presets appear where they help, not where they crowd controls */
+@media (min-width:900px) and (min-height:760px){
+  body.lab-stage-mode :is(.timing-presets,.motion-presets,.contrast-presets){
+    display:none!important
+  }
+  body.lab-stage-mode :is(.kspace-presets,.spatial-presets,.artifact-lab-presets){
+    display:grid!important
+  }
+}
+@media (min-width:1100px) and (min-height:900px){
+  body.lab-stage-mode .contrast-presets{
+    display:grid!important
+  }
+}
+@media (min-width:1280px) and (min-height:960px){
+  body.lab-stage-mode :is(.timing-presets,.motion-presets){
+    display:grid!important
+  }
+}
+
+/* Dense control Labs get a clearer rhythm between primary controls and optional helpers. */
+body.lab-stage-mode :is(.timing-controls-card,.motion-controls-card,.contrast-controls-card){
+  align-content:start!important
+}
+body.lab-stage-mode :is(.timing-controls-card,.motion-controls-card,.contrast-controls-card)>.compare-note,
+body.lab-stage-mode :is(.timing-controls-card,.motion-controls-card,.contrast-controls-card)>.sub{
+  color:#657e90!important
+}
+
+/* Avoid four different footer-like strips competing inside Home cards. */
+.lab-home-card .lab-home-tags{
+  opacity:.82
+}
+@media (max-width:1100px){
+  .lab-home-card .lab-home-tags{
+    display:none!important
+  }
+}
+
+/* On medium screens, let the graphic occupy the space recovered from tags. */
+@media (min-width:700px) and (max-width:1100px){
+  .labs-library>.lab-home-card:not(.lab-home-parameter) .v27-home-preview{
+    min-height:162px!important
+  }
+}
