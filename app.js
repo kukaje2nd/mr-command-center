@@ -88,7 +88,7 @@ function renderWorkspacePortability(){
 }
 function exportWorkspaceBackup(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data);
-  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'27.1',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
+  const payload={format:MRCC_WORKSPACE_BACKUP_FORMAT,schema:MRCC_WORKSPACE_BACKUP_SCHEMA,app:'MR Command Center',build:'28.0',exportedAt:new Date().toISOString(),scope:'active-workspace-only',note:'Educational workspace state only. Keep user-entered labels free of patient identifiers.',data};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),day=new Date().toISOString().slice(0,10);
   a.href=url;a.download='mrcc-workspace-'+day+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   toast('Workspace backup exported · '+st.stored+' data areas');
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v27.1 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v28.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -1524,14 +1524,14 @@ function contrastNullTi(material,tr){
   const t1=Math.max(1,material.t1),ratio=(1+Math.exp(-Math.max(1,tr)/t1))/2;
   return Math.max(0,-t1*Math.log(Math.max(.000001,ratio)));
 }
-const contrastPalette=['#48f0b2','#52d7ff','#b89cff'];
+const contrastPalette=['#27ddef','#6e9cff','#9e7cf7'];
 function contrastCanvasSetup(canvas){
   if(!canvas)return null;const rect=canvas.getBoundingClientRect(),dpr=Math.max(1,Math.min(2,window.devicePixelRatio||1)),w=Math.max(320,Math.round(rect.width||760)),h=Math.max(180,Math.round((canvas.height/canvas.width)*w));
   if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
   const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w,h};
 }
 function contrastDrawAxes(ctx,w,h,yMin,yMax,xLabel){
-  const l=42,r=12,t=12,b=27,pw=w-l-r,ph=h-t-b;ctx.clearRect(0,0,w,h);ctx.strokeStyle='rgba(86,125,114,.38)';ctx.lineWidth=1;ctx.fillStyle='rgba(155,184,175,.72)';ctx.font='11px system-ui';
+  const l=42,r=12,t=12,b=27,pw=w-l-r,ph=h-t-b;ctx.clearRect(0,0,w,h);ctx.strokeStyle='rgba(85,147,190,.28)';ctx.lineWidth=1;ctx.fillStyle='rgba(166,193,211,.76)';ctx.font='11px system-ui';
   for(let i=0;i<=4;i++){const y=t+ph*i/4;ctx.beginPath();ctx.moveTo(l,y);ctx.lineTo(w-r,y);ctx.stroke();const val=(yMax-(yMax-yMin)*i/4).toFixed(1);ctx.fillText(val,5,y+4)}
   ctx.beginPath();ctx.moveTo(l,t);ctx.lineTo(l,h-b);ctx.lineTo(w-r,h-b);ctx.stroke();ctx.fillText('0',l-3,h-8);ctx.fillText(xLabel,w-r-45,h-8);return {l,r,t,b,pw,ph,yMin,yMax};
 }
@@ -1539,13 +1539,13 @@ function contrastDrawRecovery(state){
   const canvas=$('contrastRecoveryCanvas'),setup=contrastCanvasSetup(canvas);if(!setup)return;const {ctx,w,h}=setup,yMin=state.mode==='ir'?-1:0,yMax=1,ax=contrastDrawAxes(ctx,w,h,yMin,yMax,'time');
   const maxT=Math.max(300,state.tr);
   contrastMaterialsModel.forEach((m,idx)=>{ctx.strokeStyle=contrastPalette[idx];ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<=160;i++){const time=maxT*i/160,val=contrastLongitudinalTerm(m,state,time),x=ax.l+ax.pw*i/160,y=ax.t+(yMax-val)/(yMax-yMin)*ax.ph;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke()});
-  const markerT=state.mode==='ir'?state.ti:state.tr,x=ax.l+ax.pw*Math.min(1,markerT/maxT);ctx.strokeStyle=state.mode==='ir'?'rgba(184,156,255,.9)':'rgba(255,226,154,.85)';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x,ax.t);ctx.lineTo(x,h-ax.b);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(225,240,235,.82)';ctx.font='11px system-ui';ctx.fillText(state.mode==='ir'?'TI':'TR',Math.min(w-28,x+4),ax.t+12);
+  const markerT=state.mode==='ir'?state.ti:state.tr,x=ax.l+ax.pw*Math.min(1,markerT/maxT);ctx.strokeStyle=state.mode==='ir'?'rgba(184,156,255,.9)':'rgba(255,226,154,.85)';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x,ax.t);ctx.lineTo(x,h-ax.b);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(233,244,255,.86)';ctx.font='11px system-ui';ctx.fillText(state.mode==='ir'?'TI':'TR',Math.min(w-28,x+4),ax.t+12);
   if(state.mode==='ir'){const zeroY=ax.t+(yMax-0)/(yMax-yMin)*ax.ph;ctx.strokeStyle='rgba(255,255,255,.25)';ctx.beginPath();ctx.moveTo(ax.l,zeroY);ctx.lineTo(w-ax.r,zeroY);ctx.stroke()}
 }
 function contrastDrawDecay(state){
   const canvas=$('contrastDecayCanvas'),setup=contrastCanvasSetup(canvas);if(!setup)return;const {ctx,w,h}=setup,ax=contrastDrawAxes(ctx,w,h,0,1,'TE');
   const maxT=180;contrastMaterialsModel.forEach((m,idx)=>{ctx.strokeStyle=contrastPalette[idx];ctx.lineWidth=2;ctx.beginPath();for(let i=0;i<=160;i++){const time=maxT*i/160,val=contrastTransverseTerm(m,time),x=ax.l+ax.pw*i/160,y=ax.t+(1-val)*ax.ph;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke()});
-  const x=ax.l+ax.pw*Math.min(1,state.te/maxT);ctx.strokeStyle='rgba(82,215,255,.85)';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x,ax.t);ctx.lineTo(x,h-ax.b);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(225,240,235,.82)';ctx.font='11px system-ui';ctx.fillText('TE',Math.min(w-28,x+4),ax.t+12);
+  const x=ax.l+ax.pw*Math.min(1,state.te/maxT);ctx.strokeStyle='rgba(82,215,255,.85)';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x,ax.t);ctx.lineTo(x,h-ax.b);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(233,244,255,.86)';ctx.font='11px system-ui';ctx.fillText('TE',Math.min(w-28,x+4),ax.t+12);
 }
 function contrastFactorSpread(parts,key){const vals=parts.map(x=>key==='longitudinal'?Math.abs(x[key]):x[key]),mx=Math.max(...vals),mn=Math.min(...vals);return mx-mn}
 function renderContrastDeep(state,signals){
@@ -1938,12 +1938,12 @@ function drawMotionImage(canvasId,real,imag=null){
   const c=$(canvasId);if(!c)return;const ctx=c.getContext('2d'),n=KS_N,cell=c.width/n;let vals,max=0;
   if(imag){vals=new Float64Array(n*n);for(let i=0;i<vals.length;i++){vals[i]=Math.hypot(real[i],imag[i]);if(vals[i]>max)max=vals[i]}}
   else{vals=real;for(let i=0;i<vals.length;i++)if(vals[i]>max)max=vals[i]}
-  ctx.fillStyle='#030706';ctx.fillRect(0,0,c.width,c.height);
+  ctx.fillStyle='#030711';ctx.fillRect(0,0,c.width,c.height);
   for(let y=0;y<n;y++)for(let x=0;x<n;x++){const q=max?Math.max(0,vals[y*n+x])/max:0,g=Math.max(0,Math.min(255,Math.round(Math.pow(q,.86)*255)));ctx.fillStyle='rgb('+g+','+g+','+g+')';ctx.fillRect(x*cell,y*cell,Math.ceil(cell),Math.ceil(cell))}
 }
 function drawMotionHistory(state,acq){
   const c=$('motionHistoryCanvas');if(!c)return;const ctx=c.getContext('2d'),w=c.width,h=c.height,pad=18,mid=h/2,max=Math.max(1,state.amplitude);
-  ctx.clearRect(0,0,w,h);ctx.fillStyle='#050b09';ctx.fillRect(0,0,w,h);ctx.strokeStyle='rgba(255,255,255,.10)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,mid);ctx.lineTo(w-pad,mid);ctx.stroke();
+  ctx.clearRect(0,0,w,h);ctx.fillStyle='#040812';ctx.fillRect(0,0,w,h);ctx.strokeStyle='rgba(255,255,255,.10)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,mid);ctx.lineTo(w-pad,mid);ctx.stroke();
   ctx.strokeStyle='rgba(82,215,255,.15)';for(let i=0;i<5;i++){const x=pad+i*(w-2*pad)/4;ctx.beginPath();ctx.moveTo(x,12);ctx.lineTo(x,h-12);ctx.stroke()}
   ctx.strokeStyle='#ff9c7c';ctx.lineWidth=2;ctx.beginPath();acq.dispByRank.forEach((d,i)=>{const x=pad+i*(w-2*pad)/(KS_N-1),y=mid-(d/max)*(h*.38);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();
   const cx=pad+acq.centerRank*(w-2*pad)/(KS_N-1);ctx.strokeStyle='#52d7ff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx,10);ctx.lineTo(cx,h-10);ctx.stroke();ctx.fillStyle='#cfefff';ctx.font='11px system-ui';ctx.fillText('k-space center',Math.min(w-100,cx+5),18);
@@ -2010,7 +2010,7 @@ function kspaceMaskPsf(masked){
   return {mag,peak,sideRatio:peak?side/peak:0,halfCount};
 }
 function drawKspacePsf(masked){
-  const c=$('ksPsfCanvas');if(!c)return null;const psf=kspaceMaskPsf(masked),ctx=c.getContext('2d'),n=KS_N,cell=c.width/n;ctx.fillStyle='#030706';ctx.fillRect(0,0,c.width,c.height);
+  const c=$('ksPsfCanvas');if(!c)return null;const psf=kspaceMaskPsf(masked),ctx=c.getContext('2d'),n=KS_N,cell=c.width/n;ctx.fillStyle='#030711';ctx.fillRect(0,0,c.width,c.height);
   for(let vy=0;vy<n;vy++)for(let vx=0;vx<n;vx++){const x=(vx+n/2)%n,y=(vy+n/2)%n,i=y*n+x,q=psf.peak?psf.mag[i]/psf.peak:0,g=Math.round(Math.pow(q,.45)*255);ctx.fillStyle='rgb('+Math.round(g*.78)+','+Math.round(g*.72)+','+Math.round(g*.38)+')';ctx.fillRect(vx*cell,vy*cell,Math.ceil(cell),Math.ceil(cell))}
   return psf;
 }
@@ -2080,7 +2080,7 @@ function kspaceTeachingCopy(state){
 function drawKspaceMagnitude(masked){
   const c=$('ksKspaceCanvas');if(!c)return;const ctx=c.getContext('2d'),n=KS_N,cell=c.width/n;let max=0,vals=new Float64Array(n*n);
   for(let y=0;y<n;y++)for(let x=0;x<n;x++){const src=y*n+x,mag=Math.hypot(masked.re[src],masked.im[src]),v=Math.log1p(mag);vals[src]=v;if(masked.mask[src]&&v>max)max=v}
-  ctx.fillStyle='#050b09';ctx.fillRect(0,0,c.width,c.height);
+  ctx.fillStyle='#040812';ctx.fillRect(0,0,c.width,c.height);
   for(let vy=0;vy<n;vy++)for(let vx=0;vx<n;vx++){
     const x=(vx+n/2)%n,y=(vy+n/2)%n,i=y*n+x,on=masked.mask[i],q=max?vals[i]/max:0,g=on?Math.round(18+220*Math.pow(q,.62)):8;
     ctx.fillStyle=on?'rgb('+Math.round(g*.55)+','+Math.round(g*.82)+','+g+')':'rgb(8,14,12)';
@@ -2091,7 +2091,7 @@ function drawKspaceMagnitude(masked){
 function drawKspaceImage(masked){
   const c=$('ksImageCanvas');if(!c)return;const ctx=c.getContext('2d'),inv=kspaceDft2D(masked.re,true,masked.im),n=KS_N,cell=c.width/n;let max=0,vals=new Float64Array(n*n);
   for(let i=0;i<vals.length;i++){vals[i]=Math.hypot(inv.re[i],inv.im[i]);if(vals[i]>max)max=vals[i]}
-  ctx.fillStyle='#030706';ctx.fillRect(0,0,c.width,c.height);
+  ctx.fillStyle='#030711';ctx.fillRect(0,0,c.width,c.height);
   for(let y=0;y<n;y++)for(let x=0;x<n;x++){const q=max?vals[y*n+x]/max:0,g=Math.max(0,Math.min(255,Math.round(Math.pow(q,.86)*255)));ctx.fillStyle='rgb('+g+','+g+','+g+')';ctx.fillRect(x*cell,y*cell,Math.ceil(cell),Math.ceil(cell))}
 }
 function persistKspaceState(state){try{localStorage.setItem('mrcc_kspace_current',JSON.stringify({...state,savedAt:new Date().toISOString()}))}catch(e){}}
