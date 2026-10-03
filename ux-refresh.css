@@ -2094,3 +2094,43 @@ body.lab-stage-mode :is(
     min-height:58px!important
   }
 }
+
+
+/* Canvas integrity — flexible wells, undistorted square image planes */
+body.lab-stage-mode :is(.kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell){
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important
+}
+body.lab-stage-mode :is(
+  #ksKspaceCanvas,#ksImageCanvas,#spWorldCanvas,#spReconCanvas,#artifactCanvas
+){
+  display:block!important;
+  width:auto!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  aspect-ratio:1 / 1!important;
+  object-fit:contain!important;
+  margin:auto!important
+}
+body.lab-stage-mode .motion-image-shell{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important
+}
+body.lab-stage-mode :is(#motionReferenceCanvas,#motionResultCanvas){
+  width:auto!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  aspect-ratio:1 / 1!important;
+  object-fit:contain!important;
+  margin:auto!important
+}
+
+/* Home preview bitmap resolution follows the rendered 122px well; no CSS stretch. */
+.v27-home-preview,
+.v27-home-preview canvas{
+  height:122px!important
+}
