@@ -145,7 +145,7 @@ function relocateDiagnostics(){const adv=document.querySelector('.v27-advanced-s
 document.addEventListener('input',e=>{const m=CONTROL_MAP[e.target?.id];if(m){lastChange[m[0]]=m[1];renderDeep()}},{passive:true});
 document.addEventListener('change',e=>{const m=CONTROL_MAP[e.target?.id];if(m){lastChange[m[0]]=m[1];renderDeep()}},{passive:true});
 const oldRender=window.renderSequenceDna;if(typeof oldRender==='function')window.renderSequenceDna=function(){const r=oldRender.apply(this,arguments);requestAnimationFrame(dnaMatrix);return r};
-function boot(){document.documentElement.dataset.mrccRelease='28.0';relocateDiagnostics();renderDeep();setTimeout(renderDeep,120);setTimeout(renderDeep,500)}
+function boot(){document.documentElement.dataset.mrccRelease='28.1';relocateDiagnostics();renderDeep();setTimeout(renderDeep,120);setTimeout(renderDeep,500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 ;(()=>{'use strict';
@@ -154,6 +154,19 @@ function sfRefresh(){document.querySelectorAll('input[type="range"]').forEach(sf
 document.addEventListener('input',e=>{if(e.target?.type==='range')sfRange(e.target)},{passive:true});
 document.addEventListener('change',e=>{if(e.target?.type==='range')sfRange(e.target)},{passive:true});
 const sfObs=new MutationObserver(m=>{if(m.some(x=>x.type==='childList'))requestAnimationFrame(sfRefresh)});
-function sfBoot(){document.documentElement.dataset.mrccRelease='28.0';sfRefresh();sfObs.observe(document.body,{subtree:true,childList:true});setTimeout(sfRefresh,300)}
+function sfBoot(){document.documentElement.dataset.mrccRelease='28.1';sfRefresh();sfObs.observe(document.body,{subtree:true,childList:true});setTimeout(sfRefresh,300)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sfBoot,{once:true});else sfBoot();
+})();
+;(()=>{'use strict';
+const pulseTargets='.comparecard,.kpi,.result,.state,.v27-intel-cell,.v271-analysis,.contrast-summary,.timing-summary,.motion-summary>div,.kspace-readouts>div,.spatial-axis-card';
+function sfPulse(el){if(!el)return;el.classList.remove('sf-updated');void el.offsetWidth;el.classList.add('sf-updated');setTimeout(()=>el.classList.remove('sf-updated'),520)}
+function sfWakeFromControl(control){
+  const section=control.closest('.section');if(!section)return;
+  const near=control.closest('.card')||section;
+  const output=control.parentElement?.querySelector('output')||control.closest('.field,.sliderline,.contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider')?.querySelector('output');
+  sfPulse(output||near);
+  const visible=section.querySelectorAll(pulseTargets);for(let i=0;i<Math.min(visible.length,3);i++)sfPulse(visible[i]);
+}
+document.addEventListener('input',e=>{if(e.target?.matches('input[type="range"],input[type="number"]'))requestAnimationFrame(()=>sfWakeFromControl(e.target))},{passive:true});
+document.addEventListener('change',e=>{if(e.target?.matches('select,input[type="checkbox"],input[type="radio"]'))requestAnimationFrame(()=>sfWakeFromControl(e.target))},{passive:true});
 })();

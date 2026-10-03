@@ -3,7 +3,7 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v28.0 — Signal Frame
+v28.1 — Signal Frame
 
 ## Production
 - Entry point: `index.html`
@@ -58,6 +58,12 @@ Each release updates the application, validator, and service-worker cache marker
 
 ## Product direction
 Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. The Premium workspace currently exposes five public concept previews: Diffusion & b-Value, Parallel Imaging, RF Power Concepts, Gradient Encoding Concepts, and Off-Resonance & Phase.
+
+### v28.1 release notes
+- Finished the deep visual cohesion pass so KPI cards, Parameter reference/deep analysis, Sequence DNA internals, image shells, Reference tools, checklists, Premium internals, and status surfaces all use Signal Frame.
+- Added subtle control-response feedback for live readouts while preserving reduced-motion behavior.
+- Standardized dense control rows, states, result blocks, focus navigation, and mobile layouts.
+- Kept the new Flux Monogram and the v28 cyan / indigo / violet instrument palette.
 
 ### v28.0 release notes
 - Rebuilt MR Command Center around Signal Frame, one futuristic-modern visual system across Home, Labs, Sequence Families, Reference, Premium, Settings, and public pages.
