@@ -4786,3 +4786,138 @@ body.lab-stage-mode :is(.timing-controls-card,.motion-controls-card,.contrast-co
     min-height:162px!important
   }
 }
+
+
+/* Chroma cleanup — remove the last visible legacy-green islands */
+.workspace-reference-hub{
+  border-color:rgba(109,156,255,.10)!important;
+  background:linear-gradient(150deg,rgba(7,16,29,.94),rgba(4,10,19,.97))!important
+}
+.workspace-reference-links button{
+  border-color:rgba(109,156,255,.14)!important;
+  background:rgba(109,156,255,.025)!important;
+  color:#a9bed0!important
+}
+
+/* Sequence Families owns a cool blue/cyan identity, not the retired green interface. */
+.sequence-family-lab{
+  --sf-accent:#6d9cff!important;
+  --seq-accent:#6d9cff!important
+}
+.seqfam-filters button,.seqfam-quick-aliases button{
+  border-color:rgba(109,156,255,.13)!important;
+  background:rgba(109,156,255,.018)!important;
+  color:#829db3!important
+}
+.seqfam-filters button:hover,.seqfam-quick-aliases button:hover{
+  border-color:rgba(85,232,255,.23)!important;
+  color:#cfeaf5!important
+}
+.seqfam-filters button.active{
+  border-color:rgba(85,232,255,.28)!important;
+  background:linear-gradient(135deg,rgba(109,156,255,.09),rgba(85,232,255,.055))!important;
+  color:#e4f8ff!important
+}
+.seqfam-family{
+  border-color:rgba(109,156,255,.10)!important;
+  background:linear-gradient(155deg,rgba(8,18,32,.93),rgba(5,11,21,.97))!important
+}
+.seqfam-family.active{
+  border-color:rgba(85,232,255,.30)!important;
+  box-shadow:inset 0 0 0 1px rgba(85,232,255,.035)!important
+}
+.seqfam-family-code{
+  border-color:rgba(109,156,255,.18)!important;
+  color:#a9c6ff!important;
+  background:rgba(109,156,255,.035)!important
+}
+.seqfam-tags span,.seqfam-dna span{
+  border-color:rgba(109,156,255,.10)!important;
+  color:#718da2!important;
+  background:rgba(255,255,255,.003)!important
+}
+.seqfam-challenge-prompt,.seqfam-translator-result{
+  border-color:rgba(109,156,255,.12)!important;
+  background:rgba(6,14,26,.78)!important;
+  color:#e5f2fb!important
+}
+.seqfam-challenge-choices button,
+.seqfam-challenge-actions button,
+.seqfam-dna-actions button,.seqfam-dna-quick button,.seqfam-dna-footer button{
+  border-color:rgba(109,156,255,.13)!important;
+  background:rgba(109,156,255,.02)!important;
+  color:#c6d9e7!important
+}
+.seqfam-challenge-choices button:hover:not(:disabled),
+.seqfam-challenge-actions button:hover,
+.seqfam-dna-actions button:hover,.seqfam-dna-quick button:hover,.seqfam-dna-footer button:hover{
+  border-color:rgba(85,232,255,.26)!important;
+  background:rgba(85,232,255,.035)!important
+}
+.seqfam-dna-match,.seqfam-map-grid>div{
+  border-color:rgba(109,156,255,.08)!important;
+  background:rgba(255,255,255,.003)!important
+}
+.seqfam-dna-score{
+  border-color:rgba(109,156,255,.09)!important;
+  background:#050b16!important
+}
+.seqfam-dna-score i{
+  background:linear-gradient(90deg,#6d9cff,#55e8ff)!important
+}
+
+/* Premium access/challenge surfaces stay violet-family and neutral-dark. */
+.premium-access-bar,.premium-access-matrix,.premium-readiness,
+.premium-security,.premium-challenge-card{
+  border-color:rgba(165,140,255,.13)!important;
+  background:linear-gradient(150deg,rgba(11,17,34,.95),rgba(5,11,23,.98))!important
+}
+.premium-access-action,.premium-challenge-actions button{
+  border-color:rgba(165,140,255,.16)!important;
+  background:rgba(165,140,255,.025)!important;
+  color:#d8cff7!important
+}
+.premium-challenge-options button{
+  border-color:rgba(165,140,255,.11)!important;
+  background:rgba(255,255,255,.005)!important;
+  color:#c6d5e1!important
+}
+.premium-challenge-options button:hover:not(:disabled){
+  border-color:rgba(165,140,255,.29)!important;
+  background:rgba(165,140,255,.045)!important
+}
+.premium-security ol{
+  color:#8298aa!important
+}
+
+/* Continuity and helper actions use the current Lab accent instead of generic green. */
+.lab-continuity-actions button{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 18%,var(--neo-line))!important;
+  background:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 3%,rgba(6,14,26,.96))!important;
+  color:#c6d9e7!important
+}
+.lab-continuity-actions button.secondary{
+  border-color:rgba(126,196,239,.08)!important;
+  background:rgba(255,255,255,.004)!important;
+  color:#8198aa!important
+}
+
+/* Deep-study modules inherit their local Lab accent if they are opened outside focused mode. */
+:is(#contrast,#timing,#motion,#kspace,#spatial,#artifact) :is(
+  .contrast-challenge-prompt,.timing-challenge-targets,.motion-challenge-targets,
+  .kspace-challenge-targets,.spatial-challenge-targets,.artifact-challenge-choices
+) button{
+  border-color:color-mix(in srgb,var(--lab-accent) 17%,var(--neo-line))!important;
+  background:color-mix(in srgb,var(--lab-accent) 2.5%,rgba(6,14,26,.96))!important
+}
+
+/* Micro-labels remain secondary without becoming illegible. */
+.lab-home-tags span{
+  font-size:.54rem!important
+}
+body.lab-stage-mode .v27-intel-cell small{
+  font-size:.52rem!important
+}
+body.lab-stage-mode .v27-intel-cell span{
+  font-size:.60rem!important
+}
