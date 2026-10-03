@@ -2203,3 +2203,38 @@ body.lab-stage-mode main.shell{
     display:none!important
   }
 }
+
+
+/* Inner instrument consistency — remove legacy green/olive surfaces from focused Labs */
+body.lab-stage-mode :is(
+  .contrast-material,
+  .timing-summary>div,
+  .motion-history,
+  .motion-image-panel,
+  .motion-summary>div,
+  .kspace-readouts>div,
+  .spatial-readouts>div,
+  .artifact-lab-readout
+){
+  border-color:color-mix(in srgb,var(--lab-accent,#55e8ff) 16%,var(--neo-line))!important;
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--lab-accent,#55e8ff) 2.5%,rgba(8,18,32,.94)),rgba(4,10,20,.96))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.014)!important
+}
+body.lab-stage-mode .contrast-material-meta span{
+  border-color:color-mix(in srgb,var(--lab-accent,#55e8ff) 14%,var(--neo-line))!important;
+  background:rgba(255,255,255,.008)!important;
+  color:#839bad!important
+}
+body.lab-stage-mode .contrast-material-head strong,
+body.lab-stage-mode .timing-summary b,
+body.lab-stage-mode .motion-summary b,
+body.lab-stage-mode .artifact-lab-readout b{
+  color:color-mix(in srgb,var(--lab-accent,#55e8ff) 58%,#f1f9ff)!important;
+  text-shadow:0 0 14px color-mix(in srgb,var(--lab-accent,#55e8ff) 8%,transparent)
+}
+body.lab-stage-mode .motion-history-copy,
+body.lab-stage-mode .artifact-lab-readout small,
+body.lab-stage-mode .artifact-lab-readout span{
+  color:#7f97a8!important
+}
