@@ -77,10 +77,57 @@ const CONTROL_MAP={
  artifactSelect:['artifact','artifact evidence pattern'],artifactStrength:['artifact','artifact strength'],artifactDirection:['artifact','display / encoding direction']
 };
 const lastChange={};
+const resultSnapshots={};
+let interactionBase=null;
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const pct=v=>(Math.round(v*1000)/10)+'%';
 const delta=v=>{const n=Math.round((v-1)*100);return (n>0?'+':'')+n+'%'};
+const signed=(v,d=1,unit='')=>{const n=Number(v)||0,eps=Math.pow(10,-d)/2;if(Math.abs(n)<eps)return '0'+unit;return (n>0?'+':'')+n.toFixed(d)+unit};
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function labResultSnapshot(lab){
+  try{
+    if(lab==='parameter'){const m=sandboxMetrics(sandboxState());return{detail:m.detail*100,snr:m.snr*100,time:m.time*100,voxel:m.voxel}}
+    if(lab==='contrast'){const s=contrastState(),sig=contrastMaterialsModel.map(m=>contrastSignal(m,s)),mx=Math.max(...sig,.000001),mn=Math.min(...sig),bi=sig.indexOf(mx);return{spread:(mx-mn)/mx*100,bright:contrastMaterialsModel[bi]?.name||'—'}}
+    if(lab==='timing'){const m=timingMetrics(timingState());return{center:m.effectiveTe,time:m.timeSec,trains:m.trains,span:m.trainSpan}}
+    if(lab==='motion'){const s=motionState(),a=motionAcquire(s);return{affected:a.affected,center:Math.abs(a.centerShift),peak:a.peak}}
+    if(lab==='kspace'){const s=kspaceState(),m=kspaceApplyMask(s),e=kspaceEnergyStats(m),p=kspaceMaskPsf(m);return{samples:m.retained*100,energy:e.energyRetained*100,side:p.sideRatio*100}}
+    if(lab==='spatial'){const s=spatialState(),m=spatialMetrics(s);return{read:m.readPixel,phase:m.phasePixel,burden:m.sampleBurden*100,wrap:(m.readWrap?1:0)+(m.phaseWrap?1:0)}}
+    if(lab==='artifact'){const s=artifactLabState();return{strength:s.strength,mode:s.mode,direction:s.direction}}
+  }catch(e){}
+  return null;
+}
+function labDeltaText(lab,prev,now){
+  if(!prev||!now)return'';
+  if(lab==='parameter')return 'detail '+signed(now.detail-prev.detail,1,' pts')+' · SNR '+signed(now.snr-prev.snr,1,' pts')+' · time '+signed(now.time-prev.time,1,' pts');
+  if(lab==='contrast'){const bright=prev.bright!==now.bright?' · brightest '+prev.bright.replace('Material ','')+' → '+now.bright.replace('Material ',''):'';return 'spread '+signed(now.spread-prev.spread,1,' pts')+bright}
+  if(lab==='timing')return 'center '+signed(now.center-prev.center,0,' ms')+' · time '+signed(now.time-prev.time,1,' s')+' · trains '+signed(now.trains-prev.trains,0,'');
+  if(lab==='motion')return 'affected '+signed(now.affected-prev.affected,0,' lines')+' · center '+signed(now.center-prev.center,2,' px')+' · peak '+signed(now.peak-prev.peak,2,' px');
+  if(lab==='kspace')return 'samples '+signed(now.samples-prev.samples,1,' pts')+' · energy '+signed(now.energy-prev.energy,1,' pts')+' · side response '+signed(now.side-prev.side,1,' pts');
+  if(lab==='spatial'){const wrap=prev.wrap!==now.wrap?' · wrap axes '+prev.wrap+' → '+now.wrap:'';return 'read pixel '+signed(now.read-prev.read,2,'×')+' · phase pixel '+signed(now.phase-prev.phase,2,'×')+' · burden '+signed(now.burden-prev.burden,1,' pts')+wrap}
+  if(lab==='artifact'){const bits=['strength '+signed(now.strength-prev.strength,0,' pts')];if(prev.mode!==now.mode)bits.push('pattern changed');if(prev.direction!==now.direction)bits.push(prev.direction+' → '+now.direction);return bits.join(' · ')}
+  return'';
+}
+function labForElement(el){
+  const section=el?.closest?.('.section');if(!section)return'';
+  return Object.entries(LAB_SECTION).find(([,id])=>id===section.id)?.[0]||'';
+}
+function pulseLabResult(lab){
+  const section=$(LAB_SECTION[lab]);if(!section)return;
+  const sel={parameter:'#paramModelCard',contrast:'.contrast-output-card',timing:'.timing-output-card',motion:'.motion-output-card',kspace:'.kspace-output-card:last-child',spatial:'.spatial-output-card:last-child',artifact:'.artifact-lab-canvas-card'}[lab];
+  const target=section.querySelector(sel)||section.querySelector('.card');
+  [target,section.querySelector('.v271-analysis')].filter(Boolean).forEach(el=>{el.classList.add('lab-result-updating');clearTimeout(el.__mrccPulse);el.__mrccPulse=setTimeout(()=>el.classList.remove('lab-result-updating'),320)});
+}
+function applyInteractionDelta(lab,now,commit=false){
+  const base=interactionBase?.lab===lab?interactionBase.snapshot:resultSnapshots[lab];
+  const text=labDeltaText(lab,base,now);
+  const intel=document.querySelector('[data-v27-intel="'+lab+'"]');
+  const detail=intel?.querySelector('[data-v27-yd]');
+  if(detail&&text)detail.textContent='Δ from interaction start · '+text;
+  const resultCell=intel?.querySelector('.v27-intel-cell:nth-child(2)');
+  if(resultCell){resultCell.classList.add('sf-updated');clearTimeout(resultCell.__mrccPulse);resultCell.__mrccPulse=setTimeout(()=>resultCell.classList.remove('sf-updated'),360)}
+  pulseLabResult(lab);
+  if(commit||!interactionBase)resultSnapshots[lab]=now;
+}
 
 function host(lab,title,kicker='Lab Intelligence'){
   const intel=document.querySelector('[data-v27-intel="'+lab+'"]'); if(!intel)return null;
@@ -195,14 +242,34 @@ function controlReading(el){
 }
 function noteControlChange(e){
   const m=CONTROL_MAP[e.target?.id];if(!m)return;
-  lastChange[m[0]]=m[1];
-  window.__mrccLastChange={lab:m[0],label:m[1],value:controlReading(e.target)};
+  const lab=m[0],now=labResultSnapshot(lab);
+  lastChange[lab]=m[1];
+  window.__mrccLastChange={lab,label:m[1],value:controlReading(e.target)};
+  applyInteractionDelta(lab,now,e.type==='change');
   renderDeep();
 }
 function relocateDiagnostics(){const adv=document.querySelector('.v27-advanced-settings-grid'),sys=$('offlineBar');if(adv&&sys&&!adv.contains(sys)){const wrap=document.createElement('div');wrap.className='v271-diagnostics';wrap.innerHTML='<h4>System & offline diagnostics</h4><p>Cache, network, runtime self-checks, and offline status.</p>';wrap.appendChild(sys);adv.appendChild(wrap)}}
+document.addEventListener('pointerdown',e=>{
+  if(!document.body.classList.contains('lab-stage-mode'))return;
+  const target=e.target.closest('input,select,button');if(!target||target.closest('.v27-lab-switcher'))return;
+  const mapped=CONTROL_MAP[target.id],lab=mapped?.[0]||labForElement(target);if(!lab)return;
+  interactionBase={lab,snapshot:labResultSnapshot(lab)};
+},{passive:true});
+document.addEventListener('focusin',e=>{
+  if(!document.body.classList.contains('lab-stage-mode'))return;
+  const target=e.target.closest?.('input,select,button');if(!target||target.closest('.v27-lab-switcher'))return;
+  const mapped=CONTROL_MAP[target.id],lab=mapped?.[0]||labForElement(target);if(!lab||interactionBase?.lab===lab)return;
+  interactionBase={lab,snapshot:labResultSnapshot(lab)};
+},{passive:true});
 document.addEventListener('input',noteControlChange,{passive:true});
-document.addEventListener('change',noteControlChange,{passive:true});
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!document.body.classList.contains('lab-stage-mode')||b.closest('.v27-lab-switcher'))return;if(b.closest('.section'))requestAnimationFrame(renderDeep)},{passive:true});
+document.addEventListener('change',e=>{noteControlChange(e);const m=CONTROL_MAP[e.target?.id];if(m)interactionBase=null},{passive:true});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||!document.body.classList.contains('lab-stage-mode')||b.closest('.v27-lab-switcher'))return;
+  const lab=labForElement(b);if(!lab)return;
+  requestAnimationFrame(()=>{const now=labResultSnapshot(lab);applyInteractionDelta(lab,now,true);interactionBase=null;renderDeep()});
+},{passive:true});
+document.addEventListener('pointerup',()=>{if(interactionBase){const now=labResultSnapshot(interactionBase.lab);if(now)resultSnapshots[interactionBase.lab]=now;interactionBase=null}},{passive:true});
+requestAnimationFrame(()=>Object.keys(LAB_SECTION).forEach(lab=>{const snap=labResultSnapshot(lab);if(snap)resultSnapshots[lab]=snap}));
 const oldRender=window.renderSequenceDna;if(typeof oldRender==='function')window.renderSequenceDna=function(){const r=oldRender.apply(this,arguments);requestAnimationFrame(dnaMatrix);return r};
 function boot(){document.documentElement.dataset.mrccRelease='28.1';relocateDiagnostics();renderDeep();setTimeout(renderDeep,120);setTimeout(renderDeep,500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();

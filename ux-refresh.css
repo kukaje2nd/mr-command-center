@@ -3551,3 +3551,309 @@ body.nav-home .routechip{display:none!important}
     font-size:1rem
   }
 }
+
+
+/* Lab Outcome Workbench v2 — primary experiment + unique analysis + immediate delta */
+body.lab-stage-mode main>.section.active-section{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:10px!important
+}
+body.lab-stage-mode main>.section.active-section>.v27-lab-switcher{
+  grid-column:1/-1!important;
+  grid-row:1!important
+}
+body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+  grid-column:1/-1!important;
+  grid-row:3!important;
+  min-height:86px!important;
+  max-height:98px!important
+}
+body.lab-stage-mode main>.section.active-section>.v271-analysis{
+  display:none!important
+}
+
+/* Primary workbench proportions: give the visual result more room than controls. */
+body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+  grid-template-columns:minmax(390px,.66fr) minmax(0,1.34fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode #contrast>.contrast-layout,
+body.lab-stage-mode #timing>.timing-layout{
+  grid-template-columns:minmax(320px,.60fr) minmax(0,1.40fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode #motion>.motion-layout,
+body.lab-stage-mode #artifact>.artifact-lab-grid{
+  grid-template-columns:minmax(300px,.56fr) minmax(0,1.44fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode #kspace>.kspace-layout,
+body.lab-stage-mode #spatial>.spatial-layout{
+  grid-template-columns:minmax(260px,.62fr) repeat(2,minmax(0,1fr))!important;
+  gap:12px!important
+}
+
+/* Roomy cards on normal-height displays; short-screen rules later still win. */
+@media (min-height:720px){
+  body.lab-stage-mode :is(
+    #paramControlsCard,#paramModelCard,
+    .contrast-controls-card,.contrast-output-card,
+    .timing-controls-card,.timing-output-card,
+    .motion-controls-card,.motion-output-card,
+    .kspace-controls-card,.kspace-output-card,
+    .spatial-controls-card,.spatial-output-card,
+    .artifact-lab-controls,.artifact-lab-canvas-card
+  ){
+    padding:16px!important
+  }
+  body.lab-stage-mode :is(
+    .contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider,
+    #paramControlsCard .sliderline
+  ){padding:6px 0!important}
+}
+
+/* Parameter: bring the causal consequence chain back into the live model without restoring lesson-page clutter. */
+body.lab-stage-mode #paramModelCard{
+  display:grid!important;
+  grid-template-rows:auto auto minmax(0,1fr) auto!important;
+  gap:8px!important
+}
+body.lab-stage-mode #paramModelCard .parameter-deep-cockpit{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important
+}
+body.lab-stage-mode #paramModelCard .parameter-deep-head,
+body.lab-stage-mode #paramModelCard .parameter-causal-grid{
+  display:none!important
+}
+body.lab-stage-mode #paramModelCard .parameter-causal-chain{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr)!important;
+  gap:6px!important;
+  margin:0!important;
+  padding:8px!important;
+  border:1px solid color-mix(in srgb,var(--lab-accent) 15%,var(--neo-line))!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.008)!important
+}
+body.lab-stage-mode #paramModelCard .parameter-causal-chain>div{
+  min-width:0!important;
+  padding:6px 7px!important
+}
+body.lab-stage-mode #paramModelCard .parameter-causal-chain small{font-size:.50rem!important}
+body.lab-stage-mode #paramModelCard .parameter-causal-chain b{font-size:.64rem!important;line-height:1.28!important}
+body.lab-stage-mode #paramModelCard .parameter-causal-chain>i{
+  align-self:center;
+  color:color-mix(in srgb,var(--lab-accent) 58%,#6e8495)!important
+}
+
+/* Immediate result feedback is the strongest cell, with a persistent interaction delta. */
+body.lab-stage-mode .v27-intel-cell:nth-child(2){
+  position:relative;
+  overflow:hidden
+}
+body.lab-stage-mode .v27-intel-cell:nth-child(2):after{
+  content:"LIVE";
+  position:absolute;
+  right:9px;
+  top:8px;
+  color:color-mix(in srgb,var(--lab-accent) 42%,#6d8495);
+  font-size:.45rem;
+  font-weight:900;
+  letter-spacing:.12em
+}
+body.lab-stage-mode .v27-intel-cell:nth-child(2) [data-v27-yd]{
+  color:#a7bdca!important;
+  font-variant-numeric:tabular-nums
+}
+body.lab-stage-mode .v27-intel-cell.sf-updated{
+  border-color:color-mix(in srgb,var(--lab-accent) 48%,var(--neo-line))!important;
+  box-shadow:inset 0 0 24px color-mix(in srgb,var(--lab-accent) 5%,transparent),0 0 20px color-mix(in srgb,var(--lab-accent) 5%,transparent)!important
+}
+body.lab-stage-mode .lab-result-updating{
+  border-color:color-mix(in srgb,var(--lab-accent) 44%,var(--neo-line))!important;
+  box-shadow:
+    inset 0 1px color-mix(in srgb,var(--lab-accent) 18%,transparent),
+    0 0 28px color-mix(in srgb,var(--lab-accent) 5%,transparent),
+    0 18px 52px rgba(0,0,0,.24)!important
+}
+
+/* On roomy screens, use otherwise-empty width for each Lab's own intelligence module. */
+@media (min-width:1360px) and (min-height:720px){
+  body.lab-stage-mode main>.section.active-section{
+    grid-template-columns:minmax(0,1fr) minmax(320px,22vw)!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+    column-gap:12px!important;
+    row-gap:10px!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v27-lab-switcher{
+    grid-column:1/-1!important;
+    grid-row:1!important
+  }
+  body.lab-stage-mode main>.section.active-section>:is(
+    .grid2:has(#paramControlsCard),.contrast-layout,.timing-layout,.motion-layout,
+    .kspace-layout,.spatial-layout,.artifact-lab-grid
+  ){
+    grid-column:1!important;
+    grid-row:2!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v271-analysis{
+    display:flex!important;
+    flex-direction:column!important;
+    grid-column:2!important;
+    grid-row:2!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:100%!important;
+    margin:0!important;
+    overflow:hidden!important;
+    border-color:color-mix(in srgb,var(--lab-accent) 22%,var(--neo-line))!important;
+    background:
+      radial-gradient(320px circle at 84% 0,color-mix(in srgb,var(--lab-accent) 7%,transparent),transparent 70%),
+      linear-gradient(155deg,rgba(8,18,32,.97),rgba(4,10,20,.99))!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    grid-column:1/-1!important;
+    grid-row:3!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    min-height:84px!important;
+    max-height:94px!important
+  }
+  body.lab-stage-mode .v271-analysis-head{
+    flex:0 0 auto!important;
+    padding:11px 12px!important
+  }
+  body.lab-stage-mode .v271-analysis-head h3{
+    font-size:.88rem!important;
+    line-height:1.25!important
+  }
+  body.lab-stage-mode .v271-analysis-head small{font-size:.54rem!important}
+  body.lab-stage-mode .v271-live{font-size:.50rem!important}
+  body.lab-stage-mode .v271-analysis-body{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    padding:10px 11px!important;
+    overflow:hidden!important
+  }
+  body.lab-stage-mode .v271-footnote{
+    margin:7px 0 0!important;
+    font-size:.55rem!important;
+    line-height:1.34!important;
+    color:#748b9b!important
+  }
+  body.lab-stage-mode .v271-callout{
+    margin-top:8px!important;
+    padding:8px 9px!important;
+    border-radius:9px!important
+  }
+  body.lab-stage-mode .v271-callout b{font-size:.70rem!important}
+  body.lab-stage-mode .v271-callout span{font-size:.59rem!important;line-height:1.35!important}
+
+  /* Parameter drivers: the top three isolated contributors only. */
+  body.lab-stage-mode [data-lab="parameter"] .v271-driver-grid{
+    grid-template-columns:1fr!important;
+    gap:6px!important
+  }
+  body.lab-stage-mode [data-lab="parameter"] .v271-driver:nth-child(n+4){display:none!important}
+  body.lab-stage-mode [data-lab="parameter"] .v271-driver{
+    min-height:62px!important;
+    padding:8px!important
+  }
+
+  /* Contrast: local sensitivity should read as a compact instrument stack. */
+  body.lab-stage-mode [data-lab="contrast"] .v271-sensitivity{
+    grid-template-columns:1fr!important;
+    gap:6px!important
+  }
+  body.lab-stage-mode [data-lab="contrast"] .v271-sensitivity>div{padding:9px!important}
+
+  /* Timing and k-space bars stay readable without wasting vertical space. */
+  body.lab-stage-mode :is([data-lab="timing"],[data-lab="kspace"]) .v271-bars{gap:7px!important}
+  body.lab-stage-mode :is([data-lab="timing"],[data-lab="kspace"]) .v271-bar{
+    grid-template-columns:1fr!important;
+    gap:4px!important
+  }
+
+  /* Motion keeps its line-vulnerability map visible as the secondary result. */
+  body.lab-stage-mode [data-lab="motion"] .v271-motion-lines{
+    height:82px!important;
+    margin-top:6px!important
+  }
+  body.lab-stage-mode [data-lab="motion"] .v271-kpis{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:6px!important;
+    margin-top:7px!important
+  }
+  body.lab-stage-mode [data-lab="motion"] .v271-kpis>div{padding:8px!important}
+
+  /* Spatial diagnosis is intentionally two-axis, not generic cards. */
+  body.lab-stage-mode [data-lab="spatial"] .v271-axis-grid{
+    grid-template-columns:1fr!important;
+    gap:7px!important
+  }
+  body.lab-stage-mode [data-lab="spatial"] .v271-axis-grid>div{padding:10px!important}
+
+  /* Artifact matcher: keep the evidence workflow usable without turning the rail into a scroll pane. */
+  body.lab-stage-mode [data-lab="artifact"] .v271-matcher-controls{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:6px!important
+  }
+  body.lab-stage-mode [data-lab="artifact"] .v271-matcher-controls label{
+    gap:3px!important;
+    font-size:.52rem!important
+  }
+  body.lab-stage-mode [data-lab="artifact"] .v271-matcher-controls select{
+    min-height:34px!important;
+    padding:0 6px!important;
+    font-size:.62rem!important
+  }
+  body.lab-stage-mode [data-lab="artifact"] .v271-matcher-results{
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+    margin-top:7px!important
+  }
+  body.lab-stage-mode [data-lab="artifact"] .v271-matcher-results button{
+    min-height:58px!important;
+    padding:7px 8px!important
+  }
+  body.lab-stage-mode [data-lab="artifact"] .v271-matcher-results button:nth-child(n+3){display:none!important}
+  body.lab-stage-mode [data-lab="artifact"] .v271-matcher-results span{
+    display:-webkit-box!important;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden
+  }
+}
+@media (min-width:1700px) and (min-height:760px){
+  body.lab-stage-mode main>.section.active-section{
+    grid-template-columns:minmax(0,1fr) minmax(360px,20vw)!important
+  }
+}
+
+/* Medium and short screens: never sacrifice the experiment just to preserve the analysis rail. */
+@media (max-width:1359px), (max-height:719px){
+  body.lab-stage-mode main>.section.active-section>.v271-analysis{display:none!important}
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    grid-column:1!important;
+    grid-row:3!important
+  }
+}
+
+/* Keep the immediate consequence readable on compact screens; explanation yields first. */
+@media (max-width:720px){
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    min-height:76px!important;
+    max-height:86px!important
+  }
+  body.lab-stage-mode .v27-intel-cell{
+    padding:6px 7px!important
+  }
+  body.lab-stage-mode .v27-intel-cell:nth-child(3){display:none!important}
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important
+  }
+}
