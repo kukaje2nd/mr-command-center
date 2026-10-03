@@ -4999,3 +4999,326 @@ body.lab-stage-mode .v27-intel-cell span{
     height:1px!important
   }
 }
+
+
+/* Scientific Lab v3 — screenshot-driven Parameter reconstruction */
+
+/* The screenshot exposed the core bug: two ~220px groups were inheriting a
+   168px label + flexible track + 78px output grid, collapsing range tracks.
+   Focused Parameter controls are now one readable vertical instrument rack. */
+body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+  grid-template-columns:clamp(390px,28vw,470px) minmax(0,1fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode #paramControlsCard{
+  padding:14px!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode #paramControlsCard>h3{
+  margin:0 0 10px!important;
+  font-size:.86rem!important
+}
+body.lab-stage-mode #paramControlsCard .sandbox{
+  display:block!important;
+  margin:0!important
+}
+body.lab-stage-mode #paramControlsCard .param-group{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:0!important;
+  margin:0 0 10px!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(109,156,255,.09)!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.004)!important
+}
+body.lab-stage-mode #paramControlsCard .param-group:last-child{margin-bottom:8px!important}
+body.lab-stage-mode #paramControlsCard .param-group-title{
+  margin:0 0 3px!important;
+  padding:0 0 7px!important;
+  border-bottom:1px solid rgba(126,196,239,.06)!important
+}
+body.lab-stage-mode #paramControlsCard .param-group-title b{
+  font-size:.68rem!important;
+  color:#dbe8f1!important
+}
+body.lab-stage-mode #paramControlsCard .param-group-title span{
+  display:inline!important;
+  margin-left:7px!important;
+  color:#607b91!important;
+  font-size:.51rem!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  grid-template-rows:auto 18px!important;
+  column-gap:10px!important;
+  row-gap:4px!important;
+  min-height:47px!important;
+  padding:7px 0!important;
+  border-bottom:1px solid rgba(126,196,239,.045)!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline:last-child{border-bottom:0!important}
+body.lab-stage-mode #paramControlsCard .sliderline label{
+  grid-column:1!important;
+  grid-row:1!important;
+  min-width:0!important;
+  color:#b9cad7!important;
+  font-size:.64rem!important;
+  font-weight:760!important;
+  line-height:1.22!important;
+  overflow:visible!important;
+  overflow-wrap:normal!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline output{
+  grid-column:2!important;
+  grid-row:1!important;
+  min-width:52px!important;
+  color:#9fc1ff!important;
+  font-size:.65rem!important;
+  font-weight:900!important;
+  text-align:right!important;
+  font-variant-numeric:tabular-nums
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type=range]{
+  grid-column:1/-1!important;
+  grid-row:2!important;
+  width:100%!important;
+  height:18px!important;
+  min-width:0!important;
+  cursor:ew-resize!important;
+  box-shadow:none!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type=range]::-webkit-slider-runnable-track{
+  height:5px!important;
+  border-radius:999px!important;
+  background:transparent!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type=range]::-webkit-slider-thumb{
+  width:16px!important;
+  height:16px!important;
+  margin-top:-5.5px!important;
+  cursor:grab!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type=range]:active::-webkit-slider-thumb{cursor:grabbing!important}
+body.lab-stage-mode #paramControlsCard .sliderline select{
+  grid-column:1/-1!important;
+  grid-row:2!important;
+  width:100%!important;
+  min-height:30px!important;
+  padding:3px 28px 3px 8px!important;
+  border-color:rgba(109,156,255,.14)!important;
+  background:#07111e!important;
+  color:#dceaf4!important;
+  font-size:.61rem!important
+}
+body.lab-stage-mode #paramControlsCard .btnline{
+  margin-top:5px!important
+}
+body.lab-stage-mode #paramControlsCard .btnline .btn{
+  min-height:34px!important;
+  width:100%!important;
+  justify-content:center!important
+}
+
+/* Focused Parameter is a scientific display, not the full lesson page. */
+body.lab-stage-mode #paramModelCard{
+  display:grid!important;
+  grid-template-rows:auto auto minmax(0,1fr)!important;
+  gap:9px!important;
+  padding:14px!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode #paramModelCard>h3{
+  margin:0!important;
+  font-size:.86rem!important
+}
+body.lab-stage-mode #paramModelCard>.comparegrid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:7px!important
+}
+body.lab-stage-mode #paramModelCard>.comparegrid .comparecard{
+  min-height:70px!important;
+  padding:9px 10px!important;
+  border-color:rgba(109,156,255,.12)!important;
+  background:rgba(5,12,23,.66)!important
+}
+body.lab-stage-mode #paramModelCard>.comparegrid .n{
+  color:#9fc1ff!important;
+  font-size:clamp(1rem,1.8vw,1.35rem)!important;
+  letter-spacing:-.02em
+}
+body.lab-stage-mode #paramModelCard>.comparegrid .d{
+  margin-top:3px!important;
+  color:#7e96a8!important;
+  font-size:.58rem!important
+}
+body.lab-stage-mode #paramModelCard>:is(
+  .parameter-deep-cockpit,.parameter-equation-lab,.map-panel,.tradegrid,#sbSummary,
+  .compare-workbench,.impact-ledger,.small
+){
+  display:none!important
+}
+body.lab-stage-mode #paramModelCard>.parameter-science-stage{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.75fr) minmax(270px,.72fr)!important;
+  gap:10px!important;
+  min-height:0!important;
+  height:100%!important
+}
+.parameter-image-plane,.parameter-response-plane{
+  position:relative;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  border:1px solid rgba(109,156,255,.15);
+  border-radius:13px;
+  background:linear-gradient(155deg,rgba(5,13,25,.94),rgba(2,7,15,.99));
+  box-shadow:inset 0 1px rgba(255,255,255,.018)
+}
+.parameter-response-plane{
+  border-color:rgba(85,232,255,.13)
+}
+.parameter-science-head{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  min-height:31px;
+  padding:7px 10px;
+  border-bottom:1px solid rgba(126,196,239,.065);
+  color:#6f879a;
+  font-size:.50rem;
+  font-weight:850;
+  letter-spacing:.075em
+}
+.parameter-science-head span{display:flex;align-items:center;gap:6px}
+.parameter-science-head span i{
+  width:5px;height:5px;border-radius:50%;
+  background:#55e8ff;box-shadow:0 0 9px rgba(85,232,255,.48)
+}
+.parameter-science-head b{
+  color:#8aa1b2;
+  font-size:.49rem;
+  font-weight:750;
+  letter-spacing:.025em
+}
+.parameter-image-plane canvas,.parameter-response-plane canvas{
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:0;
+  background:#030711
+}
+.parameter-science-foot{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:31px;
+  padding:6px 10px;
+  border-top:1px solid rgba(126,196,239,.06);
+  color:#688197;
+  font-size:.50rem;
+  font-weight:760;
+  letter-spacing:.025em
+}
+.parameter-science-foot span{display:inline-flex;align-items:center;gap:5px}
+.parameter-science-foot span:last-child{
+  margin-left:auto;
+  color:#8eabdc;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.47rem;
+  letter-spacing:.065em
+}
+.parameter-science-foot .dot{width:5px;height:5px;border-radius:50%}
+.parameter-science-foot .dot.image{background:#6d9cff}
+.parameter-science-foot .dot.sampling{background:#ffd166}
+.parameter-response-mini{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1px;
+  min-height:39px;
+  border-top:1px solid rgba(126,196,239,.06);
+  background:rgba(126,196,239,.04)
+}
+.parameter-response-mini span{
+  padding:6px 7px;
+  background:#040a14
+}
+.parameter-response-mini small,.parameter-response-mini b{display:block}
+.parameter-response-mini small{
+  color:#597187;
+  font-size:.43rem;
+  letter-spacing:.07em
+}
+.parameter-response-mini b{
+  margin-top:2px;
+  color:#b9d2ff;
+  font-size:.61rem;
+  font-variant-numeric:tabular-nums
+}
+
+/* The old generic consequence rail is useful, but it should be telemetry, not another giant block. */
+body.lab-stage-mode #sandbox>.v27-intelligence{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  min-height:48px!important;
+  max-height:54px!important;
+  padding:4px!important
+}
+body.lab-stage-mode #sandbox>.v27-intelligence .v27-intel-cell{
+  padding:5px 8px!important
+}
+body.lab-stage-mode #sandbox>.v27-intelligence .v27-intel-cell:nth-child(3){display:none!important}
+body.lab-stage-mode #sandbox>.v27-intelligence .v27-intel-cell small{display:none!important}
+body.lab-stage-mode #sandbox>.v27-intelligence .v27-intel-cell b{
+  font-size:.65rem!important;
+  margin:0!important
+}
+body.lab-stage-mode #sandbox>.v27-intelligence .v27-intel-cell span{
+  font-size:.53rem!important;
+  margin-top:2px!important;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+/* Parameter needs all available height at common 1680×900 / 1440×900 laptop-desktop sizes. */
+@media (min-width:1100px) and (min-height:760px){
+  body.lab-stage-mode #sandbox{
+    grid-template-rows:auto minmax(0,1fr) auto!important
+  }
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    min-height:0!important
+  }
+}
+@media (max-width:1180px){
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:clamp(360px,38vw,430px) minmax(0,1fr)!important
+  }
+  body.lab-stage-mode #paramModelCard>.parameter-science-stage{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,1fr)!important
+  }
+  body.lab-stage-mode .parameter-response-plane{display:none!important}
+}
+@media (max-width:760px){
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,1.15fr) minmax(0,.85fr)!important
+  }
+  body.lab-stage-mode #paramControlsCard .param-group{
+    padding:7px 9px!important
+  }
+  body.lab-stage-mode #paramControlsCard .sliderline{
+    min-height:42px!important;
+    padding:5px 0!important
+  }
+  body.lab-stage-mode #paramModelCard>.comparegrid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important
+  }
+  body.lab-stage-mode #paramModelCard>.comparegrid .comparecard:nth-child(n+3){display:none!important}
+}

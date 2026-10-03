@@ -1198,6 +1198,119 @@ function renderParameterEquations(state=sandboxState(),metrics=sandboxMetrics(st
  if($('parameterTimeResult'))$('parameterTimeResult').textContent='Product of displayed factors → sampling-time proxy '+pct(m.time)+' of baseline.';
 }
 
+
+function parameterCanvasContext(id,minW=320,minH=220){
+  const c=$(id);if(!c)return null;
+  const rect=c.getBoundingClientRect(),d=Math.min(2.25,devicePixelRatio||1),w=Math.max(minW,Math.round(rect.width||c.width||minW)),h=Math.max(minH,Math.round(rect.height||c.height||minH));
+  if(c.width!==Math.round(w*d)||c.height!==Math.round(h*d)){c.width=Math.round(w*d);c.height=Math.round(h*d)}
+  const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);return{c,x,w,h,d}
+}
+function parameterPhantomValue(x,y){
+  let v=0;
+  const e=(cx,cy,rx,ry,a,g)=>{const q=((x-cx)/rx)**2+((y-cy)/ry)**2;return q<=1?g*(1-q*.18)*a:0};
+  v+=e(0,0,.88,.96,1,.36);
+  v+=e(-.24,-.02,.32,.58,1,.23);v+=e(.24,-.02,.32,.58,1,.23);
+  v+=e(-.24,.02,.095,.19,1,-.33);v+=e(.24,.02,.095,.19,1,-.33);
+  v+=e(0,.32,.28,.18,1,.12);v+=e(0,-.38,.36,.14,1,.08);
+  v+=e(-.48,.16,.14,.24,1,.08);v+=e(.48,.16,.14,.24,1,.08);
+  v+=e(.18,-.28,.07,.06,1,.20);
+  return Math.max(0,Math.min(1,v));
+}
+function parameterNoise(ix,iy,seed){
+  let n=(ix*374761393+iy*668265263+seed*69069)>>>0;n=(n^(n>>13))*1274126177>>>0;n^=n>>16;return((n&65535)/32767.5)-1
+}
+function drawParameterScience(s,m,changed){
+  const a=parameterCanvasContext('parameterScienceCanvas',620,300);if(!a)return;
+  const {x,w,h}=a,pad=16,header=28,gap=18,imageW=Math.max(300,Math.round(w*.61)),sampleX=imageW+gap,imageH=h-header-24;
+  const imgX=pad,imgY=header,iw=imageW-pad*2,ih=imageH;
+  x.fillStyle='#030711';x.fillRect(0,0,w,h);
+  const bg=x.createLinearGradient(0,0,0,h);bg.addColorStop(0,'rgba(109,156,255,.035)');bg.addColorStop(1,'rgba(3,7,17,0)');x.fillStyle=bg;x.fillRect(0,0,w,h);
+  x.strokeStyle='rgba(126,196,239,.045)';x.lineWidth=1;
+  for(let gx=0;gx<w;gx+=24){x.beginPath();x.moveTo(gx+.5,0);x.lineTo(gx+.5,h);x.stroke()}
+  for(let gy=0;gy<h;gy+=24){x.beginPath();x.moveTo(0,gy+.5);x.lineTo(w,gy+.5);x.stroke()}
+  x.fillStyle='rgba(155,183,202,.55)';x.font='800 10px ui-monospace,monospace';x.fillText('IMAGE SPACE / SYNTHETIC PHANTOM',pad,17);
+  x.fillText('PHASE ACQUISITION',sampleX,17);
+
+  // Synthetic image-space response: FOV controls zoom/coverage, matrices control sampling,
+  // slice/NEX/BW/acceleration flow through the SNR proxy and therefore visible noise.
+  const nx=Math.max(42,Math.min(140,Math.round(s.mx/3.4))),ny=Math.max(34,Math.min(132,Math.round((s.phase*s.phaseFov)/3.2)));
+  const cellW=iw/nx,cellH=ih/ny,fovScale=240/s.fov,phaseScale=1/Math.max(.5,s.phaseFov),noiseAmp=Math.max(.012,Math.min(.30,.055/Math.max(.22,m.snr)));
+  const seed=Math.round(s.nex*17+s.bw*31+s.accel*47+s.slice*11);
+  x.save();x.beginPath();x.rect(imgX,imgY,iw,ih);x.clip();
+  x.fillStyle='#02050a';x.fillRect(imgX,imgY,iw,ih);
+  for(let yy=0;yy<ny;yy++)for(let xx=0;xx<nx;xx++){
+    let px=(xx+.5)/nx*2-1,py=(yy+.5)/ny*2-1;
+    px/=fovScale;py/=fovScale*phaseScale;
+    let v=parameterPhantomValue(px,py);
+    const noise=parameterNoise(xx,yy,seed)*noiseAmp*(.30+.70*(1-v));
+    v=Math.max(0,Math.min(1,Math.pow(v,.82)+noise));
+    const g=Math.round(8+v*228),blue=Math.min(255,Math.round(g*1.025));
+    x.fillStyle='rgb('+g+','+g+','+blue+')';x.fillRect(imgX+xx*cellW,imgY+yy*cellH,Math.ceil(cellW+.35),Math.ceil(cellH+.35));
+  }
+  // Encoded FOV boundary and central voxel sampling inset.
+  x.strokeStyle='rgba(109,156,255,.52)';x.lineWidth=1.4;x.setLineDash([6,5]);
+  const fw=iw*Math.min(1,s.fov/240),fh=ih*Math.min(1,(s.fov*s.phaseFov)/240),fx=imgX+(iw-fw)/2,fy=imgY+(ih-fh)/2;
+  x.strokeRect(fx,fy,fw,fh);x.setLineDash([]);
+  x.strokeStyle='rgba(85,232,255,.24)';x.beginPath();x.moveTo(imgX+iw/2,imgY);x.lineTo(imgX+iw/2,imgY+ih);x.moveTo(imgX,imgY+ih/2);x.lineTo(imgX+iw,imgY+ih/2);x.stroke();
+  const voxelW=Math.max(4,Math.min(34,m.px/(240/320)*10)),voxelH=Math.max(4,Math.min(34,m.py/(240/256)*10));
+  x.fillStyle='rgba(85,232,255,.08)';x.strokeStyle='rgba(85,232,255,.70)';x.fillRect(imgX+iw*.72,imgY+ih*.16,voxelW,voxelH);x.strokeRect(imgX+iw*.72,imgY+ih*.16,voxelW,voxelH);
+  x.restore();
+
+  // Acquisition-space proxy: lines removed by acceleration / PF, grouped by ETL.
+  const sx=sampleX,sw=Math.max(150,w-sampleX-pad),sy=header,sh=imageH;
+  x.fillStyle='rgba(4,9,18,.88)';x.fillRect(sx,sy,sw,sh);
+  const lines=Math.max(28,Math.min(88,Math.round(s.phase/5))),pfLines=Math.round(lines*s.pf),acc=Math.max(1,s.accel);
+  for(let i=0;i<lines;i++){
+    const yy=sy+8+i*(sh-16)/Math.max(1,lines-1),acquired=i<pfLines&&(Math.round(i)%Math.max(1,Math.round(acc))===0||acc<1.5);
+    const centerWeight=1-Math.min(1,Math.abs(i-(lines-1)/2)/((lines-1)/2));
+    x.strokeStyle=acquired?'rgba(109,156,255,'+(.18+.68*centerWeight)+')':'rgba(102,124,145,.08)';
+    x.lineWidth=acquired?(centerWeight>.82?2:1):1;x.beginPath();x.moveTo(sx+10,yy);x.lineTo(sx+sw-10,yy);x.stroke();
+  }
+  // Echo-train grouping markers.
+  const groups=Math.max(1,Math.ceil(pfLines/Math.max(1,s.etl)));x.fillStyle='rgba(255,209,102,.72)';x.font='800 9px ui-monospace,monospace';
+  for(let g=0;g<Math.min(groups,9);g++){const yy=sy+10+g*(sh-20)/Math.max(1,Math.min(groups,9)-1);x.fillRect(sx+sw-16,yy-1,7,2)}
+  x.strokeStyle='rgba(109,156,255,.22)';x.strokeRect(sx+.5,sy+.5,sw-1,sh-1);
+
+  // HUD.
+  x.fillStyle='rgba(3,8,17,.82)';x.fillRect(imgX+7,imgY+7,150,24);x.fillStyle='#a9c7ff';x.font='800 10px ui-monospace,monospace';x.fillText(Math.round(s.fov)+' mm FOV  ·  '+s.mx+'×'+s.phase,imgX+14,imgY+22);
+  x.fillStyle='rgba(3,8,17,.82)';x.fillRect(sx+7,sy+7,Math.min(sw-14,170),24);x.fillStyle='#f0d487';x.fillText('ETL '+s.etl+'  R '+s.accel.toFixed(1)+'  PF '+Math.round(s.pf*100)+'%',sx+14,sy+22);
+  x.fillStyle='rgba(147,169,184,.65)';x.font='700 9px ui-monospace,monospace';x.fillText('pixel '+m.px.toFixed(2)+' × '+m.py.toFixed(2)+' mm',imgX+10,h-8);
+  x.textAlign='right';x.fillText('modeled lines '+Math.round(pfLines/acc)+' / '+lines,sx+sw-8,h-8);x.textAlign='left';
+
+  const status=$('parameterVisualStatus');if(status)status.textContent=changed?changed.toUpperCase()+' CHANGED':'BASELINE STACK';
+}
+function drawParameterResponse(s,m){
+  const a=parameterCanvasContext('parameterResponseCanvas',280,300);if(!a)return;
+  const {x,w,h}=a,cx=w/2,cy=h*.49,r=Math.min(w*.36,h*.34),labels=['DETAIL','SNR','SPEED','COVERAGE','BW RESIST','SAMPLING'],vals=[
+    Math.max(.15,Math.min(1.45,m.detail)),
+    Math.max(.15,Math.min(1.45,m.snr)),
+    Math.max(.15,Math.min(1.45,1/Math.max(.12,m.time))),
+    Math.max(.15,Math.min(1.25,(s.fov/240)*(.65+.35*s.phaseFov))),
+    Math.max(.15,Math.min(1.45,s.bw)),
+    Math.max(.15,Math.min(1.25,s.pf*Math.min(1.15,s.phase/256)))
+  ];
+  x.fillStyle='#030711';x.fillRect(0,0,w,h);
+  x.strokeStyle='rgba(126,196,239,.05)';for(let gx=0;gx<w;gx+=24){x.beginPath();x.moveTo(gx,0);x.lineTo(gx,h);x.stroke()}for(let gy=0;gy<h;gy+=24){x.beginPath();x.moveTo(0,gy);x.lineTo(w,gy);x.stroke()}
+  const n=labels.length,pt=(i,scale)=>{const ang=-Math.PI/2+i*Math.PI*2/n;return[cx+Math.cos(ang)*r*scale,cy+Math.sin(ang)*r*scale]};
+  for(const scale of [.25,.5,.75,1]){x.beginPath();for(let i=0;i<n;i++){const p=pt(i,scale);i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])}x.closePath();x.strokeStyle=scale===1?'rgba(109,156,255,.28)':'rgba(126,196,239,.08)';x.stroke()}
+  for(let i=0;i<n;i++){const p=pt(i,1);x.beginPath();x.moveTo(cx,cy);x.lineTo(p[0],p[1]);x.strokeStyle='rgba(126,196,239,.08)';x.stroke()}
+  // Baseline ring.
+  x.beginPath();for(let i=0;i<n;i++){const p=pt(i,1);i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])}x.closePath();x.setLineDash([4,4]);x.strokeStyle='rgba(220,237,248,.30)';x.stroke();x.setLineDash([]);
+  // Live vector, normalized so 100%=outer baseline ring; values over baseline extend up to 145%.
+  x.beginPath();vals.forEach((v,i)=>{const p=pt(i,Math.min(1.32,v));i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])});x.closePath();
+  const fill=x.createRadialGradient(cx,cy,0,cx,cy,r*1.2);fill.addColorStop(0,'rgba(85,232,255,.15)');fill.addColorStop(1,'rgba(109,156,255,.05)');x.fillStyle=fill;x.fill();x.strokeStyle='#6d9cff';x.lineWidth=2;x.stroke();
+  vals.forEach((v,i)=>{const p=pt(i,Math.min(1.32,v));x.fillStyle=v>=1?'#55e8ff':'#9a83ff';x.beginPath();x.arc(p[0],p[1],4,0,Math.PI*2);x.fill()});
+  x.font='800 9px ui-monospace,monospace';x.fillStyle='rgba(184,205,219,.74)';
+  labels.forEach((lab,i)=>{const p=pt(i,1.16);x.textAlign=p[0]<cx-8?'right':p[0]>cx+8?'left':'center';x.textBaseline=p[1]<cy?'bottom':'top';x.fillText(lab,p[0],p[1])});
+  x.textAlign='center';x.textBaseline='middle';x.fillStyle='#eaf6ff';x.font='900 18px ui-monospace,monospace';x.fillText(Math.round(m.snr*100)+'%',cx,cy-5);x.fillStyle='rgba(147,169,184,.70)';x.font='800 9px ui-monospace,monospace';x.fillText('SNR PROXY',cx,cy+13);
+  const d=$('parameterVisualDetail'),sn=$('parameterVisualSnr'),sp=$('parameterVisualSpeed');if(d)d.textContent=pct(m.detail);if(sn)sn.textContent=pct(m.snr);if(sp)sp.textContent=pct(1/Math.max(.001,m.time));
+}
+function renderParameterScientificVisual(s=sandboxState(),m=sandboxMetrics(s),changed=''){
+  drawParameterScience(s,m,changed||'');drawParameterResponse(s,m);
+}
+let parameterVisualResizeRaf=0;
+addEventListener('resize',()=>{cancelAnimationFrame(parameterVisualResizeRaf);parameterVisualResizeRaf=requestAnimationFrame(()=>{if($('parameterScienceCanvas'))renderParameterScientificVisual()})},{passive:true});
+
 function sandboxUpdate(changed){
   const s=sandboxState(),{fov,mx,phase,phaseFov,slice,nex,bw,etl,accel,pf}=s;queueSandboxAutosave(s);
   $('sbFovOut').textContent=fov;$('sbFreqOut').textContent=mx;$('sbPhaseOut').textContent=phase;$('sbPhaseFovOut').textContent=Math.round(phaseFov*100)+'%';$('sbSliceOut').textContent=slice.toFixed(1);$('sbNexOut').textContent=nex.toFixed(1);$('sbBwOut').textContent=bw.toFixed(1)+'×';$('sbEtlOut').textContent=etl;$('sbAccelOut').textContent=accel.toFixed(1)+'×';$('sbPfOut').textContent=Math.round(pf*100)+'%';
@@ -1238,6 +1351,7 @@ function sandboxUpdate(changed){
   const departures=[['spatial detail',detailIndex],['SNR proxy',snr],['sampling time',time],['bandwidth',bw/sbBase.bw],['echo train',etl/sbBase.etl],['acceleration',accel/sbBase.accel],['Fourier fraction',pf/sbBase.pf]].map(([n,r])=>[n,r,Math.abs(Math.log(Math.max(.001,r)))]).sort((a,b)=>b[2]-a[2]);
   if(changes.length){const [name,r]=departures[0];$('sbDominant').innerHTML='<strong>Largest modeled departure:</strong> '+name+' is '+(r>=1?'↑':'↓')+' '+Math.round(Math.abs(r-1)*100)+'% vs baseline. This is a magnitude flag, not a quality judgment.'}else $('sbDominant').innerHTML='<strong>Largest departure:</strong> none — all modeled inputs are at baseline.';
   if(changed)renderParameterLens(changed);
+  renderParameterScientificVisual(s,m,changed||'');
   renderSandboxCompare();
   if(typeof renderLabsHome==='function')renderLabsHome();
 }
