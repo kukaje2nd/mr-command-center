@@ -117,16 +117,21 @@ function pulseLabResult(lab){
   const target=section.querySelector(sel)||section.querySelector('.card');
   [target,section.querySelector('.v271-analysis')].filter(Boolean).forEach(el=>{el.classList.add('lab-result-updating');clearTimeout(el.__mrccPulse);el.__mrccPulse=setTimeout(()=>el.classList.remove('lab-result-updating'),320)});
 }
-function applyInteractionDelta(lab,now,commit=false){
-  const base=interactionBase?.lab===lab?interactionBase.snapshot:resultSnapshots[lab];
-  const text=labDeltaText(lab,base,now);
+function paintInteractionDelta(lab,text){
+  if(!text)return;
   const intel=document.querySelector('[data-v27-intel="'+lab+'"]');
   const detail=intel?.querySelector('[data-v27-yd]');
-  if(detail&&text)detail.textContent='Δ from interaction start · '+text;
+  if(detail)detail.textContent='Δ from interaction start · '+text;
   const resultCell=intel?.querySelector('.v27-intel-cell:nth-child(2)');
   if(resultCell){resultCell.classList.add('sf-updated');clearTimeout(resultCell.__mrccPulse);resultCell.__mrccPulse=setTimeout(()=>resultCell.classList.remove('sf-updated'),360)}
   pulseLabResult(lab);
+}
+function applyInteractionDelta(lab,now,commit=false){
+  const base=interactionBase?.lab===lab?interactionBase.snapshot:resultSnapshots[lab];
+  const text=labDeltaText(lab,base,now);
+  paintInteractionDelta(lab,text);
   if(commit||!interactionBase)resultSnapshots[lab]=now;
+  return text;
 }
 
 function host(lab,title,kicker='Lab Intelligence'){
@@ -240,12 +245,35 @@ function controlReading(el){
   if(out?.textContent?.trim())return out.textContent.trim();
   return String(el.value??'').trim();
 }
+const IMPACT_TARGETS={
+  sbFov:['#sbRes','#sbVoxel','#sbSnr','#mapDetail','#mapSnr'],sbFreq:['#sbRes','#sbVoxel','#sbSnr','#mapDetail','#mapSnr'],sbPhase:['#sbRes','#sbVoxel','#sbSnr','#sbTime','#mapDetail','#mapSnr','#mapTime'],sbPhaseFov:['#sbRes','#sbVoxel','#sbSnr','#mapDetail','#mapSnr'],sbSlice:['#sbVoxel','#sbSnr','#mapSnr'],sbNex:['#sbSnr','#sbTime','#mapSnr','#mapTime'],sbBw:['#sbSnr','#mapSnr'],sbEtl:['#sbTime','#mapTime'],sbAccel:['#sbSnr','#sbTime','#mapSnr','#mapTime'],sbPf:['#sbTime','#mapTime'],
+  clMode:['#contrastMaterials','.contrast-summary','.contrast-timeline'],clTr:['#contrastMaterials','#clSpread','.contrast-timeline'],clTe:['#contrastMaterials','#clSpread','.contrast-timeline'],clTi:['#contrastMaterials','#clSpread','.contrast-timeline'],
+  timingTr:['#timingFitBadge','#timingTimeCard','.timing-timeline'],timingFirstEcho:['#timingEffectiveTe','#timingTrainSpan','.timing-timeline'],timingSpacing:['#timingEffectiveTe','#timingTrainSpan','.timing-timeline'],timingEtl:['#timingTrainSpan','#timingTrainCount','#timingTimeProxy','.timing-timeline'],timingCenter:['#timingEffectiveTe','.timing-timeline'],timingPhase:['#timingTrainCount','#timingTimeProxy'],timingNex:['#timingTimeProxy'],
+  motionMode:['#motionResultCanvas','.motion-history','.motion-summary'],motionDirection:['#motionResultCanvas','#motionCenterShift'],motionOrder:['#motionResultCanvas','.motion-history','#motionCenterSummary'],motionAmplitude:['#motionResultCanvas','.motion-history','#motionAffected','#motionPeak'],motionOnset:['#motionResultCanvas','.motion-history','#motionAffected','#motionCenterShift'],motionCycles:['#motionResultCanvas','.motion-history','#motionAffected'],
+  ksMode:['#ksKspaceCanvas','#ksImageCanvas','.kspace-readouts'],ksAmount:['#ksKspaceCanvas','#ksImageCanvas','.kspace-readouts'],
+  spPhaseFov:['#spWorldCanvas','#spReconCanvas','#spatialWrapCue','#spatialPixelProxy'],spReadFov:['#spWorldCanvas','#spReconCanvas','#spatialWrapCue','#spatialPixelProxy'],spPhaseSamples:['#spReconCanvas','#spatialPixelProxy','#spatialSampleBurden'],spReadSamples:['#spReconCanvas','#spatialPixelProxy','#spatialSampleBurden'],
+  artifactSelect:['#artifactCanvas','#artifactVisualCue','#artifactVisualBadge'],artifactStrength:['#artifactCanvas','#artifactVisualCue'],artifactDirection:['#artifactCanvas','#artifactPhaseLabel']
+};
+function impactBox(node){
+  if(!node)return null;
+  if(node.matches('canvas'))return node.closest('.kspace-canvas-shell,.spatial-canvas-shell,.motion-image-shell,.artifact-canvas-shell,.contrast-curve-panel')||node;
+  return node.closest('.comparecard,.contrast-summary>div,.timing-summary>div,.motion-summary>div,.kspace-readouts>div,.spatial-readouts>div,.card,.contrast-timeline,.motion-history')||node;
+}
+function flashControlImpacts(control){
+  if(!control)return;
+  const row=control.closest('.sliderline,.contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider,.contrast-field,.timing-field,.motion-field,.kspace-field,.spatial-field,.artifact-lab-field,.field');
+  if(row){row.classList.add('control-causing-change');clearTimeout(row.__mrccImpact);row.__mrccImpact=setTimeout(()=>row.classList.remove('control-causing-change'),420)}
+  const selectors=IMPACT_TARGETS[control.id]||[];
+  selectors.forEach(sel=>document.querySelectorAll(sel).forEach(n=>{const box=impactBox(n);if(!box)return;box.classList.add('consequence-highlight');clearTimeout(box.__mrccImpact);box.__mrccImpact=setTimeout(()=>box.classList.remove('consequence-highlight'),520)}));
+}
 function noteControlChange(e){
   const m=CONTROL_MAP[e.target?.id];if(!m)return;
   const lab=m[0],now=labResultSnapshot(lab);
   lastChange[lab]=m[1];
   window.__mrccLastChange={lab,label:m[1],value:controlReading(e.target)};
-  applyInteractionDelta(lab,now,e.type==='change');
+  const deltaText=applyInteractionDelta(lab,now,e.type==='change');
+  requestAnimationFrame(()=>paintInteractionDelta(lab,deltaText));
+  flashControlImpacts(e.target);
   renderDeep();
 }
 function relocateDiagnostics(){const adv=document.querySelector('.v27-advanced-settings-grid'),sys=$('offlineBar');if(adv&&sys&&!adv.contains(sys)){const wrap=document.createElement('div');wrap.className='v271-diagnostics';wrap.innerHTML='<h4>System & offline diagnostics</h4><p>Cache, network, runtime self-checks, and offline status.</p>';wrap.appendChild(sys);adv.appendChild(wrap)}}
@@ -290,6 +318,7 @@ function sfWakeFromControl(control){
   const near=control.closest('.card')||section;
   const output=control.parentElement?.querySelector('output')||control.closest('.field,.sliderline,.contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider')?.querySelector('output');
   sfPulse(output||near);
+  if(document.body.classList.contains('lab-stage-mode'))return;
   const visible=section.querySelectorAll(pulseTargets);for(let i=0;i<Math.min(visible.length,3);i++)sfPulse(visible[i]);
 }
 document.addEventListener('input',e=>{if(e.target?.matches('input[type="range"],input[type="number"]'))requestAnimationFrame(()=>sfWakeFromControl(e.target))},{passive:true});
