@@ -4999,3 +4999,226 @@ body.lab-stage-mode .v27-intel-cell span{
     height:1px!important
   }
 }
+
+
+/* Screenshot-driven Lab interaction hotfix — usable controls + scientific response stage */
+
+/* Parameter controls: each row gets a real full-width range track. No fixed 3-column squeeze. */
+body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+  grid-template-columns:clamp(330px,27vw,410px) minmax(0,1fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode #paramControlsCard{
+  overflow:hidden!important
+}
+body.lab-stage-mode #paramControlsCard .sandbox{
+  grid-template-columns:1fr!important;
+  gap:9px!important;
+  min-height:0!important;
+  overflow:auto!important;
+  padding-right:3px!important;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(109,156,255,.20) transparent
+}
+body.lab-stage-mode #paramControlsCard .param-group{
+  padding:10px 11px!important;
+  border-color:rgba(109,156,255,.10)!important;
+  background:rgba(255,255,255,.004)!important
+}
+body.lab-stage-mode #paramControlsCard .param-group-title{
+  margin-bottom:5px!important;
+  padding-bottom:7px!important
+}
+body.lab-stage-mode #paramControlsCard .param-group-title b{
+  font-size:.69rem!important;
+  color:#dfeaff!important
+}
+body.lab-stage-mode #paramControlsCard .param-group-title span{
+  display:block!important;
+  font-size:.52rem!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  grid-template-rows:auto 22px!important;
+  gap:3px 10px!important;
+  align-items:center!important;
+  min-width:0!important;
+  padding:4px 0 5px!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline label{
+  grid-column:1!important;
+  grid-row:1!important;
+  min-width:0!important;
+  font-size:.63rem!important;
+  line-height:1.2!important;
+  overflow-wrap:normal!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline output{
+  grid-column:2!important;
+  grid-row:1!important;
+  min-width:48px!important;
+  color:#9fbfff!important;
+  font-size:.64rem!important;
+  font-variant-numeric:tabular-nums;
+  text-align:right!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type="range"]{
+  grid-column:1/-1!important;
+  grid-row:2!important;
+  width:100%!important;
+  min-width:0!important;
+  height:22px!important;
+  margin:0!important;
+  padding:0!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background:transparent!important;
+  cursor:pointer!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type="range"]::-webkit-slider-runnable-track{
+  height:5px!important;
+  border:1px solid rgba(109,156,255,.18)!important;
+  border-radius:999px!important;
+  background:linear-gradient(90deg,#6d9cff 0 var(--sf-fill,50%),rgba(109,156,255,.10) var(--sf-fill,50%) 100%)!important;
+  box-shadow:inset 0 0 8px rgba(0,0,0,.35)!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type="range"]::-webkit-slider-thumb{
+  width:17px!important;height:17px!important;
+  margin-top:-7px!important;
+  border:2px solid #8fb2ff!important;
+  border-radius:50%!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background:#e8f3ff!important;
+  box-shadow:0 0 0 4px rgba(109,156,255,.10),0 0 16px rgba(109,156,255,.24)!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type="range"]::-moz-range-track{
+  height:5px!important;border:1px solid rgba(109,156,255,.18)!important;border-radius:999px!important;background:rgba(109,156,255,.10)!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type="range"]::-moz-range-progress{
+  height:5px!important;border-radius:999px!important;background:#6d9cff!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline input[type="range"]::-moz-range-thumb{
+  width:15px!important;height:15px!important;border:2px solid #8fb2ff!important;border-radius:50%!important;background:#e8f3ff!important;box-shadow:0 0 0 4px rgba(109,156,255,.10)!important
+}
+body.lab-stage-mode #paramControlsCard .sliderline select{
+  grid-column:1/-1!important;
+  grid-row:2!important;
+  width:100%!important;
+  min-width:0!important;
+  height:28px!important;
+  border-color:rgba(109,156,255,.18)!important;
+  background:#071323!important;
+  color:#dceaff!important;
+  font-size:.62rem!important
+}
+
+/* Use the model area for an actual graphic, not old workspace text panels. */
+body.lab-stage-mode #paramModelCard{
+  display:grid!important;
+  grid-template-rows:auto auto minmax(0,1fr)!important;
+  gap:9px!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode #paramModelCard>.comparegrid{
+  grid-row:2!important
+}
+body.lab-stage-mode #paramModelCard>.parameter-response-stage{
+  display:block!important;
+  grid-row:3!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:100%!important;
+  overflow:hidden!important;
+  border:1px solid rgba(109,156,255,.22)!important;
+  border-radius:12px!important;
+  background:#030812!important;
+  box-shadow:inset 0 0 42px rgba(0,0,0,.34),0 0 28px rgba(109,156,255,.035)!important
+}
+body.lab-stage-mode #paramModelCard>.parameter-response-stage canvas{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:280px!important
+}
+body.lab-stage-mode #paramModelCard>:is(
+  .parameter-deep-cockpit,.parameter-equation-lab,.map-panel,.tradegrid,#sbSummary,
+  .compare-workbench,.impact-ledger,.small
+){
+  display:none!important
+}
+
+/* Metric cards become compact scientific readouts rather than oversized empty boxes. */
+body.lab-stage-mode #paramModelCard>.comparegrid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:7px!important
+}
+body.lab-stage-mode #paramModelCard>.comparegrid .comparecard{
+  min-height:72px!important;
+  padding:9px 10px!important;
+  border-color:rgba(109,156,255,.14)!important;
+  background:linear-gradient(150deg,rgba(8,18,34,.92),rgba(4,10,20,.96))!important
+}
+body.lab-stage-mode #paramModelCard>.comparegrid .n{
+  font-size:clamp(1rem,1.35vw,1.35rem)!important;
+  color:#a9c5ff!important
+}
+body.lab-stage-mode #paramModelCard>.comparegrid .d{
+  margin-top:4px!important;
+  color:#7891a5!important;
+  font-size:.55rem!important
+}
+
+/* All focused Lab range controls get an obvious, full-width instrument track. */
+body.lab-stage-mode :is(
+  .contrast-controls-card,.timing-controls-card,.motion-controls-card,
+  .kspace-controls-card,.spatial-controls-card,.artifact-lab-controls
+) input[type="range"]{
+  min-width:0!important;
+  cursor:pointer!important;
+  accent-color:var(--lab-accent)!important
+}
+
+/* The screenshot viewport is wide enough to prioritize the experiment and remove the side analysis rail. */
+@media (min-width:1180px) and (max-width:1799px){
+  body.lab-stage-mode main>.section.active-section{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important
+  }
+  body.lab-stage-mode main>.section.active-section>.v271-analysis{display:none!important}
+  body.lab-stage-mode main>.section.active-section>.v27-intelligence{
+    grid-column:1!important;
+    grid-row:3!important
+  }
+}
+@media (min-width:1800px) and (min-height:850px){
+  body.lab-stage-mode main>.section.active-section{
+    grid-template-columns:minmax(0,1fr) minmax(310px,18vw)!important
+  }
+}
+
+/* Responsive Parameter stage: never collapse the slider track again. */
+@media (max-width:900px){
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,.95fr) minmax(0,1.05fr)!important
+  }
+  body.lab-stage-mode #paramControlsCard .sandbox{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important
+  }
+  body.lab-stage-mode #paramControlsCard .sliderline{
+    grid-template-columns:minmax(0,1fr) auto!important
+  }
+}
+@media (max-width:620px){
+  body.lab-stage-mode #paramControlsCard .sandbox{
+    grid-template-columns:1fr!important
+  }
+  body.lab-stage-mode #paramModelCard>.comparegrid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important
+  }
+  body.lab-stage-mode #paramModelCard>.parameter-response-stage canvas{
+    min-height:220px!important
+  }
+}

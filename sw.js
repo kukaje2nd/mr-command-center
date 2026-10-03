@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mrcc-v28.1.0-ux33';
+const CACHE_NAME = 'mrcc-v28.1.0-ux34';
 const CORE_ASSETS = ['/', '/index.html', '/app.css?v=28.1', '/signal-frame.css?v=28.1', '/ux-refresh.css?v=28.1', '/app.js?v=28.1', '/signal-frame.js?v=28.1', '/manifest.webmanifest', '/icon.svg', '/brand-mark.svg', '/premium-products.json', '/about.html', '/privacy.html', '/public-signal.css?v=28.1', '/404.html', '/og-v28.svg'];
 
 self.addEventListener('install', event => {

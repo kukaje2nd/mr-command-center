@@ -1198,10 +1198,98 @@ function renderParameterEquations(state=sandboxState(),metrics=sandboxMetrics(st
  if($('parameterTimeResult'))$('parameterTimeResult').textContent='Product of displayed factors → sampling-time proxy '+pct(m.time)+' of baseline.';
 }
 
+function drawParameterResponse(state,metrics,changed){
+  const c=$('paramResponseCanvas');if(!c||!state||!metrics)return;
+  const rect=c.getBoundingClientRect(),cssW=Math.max(620,Math.round(rect.width||960)),cssH=Math.max(270,Math.round(rect.height||390)),d=Math.min(2.25,devicePixelRatio||1);
+  c.width=Math.round(cssW*d);c.height=Math.round(cssH*d);
+  const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);
+  const w=cssW,h=cssH,pad=16,gap=12,base=sandboxMetrics(sbBase);
+  const bg=x.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#061222');bg.addColorStop(1,'#030812');x.fillStyle=bg;x.fillRect(0,0,w,h);
+  x.strokeStyle='rgba(109,156,255,.045)';x.lineWidth=1;
+  for(let gx=0;gx<w;gx+=24){x.beginPath();x.moveTo(gx+.5,0);x.lineTo(gx+.5,h);x.stroke()}
+  for(let gy=0;gy<h;gy+=24){x.beginPath();x.moveTo(0,gy+.5);x.lineTo(w,gy+.5);x.stroke()}
+  const headerH=34,bottomH=78,bodyY=headerH+8,bodyH=h-headerH-bottomH-18,panelW=(w-pad*2-gap*2)/3;
+  const panels=[
+    {x:pad,y:bodyY,w:panelW,h:bodyH,title:'SPATIAL SAMPLING',accent:'#6d9cff'},
+    {x:pad+panelW+gap,y:bodyY,w:panelW,h:bodyH,title:'VOXEL / SIGNAL',accent:'#67e4c0'},
+    {x:pad+(panelW+gap)*2,y:bodyY,w:panelW,h:bodyH,title:'ACQUISITION BURDEN',accent:'#ffd166'}
+  ];
+  function panel(p){
+    x.fillStyle='rgba(5,13,25,.82)';x.fillRect(p.x,p.y,p.w,p.h);
+    x.strokeStyle=p.accent+'44';x.strokeRect(p.x+.5,p.y+.5,p.w-1,p.h-1);
+    x.fillStyle=p.accent;x.font='800 10px system-ui';x.fillText(p.title,p.x+12,p.y+18);
+  }
+  panels.forEach(panel);
+  x.fillStyle='rgba(213,234,247,.82)';x.font='800 11px system-ui';x.fillText('LIVE PARAMETER RESPONSE',pad,21);
+  x.fillStyle='rgba(126,156,177,.62)';x.font='9px system-ui';x.fillText('geometry → signal → sampling burden',pad+155,21);
+  if(changed){x.fillStyle='rgba(109,156,255,.78)';x.textAlign='right';x.fillText('UPDATED: '+String(changed).toUpperCase(),w-pad,21);x.textAlign='left'}
+
+  // Spatial sampling field: FOV changes coverage; matrix changes grid density.
+  {
+    const p=panels[0],cx=p.x+p.w/2,cy=p.y+p.h*.56;
+    const fovScale=Math.max(.62,Math.min(1.22,state.fov/sbBase.fov)),phaseScale=Math.max(.52,Math.min(1.08,state.phaseFov));
+    const fw=Math.min(p.w*.76,p.w*.64*fovScale),fh=Math.min(p.h*.62,p.h*.52*fovScale*phaseScale),fx=cx-fw/2,fy=cy-fh/2;
+    x.fillStyle='rgba(109,156,255,.035)';x.fillRect(fx,fy,fw,fh);
+    x.strokeStyle='rgba(109,156,255,.72)';x.setLineDash([5,4]);x.strokeRect(fx,fy,fw,fh);x.setLineDash([]);
+    const cols=Math.max(5,Math.min(14,Math.round(state.mx/40))),rows=Math.max(4,Math.min(12,Math.round(state.phase/36)));
+    x.strokeStyle='rgba(85,232,255,.13)';
+    for(let i=1;i<cols;i++){const xx=fx+fw*i/cols;x.beginPath();x.moveTo(xx,fy);x.lineTo(xx,fy+fh);x.stroke()}
+    for(let i=1;i<rows;i++){const yy=fy+fh*i/rows;x.beginPath();x.moveTo(fx,yy);x.lineTo(fx+fw,yy);x.stroke()}
+    const cellW=fw/cols,cellH=fh/rows;x.fillStyle='rgba(85,232,255,.19)';x.fillRect(cx-cellW/2,cy-cellH/2,cellW,cellH);
+    x.strokeStyle='rgba(224,247,255,.78)';x.strokeRect(cx-cellW/2+.5,cy-cellH/2+.5,Math.max(1,cellW-1),Math.max(1,cellH-1));
+    x.fillStyle='#dceaff';x.font='900 18px ui-monospace,monospace';x.fillText(metrics.px.toFixed(2)+' × '+metrics.py.toFixed(2),p.x+12,p.y+p.h-30);
+    x.fillStyle='rgba(140,164,182,.72)';x.font='9px system-ui';x.fillText('mm in-plane pixel',p.x+12,p.y+p.h-15);
+  }
+
+  // Voxel and signal: cuboid geometry + signal ring + deterministic noise field.
+  {
+    const p=panels[1],cx=p.x+p.w*.47,cy=p.y+p.h*.50;
+    const sx=Math.max(.58,Math.min(1.55,metrics.px/base.px)),sy=Math.max(.58,Math.min(1.55,metrics.py/base.py)),sz=Math.max(.50,Math.min(1.7,state.slice/sbBase.slice));
+    const vw=48*sx,vh=34*sy,depth=22*sz;
+    x.fillStyle='rgba(103,228,192,.10)';x.strokeStyle='rgba(103,228,192,.76)';x.lineWidth=1.4;
+    x.beginPath();x.moveTo(cx-vw/2,cy-vh/2);x.lineTo(cx+vw/2,cy-vh/2);x.lineTo(cx+vw/2,cy+vh/2);x.lineTo(cx-vw/2,cy+vh/2);x.closePath();x.fill();x.stroke();
+    x.beginPath();x.moveTo(cx-vw/2,cy-vh/2);x.lineTo(cx-vw/2+depth,cy-vh/2-depth*.55);x.lineTo(cx+vw/2+depth,cy-vh/2-depth*.55);x.lineTo(cx+vw/2,cy-vh/2);x.stroke();
+    x.beginPath();x.moveTo(cx+vw/2,cy-vh/2);x.lineTo(cx+vw/2+depth,cy-vh/2-depth*.55);x.lineTo(cx+vw/2+depth,cy+vh/2-depth*.55);x.lineTo(cx+vw/2,cy+vh/2);x.stroke();
+    const ringR=Math.max(24,Math.min(54,34*Math.sqrt(Math.max(.18,metrics.snr))));
+    x.strokeStyle='rgba(103,228,192,.26)';x.lineWidth=5;x.beginPath();x.arc(p.x+p.w*.79,p.y+p.h*.39,ringR,0,Math.PI*2);x.stroke();
+    x.strokeStyle='rgba(223,255,247,.78)';x.lineWidth=2;x.beginPath();x.arc(p.x+p.w*.79,p.y+p.h*.39,ringR*Math.max(.22,Math.min(1,metrics.snr)),0,Math.PI*2);x.stroke();
+    const noise=Math.max(8,Math.min(34,Math.round(28/Math.max(.45,metrics.snr))));
+    x.fillStyle='rgba(183,221,211,.16)';
+    for(let i=0;i<noise;i++){const px=p.x+12+((i*47)%Math.max(24,p.w-24)),py=p.y+34+((i*73)%Math.max(24,p.h-70));x.fillRect(px,py,1.3,1.3)}
+    x.fillStyle='#d9fff3';x.font='900 18px ui-monospace,monospace';x.fillText(metrics.voxel.toFixed(2)+' mm³',p.x+12,p.y+p.h-30);
+    x.fillStyle='rgba(140,184,171,.76)';x.font='9px system-ui';x.fillText('voxel · SNR '+Math.round(metrics.snr*100)+'%',p.x+12,p.y+p.h-15);
+  }
+
+  // Acquisition burden: baseline-centered bar and sampled phase-line field.
+  {
+    const p=panels[2],left=p.x+14,right=p.x+p.w-14,barY=p.y+p.h*.36,barW=right-left,ratio=Math.max(.05,Math.min(1.5,metrics.time));
+    x.fillStyle='rgba(255,255,255,.035)';x.fillRect(left,barY,barW,10);
+    const baseX=left+barW/1.5;x.fillStyle='rgba(237,244,220,.34)';x.fillRect(baseX,barY-5,1,20);
+    const grad=x.createLinearGradient(left,0,right,0);grad.addColorStop(0,'rgba(103,228,192,.80)');grad.addColorStop(.66,'rgba(255,209,102,.92)');grad.addColorStop(1,'rgba(255,144,127,.92)');
+    x.fillStyle=grad;x.fillRect(left,barY,barW*ratio/1.5,10);
+    x.fillStyle='rgba(232,239,203,.76)';x.font='8px system-ui';x.fillText('100% baseline',Math.max(left,baseX-30),barY-9);
+    const lines=32,step=barW/(lines-1),skip=Math.max(1,Math.round(state.accel)),keep=Math.max(1,Math.round(lines*state.pf));
+    for(let i=0;i<lines;i++){const active=i<keep&&i%skip===0,xx=left+i*step,hh=active?20:8;x.strokeStyle=active?'rgba(255,209,102,.58)':'rgba(255,255,255,.06)';x.beginPath();x.moveTo(xx,p.y+p.h*.58-hh/2);x.lineTo(xx,p.y+p.h*.58+hh/2);x.stroke()}
+    x.fillStyle='#fff0bd';x.font='900 18px ui-monospace,monospace';x.fillText(Math.round(metrics.time*100)+'%',left,p.y+p.h-30);
+    x.fillStyle='rgba(177,161,111,.82)';x.font='9px system-ui';x.fillText('NEX '+state.nex+' · ETL '+state.etl+' · R '+state.accel+' · PF '+Math.round(state.pf*100)+'%',left,p.y+p.h-15);
+  }
+
+  // Baseline-centered response telemetry across the bottom.
+  const metricsRow=[['DETAIL',metrics.detail,'#6d9cff'],['SNR',metrics.snr,'#67e4c0'],['TIME',metrics.time,'#ffd166']],by=h-bottomH+20,bw=(w-pad*2-gap*2)/3;
+  metricsRow.forEach((r,i)=>{const label=r[0],v=r[1],color=r[2],bx=pad+i*(bw+gap),trackY=by+21,trackW=bw-42,max=1.5;
+    x.fillStyle='rgba(255,255,255,.03)';x.fillRect(bx,trackY,trackW,7);x.fillStyle=color;x.globalAlpha=.78;x.fillRect(bx,trackY,trackW*Math.max(.02,Math.min(max,v))/max,7);x.globalAlpha=1;
+    const baselineX=bx+trackW/max;x.fillStyle='rgba(224,239,248,.30)';x.fillRect(baselineX,trackY-3,1,13);
+    x.fillStyle='rgba(150,173,189,.68)';x.font='800 8px system-ui';x.fillText(label,bx,by+8);x.fillStyle=color;x.font='900 11px ui-monospace,monospace';x.textAlign='right';x.fillText(Math.round(v*100)+'%',bx+trackW,by+8);x.textAlign='left'
+  });
+  if(typeof drawScannerHud==='function')drawScannerHud(x,w,h,{accent:'rgba(109,156,255,.24)',label:'MRCC / PARAMETER RESPONSE',grid:false,cross:false});
+}
+let parameterResponseResizeRaf=0;
+addEventListener('resize',()=>{if(!$('paramResponseCanvas'))return;cancelAnimationFrame(parameterResponseResizeRaf);parameterResponseResizeRaf=requestAnimationFrame(()=>{try{drawParameterResponse(sandboxState(),sandboxMetrics(sandboxState()))}catch(e){}})},{passive:true});
+
 function sandboxUpdate(changed){
   const s=sandboxState(),{fov,mx,phase,phaseFov,slice,nex,bw,etl,accel,pf}=s;queueSandboxAutosave(s);
   $('sbFovOut').textContent=fov;$('sbFreqOut').textContent=mx;$('sbPhaseOut').textContent=phase;$('sbPhaseFovOut').textContent=Math.round(phaseFov*100)+'%';$('sbSliceOut').textContent=slice.toFixed(1);$('sbNexOut').textContent=nex.toFixed(1);$('sbBwOut').textContent=bw.toFixed(1)+'×';$('sbEtlOut').textContent=etl;$('sbAccelOut').textContent=accel.toFixed(1)+'×';$('sbPfOut').textContent=Math.round(pf*100)+'%';
-  const m=sandboxMetrics(s),base=sandboxMetrics(sbBase),{px,py,voxel,snr,time,detail:detailIndex}=m,detailRatio=1/detailIndex;renderParameterGoalFeedback(s,m);renderParameterChallenge(s);renderParameterDeepDive(changed);
+  const m=sandboxMetrics(s),base=sandboxMetrics(sbBase),{px,py,voxel,snr,time,detail:detailIndex}=m,detailRatio=1/detailIndex;drawParameterResponse(s,m,changed);renderParameterGoalFeedback(s,m);renderParameterChallenge(s);renderParameterDeepDive(changed);
   $('sbRes').textContent=px.toFixed(2)+' × '+py.toFixed(2);$('sbVoxel').textContent=voxel.toFixed(2);$('sbSnr').textContent=pct(snr);$('sbTime').textContent=pct(time);
   $('mapDetail').textContent=pct(detailIndex);$('mapSnr').textContent=pct(snr);$('mapTime').textContent=pct(time);$('mapBw').textContent=pct(bw/sbBase.bw);$('mapEtl').textContent=pct(etl/sbBase.etl);$('mapAccel').textContent=pct(accel/sbBase.accel);$('mapPf').textContent=pct(pf/sbBase.pf);
   setBalanceBar('barDetail',detailIndex);setBalanceBar('barSnr',snr);setBalanceBar('barTime',time);setBalanceBar('barBw',bw/sbBase.bw);setBalanceBar('barEtl',etl/sbBase.etl);setBalanceBar('barAccel',accel/sbBase.accel);setBalanceBar('barPf',pf/sbBase.pf);
