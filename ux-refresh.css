@@ -5515,3 +5515,326 @@ body.lab-stage-mode .timing-summary{
 }
 body.lab-stage-mode .timing-summary>div{padding:6px 7px!important}
 body.lab-stage-mode .timing-summary span{display:none!important}
+
+
+/* Scientific Lab v3 — visual dominance for Motion / K-Space / Spatial / Artifact */
+
+/* Motion: acquisition trace + before/after reconstruction are the experiment. */
+body.lab-stage-mode #motion>.motion-layout{
+  grid-template-columns:clamp(320px,23vw,360px) minmax(0,1fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode .motion-controls-card{
+  align-content:start!important
+}
+body.lab-stage-mode .motion-controls-card .motion-field{
+  margin-bottom:8px!important
+}
+body.lab-stage-mode .motion-controls-card .motion-field select{
+  width:100%!important;
+  min-height:34px!important
+}
+body.lab-stage-mode .motion-controls-card .motion-presets{
+  margin-top:8px!important
+}
+body.lab-stage-mode .motion-cue{
+  margin-top:8px!important;
+  padding:8px 9px!important
+}
+body.lab-stage-mode .motion-cue span{
+  display:none!important
+}
+body.lab-stage-mode .motion-output-card{
+  display:grid!important;
+  grid-template-rows:auto 104px minmax(0,1fr) auto!important;
+  gap:8px!important
+}
+body.lab-stage-mode .motion-history{
+  min-height:0!important;
+  padding:6px 8px!important;
+  border-color:rgba(255,144,127,.11)!important;
+  background:#030711!important
+}
+body.lab-stage-mode .motion-history canvas{
+  width:100%!important;
+  height:76px!important
+}
+body.lab-stage-mode .motion-history-copy{
+  margin-top:3px!important;
+  font-size:.48rem!important
+}
+body.lab-stage-mode .motion-images{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important;
+  min-height:0!important
+}
+body.lab-stage-mode .motion-image-panel{
+  display:grid!important;
+  grid-template-rows:auto auto minmax(0,1fr)!important;
+  min-height:0!important;
+  padding:8px!important;
+  border:1px solid rgba(255,144,127,.10)!important;
+  border-radius:11px!important;
+  background:linear-gradient(155deg,rgba(7,13,23,.94),rgba(2,6,13,.99))!important
+}
+body.lab-stage-mode .motion-image-panel>b{
+  font-size:.62rem!important
+}
+body.lab-stage-mode .motion-image-panel>small{
+  margin:2px 0 6px!important;
+  color:#698094!important;
+  font-size:.48rem!important
+}
+body.lab-stage-mode .motion-image-shell{
+  display:grid!important;
+  place-items:center!important;
+  min-height:0!important;
+  height:100%!important;
+  border-radius:9px!important;
+  background:#02050b!important
+}
+body.lab-stage-mode .motion-image-shell canvas{
+  width:auto!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  aspect-ratio:1!important;
+  object-fit:contain!important
+}
+body.lab-stage-mode .motion-summary{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:5px!important
+}
+body.lab-stage-mode .motion-summary>div{
+  padding:6px 7px!important
+}
+body.lab-stage-mode .motion-summary span{
+  display:none!important
+}
+body.lab-stage-mode .motion-explain{
+  display:none!important
+}
+
+/* K-Space: make frequency space and inverse transform the two primary displays. */
+body.lab-stage-mode #kspace>.kspace-layout{
+  grid-template-columns:clamp(250px,18vw,300px) minmax(0,1fr) minmax(0,1fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode .kspace-controls-card{
+  align-content:start!important
+}
+body.lab-stage-mode .kspace-field select{
+  width:100%!important;
+  min-height:34px!important
+}
+body.lab-stage-mode .kspace-explain{
+  margin-top:8px!important;
+  padding:8px 9px!important
+}
+body.lab-stage-mode .kspace-explain span{
+  display:none!important
+}
+body.lab-stage-mode .kspace-output-card{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  gap:7px!important;
+  min-height:0!important
+}
+body.lab-stage-mode .kspace-canvas-shell{
+  display:grid!important;
+  place-items:center!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  padding:10px!important;
+  border-color:rgba(255,209,102,.12)!important;
+  border-radius:11px!important;
+  background:
+    linear-gradient(rgba(255,209,102,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,159,109,.016) 1px,transparent 1px),
+    #02050a!important;
+  background-size:24px 24px,24px 24px,auto!important
+}
+body.lab-stage-mode .kspace-canvas-shell canvas{
+  width:auto!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  aspect-ratio:1!important;
+  object-fit:contain!important;
+  image-rendering:auto!important
+}
+body.lab-stage-mode #kspace>.kspace-readouts{
+  min-height:50px!important;
+  max-height:58px!important;
+  gap:5px!important
+}
+body.lab-stage-mode #kspace>.kspace-readouts>div{
+  padding:6px 8px!important
+}
+body.lab-stage-mode #kspace>.kspace-readouts span{
+  display:none!important
+}
+body.lab-stage-mode .kspace-teaching-note{
+  display:none!important
+}
+
+/* Spatial: side-by-side object space and encoded reconstruction stay large and comparable. */
+body.lab-stage-mode #spatial>.spatial-layout{
+  grid-template-columns:clamp(270px,19vw,315px) minmax(0,1fr) minmax(0,1fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode .spatial-controls-card{
+  align-content:start!important
+}
+body.lab-stage-mode .spatial-explain{
+  margin-top:8px!important;
+  padding:8px 9px!important
+}
+body.lab-stage-mode .spatial-explain span{
+  display:none!important
+}
+body.lab-stage-mode .spatial-output-card{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  gap:7px!important;
+  min-height:0!important
+}
+body.lab-stage-mode .spatial-canvas-shell{
+  display:grid!important;
+  place-items:center!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  padding:10px!important;
+  border-color:rgba(103,228,192,.12)!important;
+  border-radius:11px!important;
+  background:
+    linear-gradient(rgba(103,228,192,.016) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(85,232,255,.014) 1px,transparent 1px),
+    #02050a!important;
+  background-size:24px 24px,24px 24px,auto!important
+}
+body.lab-stage-mode .spatial-canvas-shell canvas{
+  width:auto!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  aspect-ratio:1!important;
+  object-fit:contain!important
+}
+body.lab-stage-mode #spatial>.spatial-readouts{
+  min-height:50px!important;
+  max-height:58px!important;
+  gap:5px!important
+}
+body.lab-stage-mode #spatial>.spatial-readouts>div{
+  padding:6px 8px!important
+}
+body.lab-stage-mode #spatial>.spatial-readouts span{
+  display:none!important
+}
+body.lab-stage-mode .spatial-teaching-note{
+  display:none!important
+}
+
+/* Artifact: the synthetic pattern itself dominates, with controls as a narrow diagnostic rack. */
+body.lab-stage-mode #artifact>.artifact-lab-grid{
+  grid-template-columns:clamp(310px,22vw,350px) minmax(0,1fr)!important;
+  gap:14px!important
+}
+body.lab-stage-mode .artifact-lab-controls{
+  align-content:start!important
+}
+body.lab-stage-mode .artifact-lab-controls>.field{
+  margin-bottom:8px!important
+}
+body.lab-stage-mode .artifact-lab-controls>.field select{
+  width:100%!important;
+  min-height:34px!important
+}
+body.lab-stage-mode .artifact-lab-readout{
+  margin-top:9px!important;
+  padding:9px 10px!important
+}
+body.lab-stage-mode .artifact-lab-readout span{
+  display:none!important
+}
+body.lab-stage-mode .artifact-lab-canvas-card{
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  gap:8px!important
+}
+body.lab-stage-mode .artifact-canvas-shell{
+  display:grid!important;
+  place-items:center!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  padding:12px!important;
+  border-color:rgba(217,140,255,.13)!important;
+  border-radius:12px!important;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(154,131,255,.035),transparent 64%),
+    linear-gradient(rgba(217,140,255,.016) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(154,131,255,.014) 1px,transparent 1px),
+    #02050a!important;
+  background-size:auto,26px 26px,26px 26px,auto!important
+}
+body.lab-stage-mode .artifact-canvas-shell canvas{
+  width:auto!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  aspect-ratio:1!important;
+  object-fit:contain!important
+}
+body.lab-stage-mode .artifact-canvas-note{
+  min-height:40px!important;
+  padding:7px 9px!important
+}
+body.lab-stage-mode .artifact-canvas-note span{
+  display:none!important
+}
+
+/* Presets are shortcuts, not the main experiment: only show when there is enough height. */
+@media (max-height:899px){
+  body.lab-stage-mode :is(
+    .contrast-presets,.timing-presets,.motion-presets,.kspace-presets,.spatial-presets,.artifact-lab-presets
+  ){
+    display:none!important
+  }
+}
+
+/* Mid-width desktops keep usable controls and two large visual surfaces. */
+@media (min-width:900px) and (max-width:1179px){
+  body.lab-stage-mode #motion>.motion-layout,
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:clamp(285px,31vw,340px) minmax(0,1fr)!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:clamp(250px,29vw,300px) repeat(2,minmax(0,1fr))!important
+  }
+}
+
+/* Tablet: stack controls above paired scientific displays rather than crushing three columns. */
+@media (max-width:899px) and (min-width:721px){
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-rows:auto minmax(0,1fr)!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout>.kspace-controls-card,
+  body.lab-stage-mode #spatial>.spatial-layout>.spatial-controls-card{
+    grid-column:1/-1!important
+  }
+}
