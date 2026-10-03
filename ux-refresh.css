@@ -1274,3 +1274,464 @@ body.lab-stage-mode .artifact-lab-readout span{font-size:.52rem!important;line-h
   body.lab-stage-mode .timing-summary>div:nth-child(n+3),
   body.lab-stage-mode .motion-summary>div:nth-child(n+3){display:none!important}
 }
+
+
+/* Spectral Command System — futuristic color, material, and cross-workspace consistency */
+:root{
+  --neo-bg:#030711;
+  --neo-bg-2:#050b16;
+  --neo-panel:rgba(8,17,31,.92);
+  --neo-panel-2:rgba(11,23,40,.90);
+  --neo-panel-soft:rgba(11,25,42,.66);
+  --neo-line:rgba(120,205,255,.12);
+  --neo-line-hi:rgba(126,220,255,.28);
+  --neo-line-violet:rgba(145,121,255,.22);
+  --neo-text:#f3f9ff;
+  --neo-muted:#91aabd;
+  --neo-dim:#647d90;
+  --neo-cyan:#55e8ff;
+  --neo-blue:#6d9cff;
+  --neo-violet:#9a83ff;
+  --neo-magenta:#d98cff;
+  --neo-mint:#67e4c0;
+  --neo-amber:#ffd166;
+  --neo-coral:#ff907f;
+  --neo-glow:0 0 0 1px rgba(116,214,255,.035),0 18px 54px rgba(0,0,0,.22);
+  --neo-glow-hi:0 0 34px rgba(82,211,255,.08),0 22px 70px rgba(0,0,0,.28)
+}
+
+/* Global atmosphere: technical, dimensional, not neon wallpaper. */
+html{background:var(--neo-bg)!important}
+body{
+  background:
+    radial-gradient(900px 560px at 10% -8%,rgba(55,198,255,.10),transparent 62%),
+    radial-gradient(820px 560px at 102% 8%,rgba(132,105,255,.085),transparent 65%),
+    radial-gradient(680px 480px at 52% 110%,rgba(72,225,190,.04),transparent 66%),
+    linear-gradient(180deg,#030711 0%,#050a14 48%,#03070f 100%)!important;
+  color:var(--neo-text)!important
+}
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(107,192,235,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(107,192,235,.025) 1px,transparent 1px),
+    repeating-linear-gradient(180deg,rgba(255,255,255,.008) 0 1px,transparent 1px 5px);
+  background-size:42px 42px,42px 42px,100% 5px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.82),rgba(0,0,0,.20) 72%,transparent)
+}
+::selection{background:rgba(85,232,255,.24)!important;color:#fff!important}
+
+/* Shared chrome. */
+.topbar{
+  background:linear-gradient(180deg,rgba(4,9,19,.92),rgba(4,10,20,.82))!important;
+  border-bottom:1px solid rgba(112,211,255,.14)!important;
+  box-shadow:0 14px 40px rgba(0,0,0,.22)!important;
+  backdrop-filter:blur(20px) saturate(1.18)!important
+}
+.brandmark{filter:drop-shadow(0 0 18px rgba(85,232,255,.19))!important}
+.brand-command{color:#aec0d0!important}
+.releasebadge{
+  border-color:rgba(85,232,255,.22)!important;
+  background:linear-gradient(135deg,rgba(85,232,255,.07),rgba(109,156,255,.04))!important;
+  color:#c6f4fb!important
+}
+.workspace-rail,.v27-workspace-rail{
+  background:linear-gradient(180deg,rgba(6,13,25,.91),rgba(5,11,21,.88))!important;
+  border-color:rgba(126,211,255,.13)!important;
+  box-shadow:0 18px 54px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.025)!important
+}
+.workspace-rail button{
+  color:#738da0!important
+}
+.workspace-rail button:hover{
+  background:linear-gradient(145deg,rgba(85,232,255,.045),rgba(109,156,255,.025))!important;
+  border-color:rgba(126,211,255,.12)!important;
+  color:#dbefff!important
+}
+.workspace-rail button.active{
+  background:linear-gradient(145deg,rgba(85,232,255,.095),rgba(109,156,255,.07))!important;
+  border-color:rgba(85,232,255,.22)!important;
+  color:#fff!important;
+  box-shadow:inset 0 0 24px rgba(85,232,255,.035)!important
+}
+
+/* One material language everywhere: spectral glass with a quiet specular top edge. */
+.card,.seqfam-toolbar,.seqfam-detail,.seqfam-anatomy-lab,.seqfam-dna-builder,
+.seqfam-compare-lab,.seqfam-challenge,.premium-zone,.premium-card,.pref-card,
+.system-panel,.lab-continuity,.lab-challenge-launcher,.parameter-goal-panel,
+.parameter-challenge-panel,.v271-analysis,.labs-home-work,.labs-principle-strip{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 13%,var(--neo-line))!important;
+  background:
+    radial-gradient(360px circle at var(--sf-x,50%) var(--sf-y,0%),color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 5%,transparent),transparent 65%),
+    linear-gradient(155deg,rgba(10,22,38,.94),rgba(5,12,23,.97))!important;
+  box-shadow:var(--neo-glow)!important
+}
+.card:after,.premium-card:after,.seqfam-detail:after,.pref-card:after{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:1px;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 42%,transparent),rgba(255,255,255,.10),transparent);
+  opacity:.55
+}
+.card:hover,.premium-card:hover,.seqfam-family:hover{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 31%,var(--neo-line))!important;
+  box-shadow:var(--neo-glow-hi)!important
+}
+.card h3,.card h4,.seqfam-detail h3,.premium-card h3{color:#eef7ff!important}
+.sub,.small,.card p,.card li{color:#93aabb!important}
+
+/* Section headers use the same HUD treatment across Labs, Sequences and Reference. */
+.section-head,.seqfam-hero{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 20%,var(--neo-line))!important;
+  background:
+    linear-gradient(90deg,color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 3.5%,transparent),transparent 48%),
+    linear-gradient(145deg,rgba(10,22,39,.95),rgba(5,12,24,.96))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.018),0 18px 48px rgba(0,0,0,.16)!important
+}
+.section-head:before,.seqfam-hero:before{
+  background:
+    radial-gradient(420px circle at 8% 0,color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 12%,transparent),transparent 66%),
+    linear-gradient(90deg,color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 72%,transparent),transparent 52%) top left/100% 1px no-repeat!important
+}
+.eyebrow{
+  color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 88%,#eaf7ff)!important;
+  text-shadow:0 0 18px color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 22%,transparent)
+}
+
+/* Home is the showroom: stronger identity, controlled energy. */
+.labs-home-hero{
+  border-color:rgba(100,213,255,.24)!important;
+  background:
+    radial-gradient(460px 330px at 76% 44%,rgba(85,232,255,.13),transparent 66%),
+    radial-gradient(420px 300px at 94% 14%,rgba(154,131,255,.12),transparent 69%),
+    linear-gradient(135deg,rgba(7,18,34,.98),rgba(4,10,20,.99) 56%,rgba(10,10,27,.98))!important;
+  box-shadow:0 30px 90px rgba(0,0,0,.36),inset 0 1px rgba(255,255,255,.028)!important
+}
+.labs-home-hero:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(85,232,255,.50),transparent 34%,transparent 70%,rgba(154,131,255,.36)) top/100% 1px no-repeat,
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent 32%);
+  opacity:.8
+}
+.labs-home-copy h1{
+  color:#f5fbff!important;
+  text-shadow:0 0 28px rgba(85,232,255,.07)
+}
+.labs-home-copy>p{color:#abc0cf!important}
+.v27-home-search{
+  border-color:rgba(85,232,255,.22)!important;
+  background:linear-gradient(135deg,rgba(10,26,44,.96),rgba(8,16,31,.98))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.025),0 16px 46px rgba(0,0,0,.22)!important
+}
+.v27-home-search:hover{
+  border-color:rgba(85,232,255,.38)!important;
+  background:linear-gradient(135deg,rgba(11,31,51,.97),rgba(10,18,36,.99))!important
+}
+.v27-resonance-logo{filter:drop-shadow(0 0 42px rgba(85,232,255,.22))!important}
+.v27-resonance-trace{stroke:rgba(85,232,255,.82)!important}
+
+/* Lab identities: unique hue, shared material system. */
+.lab-home-parameter,#sandbox{--sf-accent:#55e8ff;--lab-accent:#55e8ff;--lab-accent-2:#6d9cff}
+.lab-home-contrast,#contrast{--sf-accent:#a58cff;--lab-accent:#a58cff;--lab-accent-2:#d28cff}
+.lab-home-timing,#timing{--sf-accent:#54d9ff;--lab-accent:#54d9ff;--lab-accent-2:#55e8ff}
+.lab-home-motion,#motion{--sf-accent:#ff907f;--lab-accent:#ff907f;--lab-accent-2:#ffb16f}
+.lab-home-kspace,#kspace{--sf-accent:#ffd166;--lab-accent:#ffd166;--lab-accent-2:#ff9f6d}
+.lab-home-spatial,#spatial{--sf-accent:#67e4c0;--lab-accent:#67e4c0;--lab-accent-2:#55e8ff}
+.lab-home-artifact,#artifact{--sf-accent:#d98cff;--lab-accent:#d98cff;--lab-accent-2:#9a83ff}
+#protocol{--sf-accent:#6d9cff!important}
+.reference-tool-section{--sf-accent:#69c7ff}
+.premium-zone{--sf-accent:#a58cff!important}
+
+/* Home Lab cards become collectible instrument modules rather than generic cards. */
+.lab-home-card{
+  border-color:color-mix(in srgb,var(--sf-accent) 21%,var(--neo-line))!important;
+  background:
+    radial-gradient(270px 180px at 84% 0,color-mix(in srgb,var(--sf-accent) 9%,transparent),transparent 69%),
+    linear-gradient(155deg,rgba(10,23,39,.96),rgba(5,12,23,.985))!important;
+  box-shadow:0 16px 44px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.02)!important
+}
+.lab-home-card:before{
+  height:2px!important;
+  background:linear-gradient(90deg,var(--sf-accent),color-mix(in srgb,var(--sf-accent) 34%,transparent) 52%,transparent 88%)!important;
+  box-shadow:0 0 18px color-mix(in srgb,var(--sf-accent) 18%,transparent)
+}
+.lab-home-card:hover,.lab-home-card:focus-within{
+  border-color:color-mix(in srgb,var(--sf-accent) 42%,var(--neo-line))!important;
+  box-shadow:0 26px 68px rgba(0,0,0,.28),0 0 34px color-mix(in srgb,var(--sf-accent) 5%,transparent)!important
+}
+.lab-home-icon{
+  display:grid!important;
+  place-items:center!important;
+  width:37px!important;
+  height:37px!important;
+  border:1px solid color-mix(in srgb,var(--sf-accent) 36%,transparent)!important;
+  border-radius:11px!important;
+  color:var(--sf-accent)!important;
+  background:color-mix(in srgb,var(--sf-accent) 8%,rgba(5,12,23,.94))!important;
+  box-shadow:inset 0 0 20px color-mix(in srgb,var(--sf-accent) 5%,transparent),0 0 20px color-mix(in srgb,var(--sf-accent) 5%,transparent)
+}
+.lab-home-badge,.premium-lock,.premium-status,.compare-state{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 24%,var(--neo-line))!important;
+  background:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 6%,rgba(6,14,27,.92))!important;
+  color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 68%,#dceaff)!important
+}
+.v27-home-preview{
+  position:relative;
+  border-color:color-mix(in srgb,var(--sf-accent) 17%,var(--neo-line))!important;
+  background:
+    linear-gradient(rgba(125,205,245,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(125,205,245,.025) 1px,transparent 1px),
+    #040a13!important;
+  background-size:18px 18px,18px 18px,auto!important;
+  box-shadow:inset 0 0 28px rgba(0,0,0,.36),inset 0 1px color-mix(in srgb,var(--sf-accent) 22%,transparent)!important
+}
+.lab-home-state{
+  border-top-color:color-mix(in srgb,var(--sf-accent) 12%,var(--neo-line))!important
+}
+.lab-home-state small{color:var(--neo-dim)!important}
+.lab-home-state b{color:#e9f6ff!important}
+.lab-home-tags span{
+  border-color:color-mix(in srgb,var(--sf-accent) 13%,var(--neo-line))!important;
+  background:rgba(255,255,255,.012)!important;
+  color:#7994a7!important
+}
+.lab-home-open,.premium-open{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--premium-accent,var(--neo-cyan))) 30%,var(--neo-line))!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--sf-accent,var(--premium-accent,var(--neo-cyan))) 9%,#07111f),rgba(8,17,31,.95))!important;
+  color:#eaf7ff!important
+}
+.lab-home-open:hover,.premium-open:hover{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--premium-accent,var(--neo-cyan))) 54%,var(--neo-line))!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--sf-accent,var(--premium-accent,var(--neo-cyan))) 14%,#07111f),rgba(8,17,31,.98))!important
+}
+
+/* Controls look like instrumentation, with the same geometry everywhere. */
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{
+  border-color:rgba(126,205,244,.15)!important;
+  background:linear-gradient(180deg,rgba(5,12,23,.98),rgba(7,16,29,.98))!important;
+  color:#eaf6ff!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.018)!important
+}
+input:not([type=checkbox]):not([type=radio]):not([type=range]):focus,select:focus,textarea:focus{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 55%,transparent)!important;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 10%,transparent),inset 0 1px rgba(255,255,255,.02)!important
+}
+input[type=range]{
+  background:linear-gradient(90deg,var(--sf-accent,var(--neo-cyan)) 0 var(--sf-fill),rgba(116,151,178,.16) var(--sf-fill) 100%)!important;
+  box-shadow:0 0 14px color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 4%,transparent)
+}
+input[type=range]::-webkit-slider-thumb{
+  border-color:#e9fbff!important;
+  background:var(--sf-accent,var(--neo-cyan))!important;
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 13%,transparent),0 0 16px color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 26%,transparent)!important
+}
+.btn,.labs-home-primary{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 36%,var(--neo-line))!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 15%,#07111f),rgba(19,30,54,.84))!important;
+  color:#eefaff!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.025)!important
+}
+.btn.secondary{
+  border-color:var(--neo-line)!important;
+  background:rgba(255,255,255,.015)!important;
+  color:#b6c8d5!important
+}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,summary:focus-visible,[tabindex]:focus-visible{
+  outline-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 86%,white)!important
+}
+
+/* Readouts and metrics adopt a precise instrument display language. */
+output,.comparecard .n,.kpi .v,.goal-track-card b,.motion-summary b,
+.kspace-readouts b,.spatial-readouts b,.contrast-summary b,.premium-readout b,
+.diffusion-readout b,.parallel-readout b,.rf-readout b{
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em
+}
+.comparecard,.goal-track-card,.motion-summary>div,.kspace-readouts>div,
+.spatial-readouts>div,.contrast-summary>div,.premium-summary>div{
+  border-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 13%,var(--neo-line))!important;
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 2.5%,rgba(8,18,32,.94)),rgba(5,12,23,.96))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.015)!important
+}
+.comparecard .n,.kpi .v,.motion-summary b,.kspace-readouts b,.spatial-readouts b,.contrast-summary b{
+  color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 62%,#eefaff)!important;
+  text-shadow:0 0 16px color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 10%,transparent)
+}
+
+/* Image/graph wells share the same scanner-display frame. */
+:is(.kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell,.contrast-curve-panel,.motion-image-panel,.timing-timeline){
+  border-color:color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 18%,var(--neo-line))!important;
+  background:
+    linear-gradient(rgba(126,196,239,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(126,196,239,.022) 1px,transparent 1px),
+    #030812!important;
+  background-size:20px 20px,20px 20px,auto!important;
+  box-shadow:inset 0 0 34px rgba(0,0,0,.38),inset 0 1px color-mix(in srgb,var(--sf-accent,var(--neo-cyan)) 18%,transparent)!important
+}
+
+/* Sequences and Reference inherit the same futuristic spec without becoming Labs. */
+.seqfam-family{
+  border-color:rgba(126,196,239,.12)!important;
+  background:
+    radial-gradient(180px circle at 90% 0,rgba(109,156,255,.055),transparent 70%),
+    linear-gradient(155deg,rgba(9,20,35,.94),rgba(5,12,23,.97))!important
+}
+.seqfam-family.active{
+  border-color:rgba(109,156,255,.46)!important;
+  box-shadow:inset 3px 0 0 #6d9cff,0 0 24px rgba(109,156,255,.045)!important
+}
+.seqfam-family-code{
+  border-color:rgba(109,156,255,.22)!important;
+  background:rgba(109,156,255,.055)!important;
+  color:#a9c4ff!important
+}
+.reference-tool-section>.section-head .eyebrow{
+  border-color:rgba(105,199,255,.18)!important;
+  background:rgba(105,199,255,.045)!important;
+  color:#a8e0ff!important
+}
+.rescue-problem,.check,.param-ref-group,.shortcut{
+  border-color:rgba(126,196,239,.10)!important;
+  background:rgba(255,255,255,.008)!important
+}
+
+/* Premium uses violet as a family color, then controlled sub-accents per concept. */
+.premium-zone{
+  border-color:rgba(165,140,255,.20)!important;
+  background:
+    radial-gradient(560px circle at 92% 0,rgba(165,140,255,.08),transparent 69%),
+    linear-gradient(155deg,rgba(10,20,37,.95),rgba(6,12,25,.98))!important
+}
+.premium-card{
+  background:
+    radial-gradient(240px circle at 90% 0,color-mix(in srgb,var(--premium-accent,#a58cff) 9%,transparent),transparent 70%),
+    linear-gradient(155deg,rgba(10,20,37,.96),rgba(5,12,24,.985))!important
+}
+.premium-icon{
+  border-color:color-mix(in srgb,var(--premium-accent,#a58cff) 34%,transparent)!important;
+  background:color-mix(in srgb,var(--premium-accent,#a58cff) 8%,rgba(5,12,23,.96))!important;
+  color:var(--premium-accent,#a58cff)!important;
+  box-shadow:0 0 22px color-mix(in srgb,var(--premium-accent,#a58cff) 7%,transparent)!important
+}
+
+/* Search, Settings and modal surfaces now visibly belong to the same product. */
+.palette,.prefs,.premiummodal,.v27-hub{
+  border-color:rgba(126,211,255,.19)!important;
+  background:
+    radial-gradient(520px circle at 82% 0,rgba(109,156,255,.055),transparent 70%),
+    linear-gradient(155deg,rgba(8,18,33,.985),rgba(4,10,21,.99))!important;
+  box-shadow:0 36px 120px rgba(0,0,0,.58),inset 0 1px rgba(255,255,255,.025)!important
+}
+.paletteinput{
+  border-color:rgba(85,232,255,.18)!important;
+  background:rgba(3,9,19,.84)!important
+}
+.palettefilters button,.premium-filter{
+  border-color:rgba(126,196,239,.12)!important;
+  background:rgba(255,255,255,.012)!important;
+  color:#8ea6b7!important
+}
+.palettefilters button.active,.premium-filter.active{
+  border-color:rgba(85,232,255,.30)!important;
+  background:linear-gradient(135deg,rgba(85,232,255,.085),rgba(109,156,255,.055))!important;
+  color:#eafaff!important
+}
+.pref-card,.palitem,.v27-hub-grid button{
+  background:rgba(255,255,255,.009)!important;
+  border-color:rgba(126,196,239,.09)!important
+}
+
+/* Focused Labs become the strongest futuristic surface: full-screen instrument bays. */
+body.lab-stage-mode{
+  background:
+    radial-gradient(740px 520px at 78% 38%,color-mix(in srgb,var(--lab-accent,#55e8ff) 10%,transparent),transparent 70%),
+    radial-gradient(640px 440px at 10% 86%,color-mix(in srgb,var(--lab-accent-2,#6d9cff) 7%,transparent),transparent 72%),
+    linear-gradient(180deg,#030711,#040914 58%,#02060d)!important
+}
+body.lab-stage-mode main.shell:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(color-mix(in srgb,var(--lab-accent,#55e8ff) 3%,transparent) 1px,transparent 1px),
+    linear-gradient(90deg,color-mix(in srgb,var(--lab-accent,#55e8ff) 3%,transparent) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:radial-gradient(circle at 60% 45%,#000,transparent 78%)
+}
+body.lab-stage-mode main.shell{position:relative!important}
+body.lab-stage-mode .v27-lab-switcher{
+  border-color:color-mix(in srgb,var(--lab-accent,#55e8ff) 20%,var(--neo-line))!important;
+  background:linear-gradient(180deg,rgba(6,14,27,.91),rgba(4,10,20,.94))!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.02)!important
+}
+body.lab-stage-mode .v27-lab-switcher button.active{
+  border-color:color-mix(in srgb,var(--lab-accent,#55e8ff) 42%,transparent)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--lab-accent,#55e8ff) 13%,#07111f),color-mix(in srgb,var(--lab-accent-2,#6d9cff) 8%,#07111f))!important;
+  color:#fff!important;
+  box-shadow:inset 0 0 20px color-mix(in srgb,var(--lab-accent,#55e8ff) 5%,transparent),0 0 22px color-mix(in srgb,var(--lab-accent,#55e8ff) 5%,transparent)!important
+}
+body.lab-stage-mode .v27-lab-switcher .v27-lab-exit{
+  color:#9fb4c4!important
+}
+body.lab-stage-mode :is(
+  #paramControlsCard,#paramModelCard,
+  .contrast-controls-card,.contrast-output-card,
+  .timing-controls-card,.timing-output-card,
+  .motion-controls-card,.motion-output-card,
+  .kspace-controls-card,.kspace-output-card,
+  .spatial-controls-card,.spatial-output-card,
+  .artifact-lab-controls,.artifact-lab-canvas-card
+){
+  border-color:color-mix(in srgb,var(--lab-accent,#55e8ff) 18%,var(--neo-line))!important;
+  background:
+    radial-gradient(320px circle at 92% 0,color-mix(in srgb,var(--lab-accent,#55e8ff) 6%,transparent),transparent 69%),
+    linear-gradient(155deg,rgba(8,19,34,.965),rgba(4,10,20,.985))!important;
+  box-shadow:0 18px 52px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.018)!important
+}
+body.lab-stage-mode :is(
+  .contrast-output-card,.timing-output-card,.motion-output-card,
+  .kspace-output-card,.spatial-output-card,.artifact-lab-canvas-card,#paramModelCard
+){
+  border-color:color-mix(in srgb,var(--lab-accent,#55e8ff) 34%,var(--neo-line))!important;
+  box-shadow:
+    inset 0 1px color-mix(in srgb,var(--lab-accent,#55e8ff) 14%,transparent),
+    0 20px 60px rgba(0,0,0,.28),
+    0 0 36px color-mix(in srgb,var(--lab-accent,#55e8ff) 4%,transparent)!important
+}
+body.lab-stage-mode :is(.compare-state,output){
+  color:color-mix(in srgb,var(--lab-accent,#55e8ff) 68%,#f4fbff)!important
+}
+
+/* Very subtle motion; the interface should feel alive, never distracting. */
+@media (hover:hover) and (pointer:fine){
+  .lab-home-card,.premium-card,.seqfam-family{
+    transition:transform .18s var(--sf-ease),border-color .18s var(--sf-ease),box-shadow .18s var(--sf-ease),background .18s var(--sf-ease)!important
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  .lab-home-card,.premium-card,.seqfam-family,.card{transition:none!important}
+}
+body.ui-reduce-motion .lab-home-card,
+body.ui-reduce-motion .premium-card,
+body.ui-reduce-motion .seqfam-family,
+body.ui-reduce-motion .card{transition:none!important}
+
+@media (max-width:760px){
+  body:after{background-size:32px 32px,32px 32px,100% 5px}
+  .labs-home-hero{box-shadow:0 22px 60px rgba(0,0,0,.30)!important}
+  .lab-home-card{box-shadow:0 12px 34px rgba(0,0,0,.18)!important}
+  body.lab-stage-mode main.shell:before{background-size:26px 26px}
+}
