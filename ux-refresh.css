@@ -2576,3 +2576,226 @@ body.lab-stage-mode .v27-intel-cell.sf-updated{
     max-height:72px!important
   }
 }
+
+
+/* Lab identity system — one product language, seven deliberate visual signatures */
+
+/* Keep every legacy section-accent consumer aligned with the current Lab identity. */
+#sandbox{--section-accent:#55e8ff!important;--lab-accent:#55e8ff;--lab-accent-2:#6d9cff}
+#contrast{--section-accent:#a58cff!important;--lab-accent:#a58cff;--lab-accent-2:#d28cff}
+#timing{--section-accent:#54d9ff!important;--lab-accent:#54d9ff;--lab-accent-2:#55e8ff}
+#motion{--section-accent:#ff907f!important;--lab-accent:#ff907f;--lab-accent-2:#ffb16f}
+#kspace{--section-accent:#ffd166!important;--lab-accent:#ffd166;--lab-accent-2:#ff9f6d}
+#spatial{--section-accent:#67e4c0!important;--lab-accent:#67e4c0;--lab-accent-2:#55e8ff}
+#artifact{--section-accent:#d98cff!important;--lab-accent:#d98cff;--lab-accent-2:#9a83ff}
+
+body.nav-focus:has(#sandbox.active-section){--section-accent:#55e8ff}
+body.nav-focus:has(#contrast.active-section){--section-accent:#a58cff}
+body.nav-focus:has(#timing.active-section){--section-accent:#54d9ff}
+body.nav-focus:has(#motion.active-section){--section-accent:#ff907f}
+body.nav-focus:has(#kspace.active-section){--section-accent:#ffd166}
+body.nav-focus:has(#spatial.active-section){--section-accent:#67e4c0}
+body.nav-focus:has(#artifact.active-section){--section-accent:#d98cff}
+
+/* The result cell is always the visual anchor; changed/why remain quieter context. */
+body.lab-stage-mode .v27-intel-cell:nth-child(2){
+  border-color:color-mix(in srgb,var(--lab-accent,#55e8ff) 30%,var(--neo-line))!important;
+  background:
+    radial-gradient(260px circle at 92% 8%,color-mix(in srgb,var(--lab-accent-2,#6d9cff) 9%,transparent),transparent 70%),
+    linear-gradient(135deg,color-mix(in srgb,var(--lab-accent,#55e8ff) 7%,rgba(9,20,35,.96)),rgba(5,12,23,.98))!important;
+  box-shadow:inset 0 1px color-mix(in srgb,var(--lab-accent,#55e8ff) 18%,transparent)!important
+}
+body.lab-stage-mode .v27-intel-cell:nth-child(2) b{
+  color:color-mix(in srgb,var(--lab-accent,#55e8ff) 56%,#f5fbff)!important;
+  text-shadow:0 0 18px color-mix(in srgb,var(--lab-accent,#55e8ff) 10%,transparent)
+}
+
+/* All focused output cards share geometry and material, but each Lab gets one restrained motif. */
+body.lab-stage-mode :is(
+  #paramModelCard,.contrast-output-card,.timing-output-card,.motion-output-card,
+  .kspace-output-card,.spatial-output-card,.artifact-lab-canvas-card
+){
+  position:relative!important;
+  isolation:isolate
+}
+body.lab-stage-mode :is(
+  #paramModelCard,.contrast-output-card,.timing-output-card,.motion-output-card,
+  .kspace-output-card,.spatial-output-card,.artifact-lab-canvas-card
+)>*{
+  position:relative;
+  z-index:1
+}
+
+/* Parameter: calibration grid / multi-axis tradeoff map. */
+body.lab-stage-mode #paramModelCard{
+  background:
+    linear-gradient(rgba(85,232,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(109,156,255,.026) 1px,transparent 1px),
+    radial-gradient(420px circle at 82% 10%,rgba(85,232,255,.075),transparent 70%),
+    linear-gradient(155deg,rgba(8,19,34,.97),rgba(4,10,20,.99))!important;
+  background-size:26px 26px,26px 26px,auto,auto!important
+}
+
+/* Contrast: spectral separation / relaxation families. */
+body.lab-stage-mode .contrast-output-card{
+  background:
+    radial-gradient(420px 150px at 92% 20%,rgba(210,140,255,.095),transparent 72%),
+    radial-gradient(360px 180px at 24% 82%,rgba(165,140,255,.055),transparent 72%),
+    linear-gradient(155deg,rgba(10,17,36,.97),rgba(5,10,22,.99))!important
+}
+body.lab-stage-mode .contrast-output-card:before{
+  content:"";
+  position:absolute;
+  inset:18% 4% auto 44%;
+  height:1px;
+  z-index:0;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(165,140,255,.30),rgba(210,140,255,.16),transparent)
+}
+
+/* Timing: echo-train ticks / acquisition cadence. */
+body.lab-stage-mode .timing-output-card{
+  background:
+    repeating-linear-gradient(90deg,transparent 0 46px,rgba(84,217,255,.025) 46px 47px),
+    radial-gradient(420px circle at 88% 8%,rgba(84,217,255,.07),transparent 70%),
+    linear-gradient(155deg,rgba(7,20,36,.97),rgba(4,10,20,.99))!important
+}
+
+/* Motion: directional displacement / phase-history streaks. */
+body.lab-stage-mode .motion-output-card{
+  background:
+    repeating-linear-gradient(135deg,transparent 0 34px,rgba(255,144,127,.025) 34px 35px),
+    radial-gradient(420px circle at 86% 12%,rgba(255,144,127,.075),transparent 72%),
+    linear-gradient(155deg,rgba(24,15,24,.97),rgba(5,10,20,.99))!important
+}
+
+/* K-Space: frequency lattice with center-energy emphasis. */
+body.lab-stage-mode .kspace-output-card{
+  background:
+    linear-gradient(rgba(255,209,102,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,209,102,.028) 1px,transparent 1px),
+    radial-gradient(circle at 50% 50%,rgba(255,209,102,.075),transparent 30%),
+    linear-gradient(155deg,rgba(22,19,12,.97),rgba(5,10,18,.99))!important;
+  background-size:22px 22px,22px 22px,auto,auto!important
+}
+
+/* Spatial: encoded coordinate field / coverage geometry. */
+body.lab-stage-mode .spatial-output-card{
+  background:
+    linear-gradient(rgba(103,228,192,.024) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(85,232,255,.022) 1px,transparent 1px),
+    radial-gradient(400px circle at 84% 10%,rgba(103,228,192,.07),transparent 72%),
+    linear-gradient(155deg,rgba(7,22,26,.97),rgba(4,10,19,.99))!important;
+  background-size:32px 32px,32px 32px,auto,auto!important
+}
+
+/* Artifact: interference / competing evidence patterns. */
+body.lab-stage-mode .artifact-lab-canvas-card{
+  background:
+    repeating-linear-gradient(115deg,transparent 0 38px,rgba(217,140,255,.022) 38px 39px),
+    repeating-linear-gradient(65deg,transparent 0 54px,rgba(154,131,255,.018) 54px 55px),
+    radial-gradient(420px circle at 86% 10%,rgba(217,140,255,.07),transparent 72%),
+    linear-gradient(155deg,rgba(20,13,30,.97),rgba(5,10,20,.99))!important
+}
+
+/* Switcher: preserve individual Lab identity without turning navigation into a rainbow bar. */
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab="parameter"]{--switch-lab:#55e8ff}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab="contrast"]{--switch-lab:#a58cff}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab="timing"]{--switch-lab:#54d9ff}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab="motion"]{--switch-lab:#ff907f}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab="kspace"]{--switch-lab:#ffd166}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab="spatial"]{--switch-lab:#67e4c0}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab="artifact"]{--switch-lab:#d98cff}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab] svg{
+  color:color-mix(in srgb,var(--switch-lab) 62%,#8ba3b5)!important
+}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab]:not(.active){
+  border-color:color-mix(in srgb,var(--switch-lab) 6%,transparent)!important
+}
+body.lab-stage-mode .v27-lab-switcher [data-v27-lab].active svg{
+  color:var(--switch-lab)!important;
+  filter:drop-shadow(0 0 8px color-mix(in srgb,var(--switch-lab) 24%,transparent))
+}
+
+/* Deep Lab modules inherit the Lab family instead of reverting to legacy green/olive surfaces. */
+#contrast :is(
+  .contrast-material,.contrast-material-key,.contrast-material-key>div span,
+  .contrast-curve-panel,.contrast-decomp-row,.contrast-anatomy-card,.contrast-challenge-card
+),
+#timing :is(
+  .timing-summary>div,.timing-equation-card,.timing-kspace-card,.timing-challenge-card,
+  .timing-equation-breakdown>div,.timing-kspace-strip
+),
+#motion :is(
+  .motion-history,.motion-image-panel,.motion-summary>div,.motion-line-card,.motion-order-card,
+  .motion-order-images>div,.motion-challenge-card,.motion-challenge-body,.motion-challenge-constraint
+),
+#kspace :is(
+  .kspace-readouts>div,.kspace-energy-card,.kspace-energy-summary>div,.kspace-psf-card,
+  .kspace-psf-shell,.kspace-psf-stats>div,.kspace-challenge-card,.kspace-challenge-body,
+  .kspace-challenge-constraint
+),
+#spatial :is(
+  .spatial-readouts>div,.spatial-provenance-card,.spatial-provenance-row,.spatial-grid-card,
+  .spatial-axis-card,.spatial-causal-cards>div,.spatial-challenge-card,.spatial-challenge-body,
+  .spatial-challenge-constraint,.spatial-match-solver
+),
+#artifact :is(
+  .artifact-lab-readout,.artifact-fingerprint-card,.artifact-fingerprint-row,.artifact-differential-card,
+  .artifact-differential-vs>div,.artifact-challenge-card,.artifact-challenge-prompt,
+  .artifact-reference-panel
+){
+  border-color:color-mix(in srgb,var(--lab-accent) 16%,var(--neo-line))!important;
+  background:
+    radial-gradient(260px circle at 92% 0,color-mix(in srgb,var(--lab-accent) 4.5%,transparent),transparent 72%),
+    linear-gradient(155deg,rgba(9,20,35,.94),rgba(5,12,23,.97))!important;
+  color:#eaf5fc!important
+}
+
+/* Deep interactive controls use the same neutral surface + Lab accent edge. */
+#contrast :is(.contrast-challenge-card button,.contrast-material-key button),
+#timing :is(.timing-challenge-card button),
+#motion :is(.motion-challenge-targets button,.motion-challenge-actions button),
+#kspace :is(.kspace-challenge-targets button,.kspace-challenge-actions button),
+#spatial :is(.spatial-challenge-targets button,.spatial-challenge-actions button,.spatial-match-actions button),
+#artifact :is(.artifact-direction-logic button,.artifact-challenge-choices button,.artifact-challenge-actions button){
+  border-color:color-mix(in srgb,var(--lab-accent) 19%,var(--neo-line))!important;
+  background:color-mix(in srgb,var(--lab-accent) 3%,rgba(7,16,29,.96))!important;
+  color:#dceaf4!important
+}
+#contrast :is(.contrast-challenge-card button,.contrast-material-key button):hover,
+#timing :is(.timing-challenge-card button):hover,
+#motion :is(.motion-challenge-targets button,.motion-challenge-actions button):hover,
+#kspace :is(.kspace-challenge-targets button,.kspace-challenge-actions button):hover,
+#spatial :is(.spatial-challenge-targets button,.spatial-challenge-actions button,.spatial-match-actions button):hover,
+#artifact :is(.artifact-direction-logic button,.artifact-challenge-choices button,.artifact-challenge-actions button):hover{
+  border-color:color-mix(in srgb,var(--lab-accent) 38%,var(--neo-line))!important;
+  background:color-mix(in srgb,var(--lab-accent) 7%,rgba(7,16,29,.98))!important
+}
+
+/* Lab-colored values, neutral prose. */
+#contrast :is(.contrast-material-head strong,.contrast-summary b),
+#timing :is(.timing-summary b,.timing-equation-card strong),
+#motion :is(.motion-summary b,.motion-history b),
+#kspace :is(.kspace-readouts b,.kspace-energy-summary b,.kspace-psf-stats b),
+#spatial :is(.spatial-readouts b,.spatial-axis-card b),
+#artifact :is(.artifact-lab-readout b,.artifact-fingerprint-row b){
+  color:color-mix(in srgb,var(--lab-accent) 62%,#f4fbff)!important;
+  text-shadow:0 0 14px color-mix(in srgb,var(--lab-accent) 8%,transparent)
+}
+
+/* Warnings remain semantic amber/coral rather than inheriting a Lab brand color. */
+:is(.warn,.bad,.conflict,[data-state="warn"],[data-state="bad"]){
+  --semantic-accent:#ffd166
+}
+
+/* Keep motifs subtle on compact screens. */
+@media (max-width:720px){
+  body.lab-stage-mode #paramModelCard,
+  body.lab-stage-mode :is(
+    .contrast-output-card,.timing-output-card,.motion-output-card,
+    .kspace-output-card,.spatial-output-card,.artifact-lab-canvas-card
+  ){
+    background-size:auto!important
+  }
+}
