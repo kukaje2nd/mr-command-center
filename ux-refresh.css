@@ -4111,3 +4111,147 @@ body.lab-stage-mode #paramModelCard .balance-list{
   height:100%!important;
   align-content:center!important
 }
+
+
+/* Visual instrumentation pass — clearer graphics, stronger depth, consistent scanner-display language */
+body.lab-stage-mode :is(
+  .kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell,.motion-image-shell,
+  .contrast-curve-panel,.motion-history,.timing-timeline
+){
+  position:relative!important;
+  overflow:hidden!important;
+  border-color:color-mix(in srgb,var(--lab-accent) 24%,var(--neo-line))!important;
+  box-shadow:
+    inset 0 0 46px rgba(0,0,0,.34),
+    inset 0 1px color-mix(in srgb,var(--lab-accent) 10%,transparent),
+    0 14px 36px rgba(0,0,0,.16)!important
+}
+body.lab-stage-mode :is(
+  .kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell,.motion-image-shell,
+  .contrast-curve-panel,.motion-history,.timing-timeline
+):after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:4;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.015),transparent 12%,transparent 88%,rgba(0,0,0,.08)),
+    repeating-linear-gradient(180deg,rgba(255,255,255,.008) 0 1px,transparent 1px 4px);
+  mix-blend-mode:screen;
+  opacity:.45
+}
+
+/* Parameter map: visible baseline and instrument-like tracks. */
+body.lab-stage-mode #paramModelCard .balance-track{
+  position:relative!important;
+  min-height:9px!important;
+  overflow:visible!important;
+  background:
+    linear-gradient(90deg,rgba(109,156,255,.035),rgba(85,232,255,.08) 50%,rgba(109,156,255,.035)),
+    rgba(255,255,255,.018)!important
+}
+body.lab-stage-mode #paramModelCard .balance-track:before{
+  content:"";
+  position:absolute;
+  left:50%;top:-3px;bottom:-3px;
+  width:1px;
+  z-index:2;
+  background:rgba(220,239,250,.30);
+  box-shadow:0 0 8px rgba(85,232,255,.10)
+}
+body.lab-stage-mode #paramModelCard .balance-track:after{
+  content:"100%";
+  position:absolute;
+  left:50%;top:-16px;
+  transform:translateX(-50%);
+  color:#5f7a8d;
+  font-size:.43rem;
+  font-weight:850;
+  letter-spacing:.04em
+}
+body.lab-stage-mode #paramModelCard .balance-fill{
+  box-shadow:0 0 12px color-mix(in srgb,var(--lab-accent) 12%,transparent)!important
+}
+
+/* Contrast curves feel like an oscilloscope, not a plain canvas. */
+body.lab-stage-mode .contrast-curve-panel canvas{
+  border-radius:8px!important;
+  background:#050a15!important
+}
+body.lab-stage-mode .contrast-curve-legend span{
+  border:1px solid color-mix(in srgb,var(--lab-accent) 10%,var(--neo-line));
+  border-radius:999px;
+  padding:4px 7px;
+  background:rgba(255,255,255,.008)
+}
+
+/* Timing: center echo is the visual anchor, non-center echoes recede. */
+body.lab-stage-mode .timing-echo{
+  opacity:.58!important;
+  transition:opacity .16s ease,filter .16s ease!important
+}
+body.lab-stage-mode .timing-echo.center{
+  opacity:1!important;
+  filter:drop-shadow(0 0 9px color-mix(in srgb,var(--lab-accent) 44%,transparent))!important
+}
+body.lab-stage-mode .timing-echo.center i{
+  transform:scale(1.28)!important;
+  box-shadow:0 0 14px color-mix(in srgb,var(--lab-accent) 35%,transparent)!important
+}
+body.lab-stage-mode .timing-train-band{
+  background:
+    linear-gradient(90deg,color-mix(in srgb,var(--lab-accent) 5%,transparent),color-mix(in srgb,var(--lab-accent) 18%,transparent),color-mix(in srgb,var(--lab-accent) 5%,transparent))!important;
+  border-color:color-mix(in srgb,var(--lab-accent) 25%,transparent)!important
+}
+
+/* Motion: paired images read as reference vs affected acquisition. */
+body.lab-stage-mode .motion-images{
+  position:relative
+}
+body.lab-stage-mode .motion-image-panel:first-child{
+  border-color:rgba(85,232,255,.13)!important
+}
+body.lab-stage-mode .motion-image-panel:last-child{
+  border-color:rgba(255,144,127,.22)!important;
+  box-shadow:inset 0 1px rgba(255,144,127,.05)!important
+}
+
+/* K-space: make the frequency-space and image-space pairing visually explicit. */
+body.lab-stage-mode #kspace>.kspace-layout>.kspace-output-card:nth-child(2){
+  border-color:rgba(255,209,102,.24)!important
+}
+body.lab-stage-mode #kspace>.kspace-layout>.kspace-output-card:nth-child(3){
+  border-color:rgba(255,226,168,.16)!important
+}
+
+/* Spatial: object-space and periodic reconstruction get distinct but related frames. */
+body.lab-stage-mode #spatial>.spatial-layout>.spatial-output-card:nth-child(2){
+  border-color:rgba(103,228,192,.20)!important
+}
+body.lab-stage-mode #spatial>.spatial-layout>.spatial-output-card:nth-child(3){
+  border-color:rgba(85,232,255,.20)!important
+}
+
+/* Artifact preview gets a darker diagnostic surround so the pattern stays dominant. */
+body.lab-stage-mode .artifact-canvas-shell{
+  background:
+    radial-gradient(circle at 50% 46%,rgba(217,140,255,.035),transparent 58%),
+    #030711!important
+}
+body.lab-stage-mode .artifact-phase-label{
+  z-index:6!important;
+  border:1px solid rgba(217,140,255,.18)!important;
+  border-radius:999px!important;
+  background:rgba(4,8,17,.78)!important;
+  color:#d8b8ef!important;
+  backdrop-filter:blur(8px)
+}
+
+/* Output headers should visually belong to the display beneath them. */
+body.lab-stage-mode :is(
+  .contrast-output-card,.timing-output-card,.motion-output-card,
+  .kspace-output-card,.spatial-output-card,.artifact-lab-canvas-card
+) :is(.compare-state,.contrast-card-head>span,.timing-card-head>span,.motion-card-head>span,.kspace-card-head>span,.spatial-card-head>span,.artifact-lab-card-head>span){
+  box-shadow:0 0 16px color-mix(in srgb,var(--lab-accent) 6%,transparent)!important
+}
