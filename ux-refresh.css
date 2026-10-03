@@ -1,0 +1,559 @@
+/* MR Command Center — UX hierarchy pass
+   Additive visual/layout layer over v28.1 Signal Frame.
+   Goal: put the experiment and live result first, keep related information together,
+   and reduce equal-weight visual noise without changing application logic. */
+
+:root{
+  --ux-content:1480px;
+  --ux-gap:16px;
+  --ux-radius:20px;
+  --ux-panel:rgba(8,18,30,.94);
+  --ux-panel-strong:rgba(10,24,38,.97);
+  --ux-panel-quiet:rgba(255,255,255,.012);
+  --ux-line:rgba(126,196,239,.11);
+  --ux-line-strong:rgba(126,211,255,.23);
+  --ux-copy:#a8bbc8;
+  --ux-dim:#7f95a4;
+  --ux-shadow:0 22px 58px rgba(0,0,0,.20);
+}
+
+html{scroll-padding-top:148px}
+body{overflow-x:hidden}
+.shell,.topin{max-width:var(--ux-content)!important}
+main.shell{padding-bottom:74px!important}
+.section [id],.sequence-family-lab [id]{scroll-margin-top:148px}
+
+/* Global chrome: clearer orientation, less decorative competition. */
+.topbar{
+  background:rgba(3,8,16,.92)!important;
+  border-bottom-color:rgba(126,196,239,.10)!important;
+  box-shadow:0 8px 28px rgba(0,0,0,.16)!important
+}
+.topin{min-height:62px!important}
+.routechip{
+  padding:6px 10px!important;
+  border-color:rgba(126,211,255,.16)!important;
+  background:rgba(39,221,239,.025)!important
+}
+.workspace-rail{
+  width:82px!important;
+  padding:8px!important;
+  gap:8px!important;
+  border-radius:18px!important;
+  background:rgba(4,10,18,.80)!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.20)!important
+}
+.workspace-rail button{
+  min-height:58px!important;
+  border-radius:12px!important
+}
+.workspace-rail button small{font-size:.66rem!important;letter-spacing:.01em}
+.workspace-rail button.active{box-shadow:inset 0 0 0 1px rgba(39,221,239,.025)!important}
+
+/* Home: reduce hero dominance so choices appear sooner and give cards breathing room. */
+.labs-home{max-width:1360px;margin-inline:auto}
+.labs-home-hero{
+  min-height:340px!important;
+  grid-template-columns:minmax(0,1.22fr) minmax(290px,.78fr)!important;
+  gap:34px!important;
+  padding:38px 42px!important;
+  border-radius:24px!important;
+  box-shadow:0 26px 76px rgba(0,0,0,.25)!important
+}
+.labs-home-copy h1{
+  font-size:clamp(2.55rem,4.65vw,4.55rem)!important;
+  max-width:760px!important;
+  line-height:.97!important
+}
+.labs-home-copy>p{
+  max-width:680px!important;
+  font-size:.98rem!important;
+  line-height:1.64!important
+}
+.labs-home-actions{gap:9px!important;flex-wrap:wrap}
+.labs-home-actions button{min-height:46px!important;padding-inline:15px!important}
+.labs-home-boundary{
+  max-width:690px;
+  padding:10px 12px!important;
+  border-radius:11px!important;
+  background:rgba(39,221,239,.018)!important
+}
+.v27-resonance-scene{min-height:190px!important}
+.v27-resonance-logo{width:min(250px,72%)!important}
+.v27-home-search{
+  min-height:62px!important;
+  margin:16px 0 24px!important;
+  border-radius:15px!important;
+  box-shadow:none!important
+}
+.labs-library-head{margin:24px 2px 12px!important}
+.labs-library-head h2{font-size:1.32rem!important}
+.labs-library{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important
+}
+.lab-home-card{
+  min-height:0!important;
+  padding:20px!important;
+  border-radius:20px!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.12)!important
+}
+.lab-home-card:hover,.lab-home-card:focus-within{
+  transform:translateY(-2px)!important;
+  box-shadow:0 22px 54px rgba(0,0,0,.21)!important
+}
+.lab-home-card-copy h3{margin-top:15px!important;font-size:1.12rem!important}
+.lab-home-card-copy p{font-size:.84rem!important;line-height:1.58!important}
+.v27-home-preview{
+  height:138px!important;
+  margin:15px 0 11px!important;
+  border-radius:14px!important
+}
+.v27-home-preview canvas{height:138px!important}
+.lab-home-state{
+  padding:10px 0!important;
+  border-top:1px solid var(--ux-line)!important;
+  border-bottom:1px solid var(--ux-line)!important
+}
+.lab-home-state b{font-size:.86rem!important}
+.lab-home-state span{font-size:.76rem!important;line-height:1.45!important}
+.lab-home-tags{gap:5px!important;margin-top:10px!important}
+.lab-home-tags span{padding:4px 7px!important;font-size:.64rem!important}
+.lab-home-open{margin-top:13px!important;min-height:46px!important}
+.labs-home-work,.labs-principle-strip{margin-top:20px!important;border-radius:18px!important}
+.labs-home-work-grid{gap:10px!important}
+.labs-home-work-grid button{min-height:72px!important;border-radius:12px!important}
+
+/* Lab workspace: establish a predictable hierarchy.
+   1) navigation  2) title/boundary  3) controls + live result  4) deeper analysis. */
+.section.active-section,.sequence-family-lab{max-width:1360px;margin-left:auto!important;margin-right:auto!important}
+.v27-lab-switcher{
+  top:70px!important;
+  margin:8px 0 14px!important;
+  padding:6px!important;
+  gap:5px!important;
+  border-radius:13px!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.14)!important
+}
+.v27-lab-switcher button{
+  min-height:44px!important;
+  padding:5px 10px!important;
+  border-radius:9px!important
+}
+.section-head{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.05fr) minmax(280px,.75fr)!important;
+  gap:26px!important;
+  align-items:end!important;
+  min-height:0!important;
+  margin:0 0 12px!important;
+  padding:20px 22px!important;
+  border-radius:18px!important;
+  background:linear-gradient(145deg,rgba(8,19,31,.82),rgba(5,11,20,.88))!important;
+  border-color:color-mix(in srgb,var(--sf-accent,var(--sf-cyan)) 15%,var(--ux-line))!important
+}
+.section-head h2{
+  font-size:clamp(1.72rem,2.65vw,2.38rem)!important;
+  line-height:1.05!important
+}
+.section-head>p{
+  margin:0!important;
+  max-width:520px!important;
+  justify-self:end;
+  color:#96aab8!important;
+  font-size:.84rem!important;
+  line-height:1.58!important
+}
+.section-head:after{opacity:.08!important}
+:is(.contrast-boundary,.timing-boundary,.motion-boundary,.kspace-boundary,.spatial-boundary,.artifact-lab-boundary,.seqfam-boundary){
+  margin-bottom:16px!important;
+  padding:9px 12px!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.009)!important;
+  color:#8298a7!important;
+  font-size:.70rem!important
+}
+:is(.contrast-boundary,.timing-boundary,.motion-boundary,.kspace-boundary,.spatial-boundary,.artifact-lab-boundary,.seqfam-boundary) b{
+  color:#aec5d2!important
+}
+
+/* Primary experiment surfaces. */
+.contrast-layout,.timing-layout,.motion-layout,.artifact-lab-grid{
+  grid-template-columns:minmax(330px,.72fr) minmax(0,1.28fr)!important;
+  gap:var(--ux-gap)!important;
+  align-items:start!important
+}
+.kspace-layout,.spatial-layout{
+  display:grid!important;
+  grid-template-columns:minmax(330px,.72fr) minmax(0,1.28fr)!important;
+  gap:var(--ux-gap)!important;
+  align-items:start!important
+}
+.kspace-layout>.kspace-controls-card,
+.spatial-layout>.spatial-controls-card{
+  grid-column:1!important;
+  grid-row:1 / span 2!important
+}
+.kspace-layout>.kspace-output-card,
+.spatial-layout>.spatial-output-card{grid-column:2!important}
+:is(.contrast-layout,.timing-layout,.motion-layout,.kspace-layout,.spatial-layout,.artifact-lab-grid)>.card{
+  padding:18px!important;
+  border-radius:18px!important
+}
+:is(.contrast-controls-card,.timing-controls-card,.motion-controls-card,.kspace-controls-card,.spatial-controls-card,.artifact-lab-controls,#paramControlsCard){
+  background:linear-gradient(155deg,rgba(8,19,30,.95),rgba(5,12,20,.97))!important;
+  border-color:var(--ux-line)!important
+}
+:is(.contrast-output-card,.timing-output-card,.motion-output-card,.kspace-output-card,.spatial-output-card,.artifact-lab-canvas-card,#paramModelCard,.seqfam-detail){
+  border-color:color-mix(in srgb,var(--sf-accent,var(--sf-cyan)) 30%,var(--ux-line))!important;
+  background:
+    radial-gradient(440px circle at 68% 10%,color-mix(in srgb,var(--sf-accent,var(--sf-cyan)) 7%,transparent),transparent 64%),
+    linear-gradient(150deg,rgba(9,23,37,.98),rgba(5,12,21,.98))!important;
+  box-shadow:var(--ux-shadow)!important
+}
+:is(.contrast-card-head,.timing-card-head,.motion-card-head,.kspace-card-head,.spatial-card-head,.artifact-lab-card-head){
+  min-height:48px;
+  margin-bottom:13px!important;
+  padding-bottom:11px!important
+}
+:is(.contrast-card-head,.timing-card-head,.motion-card-head,.kspace-card-head,.spatial-card-head,.artifact-lab-card-head) h3{
+  font-size:1.02rem!important
+}
+:is(.contrast-slider,.timing-slider,.motion-slider,.kspace-slider,.spatial-slider,.artifact-lab-slider){
+  padding-block:9px!important
+}
+:is(.contrast-presets,.timing-presets,.motion-presets,.kspace-presets,.spatial-presets,.artifact-lab-presets){
+  gap:7px!important;
+  margin-top:12px!important
+}
+:is(.contrast-presets,.timing-presets,.motion-presets,.kspace-presets,.spatial-presets,.artifact-lab-presets) button{
+  min-height:54px!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.012)!important
+}
+.kspace-layout .kspace-canvas-shell,
+.spatial-layout .spatial-canvas-shell{max-width:540px!important;margin-inline:auto!important}
+.motion-images{gap:12px!important}
+.motion-image-shell{border-radius:13px!important}
+
+/* Keep live readouts visually adjacent and scan-friendly. */
+:is(.contrast-summary,.timing-summary,.motion-summary,.kspace-readouts,.spatial-readouts){
+  gap:8px!important;
+  margin-top:12px!important
+}
+:is(.contrast-summary,.timing-summary,.motion-summary,.kspace-readouts,.spatial-readouts)>div{
+  min-height:84px!important;
+  padding:11px 12px!important;
+  border-radius:11px!important
+}
+:is(.contrast-summary,.timing-summary,.motion-summary,.kspace-readouts,.spatial-readouts) small{
+  font-size:.62rem!important;
+  letter-spacing:.05em!important
+}
+:is(.contrast-summary,.timing-summary,.motion-summary,.kspace-readouts,.spatial-readouts) b{
+  font-size:.9rem!important
+}
+
+/* Secondary analysis: quieter than the live workspace; challenges become a clear next step. */
+.contrast-deep-grid,.timing-deep-grid,.motion-deep-grid,.kspace-deep-grid,.spatial-deep-grid,.artifact-deep-grid{
+  gap:14px!important;
+  margin-top:20px!important;
+  align-items:start!important
+}
+.contrast-deep-grid>.card,.timing-deep-grid>.card,.motion-deep-grid>.card,
+.kspace-deep-grid>.card,.spatial-deep-grid>.card,.artifact-deep-grid>.card{
+  padding:17px!important;
+  background:linear-gradient(150deg,rgba(8,18,29,.82),rgba(5,11,19,.88))!important;
+  border-color:var(--ux-line)!important;
+  box-shadow:none!important
+}
+:is(.contrast-challenge-card,.timing-challenge-card,.motion-challenge-card,.kspace-challenge-card,.spatial-challenge-card,.artifact-challenge-card){
+  grid-column:1 / -1!important;
+  margin-top:0!important;
+  border-color:color-mix(in srgb,var(--sf-accent,var(--sf-cyan)) 24%,var(--ux-line))!important
+}
+:is(.contrast-curve-panel,.contrast-decomp-row,.timing-equation-card,.motion-image-panel,.kspace-energy-summary>div,.kspace-psf-stats>div,.spatial-axis-card,.spatial-causal-cards>div){
+  border-radius:10px!important
+}
+
+/* Parameter Lab: controls and modeled result stay paired; workspace utilities recede. */
+#sandbox>.grid2:has(#paramControlsCard){
+  grid-template-columns:minmax(360px,.78fr) minmax(0,1.22fr)!important;
+  gap:16px!important;
+  align-items:start!important
+}
+#paramControlsCard,#paramModelCard{padding:18px!important;border-radius:18px!important}
+.parameter-jumps{
+  top:130px!important;
+  margin:-2px 0 12px!important;
+  padding:7px!important;
+  border-radius:10px!important;
+  background:rgba(5,12,20,.90)!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.12)!important
+}
+.parameter-jumps button{padding:6px 9px!important;font-size:.68rem!important}
+.lab-continuity{
+  margin-bottom:12px!important;
+  padding:11px 13px!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.009)!important
+}
+.lab-challenge-launcher,.parameter-goal-panel,.parameter-challenge-panel{
+  margin-bottom:14px!important;
+  border-radius:14px!important
+}
+.lab-challenge-options{gap:7px!important}
+.lab-challenge-options button{min-height:68px!important;border-radius:10px!important}
+.parameter-goal-tabs{gap:6px!important}
+.parameter-goal-tabs button{min-height:40px!important}
+.param-group{margin-bottom:10px!important}
+.param-group-title{padding:9px 10px!important}
+.sliderline{min-height:42px!important}
+.comparegrid{gap:8px!important}
+.comparecard{min-height:82px!important;border-radius:11px!important}
+
+/* Sequence Families: library first, detail and builders read as one focused workbench. */
+.sequence-family-lab .seqfam-hero{
+  margin-bottom:14px!important;
+  border-radius:18px!important;
+  box-shadow:none!important
+}
+.seqfam-toolbar{margin-bottom:12px!important;border-radius:14px!important}
+.seqfam-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important
+}
+.seqfam-family-card{min-height:120px!important;padding:13px!important}
+.seqfam-detail{margin-top:16px!important;padding:20px!important;border-radius:18px!important}
+.seqfam-lab-grid{gap:14px!important}
+:is(.seqfam-anatomy-lab,.seqfam-dna-builder,.seqfam-translator,.seqfam-compare,.seqfam-challenge,.seqfam-map){
+  padding:17px!important;
+  border-radius:16px!important
+}
+.seqfam-dna-controls{gap:8px!important}
+.seqfam-dna-results{gap:9px!important}
+
+/* Reference: pair the actionable checklist/calculator with its closest explanation. */
+.reference-tool-section>.grid2,
+.reference-tool-section>.grid3,
+.reference-tool-section>.rescue-shell{
+  gap:16px!important;
+  align-items:start!important
+}
+.reference-tool-section>.grid2>.card,
+.reference-tool-section>.grid3>.card,
+.reference-tool-section>.rescue-shell>.card{
+  padding:18px!important;
+  border-radius:16px!important
+}
+.reference-tool-section>.section-head{
+  margin-bottom:14px!important;
+  padding:18px 20px!important
+}
+.check{min-height:48px!important;padding:10px 11px!important}
+.check span{line-height:1.45!important}
+
+/* Premium hub: less card density, clearer preview/challenge relationship. */
+.premium-zone{max-width:1360px;margin-inline:auto!important;padding:22px!important;border-radius:22px!important}
+.premium-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:14px!important
+}
+.premium-card{min-height:300px!important;padding:18px!important;border-radius:17px!important}
+.premium-card h3{font-size:1.02rem!important}
+.premium-card p,.premium-feature-list li{font-size:.78rem!important;line-height:1.5!important}
+.premium-challenge-zone{margin:16px 0!important}
+.premium-challenge-card{padding:17px!important;border-radius:15px!important}
+
+/* Opened/clickable surfaces: one modal language, more room, anchored hierarchy. */
+.paletteback,.prefsback,.premiumback,.v27-hubback{
+  padding:5vh 18px 18px!important;
+  background:rgba(1,4,10,.78)!important;
+  backdrop-filter:blur(16px) saturate(1.05)!important
+}
+.palette{
+  width:min(900px,calc(100vw - 36px))!important;
+  max-height:86dvh!important;
+  border-radius:23px!important;
+  border-color:var(--ux-line-strong)!important;
+  box-shadow:0 34px 110px rgba(0,0,0,.52)!important
+}
+.palettehead{padding:18px 20px 12px!important}
+.paletteinput{margin:0 18px!important;min-height:50px!important;border-radius:12px!important}
+.palettefilters{padding:10px 18px 8px!important;gap:7px!important}
+.palettefilters button{min-height:32px!important;padding:5px 10px!important}
+.palhint{padding-inline:18px!important}
+.palresults{max-height:58dvh!important;padding:10px 12px 16px!important}
+.palitem{
+  display:grid!important;
+  grid-template-columns:42px minmax(0,1fr) auto!important;
+  gap:12px!important;
+  min-height:64px!important;
+  padding:10px 12px!important;
+  border-radius:12px!important
+}
+.palitem+.palitem{margin-top:3px}
+.palcopy small{line-height:1.4!important}
+
+.prefs{
+  width:min(980px,calc(100vw - 36px))!important;
+  max-height:88dvh!important;
+  padding:20px!important;
+  border-radius:23px!important;
+  border-color:var(--ux-line-strong)!important;
+  box-shadow:0 34px 110px rgba(0,0,0,.52)!important
+}
+.prefs-head{
+  position:sticky;
+  top:-20px;
+  z-index:4;
+  margin:-20px -20px 0!important;
+  padding:18px 20px 14px!important;
+  border-bottom:1px solid var(--ux-line)!important;
+  background:rgba(7,16,28,.96)!important;
+  backdrop-filter:blur(16px)
+}
+.prefs-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;
+  margin-top:14px!important
+}
+.pref-card{padding:15px!important;border-radius:13px!important}
+.pref-card p{font-size:.76rem!important;line-height:1.5!important}
+.v27-advanced-settings{grid-column:1/-1!important}
+.shortcut-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+
+.premiummodal{
+  width:min(1040px,calc(100vw - 36px))!important;
+  max-height:89dvh!important;
+  border-radius:23px!important;
+  border-color:rgba(158,124,247,.28)!important;
+  box-shadow:0 34px 110px rgba(0,0,0,.55)!important
+}
+.premiummodal-head{
+  position:sticky;
+  top:0;
+  z-index:5;
+  padding:17px 20px!important;
+  background:rgba(8,15,28,.96)!important;
+  backdrop-filter:blur(16px);
+  border-bottom-color:rgba(158,124,247,.15)!important
+}
+.premiummodal-body{padding:20px!important}
+.premium-summary{margin-bottom:14px!important}
+:is(.diffusion-preview-grid,.parallel-preview-grid,.rf-preview-grid,.gradient-preview-grid,.offres-preview-grid){
+  grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr)!important;
+  gap:16px!important;
+  align-items:start!important
+}
+
+.v27-hub{
+  width:min(900px,calc(100vw - 36px))!important;
+  max-height:88dvh!important;
+  padding:20px!important;
+  border-radius:23px!important;
+  border-color:var(--ux-line-strong)!important;
+  box-shadow:0 34px 110px rgba(0,0,0,.52)!important
+}
+.v27-hub-grid{gap:10px!important}
+.v27-hub-grid button{min-height:86px!important;padding:13px!important;border-radius:13px!important}
+
+/* Desktop density safeguards. */
+@media (min-width:981px){
+  .contrast-deep-grid{grid-template-columns:minmax(0,1.16fr) minmax(320px,.84fr)!important}
+  .timing-deep-grid,.artifact-deep-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .motion-deep-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important}
+  .kspace-deep-grid,.spatial-deep-grid{grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr)!important}
+}
+
+/* Medium screens: preserve relationship without forcing three narrow columns. */
+@media (max-width:1180px){
+  .labs-home-hero{grid-template-columns:minmax(0,1fr) minmax(250px,.62fr)!important;padding:32px!important}
+  .seqfam-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .section-head{grid-template-columns:minmax(0,1fr) minmax(240px,.7fr)!important}
+}
+@media (max-width:980px){
+  html{scroll-padding-top:118px}
+  .section [id],.sequence-family-lab [id]{scroll-margin-top:118px}
+  .section-head{grid-template-columns:1fr!important;gap:8px!important}
+  .section-head>p{justify-self:start!important;max-width:760px!important}
+  .contrast-layout,.timing-layout,.motion-layout,.kspace-layout,.spatial-layout,.artifact-lab-grid,
+  #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:1fr!important
+  }
+  .kspace-layout>.kspace-controls-card,.spatial-layout>.spatial-controls-card,
+  .kspace-layout>.kspace-output-card,.spatial-layout>.spatial-output-card{
+    grid-column:1!important;
+    grid-row:auto!important
+  }
+  .parameter-jumps{top:118px!important}
+  .premium-grid{grid-template-columns:1fr!important}
+  :is(.diffusion-preview-grid,.parallel-preview-grid,.rf-preview-grid,.gradient-preview-grid,.offres-preview-grid){
+    grid-template-columns:1fr!important
+  }
+}
+
+/* Mobile: convert overlays to comfortable sheets and remove unnecessary visual height. */
+@media (max-width:760px){
+  main.shell{padding-left:12px!important;padding-right:12px!important;padding-bottom:88px!important}
+  .labs-home-hero{
+    grid-template-columns:1fr!important;
+    min-height:0!important;
+    gap:14px!important;
+    padding:24px 18px!important;
+    border-radius:19px!important
+  }
+  .labs-home-copy h1{font-size:clamp(2.25rem,12vw,3.45rem)!important;line-height:.96!important}
+  .labs-home-copy>p{font-size:.9rem!important}
+  .v27-resonance-scene{min-height:140px!important}
+  .v27-resonance-logo{width:min(190px,58%)!important}
+  .v27-home-search{min-height:58px!important;margin:12px 0 18px!important}
+  .labs-library{grid-template-columns:1fr!important;gap:12px!important}
+  .lab-home-card{padding:16px!important;border-radius:16px!important}
+  .v27-home-preview,.v27-home-preview canvas{height:122px!important}
+  .section-head{padding:17px 15px!important;border-radius:15px!important}
+  .section-head h2{font-size:clamp(1.48rem,7.4vw,2rem)!important}
+  .section-head>p{font-size:.79rem!important}
+  .v27-lab-switcher{top:60px!important;margin-inline:-3px!important}
+  .v27-lab-switcher button{min-width:96px!important}
+  :is(.contrast-layout,.timing-layout,.motion-layout,.kspace-layout,.spatial-layout,.artifact-lab-grid)>.card,
+  #paramControlsCard,#paramModelCard{padding:15px!important;border-radius:15px!important}
+  .contrast-deep-grid,.timing-deep-grid,.motion-deep-grid,.kspace-deep-grid,.spatial-deep-grid,.artifact-deep-grid{
+    margin-top:14px!important
+  }
+  .contrast-deep-grid>.card,.timing-deep-grid>.card,.motion-deep-grid>.card,
+  .kspace-deep-grid>.card,.spatial-deep-grid>.card,.artifact-deep-grid>.card{padding:14px!important}
+  .seqfam-grid{grid-template-columns:1fr!important}
+  .premium-zone{padding:14px!important;border-radius:16px!important}
+  .paletteback,.prefsback,.premiumback,.v27-hubback{
+    align-items:flex-end!important;
+    place-items:end center!important;
+    padding:8px!important
+  }
+  .palette,.prefs,.premiummodal,.v27-hub{
+    width:100%!important;
+    max-height:92dvh!important;
+    border-radius:20px 20px 12px 12px!important
+  }
+  .prefs{padding:16px!important}
+  .prefs-head{top:-16px;margin:-16px -16px 0!important;padding:15px 16px 13px!important}
+  .prefs-grid,.shortcut-grid{grid-template-columns:1fr!important}
+  .premiummodal-body{padding:15px!important}
+  .palitem{grid-template-columns:36px minmax(0,1fr)!important}
+  .palcat{display:none!important}
+}
+@media (max-width:520px){
+  .labs-home-actions{display:grid!important;grid-template-columns:1fr!important}
+  .labs-home-actions button{width:100%!important}
+  .labs-home-work-grid{grid-template-columns:1fr!important}
+  .premium-card{padding:15px!important}
+  .kspace-layout .kspace-canvas-shell,.spatial-layout .spatial-canvas-shell{max-width:100%!important}
+}
+
+/* Respect the existing reduced-motion preference after adding hierarchy effects. */
+@media (prefers-reduced-motion:reduce){
+  .lab-home-card,.card,.palitem{transition:none!important}
+}
+body.ui-reduce-motion .lab-home-card,
+body.ui-reduce-motion .card,
+body.ui-reduce-motion .palitem{transition:none!important}
