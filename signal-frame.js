@@ -27,7 +27,9 @@ function intel(section,lab){
 function setI(l,a,b,c,d,e,f){const h=document.querySelector(`[data-v27-intel="${l}"]`);if(!h)return;[['[data-v27-what]',a],['[data-v27-wd]',b],['[data-v27-why]',c],['[data-v27-yd]',d],['[data-v27-next]',e],['[data-v27-nd]',f]].forEach(([q,v])=>{const x=h.querySelector(q);if(x)x.textContent=v})}
 function changeLead(lab,title,detail){
   const c=window.__mrccLastChange;
-  return c&&c.lab===lab?[c.label+' changed',c.value?('Now '+c.value):detail]:[title,detail];
+  if(!(c&&c.lab===lab))return[title,detail];
+  const movement=c.previous&&c.value&&c.previous!==c.value?c.previous+' → '+c.value:c.value?'Now '+c.value:detail;
+  return[c.label+' changed',movement];
 }
 function renderI(){
   try{
@@ -270,7 +272,7 @@ function noteControlChange(e){
   const m=CONTROL_MAP[e.target?.id];if(!m)return;
   const lab=m[0],now=labResultSnapshot(lab);
   lastChange[lab]=m[1];
-  window.__mrccLastChange={lab,label:m[1],value:controlReading(e.target)};
+  window.__mrccLastChange={lab,label:m[1],value:controlReading(e.target),previous:interactionBase?.lab===lab&&interactionBase.controlId===e.target.id?interactionBase.controlValue:''};
   const deltaText=applyInteractionDelta(lab,now,e.type==='change');
   requestAnimationFrame(()=>paintInteractionDelta(lab,deltaText));
   flashControlImpacts(e.target);
@@ -281,13 +283,13 @@ document.addEventListener('pointerdown',e=>{
   if(!document.body.classList.contains('lab-stage-mode'))return;
   const target=e.target.closest('input,select,button');if(!target||target.closest('.v27-lab-switcher'))return;
   const mapped=CONTROL_MAP[target.id],lab=mapped?.[0]||labForElement(target);if(!lab)return;
-  interactionBase={lab,snapshot:labResultSnapshot(lab)};
+  interactionBase={lab,snapshot:labResultSnapshot(lab),controlId:target.id||'',controlValue:controlReading(target)};
 },{passive:true});
 document.addEventListener('focusin',e=>{
   if(!document.body.classList.contains('lab-stage-mode'))return;
   const target=e.target.closest?.('input,select,button');if(!target||target.closest('.v27-lab-switcher'))return;
   const mapped=CONTROL_MAP[target.id],lab=mapped?.[0]||labForElement(target);if(!lab||interactionBase?.lab===lab)return;
-  interactionBase={lab,snapshot:labResultSnapshot(lab)};
+  interactionBase={lab,snapshot:labResultSnapshot(lab),controlId:target.id||'',controlValue:controlReading(target)};
 },{passive:true});
 document.addEventListener('input',noteControlChange,{passive:true});
 document.addEventListener('change',e=>{noteControlChange(e);const m=CONTROL_MAP[e.target?.id];if(m)interactionBase=null},{passive:true});
