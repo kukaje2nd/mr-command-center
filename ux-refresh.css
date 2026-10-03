@@ -1846,3 +1846,181 @@ body.lab-stage-mode .motion-summary{
     grid-template-rows:auto minmax(0,1fr) auto!important
   }
 }
+
+
+/* Deformation repair — viewport-safe Lab geometry */
+body.lab-stage-mode :is(
+  #paramControlsCard,#paramModelCard,
+  .contrast-controls-card,.contrast-output-card,
+  .timing-controls-card,.timing-output-card,
+  .motion-controls-card,.motion-output-card,
+  .kspace-controls-card,.kspace-output-card,
+  .spatial-controls-card,.spatial-output-card,
+  .artifact-lab-controls,.artifact-lab-canvas-card
+){
+  height:auto!important;
+  max-height:100%!important;
+  align-self:stretch!important
+}
+
+/* Parameter model had three visible children but only two explicit grid rows. */
+body.lab-stage-mode #paramModelCard{
+  grid-template-rows:auto auto minmax(0,1fr)!important
+}
+body.lab-stage-mode #paramModelCard>.map-panel{
+  min-height:0!important;
+  height:auto!important
+}
+
+/* Output cards allocate space explicitly instead of letting inner content fight the card height. */
+body.lab-stage-mode .timing-output-card{
+  display:grid!important;
+  grid-template-rows:auto minmax(92px,.72fr) auto!important;
+  min-height:0!important
+}
+body.lab-stage-mode .timing-timeline{
+  min-height:0!important;
+  height:auto!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode .timing-timeline-track{
+  height:100%!important;
+  min-height:78px!important;
+  max-height:150px!important
+}
+body.lab-stage-mode .contrast-output-card{
+  display:grid!important;
+  grid-template-rows:auto auto auto minmax(72px,.52fr)!important;
+  min-height:0!important
+}
+body.lab-stage-mode .contrast-timeline{
+  min-height:0!important;
+  overflow:hidden!important
+}
+
+/* Canvas Labs: the old forced square shell could exceed available height on wide/short screens. */
+body.lab-stage-mode :is(.kspace-output-card,.spatial-output-card,.artifact-lab-canvas-card){
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr)!important;
+  min-height:0!important
+}
+body.lab-stage-mode :is(.kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell){
+  display:grid!important;
+  place-items:center!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  overflow:hidden!important
+}
+body.lab-stage-mode :is(.kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell) canvas{
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center!important
+}
+
+/* Keep medium-width tablets/small laptops side-by-side; stacking at 900px was visibly squashing both halves. */
+@media (min-width:721px) and (max-width:900px){
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:minmax(320px,.92fr) minmax(0,1.08fr)!important;
+    grid-template-rows:1fr!important
+  }
+  body.lab-stage-mode #contrast>.contrast-layout,
+  body.lab-stage-mode #timing>.timing-layout,
+  body.lab-stage-mode #motion>.motion-layout,
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:minmax(285px,.78fr) minmax(0,1.22fr)!important;
+    grid-template-rows:1fr!important
+  }
+  body.lab-stage-mode .timing-controls-card,
+  body.lab-stage-mode .motion-controls-card,
+  body.lab-stage-mode .contrast-controls-card{
+    display:block!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:minmax(230px,.7fr) repeat(2,minmax(0,1fr))!important;
+    grid-template-rows:1fr!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout>.kspace-controls-card,
+  body.lab-stage-mode #spatial>.spatial-layout>.spatial-controls-card{
+    grid-column:auto!important
+  }
+  body.lab-stage-mode #kspace>.kspace-readouts,
+  body.lab-stage-mode #spatial>.spatial-readouts{
+    display:none!important
+  }
+}
+
+/* Phones actually stack, with per-Lab proportions rather than one generic split. */
+@media (max-width:720px){
+  body.lab-stage-mode #sandbox>.grid2:has(#paramControlsCard){
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,1fr) minmax(0,1fr)!important
+  }
+  body.lab-stage-mode #contrast>.contrast-layout{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,.9fr) minmax(0,1.1fr)!important
+  }
+  body.lab-stage-mode #timing>.timing-layout{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,1.08fr) minmax(0,.92fr)!important
+  }
+  body.lab-stage-mode #motion>.motion-layout{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,.88fr) minmax(0,1.12fr)!important
+  }
+  body.lab-stage-mode #artifact>.artifact-lab-grid{
+    grid-template-columns:1fr!important;
+    grid-template-rows:minmax(0,.78fr) minmax(0,1.22fr)!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-rows:minmax(0,.72fr) minmax(0,1.28fr)!important
+  }
+  body.lab-stage-mode #kspace>.kspace-layout>.kspace-controls-card,
+  body.lab-stage-mode #spatial>.spatial-layout>.spatial-controls-card{
+    grid-column:1/-1!important
+  }
+  body.lab-stage-mode :is(.kspace-canvas-shell,.spatial-canvas-shell,.artifact-canvas-shell){
+    max-height:none!important
+  }
+}
+
+/* Extra-wide but shallow windows need height-first sizing, not width-first square canvases. */
+@media (min-width:901px) and (max-height:680px){
+  body.lab-stage-mode #kspace>.kspace-layout,
+  body.lab-stage-mode #spatial>.spatial-layout{
+    grid-template-columns:minmax(250px,.66fr) repeat(2,minmax(0,1fr))!important
+  }
+  body.lab-stage-mode .timing-output-card{
+    grid-template-rows:auto minmax(72px,.58fr) auto!important
+  }
+  body.lab-stage-mode .contrast-output-card{
+    grid-template-rows:auto auto auto minmax(58px,.4fr)!important
+  }
+}
+
+/* Prevent tiny type from collapsing into unreadable/deformed labels. */
+body.lab-stage-mode :is(
+  .contrast-slider label,.timing-slider label,.motion-slider label,
+  .kspace-slider label,.spatial-slider label,.artifact-lab-slider label,
+  #paramControlsCard .sliderline label
+){
+  min-width:0!important;
+  overflow-wrap:anywhere
+}
+body.lab-stage-mode :is(
+  .contrast-summary>div,.timing-summary>div,.motion-summary>div,
+  .kspace-readouts>div,.spatial-readouts>div,.comparecard
+){
+  min-width:0!important
+}
