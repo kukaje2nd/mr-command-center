@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#050910"/><stop offset="1" stop-color="#0b1725"/></linearGradient><linearGradient id="sig" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5be7ff"/><stop offset="1" stop-color="#9a83ff"/></linearGradient><pattern id="grid" width="38" height="38" patternUnits="userSpaceOnUse"><path d="M38 0H0V38" fill="none" stroke="#5be7ff" stroke-opacity=".07"/></pattern></defs>
+<rect width="1200" height="630" fill="url(#bg)"/><rect width="1200" height="630" fill="url(#grid)"/>
+<g transform="translate(105 115) scale(.72)"><path d="M218 77A95 95 0 1 0 218 179" fill="none" stroke="url(#sig)" stroke-width="18" stroke-linecap="round"/><path d="M187 91A67 67 0 1 0 187 165" fill="none" stroke="#5be7ff" stroke-width="8" stroke-linecap="round"/><path d="M128 128L158 93M128 128l30 35" fill="none" stroke="#9a83ff" stroke-width="12" stroke-linecap="round"/><path d="M163 128h55" fill="none" stroke="#71e2ef" stroke-width="12" stroke-linecap="round"/><circle cx="128" cy="128" r="14" fill="#e8fbff"/></g>
+<text x="355" y="220" fill="#5be7ff" font-family="system-ui,Segoe UI,sans-serif" font-size="24" font-weight="800" letter-spacing="4">MR COMMAND CENTER</text>
+<text x="355" y="305" fill="#eef8ff" font-family="system-ui,Segoe UI,sans-serif" font-size="62" font-weight="800">Learn MRI by changing</text><text x="355" y="375" fill="#eef8ff" font-family="system-ui,Segoe UI,sans-serif" font-size="62" font-weight="800">the model.</text>
+<text x="355" y="432" fill="#a6bac8" font-family="system-ui,Segoe UI,sans-serif" font-size="27">Interactive MRI reasoning instruments · v27</text>
+<path d="M90 520H300c35 0 40-55 62-55s25 98 50 98 37-72 61-72 32 29 66 29h570" fill="none" stroke="url(#sig)" stroke-width="4" stroke-linecap="round"/>
+</svg>

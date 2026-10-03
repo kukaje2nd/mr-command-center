@@ -3,12 +3,12 @@
 MR Command Center is a static, browser-local collection of interactive MRI reasoning labs for trained professionals. The Labs-first home launches Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact experiments, with comparisons, contextual references, and safety material supporting the interactive work.
 
 ## Current build
-v26.0 — Sequence DNA Builder
+v27.0 — Lab Intelligence + Resonance Core
 
 ## Production
 - Entry point: `index.html`
-- Application stylesheet: `app.css`
-- Application runtime: `app.js`
+- Application stylesheets: `app.css` + `v27.css`
+- Application runtime: `app.js` + `v27.js`
 - Static PWA manifest: `manifest.webmanifest`
 - Offline worker: `sw.js`
 - Vercel response headers: `vercel.json`
@@ -16,16 +16,15 @@ v26.0 — Sequence DNA Builder
 - Release guard: `node scripts/validate.mjs`
 
 ## Product architecture
-The primary interface has six top-level workspace destinations:
+The primary interface has five top-level workspace destinations:
 
-1. **Home** — a Labs-first launcher showing current local lab state and available labs.
-2. **Labs** — interactive MRI reasoning tools. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab are active reusable labs.
-3. **Compare** — Snapshot A vs live B experiments and saved comparison history.
-4. **Reference** — Parameter Reference plus supporting Scan Math, troubleshooting, and artifact tools.
-5. **Safety** — MR safety evidence-chain reference, with RF / thermal details inside the safety context.
-6. **Premium** — the dedicated Premium Lab workspace with public previews, deep links, access-state UI, and session-only concept challenges.
+1. **Home** — live state previews for all seven core Labs, shared search, and resume.
+2. **Labs** — Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact Labs.
+3. **Sequences** — Sequence Families Lab, DNA matching, vendor-name translation, comparison, and recognition challenge.
+4. **Reference** — Parameter Reference, Scan Math, Sequence Rescue, Artifact troubleshooting, MR Safety, and Thermal/RF foundations.
+5. **Premium** — five public advanced concept previews and session-only concept challenges; commerce remains inactive.
 
-Constraint challenges live inside Parameter Lab rather than occupying a global navigation slot. Premium Concept Challenge is scoped to the Premium workspace and does not change entitlement state.
+Parameter A/B Compare remains inside Parameter Lab. Safety remains prominent inside the Reference system and related tools instead of consuming a permanent global navigation slot. Mobile uses Home / Labs / Seq / Ref / More.
 
 The legacy course-style homepage, learning-path/review UI, Pack Library, Case Lab, Study Report, Publisher Studio, creator/commercial surfaces, and Micro-Lab have been removed from the active production runtime. Older browser-local keys can remain after an upgrade, but v15.0 no longer parses or initializes those retired systems; Settings can detect and clear the legacy data explicitly.
 
@@ -58,7 +57,14 @@ The current free application remains intentionally dependency-light: a static HT
 Each release updates the application, validator, and service-worker cache marker together. Before moving `main`, validate JavaScript parsing, required workspace IDs, lab initialization order, navigation-state contracts, the Labs-only runtime path, retired-surface guards, and the release cache marker.
 
 ## Product direction
-Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. v11.0 introduces three Premium candidates: Diffusion & b-Value, Parallel Imaging, and RF Power Concepts.
+Future product work should deepen and polish the Labs model rather than restore broad course navigation. New labs should pass a strict interaction test: the user changes something, immediately sees a modeled consequence, and can explain the tradeoff. Parameter Lab, Contrast Lab, Sequence Timing Lab, Motion Lab, K-Space Lab, Spatial Encoding Lab, and Artifact Lab establish that pattern. The Premium workspace currently exposes five public concept previews: Diffusion & b-Value, Parallel Imaging, RF Power Concepts, Gradient Encoding Concepts, and Off-Resonance & Phase.
+
+### v27.0 release notes
+- Introduced the Resonance Core visual identity and MRI-specific Lab icon system.
+- Simplified desktop/mobile navigation with a dedicated Reference Hub and mobile More menu.
+- Added live Home Lab instruments plus What changed / Why / Try next interpretation panels.
+- Improved typography scaling, accessibility naming, Sequence DNA evidence, and Artifact direction summaries.
+- Removed retired pins/recent cockpit code and learner-facing Premium commerce scaffolding while retaining all five concept previews.
 
 ### v26.0 release notes
 - Deepened **Sequence Families Lab** with a new **Sequence DNA Builder** that matches acquisition mechanisms instead of relying on vendor-name memorization.

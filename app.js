@@ -37,11 +37,11 @@ function renderDataHealth(){
   const activeStates=['mrcc_sandbox_current','mrcc_contrast_current','mrcc_timing_current','mrcc_motion_current','mrcc_kspace_current','mrcc_spatial_current','mrcc_artifact_current'].filter(k=>{try{return !!localStorage.getItem(k)}catch(e){return false}}).length;
   el.textContent='Saved parameter setups '+sbPresets.length+' · comparisons '+comparisonHistory.length+' · active Lab states '+activeStates+'/7. '+(dataRepairCount?dataRepairCount+' malformed saved value'+(dataRepairCount===1?' was':'s were')+' repaired or ignored this load.':'Current workspace data structures look healthy.');
 }
-const MRCC_RETIRED_DATA_KEYS=['mrcc_case_history','mrcc_case_packs','mrcc_pack_drafts','mrcc_pack_resume','mrcc_active_case_pack','mrcc_learning_attempts','mrcc_study_progress','mrcc_study_session_history','mrcc_daily_focus_history','mrcc_engagement_days'];
+const MRCC_RETIRED_DATA_KEYS=['mrcc_case_history','mrcc_case_packs','mrcc_pack_drafts','mrcc_pack_resume','mrcc_active_case_pack','mrcc_learning_attempts','mrcc_study_progress','mrcc_study_session_history','mrcc_daily_focus_history','mrcc_engagement_days','mrcc_pins'];
 function retiredLegacyDataStats(){
   let local=0,session=0;
   for(const key of MRCC_RETIRED_DATA_KEYS){try{if(localStorage.getItem(key)!==null)local++}catch(e){}}
-  try{if(sessionStorage.getItem('mrcc_study_session')!==null)session++}catch(e){}
+  try{if(sessionStorage.getItem('mrcc_study_session')!==null)session++;if(sessionStorage.getItem('mrcc_recent')!==null)session++}catch(e){}
   return {local,session,total:local+session};
 }
 function renderRetiredDataSummary(){
@@ -52,14 +52,14 @@ function clearRetiredLegacyData(){
   const st=retiredLegacyDataStats();if(!st.total){renderRetiredDataSummary();toast('No retired data to clear');return}
   if(!confirm('Clear retired MRCC course, study-session, and case-pack data from this browser? Current Lab states, presets, comparisons, settings, and workspace backups are not affected.'))return;
   for(const key of MRCC_RETIRED_DATA_KEYS){try{localStorage.removeItem(key)}catch(e){}}
-  try{sessionStorage.removeItem('mrcc_study_session')}catch(e){}
+  try{sessionStorage.removeItem('mrcc_study_session');sessionStorage.removeItem('mrcc_recent')}catch(e){}
   renderRetiredDataSummary();renderDataHealth();toast('Retired local data cleared');
 }
 function runDataHealthCheck(){renderDataHealth();renderWorkspacePortability();renderRetiredDataSummary();toast(localDataHealthy()?'Local data check passed':'Local data check found an issue')}
 
 const MRCC_WORKSPACE_BACKUP_FORMAT='mrcc-workspace';
 const MRCC_WORKSPACE_BACKUP_SCHEMA=4;
-const MRCC_WORKSPACE_ACTIVE_KEYS=['mrcc_sandbox_current','mrcc_contrast_current','mrcc_timing_current','mrcc_motion_current','mrcc_kspace_current','mrcc_spatial_current','mrcc_artifact_current','mrcc_sandbox_presets','mrcc_sandbox_snapshot','mrcc_compare_history','mrcc_ui_prefs','mrcc_pins','mrcc_last_lab'];
+const MRCC_WORKSPACE_ACTIVE_KEYS=['mrcc_sandbox_current','mrcc_contrast_current','mrcc_timing_current','mrcc_motion_current','mrcc_kspace_current','mrcc_spatial_current','mrcc_artifact_current','mrcc_sandbox_presets','mrcc_sandbox_snapshot','mrcc_compare_history','mrcc_ui_prefs','mrcc_last_lab'];
 let pendingWorkspaceImport=null;
 function workspaceRawValue(key){try{return localStorage.getItem(key)}catch(e){return null}}
 function workspaceSnapshotData(){
@@ -138,7 +138,7 @@ function applyWorkspaceImport(){
 }
 function workspaceDiagnosticsText(){
   const data=workspaceSnapshotData(),st=workspaceActiveStats(data),cache=$('cacheChip')?.textContent||'Offline cache: unknown';
-  return ['MR Command Center v26.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
+  return ['MR Command Center v27.0 workspace diagnostics','Network: '+(navigator.onLine?'online':'offline'),cache,'Runtime errors this load: '+window.__mrccRuntimeErrors,'Local data health: '+(localDataHealthy()?'healthy':'issue detected'),'Active workspace areas: '+st.stored+'/'+MRCC_WORKSPACE_ACTIVE_KEYS.length,'Active Lab states: '+st.labs+'/7','Parameter presets: '+st.presets,'Saved comparisons: '+st.comparisons,'Last Lab: '+(data.mrcc_last_lab||'not recorded'),'Approx active data size: '+Math.max(1,Math.round(st.bytes/1024))+' KB','No Lab values, labels, or patient information are included in this diagnostic summary.'].join('\n');
 }
 async function copyWorkspaceDiagnostics(){
   const text=workspaceDiagnosticsText();
@@ -151,6 +151,8 @@ let uiPrefs={textSize:'standard',compact:false,contrast:false,reduceMotion:false
 if(!localStorage.getItem('mrcc_ui_prefs')&&window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)uiPrefs.reduceMotion=true;
 function saveUiPrefs(){try{localStorage.setItem('mrcc_ui_prefs',JSON.stringify(uiPrefs))}catch(e){}applyUiPrefs()}
 function applyUiPrefs(){
+  document.documentElement.classList.toggle('ui-large',uiPrefs.textSize==='large');
+  document.documentElement.classList.toggle('ui-xl',uiPrefs.textSize==='xl');
   document.body.classList.toggle('ui-large',uiPrefs.textSize==='large');
   document.body.classList.toggle('ui-xl',uiPrefs.textSize==='xl');
   document.body.classList.toggle('ui-compact',!!uiPrefs.compact);
@@ -316,7 +318,7 @@ function renderLabsHome(){
   try{
     const a=artifactLabState(),label=artifacts[a.mode]?.title||'Artifact Lab';
     if($('homeArtifactState'))$('homeArtifactState').textContent=label;
-    if($('homeArtifactMeta'))$('homeArtifactMeta').textContent='Strength '+Math.round(a.strength)+'% · phase '+(a.direction==='x'?'horizontal':'vertical');
+    if($('homeArtifactMeta')){const ap=artifactProfile(a.mode);$('homeArtifactMeta').textContent='Strength '+Math.round(a.strength)+'% · '+(ap.directionLabel||ap.direction||'pattern');}
   }catch(e){}
   if($('homePresetResumeCount'))$('homePresetResumeCount').textContent=sbPresets.length+' saved parameter setup'+(sbPresets.length===1?'':'s');
   if($('homeCompareResumeCount'))$('homeCompareResumeCount').textContent=comparisonHistory.length+' saved comparison'+(comparisonHistory.length===1?'':'s');
@@ -404,41 +406,7 @@ function jumpHomeSection(id){
   revealHomeContainer(id);
   el.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'});
 }
-const pinCatalog=[
-{id:'safety',title:'MR Safety Foundations',icon:'S'},
-{id:'math',title:'Scan Math',icon:'∑'},
-{id:'sandbox',title:'Parameter Lab',icon:'⇄'},
-{id:'timing',title:'Sequence Timing Lab',icon:'◷'},
-{id:'motion',title:'Motion Lab',icon:'↝'},
-{id:'spatial',title:'Spatial Encoding Lab',icon:'▦'},
-{id:'rescue',title:'Sequence Rescue',icon:'↯'},
-{id:'artifact',title:'Artifact Solver',icon:'◫'},
-{id:'burn',title:'Thermal / RF Foundations',icon:'T'},
-];
-let pinnedTools=readStoredJson(localStorage,'mrcc_pins',[]);
-if(!Array.isArray(pinnedTools)){pinnedTools=[];dataRepairCount++}
-pinnedTools=pinnedTools.filter(id=>typeof id==='string'&&pinCatalog.some(x=>x.id===id)).slice(0,6);
-if(!pinnedTools.length)pinnedTools=['safety','sandbox','rescue','artifact'];else if(pinnedTools.length===4&&['safety','rescue','artifact','math'].every(id=>pinnedTools.includes(id))){pinnedTools=['safety','sandbox','rescue','artifact'];try{localStorage.setItem('mrcc_pins',JSON.stringify(pinnedTools))}catch(e){}}
-function savePins(){try{localStorage.setItem('mrcc_pins',JSON.stringify(pinnedTools))}catch(e){}renderPins()}
-function togglePin(id){
-  if(pinnedTools.includes(id)){pinnedTools=pinnedTools.filter(x=>x!==id)}
-  else{
-    if(pinnedTools.length>=6){toast('Maximum 6 pinned tools');return}
-    pinnedTools.push(id)
-  }
-  savePins();
-}
-function togglePinManager(){const m=$('pinManager');if(m)m.classList.toggle('open')}
-function renderPins(){
-  const wrap=$('pinnedTools'),mgr=$('pinManager');
-  if(wrap)wrap.innerHTML=pinnedTools.map(id=>{const p=pinCatalog.find(x=>x.id===id);return p?'<button class="pintool" onclick="go(\''+p.id+'\')"><span class="picon">'+p.icon+'</span><span>'+p.title+'</span></button>':''}).join('');
-  if(mgr)mgr.innerHTML=pinCatalog.map(p=>{const on=pinnedTools.includes(p.id);return '<div class="pin-option"><span>'+p.title+'</span><button class="'+(on?'on':'')+'" onclick="togglePin(\''+p.id+'\')">'+(on?'Pinned':'Pin')+'</button></div>'}).join('');
-}
-let recentUsage=readStoredJson(sessionStorage,'mrcc_recent',[]);
-if(!Array.isArray(recentUsage)){recentUsage=[];dataRepairCount++}
-recentUsage=recentUsage.filter(x=>x&&typeof x.id==='string'&&typeof x.title==='string').map(x=>({id:x.id.slice(0,40),title:x.title.slice(0,80)})).slice(0,5);
-function remember(id,title){recentUsage=[{id,title},...recentUsage.filter(x=>x.id!==id)].slice(0,5);try{sessionStorage.setItem('mrcc_recent',JSON.stringify(recentUsage))}catch(e){}}
-let continueModuleId='sandbox';
+function remember(){}
 function ensureModuleFooters(){
   const footerIds=['safety','math','rescue','burn'];
   footerIds.forEach(id=>{
@@ -458,26 +426,22 @@ function go(id,skipTrack=false){
   el.scrollIntoView({behavior:uiPrefs.reduceMotion?'auto':'smooth',block:'start'});
   if(!skipTrack&&sectionTitles[id])remember(id,sectionTitles[id]);
 }
-function openRecent(id){const cmd=commands.find(c=>c.id===id);if(cmd){runCommand(id);return}if(sectionTitles[id]){go(id);return}recentUsage=recentUsage.filter(x=>x.id!==id);try{sessionStorage.setItem('mrcc_recent',JSON.stringify(recentUsage))}catch(e){}toast('That older item is no longer part of the MRCC workspace')}
-function resumeLast(){if(recentUsage.length)openRecent(recentUsage[0].id)}
-function renderCockpit(){renderPins();const label=$('recentLabel'),resume=$('resumeBtn'),recent=$('recentTools');if(label)label.textContent=recentUsage.length?'Last: '+recentUsage[0].title:'No module opened yet.';if(resume)resume.disabled=!recentUsage.length;if(recent)recent.innerHTML=recentUsage.slice(0,4).map(x=>`<button class="recent-chip" onclick="openRecent('${x.id}')">${escapeHtml(x.title)}</button>`).join('')}
-function tick(){const d=new Date();$('clock').textContent=d.toLocaleString([], {weekday:'short',hour:'2-digit',minute:'2-digit'})}setInterval(tick,30000);tick();
 const commands=[
-{id:'home',title:'Labs Home',desc:'Return to the lab library, current local lab states, saved setups, and comparisons.',cat:'Parameters',icon:'⌂',keys:'home labs parameter contrast k-space presets compare'},
-{id:'protocol',title:'Sequence Families Lab',desc:'Explore MRI sequence families, contrast behavior, artifacts, tradeoffs, and vendor terminology.',cat:'Parameters',icon:'SE',keys:'sequence families fse tse gre stir flair dwi epi dixon lava vibe space cube fiesta propeller blade swi mra'},
+{id:'home',title:'Labs Home',desc:'Return to the lab library, current local lab states, saved setups, and comparisons.',cat:'Labs',icon:'⌂',keys:'home labs parameter contrast k-space presets compare'},
+{id:'protocol',title:'Sequence Families Lab',desc:'Explore MRI sequence families, contrast behavior, artifacts, tradeoffs, and vendor terminology.',cat:'Sequences',icon:'SE',keys:'sequence families fse tse gre stir flair dwi epi dixon lava vibe space cube fiesta propeller blade swi mra'},
 {id:'unknown',title:'Unknown / unidentified device',desc:'Study the unresolved-device evidence and escalation route.',cat:'Safety',icon:'?',keys:'unknown implant device accessory safety'},
 {id:'conditional',title:'MR Conditional device',desc:'Study conditions-of-use verification.',cat:'Safety',icon:'C',keys:'conditional implant device conditions SAR B1 rms'},
 {id:'heating',title:'Heating / burning scenario',desc:'Study the stop / assess thermal safety route.',cat:'Safety',icon:'!',keys:'burn heating hot pain discomfort patient'},
 {id:'projectile',title:'Questionable object near controlled MR area',desc:'Study access-control and projectile-risk routing.',cat:'Safety',icon:'↗',keys:'projectile ferromagnetic object zone 3 4'},
-{id:'voxel',title:'Voxel / resolution calculator',desc:'Practice FOV, matrix, pixel, and voxel math.',cat:'Math',icon:'▦',keys:'voxel pixel fov matrix resolution'},
-{id:'time',title:'2D scan-time estimator',desc:'Practice TR × phase encodes × NEX ÷ ETL.',cat:'Math',icon:'◷',keys:'time scan duration TR NEX ETL phase'},
-{id:'sandbox',title:'Parameter Lab',desc:'Explore geometry, sampling, SNR, acceleration, partial Fourier, and parameter tradeoffs.',cat:'Parameters',icon:'⇄',keys:'parameter lab protocol tradeoff snr bandwidth nex fov matrix etl acceleration partial Fourier'},
-{id:'contrastlab',title:'Contrast Lab',desc:'Explore simplified TR, TE, and TI effects using synthetic relaxation materials.',cat:'Parameters',icon:'◐',keys:'contrast lab tr te ti t1 t2 spin echo inversion recovery weighting relaxation'},
-{id:'timinglab',title:'Sequence Timing Lab',desc:'Build a simplified echo train and inspect center-echo timing, train span, phase-train count, and acquisition-time proxy.',cat:'Parameters',icon:'◷',keys:'sequence timing echo train echo spacing ETL effective TE TR phase encodes NEX acquisition time'},
-{id:'motionlab',title:'Motion Lab',desc:'Reconstruct a synthetic line-by-line acquisition with step, periodic, or drifting translation and compare phase ordering.',cat:'Parameters',icon:'↝',keys:'motion lab ghosting movement phase encode ordering centric linear drift periodic k-space acquisition'},
-{id:'kspacelab',title:'K-Space Lab',desc:'Mask a synthetic Fourier dataset and inspect center, periphery, truncation, and phase undersampling effects.',cat:'Parameters',icon:'⌁',keys:'k-space kspace Fourier sampling center periphery spatial frequency truncation aliasing undersampling reconstruction'},
-{id:'spatiallab',title:'Spatial Encoding Lab',desc:'Explore encoded FOV, discrete sampling, relative pixel width, and periodic aliasing with a synthetic object-space model.',cat:'Parameters',icon:'▦',keys:'spatial encoding fov aliasing wrap foldover matrix samples pixel resolution phase read'},
-{id:'artifactlab',title:'Artifact Lab',desc:'Apply stylized MRI artifact patterns to a synthetic phantom and connect them to troubleshooting logic.',cat:'Artifact',icon:'◫',keys:'artifact lab motion wrap susceptibility chemical shift zipper gibbs truncation flow dielectric visual'},
+{id:'voxel',title:'Voxel / resolution calculator',desc:'Practice FOV, matrix, pixel, and voxel math.',cat:'Reference',icon:'▦',keys:'voxel pixel fov matrix resolution'},
+{id:'time',title:'2D scan-time estimator',desc:'Practice TR × phase encodes × NEX ÷ ETL.',cat:'Reference',icon:'◷',keys:'time scan duration TR NEX ETL phase'},
+{id:'sandbox',title:'Parameter Lab',desc:'Explore geometry, sampling, SNR, acceleration, partial Fourier, and parameter tradeoffs.',cat:'Labs',icon:'⇄',keys:'parameter lab protocol tradeoff snr bandwidth nex fov matrix etl acceleration partial Fourier'},
+{id:'contrastlab',title:'Contrast Lab',desc:'Explore simplified TR, TE, and TI effects using synthetic relaxation materials.',cat:'Labs',icon:'◐',keys:'contrast lab tr te ti t1 t2 spin echo inversion recovery weighting relaxation'},
+{id:'timinglab',title:'Sequence Timing Lab',desc:'Build a simplified echo train and inspect center-echo timing, train span, phase-train count, and acquisition-time proxy.',cat:'Labs',icon:'◷',keys:'sequence timing echo train echo spacing ETL effective TE TR phase encodes NEX acquisition time'},
+{id:'motionlab',title:'Motion Lab',desc:'Reconstruct a synthetic line-by-line acquisition with step, periodic, or drifting translation and compare phase ordering.',cat:'Labs',icon:'↝',keys:'motion lab ghosting movement phase encode ordering centric linear drift periodic k-space acquisition'},
+{id:'kspacelab',title:'K-Space Lab',desc:'Mask a synthetic Fourier dataset and inspect center, periphery, truncation, and phase undersampling effects.',cat:'Labs',icon:'⌁',keys:'k-space kspace Fourier sampling center periphery spatial frequency truncation aliasing undersampling reconstruction'},
+{id:'spatiallab',title:'Spatial Encoding Lab',desc:'Explore encoded FOV, discrete sampling, relative pixel width, and periodic aliasing with a synthetic object-space model.',cat:'Labs',icon:'▦',keys:'spatial encoding fov aliasing wrap foldover matrix samples pixel resolution phase read'},
+{id:'artifactlab',title:'Artifact Lab',desc:'Apply stylized MRI artifact patterns to a synthetic phantom and connect them to troubleshooting logic.',cat:'Reference',icon:'◫',keys:'artifact lab motion wrap susceptibility chemical shift zipper gibbs truncation flow dielectric visual'},
 {id:'about',title:'About MR Command Center',desc:'Read the public product scope, audience, creator credit, and educational boundaries.',cat:'Reference',icon:'i',keys:'about scope creator Edon Kukaj public educational'},
 {id:'privacy',title:'Privacy & local data',desc:'Read how MRCC uses browser-local storage and what is not sent to an MRCC application backend.',cat:'Reference',icon:'◌',keys:'privacy data local storage browser analytics tracking'},
 {id:'premium',title:'Premium Labs',desc:'Open the Premium Labs catalog and compare subscription versus one-time unlock access.',cat:'Premium',icon:'◆',keys:'premium paid subscription one time purchase advanced labs membership'},
@@ -486,25 +450,25 @@ const commands=[
 {id:'premium-rfpower',title:'Premium: RF Power Concepts Lab',desc:'Preview the planned safety-bounded RF duty teaching lab.',cat:'Premium',icon:'RF',keys:'premium rf power sar b1 duty flip angle safety'},
 {id:'premium-gradient',title:'Premium: Gradient Encoding Concepts Lab',desc:'Preview the planned normalized gradient-lobe area teaching lab.',cat:'Premium',icon:'G',keys:'premium gradient encoding lobe area amplitude duration ramp slew pns'},
 {id:'premium-offresonance',title:'Premium: Off-Resonance & Phase Lab',desc:'Preview the frequency-offset phase-accrual teaching lab.',cat:'Premium',icon:'Δf',keys:'premium off resonance frequency phase accrual field offset shim chemical shift'},
-{id:'goal-time',title:'Goal: reduce scan burden',desc:'Open Parameter Lab with the main sampling-burden levers highlighted.',cat:'Parameters',icon:'◷',keys:'goal reduce scan time burden phase nex etl acceleration partial Fourier'},
-{id:'goal-snr',title:'Goal: improve SNR',desc:'Open Parameter Lab with generic signal-efficiency levers highlighted.',cat:'Parameters',icon:'≈',keys:'goal improve snr signal voxel nex bandwidth acceleration'},
-{id:'goal-detail',title:'Goal: increase detail',desc:'Open Parameter Lab with spatial-sampling levers highlighted.',cat:'Parameters',icon:'▦',keys:'goal resolution detail fov matrix slice spatial'},
-{id:'goal-distortion',title:'Goal: reduce distortion',desc:'Open Parameter Lab with bandwidth and voxel-dimension levers highlighted.',cat:'Parameters',icon:'⌁',keys:'goal distortion off resonance bandwidth voxel susceptibility'},
-{id:'compare',title:'A/B Parameter Compare',desc:'Open Snapshot A versus live B comparison in Parameter Lab.',cat:'Parameters',icon:'A/B',keys:'compare snapshot parameter a b history deltas'},
-{id:'workspace-export',title:'Export workspace backup',desc:'Download active Lab states, Parameter presets/comparisons, preferences, pins, and continuity as JSON.',cat:'Parameters',icon:'⇩',keys:'workspace backup export transfer move browser json restore recovery'},
-{id:'workspace-import',title:'Import workspace backup',desc:'Validate and restore an MRCC v8 active-workspace backup from JSON.',cat:'Parameters',icon:'⇧',keys:'workspace backup import restore transfer move browser json recovery'},
-{id:'workspace-diagnostics',title:'Copy workspace diagnostics',desc:'Copy a non-sensitive status summary without Lab values or user-entered labels.',cat:'Parameters',icon:'i',keys:'workspace diagnostics support status local storage cache errors'},
-{id:'presets',title:'Saved teaching presets',desc:'Open the local teaching-preset library in Parameter Lab.',cat:'Parameters',icon:'P',keys:'preset saved parameter library sandbox local reusable'},
-{id:'parameterref',title:'Parameter Reference',desc:'Open the deeper reference for geometry, SNR, time, contrast, and artifact controls.',cat:'Parameters',icon:'≡',keys:'parameter reference TR TE TI flip angle acceleration partial Fourier phase FOV echo spacing'},
-{id:'rescue',title:'Sequence Rescue',desc:'Reason backward from scan time, SNR, motion, distortion, wrap, or fat-sat failure.',cat:'Troubleshoot',icon:'↯',keys:'rescue sequence too long noisy snr motion distortion wrap fat suppression troubleshoot'},
-{id:'motion',title:'Motion / ghosting',desc:'Load the motion artifact learning stack.',cat:'Artifact',icon:'≈',keys:'motion ghost ghosting movement'},
-{id:'wrap',title:'Aliasing / wrap',desc:'Load wrap / aliasing troubleshooting.',cat:'Artifact',icon:'↩',keys:'aliasing wrap foldover no phase wrap'},
-{id:'chem',title:'Chemical shift',desc:'Load chemical-shift troubleshooting.',cat:'Artifact',icon:'↔',keys:'chemical shift fat water bandwidth'},
-{id:'metal',title:'Metal / susceptibility',desc:'Load metal and susceptibility troubleshooting.',cat:'Artifact',icon:'◫',keys:'metal susceptibility implant distortion SEMAC MAVRIC'},
-{id:'zipper',title:'Zipper / RF interference',desc:'Load RF interference troubleshooting.',cat:'Artifact',icon:'≋',keys:'zipper RF interference shielding door'},
-{id:'trunc',title:'Gibbs / truncation',desc:'Load Gibbs ringing troubleshooting.',cat:'Artifact',icon:'≋',keys:'gibbs truncation ringing matrix'},
-{id:'flow',title:'Flow / pulsation ghosting',desc:'Load flow and pulsation troubleshooting.',cat:'Artifact',icon:'↝',keys:'flow pulsation csf vessel ghost'},
-{id:'dielectric',title:'Dielectric shading / standing wave',desc:'Load B1 / dielectric shading troubleshooting.',cat:'Artifact',icon:'◐',keys:'dielectric shading standing wave b1 3t'},
+{id:'goal-time',title:'Goal: reduce scan burden',desc:'Open Parameter Lab with the main sampling-burden levers highlighted.',cat:'Labs',icon:'◷',keys:'goal reduce scan time burden phase nex etl acceleration partial Fourier'},
+{id:'goal-snr',title:'Goal: improve SNR',desc:'Open Parameter Lab with generic signal-efficiency levers highlighted.',cat:'Labs',icon:'≈',keys:'goal improve snr signal voxel nex bandwidth acceleration'},
+{id:'goal-detail',title:'Goal: increase detail',desc:'Open Parameter Lab with spatial-sampling levers highlighted.',cat:'Labs',icon:'▦',keys:'goal resolution detail fov matrix slice spatial'},
+{id:'goal-distortion',title:'Goal: reduce distortion',desc:'Open Parameter Lab with bandwidth and voxel-dimension levers highlighted.',cat:'Labs',icon:'⌁',keys:'goal distortion off resonance bandwidth voxel susceptibility'},
+{id:'compare',title:'A/B Parameter Compare',desc:'Open Snapshot A versus live B comparison in Parameter Lab.',cat:'Labs',icon:'A/B',keys:'compare snapshot parameter a b history deltas'},
+{id:'workspace-export',title:'Export workspace backup',desc:'Download active Lab states, Parameter presets/comparisons, preferences, pins, and continuity as JSON.',cat:'Labs',icon:'⇩',keys:'workspace backup export transfer move browser json restore recovery'},
+{id:'workspace-import',title:'Import workspace backup',desc:'Validate and restore an MRCC v8 active-workspace backup from JSON.',cat:'Labs',icon:'⇧',keys:'workspace backup import restore transfer move browser json recovery'},
+{id:'workspace-diagnostics',title:'Copy workspace diagnostics',desc:'Copy a non-sensitive status summary without Lab values or user-entered labels.',cat:'Labs',icon:'i',keys:'workspace diagnostics support status local storage cache errors'},
+{id:'presets',title:'Saved teaching presets',desc:'Open the local teaching-preset library in Parameter Lab.',cat:'Labs',icon:'P',keys:'preset saved parameter library sandbox local reusable'},
+{id:'parameterref',title:'Parameter Reference',desc:'Open the deeper reference for geometry, SNR, time, contrast, and artifact controls.',cat:'Labs',icon:'≡',keys:'parameter reference TR TE TI flip angle acceleration partial Fourier phase FOV echo spacing'},
+{id:'rescue',title:'Sequence Rescue',desc:'Reason backward from scan time, SNR, motion, distortion, wrap, or fat-sat failure.',cat:'Reference',icon:'↯',keys:'rescue sequence too long noisy snr motion distortion wrap fat suppression troubleshoot'},
+{id:'motion',title:'Motion / ghosting',desc:'Load the motion artifact learning stack.',cat:'Reference',icon:'≈',keys:'motion ghost ghosting movement'},
+{id:'wrap',title:'Aliasing / wrap',desc:'Load wrap / aliasing troubleshooting.',cat:'Reference',icon:'↩',keys:'aliasing wrap foldover no phase wrap'},
+{id:'chem',title:'Chemical shift',desc:'Load chemical-shift troubleshooting.',cat:'Reference',icon:'↔',keys:'chemical shift fat water bandwidth'},
+{id:'metal',title:'Metal / susceptibility',desc:'Load metal and susceptibility troubleshooting.',cat:'Reference',icon:'◫',keys:'metal susceptibility implant distortion SEMAC MAVRIC'},
+{id:'zipper',title:'Zipper / RF interference',desc:'Load RF interference troubleshooting.',cat:'Reference',icon:'≋',keys:'zipper RF interference shielding door'},
+{id:'trunc',title:'Gibbs / truncation',desc:'Load Gibbs ringing troubleshooting.',cat:'Reference',icon:'≋',keys:'gibbs truncation ringing matrix'},
+{id:'flow',title:'Flow / pulsation ghosting',desc:'Load flow and pulsation troubleshooting.',cat:'Reference',icon:'↝',keys:'flow pulsation csf vessel ghost'},
+{id:'dielectric',title:'Dielectric shading / standing wave',desc:'Load B1 / dielectric shading troubleshooting.',cat:'Reference',icon:'◐',keys:'dielectric shading standing wave b1 3t'},
 {id:'burn',title:'Thermal / RF Foundations',desc:'Study body-loop, cable, bore-spacing, and patient-feedback concepts.',cat:'Safety',icon:'T',keys:'burn thermal RF heating cable padding body loop'},
 ];
 let paletteIndex=0,paletteCategory='all',filteredCommands=commands.slice();
@@ -1523,11 +1487,11 @@ function runSelfCheck(){
     ['Safety reference',typeof updateSafety==='function'&&typeof burnUpdate==='function'&&!!$('safety')&&!!$('burn')],
     ['Search + settings',typeof runCommand==='function'&&typeof openPalette==='function'&&typeof openPreferences==='function'&&!!$('paletteBack')&&!!$('prefsBack')],
     ['Sequence Families Lab',typeof openSequenceFamiliesLab==='function'&&typeof renderSequenceFamilyGrid==='function'&&typeof renderSequenceAnatomy==='function'&&typeof renderSequenceDna==='function'&&typeof scoreSequenceDna==='function'&&typeof sequenceTranslateAlias==='function'&&typeof renderSequenceCompare==='function'&&typeof renderSequenceChallenge==='function'&&typeof restoreSequenceFamiliesLab==='function'&&!!$('protocol')&&!!$('sequenceFamilyGrid')&&!!$('sequenceFamilyDetail')&&!!$('seqAnatomyTimeline')&&!!$('seqDnaResult')&&!!$('seqChallengeChoices')],
-    ['Home/Labs navigation',typeof openLab==='function'&&typeof setWorkspaceTabActive==='function'&&document.querySelectorAll('[data-workspace-tab]').length===14],
-    ['Mobile navigation',typeof syncMobileNav==='function'&&document.querySelectorAll('#mobileNav [data-workspace-tab]').length===7],
+    ['Home/Labs navigation',typeof openLab==='function'&&typeof setWorkspaceTabActive==='function'&&document.querySelectorAll('[data-workspace-tab]').length===10],
+    ['Mobile navigation',typeof syncMobileNav==='function'&&document.querySelectorAll('#mobileNav [data-workspace-tab]').length===5],
     ['Deep-link navigation',typeof restoreRouteFromHash==='function'&&typeof routeHash==='function'&&sectionTitles.protocol==='Sequence Families Lab'&&sectionTitles.contrast==='Contrast Lab'&&sectionTitles.kspace==='K-Space Lab'&&sectionTitles.spatial==='Spatial Encoding Lab'&&sectionTitles.artifact==='Artifact Lab'],
     ['Local data layer',typeof readStoredJson==='function'&&typeof localDataHealthy==='function'&&localDataHealthy()],
-    ['Workspace portability',typeof exportWorkspaceBackup==='function'&&typeof sanitizeWorkspaceBackup==='function'&&typeof applyWorkspaceImport==='function'&&typeof copyWorkspaceDiagnostics==='function'&&MRCC_WORKSPACE_ACTIVE_KEYS.length===13&&!!$('workspaceImportFile')],
+    ['Workspace portability',typeof exportWorkspaceBackup==='function'&&typeof sanitizeWorkspaceBackup==='function'&&typeof applyWorkspaceImport==='function'&&typeof copyWorkspaceDiagnostics==='function'&&MRCC_WORKSPACE_ACTIVE_KEYS.length===12&&!!$('workspaceImportFile')],
     ['Offline update flow',typeof applyAppUpdate==='function'],
     ['Runtime monitor',typeof window.__mrccRuntimeErrors==='number'],
     ['Dialog focus',typeof trapDialogFocus==='function']

@@ -1,19 +1,13 @@
 {
   "name": "MR Command Center",
   "short_name": "MRCC",
-  "description": "Interactive MRI reasoning labs with deep Parameter and Contrast experiments plus Sequence Timing, Motion, K-Space, Spatial Encoding, and Artifact labs, plus a Sequence Families Lab with anatomy, vendor translation, recognition challenges, and a physics-based Sequence DNA Builder.",
+  "description": "Interactive MRI reasoning labs: Parameter, Contrast, Sequence Timing, Motion, K-Space, Spatial Encoding, Artifact, Sequence Families, and MRI reference.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#07110f",
-  "theme_color": "#07110f",
+  "background_color": "#050910",
+  "theme_color": "#050910",
   "icons": [
-    {
-      "src": "/brand-mark.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
     {
       "src": "/icon.svg",
       "sizes": "any",
