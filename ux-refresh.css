@@ -4921,3 +4921,81 @@ body.lab-stage-mode .v27-intel-cell small{
 body.lab-stage-mode .v27-intel-cell span{
   font-size:.60rem!important
 }
+
+
+/* Instrument rhythm — less boxed Home UI, clearer focused-Lab orientation */
+.labs-home-proof{
+  display:flex!important;
+  align-items:center!important;
+  gap:0!important;
+  max-width:650px!important;
+  margin-top:18px!important;
+  border-top:1px solid rgba(126,196,239,.075)!important;
+  border-bottom:1px solid rgba(126,196,239,.055)!important
+}
+.labs-home-proof span{
+  position:relative!important;
+  flex:1 1 0!important;
+  min-height:34px!important;
+  padding:8px 12px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#718a9c!important
+}
+.labs-home-proof span+span:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:8px;
+  bottom:8px;
+  width:1px;
+  background:rgba(126,196,239,.07)
+}
+.labs-home-proof b{
+  color:#819ed0!important;
+  font-size:.55rem!important
+}
+
+/* In focused mode, only the active Lab earns text. The rest stay compact icon stations. */
+@media (min-width:760px){
+  body.lab-stage-mode .v27-lab-switcher button{
+    flex:.72 1 0!important
+  }
+  body.lab-stage-mode .v27-lab-switcher button.active{
+    flex:1.55 1 0!important;
+    gap:6px!important
+  }
+  body.lab-stage-mode .v27-lab-switcher button.active .v27-lab-label{
+    display:inline!important;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-size:.62rem!important;
+    letter-spacing:.02em
+  }
+  body.lab-stage-mode .v27-lab-switcher .v27-lab-exit{
+    flex:.72 1 0!important
+  }
+}
+
+/* Keep the learning loop simple on phones too. */
+@media (max-width:559px){
+  .labs-home-proof{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    border-bottom:0!important
+  }
+  .labs-home-proof span{
+    min-height:30px!important;
+    padding:6px 4px!important
+  }
+  .labs-home-proof span+span:before{
+    top:0!important;
+    left:0!important;
+    right:0!important;
+    bottom:auto!important;
+    width:auto!important;
+    height:1px!important
+  }
+}
