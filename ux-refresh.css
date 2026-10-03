@@ -2024,3 +2024,73 @@ body.lab-stage-mode :is(
 ){
   min-width:0!important
 }
+
+
+/* Cross-workspace geometry cleanup — remove stale offsets and align repeated card systems */
+.seqfam-layout>.seqfam-detail{
+  margin-top:0!important
+}
+.seqfam-layout>.seqfam-grid{
+  align-content:start!important
+}
+@media (max-width:1180px){
+  .seqfam-layout>.seqfam-detail{
+    margin-top:2px!important
+  }
+}
+
+/* Premium cards share one vertical rhythm regardless of copy length. */
+.premium-grid{
+  align-items:stretch!important
+}
+.premium-card{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  height:100%!important
+}
+.premium-card .premium-feature-list{
+  flex:1 1 auto!important
+}
+.premium-card .premium-card-status{
+  margin-top:auto!important
+}
+.premium-card .premium-open{
+  flex:0 0 auto!important
+}
+.premium-zone{
+  border-radius:22px!important
+}
+@media (max-width:760px){
+  .premium-zone{
+    border-radius:16px!important
+  }
+}
+
+/* Keep repeated Home modules vertically aligned without forcing artificial card heights. */
+.lab-home-card .lab-home-state{
+  min-height:62px!important
+}
+.lab-home-card .lab-home-tags{
+  min-height:30px!important;
+  align-content:start!important
+}
+@media (max-width:760px){
+  .lab-home-card .lab-home-state,
+  .lab-home-card .lab-home-tags{
+    min-height:0!important
+  }
+}
+
+/* Modal geometry: one safe viewport rule on short screens. */
+@media (max-height:700px){
+  .palette,.prefs,.premiummodal,.v27-hub{
+    max-height:94dvh!important
+  }
+  .paletteback,.prefsback,.premiumback,.v27-hubback{
+    padding-top:8px!important
+  }
+  .palettehead,.premiummodal-head,.v27-hub-head{
+    min-height:58px!important
+  }
+}
